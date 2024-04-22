@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="org.terasoluna.qp.domain.repository.functionoutput.FunctionOutputRepository">
+
+	<resultMap id="functionMethodOutput" type="org.terasoluna.qp.domain.model.FunctionMethodOutput">
+		<id property="methodOutputId" column="method_output_id" />
+		<result property="methodOutputCode" column="method_output_code" />
+		<result property="methodOutputName" column="method_output_name" />
+		<result property="dataType" column="data_type" />
+		<result property="arrayFlg" column="array_flg" />
+		<result property="functionMethodId" column="function_method_id" />
+		<result property="itemSeqNo" column="item_seq_no" />
+	</resultMap>
+    <insert id="register" >
+    	<if test="lstItems != null and  lstItems.size() > 0 ">
+			INSERT INTO 
+				function_output
+			(
+	           	function_output_code,
+	           	function_output_name,
+	           	data_type,
+	           	array_flg,
+	           	function_master_id,
+	           	item_sequence_no
+	        )
+	    	VALUES 
+	    	<foreach item="item" collection="lstItems" separator=",">
+	    	(
+	    		#{item.functionOutputCode},
+	    		#{item.functionOutputName},
+	    		#{item.dataType},
+	    		#{item.arrayFlg},
+	    		#{item.functionMasterId},
+	    		#{item.itemSeqNo}
+			)
+			</foreach>;
+		</if>
+    </insert>
+    
+    <select id="getFunctionOutput" resultMap="functionMethodOutput" parameterType="Long">
+    <![CDATA[
+        SELECT   
+            function_output_id, 
+            function_output_code,
+            function_output_name,
+            data_type,
+           	array_flg,
+           	function_master_id,
+           	item_sequence_no
+        FROM 
+        	function_output 
+       	WHERE
+       		function_master_id= #{functionMasterId}
+       	ORDER BY
+    		item_sequence_no ASC
+    ]]>
+    </select>
+    
+    <update id="modify" parameterType="FunctionMethodOutput">
+    <![CDATA[
+         UPDATE 
+            function_output
+         SET 
+            function_output_code = #{functionOutputCode}, 
+            function_output_name = #{functionOutputName}, 
+            data_type = #{dataType}, 
+            array_flg = #{arrayFlg}, 
+            item_sequence_no = #{itemSeqNo} 
+         WHERE 
+            function_output_id = #{functionOutputId}
+    ]]>
+    </update>
+    
+    <delete id="delete" >
+    	<if test="functionOutputItems != null and  functionOutputItems.size() > 0 ">
+			DELETE FROM 
+				function_output
+			WHERE
+				 function_output_id
+		 	IN
+			<foreach item="item" index="index" collection="functionOutputItems" open="(" separator="," close=")">
+            	#{item.functionOutputId}
+            </foreach>
+		</if>
+    </delete>
+    
+</mapper>

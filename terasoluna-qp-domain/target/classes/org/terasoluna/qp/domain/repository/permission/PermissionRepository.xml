@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.permission.PermissionRepository">
+
+	<resultMap id="permissionResultMap" type="Permission">
+		<id property="permissionId" column="permission_id" />
+		<result property="permissionName" column="permission_name" />
+		<result property="permissionCode" column="permission_code" />
+		<result property="moduleCode" column="module_code" />
+		<result property="sortKey" column="sort_key" />
+		<result property="remark" column="remark" />
+		<result property="actionPath" column="action_path" />
+		<result property="accountId" column="account_id" />
+		<result property="roleId" column="role_id" />
+	</resultMap>
+
+	<select id="getPermissionById" parameterType="int" resultMap="permissionResultMap">
+		SELECT
+			permission_Id,
+			permission_cd,
+			module_code,
+			permission_desc_cd,
+			permission_name_cd,
+			delete_flg
+		FROM
+			permission
+		WHERE 
+			module_code=#{moduleCode}
+	</select>
+
+	<select id="getAll" resultMap="permissionResultMap">
+	<![CDATA[
+		SELECT
+			permission_id, 
+			permission_name, 
+			permission_code, 
+			module_code, 
+			sort_key, 
+			remark, 
+			action_path
+		FROM
+			permission;
+	]]>
+	</select>
+	
+	<select id="getPermissionOfAccount" parameterType="Long" resultMap="permissionResultMap">
+	select 
+		t2.permission_id,
+		t2.permission_name,
+		t2.permission_code,
+		t2.module_code,
+		t2.sort_key,
+		t2.remark,
+		t2.action_path
+	from
+		account_permission t1
+	inner join permission t2 on (t1.permission_id = t2.permission_id)
+	where t1.account_id = #{accountId}
+	</select>
+	
+	<select id="getPermissionOfAccountByRole" parameterType="Long" resultMap="permissionResultMap">
+		SELECT distinct permission_code FROM role_permission rp
+		INNER JOIN permission p on rp.permission_id = p.permission_id
+		WHERE 
+		EXISTS 
+		(
+			SELECT ar.role_id FROM account_role ar
+			WHERE rp.role_id = ar.role_id AND ar.account_id = #{accountId}
+		)
+		ORDER BY permission_code
+	</select>
+	
+	<select id="getRoleAndPermissionOfAccount" parameterType="Long" resultMap="permissionResultMap">
+		select distinct 
+			t1.permission_id,
+			t2.permission_code,
+			t2.permission_name,
+			t2.module_code,
+			t2.remark
+		from 
+			account_permission t1
+		inner join 
+			permission t2 on (t1.permission_id = t2.permission_id)
+		where 
+			t1.account_id = #{accountId} 
+		
+		UNION
+		
+		SELECT distinct 
+			rp.permission_id,
+			p.permission_code,
+			p.permission_name,
+			p.module_code,
+			p.remark
+		FROM
+			role_permission rp
+		INNER JOIN 
+			permission p on rp.permission_id = p.permission_id
+		INNER JOIN 
+			role r ON rp.role_id = r.role_id
+		WHERE EXISTS 
+			(
+				SELECT ar.role_id FROM account_role ar
+				WHERE rp.role_id = ar.role_id AND ar.account_id = #{accountId}
+			)
+			AND r.status = 1
+		ORDER BY permission_code
+	</select>
+	
+	<select id="findPermissionOfRole" parameterType="Long" resultMap="permissionResultMap">
+		SELECT  
+			p.permission_id,
+			p.permission_name,
+			p.permission_code,
+			p.module_code,
+			p.sort_key,
+			p.remark,
+			p.action_path
+   		FROM 
+   			permission p
+		INNER JOIN
+			role_permission rp ON p.permission_id = rp.permission_id
+		WHERE
+			rp.role_id = #{roleId}
+		ORDER BY
+			p.module_code
+	</select>
+	
+	<select id="getAuthorityInformation" parameterType="Long" resultMap="permissionResultMap">
+	<![CDATA[
+	 SELECT t1.permission_id, 
+			t1.permission_name, 
+			t1.permission_code, 
+			t1.module_code, 
+			t1.sort_key, 
+			t1.remark, 
+			t1.action_path,
+			t2.account_id
+	FROM 
+		permission t1
+	LEFT JOIN account_permission t2 ON (t1.permission_id = t2.permission_id and t2.account_id = #{accountId})
+	]]>
+	</select>
+	
+	<!-- Finds all module code -->
+	<select id="findAllModuleCode" resultMap="permissionResultMap">
+		<![CDATA[
+			SELECT DISTINCT
+				module_code
+			FROM
+				permission
+			ORDER BY 
+				module_code
+		]]>
+	</select>	
+	
+	<select id="getPermissionByRole" resultMap="permissionResultMap" parameterType="Long">
+	<![CDATA[
+		SELECT
+			t1.permission_id, 
+			t1.permission_name, 
+			t1.permission_code, 
+			t1.module_code, 
+			t1.sort_key,
+			t1.remark, 
+			t1.action_path,
+			t2.role_id
+		FROM 
+			permission t1
+		LEFT JOIN role_permission t2 ON (t1.permission_id = t2.permission_id and t2.role_id = #{roleId})
+		ORDER BY
+			t1.module_code, t1.sort_key
+	]]>
+	</select>
+
+</mapper>

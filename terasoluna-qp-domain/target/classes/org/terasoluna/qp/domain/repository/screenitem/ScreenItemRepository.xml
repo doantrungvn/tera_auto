@@ -1,0 +1,984 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="org.terasoluna.qp.domain.repository.screenitem.ScreenItemRepository">
+
+	<resultMap id="screenItemResultMap" type="ScreenItem">
+		<id property="screenItemId" column="screen_item_id" />
+		<result property="itemSeqNo" column="item_seq_no" />
+		<result property="screenAreaId" column="screen_area_id" />
+		<result property="screenId" column="screen_id" />
+		<result property="itemCode" column="item_code" />
+		<result property="itemName" column="item_name" />
+		<result property="messageDesign.messageCode" column="message_code" />
+		<result property="messageDesign.messageString" column="message_string" />
+		<result property="logicalDataType" column="logical_data_type" />
+		<result property="physicalDataType" column="physical_data_type" />
+		<result property="domainTblMappingId" column="domain_tbl_mapping_id" />
+		<result property="domainTblMappingItemId" column="domain_tbl_mapping_item_id" />
+		<result property="tblDesignId" column="tbl_design_id" />
+		<result property="columnId" column="column_id" />
+		<result property="colSpan" column="col_span" />
+		<result property="rowSpan" column="row_span" />
+		<result property="codelistId" column="codelist_id" />
+		<result property="codelistType" column="codelist_type" />
+		<result property="itemType" column="item_type" />
+		<result property="autocompleteId" column="autocomplete_id" />
+		<result property="sqlDesignId" column="sql_design_id" />
+		<result property="userDefineCodelistId" column="user_define_codelist_id" />
+		<result property="arrayFlg" column="array_flg" />
+		<result property="screenActionId" column="screen_action_id" />
+		<result property="groupItemId" column="group_item_id" />
+		<result property="screenItemValidation.fmtCode" column="fmt_code" />
+		<result property="screenItemValidation.minVal" column="min_val" />
+		<result property="screenItemValidation.maxVal" column="max_val" />
+		<result property="screenItemValidation.maxlength" column="maxlength" />
+		<result property="screenItemValidation.mandatoryFlg" column="mandatory_flg" />
+		<result property="screenFormId" column="screen_form_id" />
+		<result property="dataSourceType" column="data_source_type" />
+		<result property="createdBy" column="created_by" />
+		<result property="createdDate" column="created_date" />
+		<result property="updatedBy" column="updated_by" />
+		<result property="updatedDate" column="updated_date" />
+		<result property="screenAction.connectionMsg" column="connection_msg" />
+		<result property="screenAction.actionType" column="action_type" />
+		<result property="screenAction.toBlogicCode" column="business_logic_code" />
+		<result property="screenAction.toBlogicText" column="business_logic_name" />
+		<result property="autocompleteDesign.autocompleteName" column="autocomplete_name" />
+		<result property="autocompleteDesign.autocompleteCode" column="autocomplete_code" />
+		<result property="showLabel" column="show_label" />
+		<result property="toScreenPatternType" column="to_screen_pattern_type" />
+		<result property="fromScreenPatternType" column="from_screen_pattern_type" />
+		<result property="columnCode" column="column_code" />
+		<result property="customItemContent" column="custom_content" />
+		<result property="messageScreen.messageString" column="message_string_screen" />
+		<result property="moduleName" column="module_name" />
+		<result property="moduleId" column="module_id" />
+		<result property="defaultValue" column="default_value" />
+		<result property="tabIndex" column="tab_index" />
+		<result property="defaultValueTo" column="default_value_to" />
+		<result property="style" column="style" />
+		<result property="hoverStyle" column="hover_style" />
+		<result property="icon" column="icon" />
+		<result property="enablePassword" column="enable_password" />
+		<result property="allowAnyInput" column="allow_any_input" />
+		<result property="buttonType" column="button_type" />
+		<result property="enableConfirm" column="enable_confirm" />
+		<result property="showBlankItem" column="show_blank_item" />
+		<result property="displayFromTo" column="from_to" />
+		<result property="screenCode" column="screen_code" />
+		<result property="screenName" column="screen_name"/>
+
+	</resultMap>
+	
+	<resultMap id="outputBeanResultMap" type="org.terasoluna.qp.domain.model.OutputBean">
+		<id property="outputBeanId" column="output_bean_id" />
+		<result property="outputBeanCode" column="output_bean_code" />
+		<result property="outputBeanName" column="output_bean_name" />
+		<result property="arrayFlg" column="array_flg" />
+		<result property="parentOutputBeanId" column="parent_output_bean_id" />
+		<result property="parentOutputBeanName" column="parent_output_bean_name" />
+		<result property="parentOutputBeanCode" column="parent_output_bean_code" />
+		<result property="parentOutputBeanArrayFlag" column="parent_output_bean_array_flag" />
+		<result property="grandParentOutputBeanId" column="grand_parent_output_bean_id" />
+		<result property="grandParentOutputBeanName" column="grand_parent_output_bean_name" />
+		<result property="grandParentOutputBeanCode" column="grand_parent_output_bean_code" />
+		<result property="grandParentOutputBeanArrayFlag" column="grand_parent_output_bean_array_flag" />
+		<result property="mappingType" column="mapping_type" />
+		<result property="businessLogicCode" column="business_logic_code" />
+		<result property="itemCodeMapping" column="item_code_mapping" />
+		<result property="areaCodeMapping" column="area_code_mapping" />
+		<result property="formCodeMapping" column="form_code_mapping" />
+	</resultMap>
+	
+	<resultMap id="inputBeanResultMap" type="org.terasoluna.qp.domain.model.InputBean">
+		<id property="inputBeanId" column="input_bean_id" />
+		<result property="inputBeanCode" column="input_bean_code" />
+		<result property="inputBeanName" column="input_bean_name" />
+		<result property="arrayFlg" column="array_flg" />
+		<result property="parentInputBeanId" column="parent_input_bean_id" />
+		<result property="parentInputBeanName" column="parent_input_bean_name" />
+		<result property="parentInputBeanCode" column="parent_input_bean_code" />
+		<result property="parentInputBeanArrayFlag" column="parent_input_bean_array_flag" />
+		<result property="grandParentInputBeanId" column="grand_parent_input_bean_id" />
+		<result property="grandParentInputBeanName" column="grand_parent_input_bean_name" />
+		<result property="grandParentInputBeanCode" column="grand_parent_input_bean_code" />
+		<result property="grandParentInputBeanArrayFlag" column="grand_parent_input_bean_array_flag" />
+		<result property="screenItemLogicalDataType" column="screen_item_logical_data_type" />
+		<result property="blogicRequestMethod" column="blogic_request_method" />
+		
+	</resultMap>
+	
+	<resultMap type="ScreenItemCodelist" id="screenItemCodelistResultMap">
+		<id property="screenItemId" column="screen_item_id" />
+		<result property="codelistName" column="codelist_name" />
+		<result property="codelistVal" column="codelist_val" />
+	</resultMap>
+	
+	<resultMap id="screenItemContainListAutocompleteInput" type="ScreenItem">
+		<id property="screenItemId" column="screen_item_id" />
+		<result property="screenId" column="screen_id" />
+		<result property="itemCode" column="item_code" />
+		<result property="screenCode" column="screen_code" />
+		<result property="moduleId" column="module_id" />
+		<collection property="screenItemAutocompleteInputs" resultMap="screenItemAutocompleteInputMap"/>
+	</resultMap>
+	
+	<resultMap id="screenItemAutocompleteInputMap" type="ScreenItemAutocompleteInput">
+		<id property="screenAutocompleteInputId" column="screen_autocomplete_input_id" />
+		<result property="screenItemId" column="screen_item_id" />
+		<result property="inputId" column="input_id" />
+		<result property="screenItemCode" column="screen_item_code" />
+	</resultMap>
+	
+	<insert id="insertScreenItem" parameterType="ScreenItem">
+		<selectKey keyProperty="screenItemId" resultType="Long"
+			order="BEFORE">
+			SELECT NEXTVAL('screen_item_seq'::REGCLASS)
+		</selectKey>
+		INSERT INTO
+		screen_item
+		(
+			screen_item_id,
+			item_seq_no,
+			screen_area_id,
+			screen_id,
+			item_code,
+			message_code,
+			logical_data_type,
+			physical_data_type,
+			tbl_design_id,
+			column_id,
+			col_span,
+			row_span,
+			codelist_id,
+			codelist_type,
+			item_type,
+			autocomplete_id,
+			sql_design_id,
+			user_define_codelist_id,
+			array_flg,
+			screen_action_id,
+			group_item_id,
+			data_source_type,
+			created_by,
+			created_date,
+			updated_by,
+			updated_date,
+			show_label,
+			enable_confirm,
+			message_confirm,
+			button_type,
+			screen_transition_id
+		)
+		VALUES
+		(
+			#{screenItemId},
+			#{itemSeqNo},
+			#{screenAreaId},
+			#{screenId},
+			#{itemCode},
+			#{messageDesign.messageCode},
+			#{logicalDataType},
+			#{physicalDataType},
+			#{tblDesignId},
+			#{columnId},
+			#{colSpan},
+			#{rowSpan},
+			#{codelistId},
+			#{codelistType},
+			#{itemType},
+			#{autocompleteId},
+			#{sqlDesignId},
+			#{userDefineCodelistId},
+			#{arrayFlg},
+			#{screenActionId},
+			#{groupItemId},
+			#{dataSourceType},
+			#{createdBy},
+			#{createdDate},
+			#{updatedBy},
+			#{updatedDate},
+			#{showLabel},
+			#{enableConfirm},
+			#{messageConfirm.messageCode},
+			#{buttonType},
+			#{screenTransitionId}
+		)
+	</insert>
+
+	<select id="getMaxSeqNoByScreenAreaId"
+		parameterType="Long"
+		resultType="Integer">
+		 	SELECT
+		 		MAX(item_seq_no)
+		 	FROM 
+		 		screen_item_sequence AS a	
+		 	 WHERE
+		 		a.screen_area_id = #{screenAreaId}
+	</select>
+	
+	<select id="getScreenItemByScreenAreaId" parameterType="Long"
+		resultMap="screenItemResultMap">
+		SELECT
+			c.screen_item_id AS screenItemId,
+			c.item_seq_no AS itemSeqNo,
+			c.screen_area_id AS screenAreaId,
+			c.screen_id AS screenId,
+			c.item_code AS itemCode,
+			b.message_string,
+			c.logical_data_type AS logicalDataType,
+			c.physical_data_type AS physicalDataType,
+			c.domain_tbl_mapping_id AS domainTblMappingId,
+			c.domain_tbl_mapping_item_id AS domainTblMappingItemId,
+			c.col_span AS colSpan,
+			c.row_span AS rowSpan,
+			c.codelist_id AS codelistId,
+			c.codelist_type AS codelistType,
+			c.item_type AS itemType,
+			c.autocomplete_id AS autocompleteId,
+			c.array_flg AS arrayFlg,
+			c.screen_action_id AS screenActionId,
+			c.group_item_id AS groupItemId,
+			a.fmt_code,
+			a.maxlength,
+			a.mandatory_flg,
+			a.min_val,
+			a.max_val
+		FROM
+			screen_item c LEFT JOIN screen_item_validation a ON c.screen_item_id = a.screen_item_id
+			LEFT JOIN message_design b ON c.message_design_id = b.message_design_id
+		WHERE
+			c.screen_area_id = #{screenAreaId}
+		ORDER BY
+			c.item_seq_no ASC
+	</select>
+	
+	<select id="getScreenItemSingleByScreenAreaId" parameterType="Map"
+		resultMap="screenItemResultMap">
+		SELECT
+			c.screen_item_id AS screenItemId,
+			c.item_seq_no AS itemSeqNo,
+			c.screen_area_id AS screenAreaId,
+			c.screen_id AS screenId,
+			c.item_code AS itemCode,
+			(
+				SELECT 
+					md.message_string
+				FROM 
+					message_design md
+				WHERE 
+					c.message_code = md.message_code 
+				AND
+					md.language_id = #{languageId}
+				AND
+					md.project_id = #{projectId}
+			) as message_string,
+			c.logical_data_type AS logicalDataType,
+			c.physical_data_type AS physicalDataType,
+			c.domain_tbl_mapping_id AS domainTblMappingId,
+			c.domain_tbl_mapping_item_id AS domainTblMappingItemId,
+			c.col_span AS colSpan,
+			c.row_span AS rowSpan,
+			c.codelist_id AS codelistId,
+			c.codelist_type AS codelistType,
+			c.item_type AS itemType,
+			c.autocomplete_id AS autocompleteId,
+			c.array_flg AS arrayFlg,
+			c.screen_action_id AS screenActionId,
+			c.group_item_id AS groupItemId,
+			a.fmt_code,
+			a.maxlength,
+			a.mandatory_flg,
+			a.min_val,
+			a.max_val
+		FROM
+			screen_item c LEFT JOIN screen_item_validation a ON c.screen_item_id = a.screen_item_id
+		WHERE
+			c.screen_area_id = #{screenAreaId} AND c.group_item_id is NULL
+		ORDER BY
+			c.item_seq_no ASC
+	</select>
+	
+	<select id="getScreenItemGroupByScreenAreaId" parameterType="Map"
+		resultMap="screenItemResultMap">
+		SELECT
+			c.screen_item_id AS screenItemId,
+			c.item_seq_no AS itemSeqNo,
+			c.screen_area_id AS screenAreaId,
+			c.screen_id AS screenId,
+			c.item_code AS itemCode,
+			(
+				SELECT 
+					md.message_string
+				FROM 
+					message_design md
+				WHERE 
+					c.message_code = md.message_code 
+				AND
+					md.language_id = #{languageId}
+				AND
+					md.project_id = #{projectId}
+			) as message_string,
+			(
+				SELECT 
+					md.message_code
+				FROM 
+					message_design md
+				WHERE 
+					c.message_code = md.message_code 
+				AND
+					md.language_id = #{languageId}
+				AND
+					md.project_id = #{projectId}
+			) as message_code,
+			c.logical_data_type AS logicalDataType,
+			c.physical_data_type AS physicalDataType,
+			c.domain_tbl_mapping_id AS domainTblMappingId,
+			c.domain_tbl_mapping_item_id AS domainTblMappingItemId,
+			c.col_span AS colSpan,
+			c.row_span AS rowSpan,
+			c.codelist_id AS codelistId,
+			c.codelist_type AS codelistType,
+			c.item_type AS itemType,
+			c.autocomplete_id AS autocompleteId,
+			c.array_flg AS arrayFlg,
+			c.screen_action_id AS screenActionId,
+			c.group_item_id AS groupItemId,
+			a.fmt_code,
+			a.maxlength,
+			a.mandatory_flg,
+			a.min_val,
+			a.max_val,
+			c.default_value,
+			c.data_source_type,
+			c.item_width_unit,
+			c.user_define_codelist_id,
+			c.tab_index,
+			c.default_value_to,
+			c.style,
+			c.hover_style,
+			c.icon,
+			c.show_label,
+			c.enable_password,
+			c.allow_any_input,
+			c.button_type,
+			c.enable_confirm,
+			c.show_blank_item,
+			c.custom_content,
+			c.from_to
+		FROM
+			screen_item c LEFT JOIN screen_item_validation a ON c.screen_item_id = a.screen_item_id
+		WHERE
+			c.screen_area_id = #{screenAreaId} AND c.group_item_id = #{groupItemId}
+		ORDER BY
+			c.item_seq_no ASC
+	</select>
+	
+	
+	<!-- DungNN - 20150822 - get all screen item for generateDB -->
+	<select id="getAllScreenItemInfoByModuleIdForGenerateDb" parameterType="map" resultMap="screenItemResultMap">
+		WITH 
+			screen_area_temp AS (
+				SELECT 
+					screen_area_id
+				FROM 
+					screen_area sa
+				WHERE
+					area_type in (0,1,3) AND area_pattern_type = 1 
+				AND
+					EXISTS 
+					(
+						SELECT 1
+						FROM 
+							screen_design sd
+						WHERE
+							module_id = #{moduleId}
+						AND 
+							design_mode = 0 AND screen_pattern_type = 1
+						AND
+							sd.screen_id = sa.screen_id
+					)
+			)
+
+		SELECT 
+			si.screen_item_id,
+			si.item_seq_no,
+			si.group_item_id,
+			si.screen_area_id, 
+			si.item_code,
+			si.logical_data_type,
+			si.physical_data_type,
+			si.item_type,
+	   		(md.message_string) as item_name, 
+	   		si.default_value,
+	   		a.fmt_code,
+			a.maxlength,
+			a.mandatory_flg,
+			a.min_val,
+			a.max_val
+  		FROM
+  			screen_item	si LEFT JOIN screen_item_validation a ON si.screen_item_id = a.screen_item_id 
+  			INNER JOIN message_design md ON (si.message_code = md.message_code and md.language_id = #{languageId})
+  		AND
+  			EXISTS (
+  				SELECT 1
+						FROM 
+							screen_area_temp sa
+						WHERE
+							sa.screen_area_id = si.screen_area_id
+  			)
+  	</select>
+  	
+  	<select id="getAllScreenItemByLstScreenId" resultMap="screenItemResultMap">
+		SELECT
+			c.screen_item_id AS screenItemId,
+			c.item_seq_no AS itemSeqNo,
+			c.screen_area_id AS screenAreaId,
+			c.screen_id AS screenId,
+			c.item_code AS itemCode,
+			(
+				SELECT 
+					md.message_string
+				FROM 
+					message_design md
+				WHERE 
+					c.message_code = md.message_code 
+				AND
+					md.language_id = #{languageId}
+			) as message_string,
+			c.logical_data_type AS logicalDataType,
+			c.physical_data_type AS physicalDataType,
+			c.domain_tbl_mapping_id AS domainTblMappingId,
+			c.domain_tbl_mapping_item_id AS domainTblMappingItemId,
+			c.col_span AS colSpan,
+			c.row_span AS rowSpan,
+			c.codelist_id AS codelistId,
+			c.codelist_type AS codelistType,
+			c.item_type AS itemType,
+			c.autocomplete_id AS autocompleteId,
+			c.array_flg AS arrayFlg,
+			c.screen_action_id AS screenActionId,
+			c.group_item_id AS groupItemId,
+			a.fmt_code,
+			a.maxlength,
+			a.mandatory_flg,
+			a.min_val,
+			a.max_val,
+			y.screen_form_id,
+			c.tbl_design_id as tblDesignId,
+			c.column_id as columnId,
+			c.message_code
+		FROM
+			screen_item c 
+		LEFT JOIN screen_item_validation a ON c.screen_item_id = a.screen_item_id
+		LEFT JOIN screen_area x ON c.screen_area_id = x.screen_area_id
+		LEFT JOIN screen_form y ON x.screen_form_id = y.screen_form_id
+		<if test="lstScreenId != null and lstScreenId.size() > 0">
+			WHERE c.screen_id IN
+			<foreach item="item" collection="lstScreenId" separator="," close=")" open="(">
+				#{item}
+			</foreach>
+		</if>
+		ORDER BY
+			c.item_seq_no ASC
+	</select>
+	
+	<select id="getAllScreenItemByLstScreenAreaId" resultMap="screenItemResultMap">
+		SELECT
+			c.screen_item_id AS screenItemId,
+			c.item_seq_no AS itemSeqNo,
+			c.screen_area_id AS screenAreaId,
+			c.screen_id AS screenId,
+			c.item_code AS itemCode,
+			COALESCE((
+				SELECT 
+					md.message_string
+				FROM 
+					message_design md
+				WHERE 
+					c.message_code = md.message_code 
+				AND
+					md.language_id = #{languageId} AND md.project_id = #{projectId} 
+			), c.message_code) as message_string,
+			c.logical_data_type AS logicalDataType,
+			c.physical_data_type AS physicalDataType,
+			c.domain_tbl_mapping_id AS domainTblMappingId,
+			c.domain_tbl_mapping_item_id AS domainTblMappingItemId,
+			c.col_span AS colSpan,
+			c.row_span AS rowSpan,
+			c.codelist_id AS codelistId,
+			c.codelist_type AS codelistType,
+			c.item_type AS itemType,
+			c.autocomplete_id AS autocompleteId,
+			c.array_flg AS arrayFlg,
+			c.screen_action_id AS screenActionId,
+			c.group_item_id AS groupItemId,
+			a.fmt_code,
+			a.maxlength,
+			a.mandatory_flg,
+			a.min_val,
+			a.max_val,
+			y.screen_form_id,
+			c.tbl_design_id as tblDesignId,
+			c.column_id as columnId,
+			c.message_code
+		FROM
+			screen_item c 
+		LEFT JOIN screen_item_validation a ON c.screen_item_id = a.screen_item_id
+		LEFT JOIN screen_area x ON c.screen_area_id = x.screen_area_id
+		LEFT JOIN screen_form y ON x.screen_form_id = y.screen_form_id
+		WHERE 
+			c.logical_data_type != 20 
+			<!-- AND c.logical_data_type != 11 AND c.logical_data_type != 13  -->
+		<if test="lstScreenArea != null and lstScreenArea.size() > 0">
+			AND c.screen_area_id = ANY (VALUES
+			<foreach item="item" collection="lstScreenArea" separator="," close="" open="">
+				(#{item.screenAreaId})
+			</foreach>
+			)
+		</if>
+		ORDER BY
+			c.screen_id, x.area_seq_no, c.item_seq_no
+	</select>
+
+	<select id="getAllScreenItemByScreenIdForGenScreenDesign" resultMap="screenItemResultMap">
+		SELECT
+			c.screen_item_id AS screenItemId,
+			c.item_seq_no AS itemSeqNo,
+			c.screen_area_id AS screenAreaId,
+			c.screen_id AS screenId,
+			c.item_code AS itemCode,
+			(
+				SELECT 
+					md.message_string
+				FROM 
+					message_design md
+				WHERE 
+					c.message_code = md.message_code 
+				AND
+					md.language_id = #{languageId}
+			) as message_string,
+			c.logical_data_type AS logicalDataType,
+			c.physical_data_type AS physicalDataType,
+			c.domain_tbl_mapping_id AS domainTblMappingId,
+			c.domain_tbl_mapping_item_id AS domainTblMappingItemId,
+			c.col_span AS colSpan,
+			c.row_span AS rowSpan,
+			c.codelist_id AS codelistId,
+			c.codelist_type AS codelistType,
+			c.data_source_type,
+			c.item_type AS itemType,
+			c.autocomplete_id AS autocompleteId,
+			c.array_flg AS arrayFlg,
+			c.screen_action_id AS screenActionId,
+			c.group_item_id AS groupItemId,
+			a.fmt_code,
+			a.maxlength,
+			a.mandatory_flg,
+			a.min_val,
+			a.max_val,
+			y.screen_form_id,
+			c.tbl_design_id as tblDesignId,
+			c.column_id as columnId,
+			c.message_code,
+			z.connection_msg,
+			z.action_type,
+			COALESCE(bl1.business_logic_code, bl2.business_logic_code) as business_logic_code,
+			COALESCE(bl1.business_logic_name, bl2.business_logic_name) as business_logic_name,
+			ad.autocomplete_name,
+			ad.autocomplete_code
+		FROM
+			screen_item c 
+		LEFT JOIN screen_item_validation a ON c.screen_item_id = a.screen_item_id
+		LEFT JOIN screen_area x ON c.screen_area_id = x.screen_area_id
+		LEFT JOIN screen_form y ON x.screen_form_id = y.screen_form_id
+		LEFT JOIN screen_action z ON z.screen_action_id = c.screen_action_id
+		LEFT JOIN business_logic bl1 ON bl1.screen_id = z.to_screen_id AND z.action_type = 0 AND bl1.return_type = 0 AND bl1.blogic_type = 0
+		LEFT JOIN business_logic bl2 ON bl2.business_logic_id = z.to_screen_id AND z.action_type = 1
+		LEFT JOIN autocomplete_design ad ON ad.autocomplete_id = c.autocomplete_id
+		WHERE 			
+			c.screen_id = #{screenId} AND c.logical_data_type != 20
+		ORDER BY
+			c.item_seq_no ASC
+	</select>
+	
+	<select id="getListScreenItemByScreenId" resultMap="screenItemResultMap">
+		SELECT
+			si.screen_item_id,
+			si.item_seq_no,
+			si.screen_area_id,
+			si.screen_id,
+			si.item_code,
+			si.message_code,
+			si.logical_data_type,
+			si.physical_data_type,
+			si.tbl_design_id,
+			si.column_id,
+			tdd.column_code AS column_code,
+			si.col_span,
+			si.row_span,
+			si.codelist_id,
+			si.codelist_type,
+			si.item_type,
+			si.autocomplete_id,
+			si.sql_design_id,
+			si.user_define_codelist_id,
+			si.array_flg,
+			si.screen_action_id,
+			si.group_item_id,
+			si.data_source_type,
+			si.created_by,
+			si.created_date,
+			si.updated_by,
+			si.updated_date,
+			si.show_label,
+			si.enable_confirm,
+			si.message_confirm,
+			si.button_type
+		FROM 
+			screen_item si
+		LEFT JOIN 
+			table_design_details tdd ON si.column_id = tdd.column_id
+		WHERE 
+			screen_id = #{screenId}
+			
+	</select>
+	
+	<!-- in case of get by ajax -->
+	<select id="getListScreenItemByScreenIdAndAjax" resultMap="screenItemResultMap">
+		SELECT
+			si.screen_item_id,
+			si.item_seq_no,
+			si.screen_area_id,
+			si.screen_id,
+			si.item_code,
+			si.message_code,
+			si.logical_data_type,
+			si.physical_data_type,
+			si.tbl_design_id,
+			si.column_id,
+			tdd.column_code AS column_code,
+			si.col_span,
+			si.row_span,
+			si.codelist_id,
+			si.codelist_type,
+			si.item_type,
+			si.autocomplete_id,
+			si.sql_design_id,
+			si.user_define_codelist_id,
+			si.array_flg,
+			si.screen_action_id,
+			si.group_item_id,
+			si.data_source_type,
+			si.created_by,
+			si.created_date,
+			si.updated_by,
+			si.updated_date,
+			si.show_label,
+			si.enable_confirm,
+			si.message_confirm,
+			si.button_type,
+			md.message_string as message_string
+		FROM 
+			screen_item si
+		LEFT JOIN message_design md on (si.message_code = md.message_code and md.language_id = #{languageId}  and md.project_id = #{projectId})
+		LEFT JOIN 
+			table_design_details tdd ON si.column_id = tdd.column_id
+		WHERE 
+			screen_id = #{screenId}
+			
+	</select>
+	
+	<select id="getAllOutputBeanByScreenItemIds" resultMap="outputBeanResultMap">
+		SELECT 
+			ob.output_bean_id,
+			ob.output_bean_name,
+			ob.output_bean_code,
+			ob.array_flg,
+			ob.parent_output_bean_id,
+			osm.screen_item_id AS screen_item_id,
+			osm.mapping_type AS mapping_type,
+			si.item_code AS item_code_mapping,
+			sa.area_code AS area_code_mapping,
+			sf.form_code AS form_code_mapping,
+			
+			obParent.output_bean_id AS parent_output_bean_id,
+			obParent.output_bean_name AS parent_output_bean_name,
+			obParent.output_bean_code AS parent_output_bean_code,
+			obParent.array_flg AS parent_output_bean_array_flag,
+			
+			obGrand.output_bean_id AS grand_parent_output_bean_id,
+			obGrand.output_bean_name AS grand_parent_output_bean_name,
+			obGrand.output_bean_code AS grand_parent_output_bean_code,
+			obGrand.array_flg AS grand_parent_output_bean_array_flag,
+			
+			bl.business_logic_code AS business_logic_code
+		FROM
+			output_bean AS ob
+		LEFT JOIN
+			output_bean AS obParent ON obParent.output_bean_id = ob.parent_output_bean_id
+		LEFT JOIN
+			output_bean AS obGrand ON obGrand.output_bean_id = obParent.parent_output_bean_id
+		LEFT JOIN
+			outputbean_screenitem_mapping osm ON osm.output_bean_id = ob.output_bean_id
+		LEFT JOIN
+			screen_item si ON osm.screen_item_id = si.screen_item_id
+		LEFT JOIN 
+			screen_area sa ON sa.screen_area_id = si.screen_area_id
+		LEFT JOIN
+			screen_form sf ON sf.screen_form_id = sa.screen_form_id
+		LEFT JOIN
+			business_logic bl ON bl.business_logic_id = ob.business_logic_id
+		
+		<if test="listScreenItemIds != null and listScreenItemIds.size() > 0">
+			WHERE osm.screen_item_id IN
+			<foreach collection="listScreenItemIds" item="item" separator="," open="(" close=")">
+				#{item.screenItemId}
+			</foreach>
+			<if test="listBusinessDesigns != null and listBusinessDesigns.size() > 0">
+				AND bl.business_logic_id IN 
+				<foreach collection="listBusinessDesigns" item="item" separator="," open="(" close=")">
+					#{item.businessLogicId}
+				</foreach>
+			</if>
+			AND 
+				bl.blogic_type = 0
+		</if>
+		<if test="listScreenItemIds == null or listScreenItemIds.size() == 0">
+			FALSE
+		</if>
+		
+	</select>
+	
+	<!-- //TungHT -->
+	<select id="getParentOutputBeanByOutputBeanId" resultMap="outputBeanResultMap">
+		SELECT 
+			ob.output_bean_id,
+			ob.output_bean_name,
+			ob.output_bean_code,
+			ob.array_flg,
+			ob.parent_output_bean_id,
+			obParent.output_bean_id AS parent_output_bean_id,
+			obParent.output_bean_name AS parent_output_bean_name,
+			obParent.output_bean_code AS parent_output_bean_code,
+			obParent.array_flg AS parent_output_bean_array_flag
+		FROM
+			output_bean AS ob
+		LEFT JOIN
+			output_bean AS obParent ON obParent.output_bean_id = ob.parent_output_bean_id
+		<if test="lstOutput != null and lstOutput.size() > 0">
+			WHERE ob.output_bean_id IN
+			<foreach collection="lstOutput" item="item" separator="," open="(" close=")">
+				CAST(#{item.outputBeanId} AS numeric(16,0))
+			</foreach>
+		</if>
+	</select>
+	
+	<select id="getAllInputBeanByScreenItemIds" resultMap="inputBeanResultMap">
+			
+		SELECT 
+			ib.input_bean_id,
+			ib.input_bean_name,
+			ib.input_bean_code,
+			ib.item_sequence_no,
+			ib.array_flg,
+			ib.parent_input_bean_id,
+			
+			ib.screen_item_id,
+			si.logical_data_type AS screen_item_logical_data_type,
+			
+			bl.request_method AS blogic_request_method,
+			
+			ibParent.input_bean_id AS parent_input_bean_id,
+			ibParent.input_bean_name AS parent_input_bean_name,
+			ibParent.input_bean_code AS parent_input_bean_code,
+			ibParent.array_flg AS parent_input_bean_array_flag,
+			
+			ibGrand.input_bean_id AS grand_parent_input_bean_id,
+			ibGrand.input_bean_name AS grand_parent_input_bean_name,
+			ibGrand.input_bean_code AS grand_parent_input_bean_code,
+			ibGrand.array_flg AS grand_parent_input_bean_array_flag
+		FROM
+			input_bean AS ib
+		LEFT JOIN
+			input_bean AS ibParent ON ibParent.input_bean_id = ib.parent_input_bean_id
+		LEFT JOIN
+			input_bean AS ibGrand ON ibGrand.input_bean_id = ibParent.parent_input_bean_id
+		LEFT JOIN
+			screen_item AS si ON si.screen_item_id = ib.screen_item_id
+		LEFT JOIN 
+			business_logic bl ON bl.business_logic_id = ib.business_logic_id
+		<if test="listScreenItemIds != null and listScreenItemIds.size() > 0">
+			WHERE ib.screen_item_id IN
+			<foreach collection="listScreenItemIds" item="item" separator="," open="(" close=")">
+				#{item.screenItemId}
+			</foreach>
+		</if>	
+			
+	</select>
+	
+	<!-- TungHT -->
+	<select id="getAllScreenItemHidden" resultMap="screenItemResultMap" parameterType="Long">
+		SELECT
+			si.item_code,
+			si.item_type,
+			sa.area_type,
+			sf.screen_form_id
+		FROM
+			screen_item AS si
+		INNER JOIN
+			screen_area AS sa ON sa.screen_area_id = si.screen_area_id
+		INNER JOIN
+			screen_form AS sf ON sf.screen_form_id = sa.screen_form_id
+		WHERE
+			si.screen_id = #{screenId}
+		AND
+			si.item_type = 2
+	</select>
+	
+	<select id="getAllOutputBeanByScreenId" resultMap="outputBeanResultMap">
+		SELECT 
+			ob.output_bean_id,
+			ob.output_bean_name,
+			ob.output_bean_code,
+			ob.array_flg,
+			ob.parent_output_bean_id
+		FROM
+			output_bean AS ob
+		INNER JOIN
+			business_logic bl ON bl.business_logic_id = ob.business_logic_id AND return_type = 0
+		WHERE
+			bl.screen_id = #{screenId}
+	</select>
+	
+	<select id="getScreenItemById" resultMap="screenItemResultMap">
+		SELECT 
+			screen_item_id,
+			custom_content
+		FROM
+			screen_item AS si
+		WHERE
+			si.screen_item_id = #{screenItemId}
+	</select>
+    
+    <select id="getAllScreenItemByBusinessLogicId" resultMap="screenItemResultMap">
+        SELECT
+        	si.screen_item_id,
+            si.item_code,
+            si.logical_data_type,
+            m.module_name,
+            m.module_id,
+            sd.screen_id,
+            sd.screen_code,
+            sa.screen_action_id,
+             (
+                SELECT 
+                    md.message_string
+                FROM 
+                    message_design md
+                WHERE 
+                    si.message_code = md.message_code 
+                AND
+                    md.language_id = #{languageId}
+            ) as message_string
+            ,
+            
+            (
+                SELECT 
+                    md.message_string
+                FROM 
+                    message_design md
+                WHERE 
+                    sd.message_code = md.message_code 
+                AND
+                    md.language_id = #{languageId}
+            ) as message_string_screen
+        FROM
+            screen_action sa 
+        LEFT JOIN screen_item si ON sa.screen_action_id = si.screen_action_id
+        LEFT JOIN screen_design sd ON sd.screen_id = si.screen_id
+        LEFT JOIN business_logic bl ON bl.business_logic_id = sa.navigate_to_blogic_id
+        LEFT JOIN module m ON bl.module_id = m.module_id
+        
+        <if test="businessLogicId != null">
+            WHERE sa.navigate_to_blogic_id = #{businessLogicId}
+        </if>
+        ORDER BY
+            si.item_seq_no ASC
+    </select>
+    
+    <select id="getItemCodelist" resultMap="screenItemCodelistResultMap">
+    	SELECT 
+    		screen_item_id,
+    		codelist_name,
+    		codelist_val,
+    		support_option_val_flg
+    	FROM 
+    		screen_item_codelist
+    	WHERE 
+    		screen_item_id = #{screenItemId}
+    </select>
+    
+    <select id="getItemCodelistByItemName" resultMap="screenItemCodelistResultMap">
+    	SELECT 
+    		sic.screen_item_id,
+    		codelist_name,
+    		codelist_val,
+    		support_option_val_flg
+    	FROM 
+    		screen_item_codelist sic
+    	INNER JOIN
+    		screen_item si ON si.screen_item_id = sic.screen_item_id
+		INNER JOIN
+			screen_area sa ON si.screen_area_id = sa.screen_area_id
+		INNER JOIN
+			screen_form sf ON sf.screen_form_id = sa.screen_form_id
+		INNER JOIN
+			screen_design sd ON sd.screen_id = sf.screen_id 
+		<if test="screenItemName != null and screenItemName != ''">
+			WHERE
+				sf.form_code || '.' || sa.area_code || '.' || si.item_code LIKE #{screenItemName} AND sd.screen_id = #{screenId}
+		</if>
+		<if test="screenItemName == null or screenItemName == ''">
+			WHERE
+				FALSE
+		</if>
+    </select>
+    
+     <select id="getListScreenItemByAutocompleteId" resultMap="screenItemResultMap">
+        SELECT
+        	si.screen_item_id,
+        	si.item_code,
+        	s.screen_id,
+            s.screen_code,
+            s.module_id
+        FROM
+        	screen_item si
+        INNER JOIN
+        	screen_design s  ON s.screen_id = si.screen_id
+        WHERE
+        	si.autocomplete_id = #{autocompleteId}	 		
+    </select>
+    <select id="getListInputOfItemByAutocompleteId" resultMap="screenItemContainListAutocompleteInput">
+        SELECT
+        	si.screen_item_id,
+        	si.item_code,
+        	s.screen_id,
+            s.screen_code,
+            s.module_id,
+            sia.screen_autocomplete_input_id,
+            sia.input_id,
+            sia.screen_item_code
+        FROM
+        	screen_item si
+        INNER JOIN
+        	screen_design s  ON s.screen_id = si.screen_id
+        LEFT JOIN
+        	screen_item_autocomplete_input sia ON si.screen_item_id = sia.screen_item_id
+        WHERE
+        	si.autocomplete_id = #{autocompleteId}	 		
+    </select>
+</mapper>

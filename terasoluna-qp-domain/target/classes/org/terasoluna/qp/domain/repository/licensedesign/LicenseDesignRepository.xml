@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.terasoluna.qp.domain.repository.licensedesign.LicenseDesignRepository">
+	<resultMap id="licenseDesignResultMap" type="LicenseDesign">
+		<id property="licenseId" column="license_id" />
+		<result property="customerName" column="customer_name" />
+		<result property="customerCode" column="customer_code" />
+		<result property="projectId" column="project_id" />
+		<result property="tel" column="phone_number" />
+		<result property="email" column="email" />
+		<result property="address" column="address" />
+        <result property="num" column="number_of_user" />
+        <result property="startDate" column="start_date" />
+        <result property="expiredDate" column="expired_date" />
+        <result property="createdBy" column="created_by" />
+        <result property="createdDate" column="created_date" />
+        <result property="updatedBy" column="updated_by" />
+        <result property="updatedDate" column="updated_date" />
+        <result property="accountId" column="account_id" />
+	</resultMap>
+	
+	<!-- Mapping for autocomplete result -->
+	<resultMap id="autocompleteResultMap" type="Autocomplete">
+		<result property="optionValue" column="optionValue" />
+		<result property="optionLabel" column="optionLabel" />
+	</resultMap>
+
+	<!-- Count license design by search condition -->
+	<select id="countBySearchCriteria" parameterType="org.terasoluna.qp.domain.repository.licensedesign.LicenseDesignRepository" resultType="_long">
+		<![CDATA[
+			SELECT 
+				COUNT(*) 
+			FROM 
+				license_design a
+		]]>
+		<include refid="findPageByCriteriaWherePhrase" />
+	</select>
+	
+	<select id="getProjectForAutocomplete" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT DISTINCT
+			a.project_id AS optionValue,
+			a.project_name AS optionLabel,
+			a.project_code AS output01
+		FROM
+			project a
+		INNER JOIN
+		    account_project b ON a.project_id = b.project_id
+		<where>
+			<if test="arg01 != null and arg01 != ''">
+				<![CDATA[
+					AND b.account_id = CAST(#{arg01} AS numeric(16,0))
+				]]>
+			</if>
+			<if test="searchKey != null and searchKey != ''" >
+				<bind name="keyword" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(searchKey)" />
+				AND <![CDATA[ a.project_name ILIKE #{keyword} ESCAPE '~']]>
+			</if>
+		</where>
+		ORDER BY 
+			a.project_code
+		<if test="arg02 == null or arg02 == ''">
+			 LIMIT 20 
+		</if>
+		<if test="arg02 != null and arg02 != ''">
+			<![CDATA[ limit CAST(#{arg02} AS numeric(16,0)) ]]>
+		</if>	
+	</select>
+	
+	<select id="countNameCodeByLicenseId" resultType="Long" parameterType="LicenseDesign">
+		SELECT 
+			SUM(rowVal) AS totalCount
+		FROM 
+		(
+			(
+				SELECT 
+					1 AS rowVal
+				FROM 
+					license_design f INNER JOIN project m ON m.project_id = f.project_id
+				<where>
+					m.project_id = #{projectId}
+
+					<if test="customerName != null and customerName != ''">
+						AND UPPER(f.customer_name) = UPPER(#{customerName})
+					</if>
+					<if test="licenseId != null">
+						AND f.license_id != #{licenseId}
+					</if>
+					<if test="customerName == null and customerName == ''">
+						FALSE
+					</if>
+				</where>
+				LIMIT 1
+			)
+			
+			UNION
+			(
+				SELECT
+					2 AS rowVal
+				FROM 
+					license_design f INNER JOIN module m ON m.project_id = f.project_id
+				<where>
+					m.project_id = #{projectId}
+
+					<if test="customerCode != null and customerCode != ''">
+						AND UPPER(f.customer_code) = UPPER(#{customerCode})
+					</if>
+					<if test="licenseId != null">
+						AND f.license_id != #{licenseId}
+					</if>
+					<if test="customerCode == null and customerCode == ''">
+						FALSE
+					</if>
+				</where>
+				LIMIT 1
+			)
+		) AS checkDuplicate
+	</select>
+
+	<!-- Finds all license design by search condition -->
+	<select id="findPageBySearchCriteria" parameterType="org.terasoluna.qp.domain.repository.licensedesign.LicenseDesignCriteria" resultMap="licenseDesignResultMap">
+		<![CDATA[
+			SELECT
+			    a.license_id,
+				a.customer_code,
+				a.customer_name,
+				a.project_id,
+				a.project_name,
+				a.project_code,
+				a.version,
+				a.phone_number,
+				a.email,
+				a.address,
+				a.number_of_user,
+				a.start_date,
+				a.expired_date,
+				a.updated_by,
+				a.updated_date
+			FROM 
+				license_design a
+		]]>			
+		<include refid="findPageByCriteriaWherePhrase" />
+		<if test="pageable.sort != null">
+			ORDER BY
+			<foreach collection="pageable.sort" item="order" separator=",">
+				${order.property} ${order.direction}
+			</foreach>
+		</if>
+		<if test="pageable.sort == null">
+			ORDER BY
+				updated_date DESC
+		</if>
+		<![CDATA[
+			 LIMIT
+				 #{pageable.pageSize}
+			 OFFSET
+				 #{pageable.offset}
+		]]>
+	</select>
+	
+	<!-- License design search criteria -->
+	<sql id="findPageByCriteriaWherePhrase">
+		<where>
+			<if test="criteria.customerName != null and criteria.customerName != ''">
+				<bind name="customerName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.customerName)" />
+				<![CDATA[
+				    customer_name ILIKE #{customerName} ESCAPE '~'
+				]]>
+			</if>
+			<if test="criteria.customerCode != null and criteria.customerCode != ''">
+				<bind name="customerCode" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.customerCode)" />
+				<![CDATA[
+					AND customer_code ILIKE #{customerCode} ESCAPE '~'
+				]]>
+			</if>
+			<if test="criteria.projectCode != null and criteria.projectCode != ''">
+				<![CDATA[
+					AND a.project_code ILIKE '%' || #{criteria.projectCode} || '%' ESCAPE '~'
+				]]>
+			</if>
+			<if test="criteria.projectName != null and criteria.projectName != ''">
+				<![CDATA[ 
+					AND a.project_name ILIKE '%' || #{criteria.projectName} || '%' ESCAPE '~'
+				]]>
+			</if>
+			<if test="criteria.num != null and criteria.num != ''">
+				<![CDATA[
+					AND a.number_of_user = #{criteria.num}
+				]]>
+			</if>
+			<if test="criteria.email != null and criteria.email != ''">
+				<![CDATA[
+					AND a.email ILIKE '%' || #{criteria.email} || '%' ESCAPE '~'
+				]]>
+			</if>
+			<if test="criteria.projectId != null and criteria.projectId != ''">
+				<![CDATA[
+					AND a.project_id = #{criteria.projectId}
+				]]>
+			</if>
+			<if test="criteria.fromStartDate !=null and criteria.fromStartDate != ''">
+				<![CDATA[AND a.start_date >= '${criteria.fromStartDate}']]>
+			</if>
+
+			<if test="criteria.toStartDate !=null and criteria.toStartDate != ''">
+				<![CDATA[AND a.start_date <= '${criteria.toStartDate}']]>
+			</if>
+			
+			<if test="criteria.fromExpiredDate !=null and criteria.fromExpiredDate != ''">
+				<![CDATA[AND a.expired_date >= '${criteria.fromExpiredDate}']]>
+			</if>
+			
+			<if test="criteria.toExpiredDate !=null and criteria.toExpiredDate != ''">
+				<![CDATA[AND a.expired_date <= '${criteria.toExpiredDate}']]>
+			</if>
+		</where>
+	</sql>
+	
+    <select id="countNameCodeByLicneseId" resultType="Long" parameterType="LicenseDesign">
+		SELECT 
+			SUM(rowVal) AS totalCount
+		FROM 
+		(
+			(
+				SELECT 
+					1 AS rowVal
+				FROM 
+					license_design f INNER JOIN project m ON m.project_id = f.project_id
+				<where>
+					m.project_id = #{projectId}
+
+					<if test="customerName != null and customerName != ''">
+						AND UPPER(f.customer_name) = UPPER(#{customerName})
+					</if>
+					<if test="licenseId != null">
+						AND f.license_id != #{licenseId}
+					</if>
+					<if test="customerName == null and customerName == ''">
+						FALSE
+					</if>
+				</where>
+				LIMIT 1
+			)
+			
+			UNION
+			(
+				SELECT
+					2 AS rowVal
+				FROM 
+					license_design f INNER JOIN project m ON m.project_id = f.project_id
+				<where>
+					m.project_id = #{projectId}
+
+					<if test="customerCode != null and customerCode != ''">
+						AND UPPER(f.customer_code) = UPPER(#{customerCode})
+					</if>
+					<if test="licenseId != null">
+						AND f.license_id != #{licenseId}
+					</if>
+					<if test="customerCode == null and customerCode == ''">
+						FALSE
+					</if>
+				</where>
+				LIMIT 1
+			)
+		) AS checkDuplicate
+	</select>
+    
+    <!-- Finds all license design auto complete by license name and module identity and licensetype --> 
+    <select id="getAlllicenseDesignByTypeForAutocomplete" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+        SELECT
+            license_id AS optionValue,
+            license_name AS optionLabel,
+            license_code AS output01,
+            license_type AS output02
+        FROM 
+            license_design
+        <trim prefix="WHERE" prefixOverrides="AND |OR ">
+            <if test="searchKey != null and searchKey != ''" >
+                <bind name="keyword" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(searchKey)" />
+                <![CDATA[ license_name ILIKE #{keyword} ESCAPE '~' ]]>
+            </if>
+            <if test="arg02 != null and arg02 != ''">
+                <![CDATA[
+                    AND project_id = CAST(#{arg02} AS numeric(16,0))
+                ]]>
+            </if>
+           <if test="arg02 == null or arg02 == ''">
+                	AND FALSE
+            </if>
+            <if test="arg03 != null and arg03 != ''">
+                <![CDATA[
+                    AND license_type = CAST(#{arg03} AS smallint)
+                ]]>
+            </if>
+        </trim>
+        ORDER BY 
+            license_name
+        <if test="arg01 != null and arg01 != ''">
+			LIMIT CAST(#{arg01} AS NUMERIC)
+		</if>
+		<if test="arg01 == null || arg01 == ''">
+			LIMIT 20
+		</if>
+    </select>
+    
+	<select id="findAllLicenseDesignByProjectId" resultMap="licenseDesignResultMap" parameterType="Long">
+		SELECT
+			a.customer_code,
+			a.customer_name,
+			a.project_id,
+			a.project_name as project_name,
+			a.project_code as project_code,
+			a.version,
+			a.phone_number,
+			a.email,
+			a.address,
+			a.number_of_user,
+			a.start_date,
+			a.expired_date,
+			a.updated_by,
+			a.updated_date
+		FROM 
+			license_design a
+		WHERE
+			a.project_id = #{projectId}
+	</select>
+
+	<insert id="register" parameterType="LicenseDesign" >
+		<selectKey keyProperty="licenseId" resultType="long" order="BEFORE">
+			SELECT NEXTVAL('license_seq') AS licenseId
+		</selectKey>
+		<![CDATA[
+			INSERT INTO license_design 
+			(
+				license_id,
+				customer_code,
+				customer_name,
+				project_id,
+				project_code,
+				project_name,
+				version,
+				phone_number,
+				email,
+				address,
+				number_of_user,
+				start_date,
+				expired_date,
+				created_by,
+				created_date,
+				updated_by,
+				updated_date
+			)
+			VALUES
+			(
+				#{licenseId},
+				#{customerCode},
+				#{customerName},
+				#{projectId},
+				#{projectCode},
+				#{projectName},
+				#{version},
+				#{num},
+				#{email},
+				#{address},
+				#{num},
+				#{startDate},
+				#{expiredDate},
+				#{createdBy},
+				#{createdDate},
+				#{updatedBy},
+				#{updatedDate}
+			)
+		]]>
+	</insert>
+	
+	<select id="findLicenseDesignById" parameterType="Long" resultMap="licenseDesignResultMap">
+			SELECT
+			    a.license_id,
+				a.customer_code,
+				a.customer_name,
+				a.project_id,
+				a.project_name as project_name,
+				a.project_code as project_code,
+				a.version,
+				a.phone_number,
+				a.email,
+				a.address,
+				a.number_of_user,
+				a.start_date,
+				a.expired_date,
+				a.updated_by,
+				a.updated_date
+			FROM 
+				license_design a
+		    WHERE
+				license_id = #{licenseId}
+	</select>
+	
+	<update id="modify" parameterType="LicenseDesign">
+		UPDATE
+			license_design
+		SET 
+		    customer_code = #{customerCode},
+			customer_name = #{customerName},
+		    project_id = #{projectId},
+		    project_code = #{projectCode},
+		    project_name = #{projectName},
+			version = #{version},
+			phone_number = #{tel},
+			email = #{email},
+			address = #{address},
+			number_of_user = #{num},
+			start_date = #{startDate},
+			expired_date = #{expiredDate},
+			updated_by = #{updatedBy},
+			updated_date = #{sysDateTime}
+		WHERE
+			license_id = #{licenseId}
+		AND
+			updated_date = #{updatedDate}
+	</update>
+	
+	<delete id="delete" parameterType="LicenseDesign">
+		DELETE FROM
+			license_design
+		WHERE
+			license_id = #{licenseId}
+	</delete>
+	
+	<select id="getSequenceslicenseDesign" resultType="Long">
+    	select SETVAL('license_seq'::regclass, NEXTVAL('license_seq'::regclass) + #{size})
+    </select>
+	
+	<insert id="registerLstlicenseDesign" >
+    	<if test="lstlicenseDesign != null and  lstlicenseDesign.size() > 0 ">
+			INSERT INTO license_design 
+			(
+				license_id,
+				customer_code,
+				customer_name,
+				project_id,
+				project_code,
+				project_name,
+				version,
+				phone_number,
+				email,
+				address,
+				number_of_user,
+				start_date,
+				expired_date,
+				created_by,
+				created_date,
+				updated_by,
+				updated_date
+			)
+    		VALUES 
+    		<foreach item="item" collection="lstlicenseDesign" separator=",">
+			(
+				#{item.licenseId},
+				#{item.customerCode},
+				#{item.customerName},
+				#{item.projectId},
+				#{item.projectCode},
+				#{item.projectName},
+				#{item.version},
+				#{item.num},
+				#{item.email},
+				#{item.address},
+				#{item.num},
+				#{item.startDate},
+				#{item.expiredDate},
+				#{item.createdBy},
+				#{item.createdDate},
+				#{item.updatedBy},
+				#{item.updatedDate}
+            )
+			</foreach>;
+		</if>
+    </insert>
+</mapper>

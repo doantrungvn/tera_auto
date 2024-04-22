@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.impactchange.ImpactChangeRepository">
+	<resultMap id="resultMap" type="ImpactChangeJobControl">
+		<result property="jobSeqId" column="job_seq_id" />
+		<result property="jobAppCd" column="job_app_cd" />
+		<result property="projectId" column="job_arg_nm1" />
+		<result property="moduleId" column="job_arg_nm2" />
+		<result property="createdBy" column="job_arg_nm3" />
+		<result property="impactType" column="job_arg_nm4" />
+		<result property="impactId" column="job_arg_nm5" />
+		<result property="curAppStatus" column="cur_app_status" />
+		<result property="addDateTime" column="add_date_time" />
+		<result property="updDateTime" column="upd_date_time" />
+	</resultMap>
+	
+	<!-- insert generate history -->
+	<insert id="registerImpactChange" parameterType="org.terasoluna.qp.domain.model.ImpactChangeJobControl" useGeneratedKeys="true" keyProperty="ImpactChangeJobControl.jobSeqId" keyColumn="job_seq_id">
+		<selectKey keyProperty="jobSeqId" resultType="String"
+			order="BEFORE">
+			SELECT NEXTVAL('job_control_seq'::regclass)
+		</selectKey>
+		<![CDATA[
+		INSERT INTO 
+			job_control
+			(
+				job_seq_id,
+				job_app_cd,
+				job_arg_nm1,
+				job_arg_nm2,
+				job_arg_nm3,
+				job_arg_nm4,
+				job_arg_nm5,
+				job_arg_nm6,
+				job_arg_nm7,
+				job_arg_nm8,
+				job_arg_nm9,
+				job_arg_nm10,
+				cur_app_status,
+				add_date_time,
+				upd_date_time
+			)
+		VALUES 
+			(
+				CAST (#{jobSeqId} AS varchar(10)),
+				#{jobAppCd},
+				#{projectId},
+				#{moduleId},
+				#{createdBy},
+				#{impactType},
+				#{impactId},
+				#{jobArgNm6},
+				#{jobArgNm7},
+				#{jobArgNm8},
+				#{jobArgNm9},
+				#{jobArgNm10},
+				#{curAppStatus},
+				#{addDateTime},
+				#{updDateTime}
+			)
+		]]>
+	</insert>
+	
+	<!-- update job -->
+	<update id="modifyImpactChange" parameterType="org.terasoluna.qp.domain.model.ImpactChangeJobControl">
+		<![CDATA[	
+			UPDATE 
+				job_control 
+			SET 
+				upd_date_time = #{updDateTime},
+				job_arg_nm6 = #{jobArgNm6},
+				job_arg_nm7 = #{jobArgNm7},
+				job_arg_nm8 = #{jobArgNm8},
+				job_arg_nm9 = #{jobArgNm9},
+				job_arg_nm10 = #{jobArgNm10}
+			WHERE 
+				job_arg_nm4 = #{impactType} 
+				AND job_arg_nm5 = #{impactId}
+				AND cur_app_status = '0'
+		]]>
+	</update>
+	
+	<!-- update status job -->
+	<update id="modifyStatusOfImpactChange" parameterType="org.terasoluna.qp.domain.model.ImpactChangeJobControl">
+		<![CDATA[	
+			UPDATE 
+				job_control 
+			SET 
+				cur_app_status =  #{curAppStatus},
+				blogic_app_status = #{blogicAppStatus},
+				upd_date_time = #{updDateTime}
+			WHERE
+				job_seq_id =  #{jobSeqId}
+		]]>
+	</update>
+	
+	<!-- Count impact change by type -->
+	<select id="countImpactChangeByType" resultType="long" >
+		<![CDATA[
+			SELECT 
+				COUNT(*) 
+			FROM 
+				job_control
+			WHERE
+				job_arg_nm4 = #{impactChangeJobControl.impactType} 
+				AND job_arg_nm5 = #{impactChangeJobControl.impactId}
+				AND cur_app_status = '0'
+		]]>
+	</select>
+</mapper>

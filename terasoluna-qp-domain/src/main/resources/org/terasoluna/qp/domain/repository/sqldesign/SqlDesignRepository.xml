@@ -1,0 +1,1151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.sqldesign.SqlDesignRepository">
+
+	<resultMap id="resultMap" type="SqlDesign">
+		<result property="sqlDesignId" column="sql_design_id" />
+		<result property="sqlDesignCode" column="sql_design_code" />
+		<result property="sqlDesignName" column="sql_design_name" />
+		<result property="remark" column="remark" />
+		<result property="designType" column="design_type" />
+		<result property="returnType" column="return_type" />
+		<result property="omitOverlap" column="omit_overlap" />
+		<result property="updatedDate" column="updated_date" />
+		<result property="updatedBy" column="updated_by" />
+		<result property="createdDate" column="created_date" />
+		<result property="createdBy" column="created_by" />
+		<result property="sqlText" column="sql_text"/>
+		<result property="projectId" column="project_id"/>
+		<result property="projectName" column="project_name"/>
+		<result property="moduleId" column="module_id"/>
+		<result property="moduleName" column="module_name"/>
+		<result property="moduleCode" column="module_code"/>
+		<result property="moduleStatus" column="module_status"/>
+		<result property="designStatus" column="design_status" />
+		<result property="sqlPattern" column="sql_pattern"/>
+		<result property="pageable" column="pageable"/>
+        <result property="author" column="username" />
+	</resultMap>
+	<resultMap type="org.terasoluna.qp.domain.model.ConsistencyValidationModel" id="resultMap2">
+		<result column="module_name" property="groupName"/>
+		<result column="item_name" property="itemName"/>
+		<result column="group_type" property="groupType"/>
+	</resultMap>
+	
+	<resultMap id="autocompleteResultMap" type="Autocomplete">
+        <result property="optionValue" column="optionValue" />
+        <result property="optionLabel" column="optionLabel" />
+        <result property="output01" column="output01" />
+    </resultMap>
+	
+	<sql id="findByCriteriaWhere">
+		<where>
+			A.project_id = #{criteria.projectId}
+			<if test="criteria.sqlDesignName != null and criteria.sqlDesignName != ''">
+					<bind name="sqlDesignName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.sqlDesignName)"/>
+					<![CDATA[
+						AND sql_design_name iLIKE #{sqlDesignName}  ESCAPE '~'
+					]]>
+			</if>
+			<if test="criteria.sqlDesignCode != null and criteria.sqlDesignCode != ''">
+					<bind name="sqlDesignCode" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.sqlDesignCode)"/>
+					<![CDATA[
+						AND sql_design_code iLIKE #{sqlDesignCode}  ESCAPE '~'
+					]]>
+			</if>
+			<if test="criteria.moduleId != null and criteria.moduleId != ''">
+					<![CDATA[
+						AND A.module_id = #{criteria.moduleId}
+					]]>
+			</if>
+			<if test="criteria.tableId != null and criteria.tableId != ''">
+					<![CDATA[
+						AND #{criteria.tableId} IN 
+						(
+							(
+								SELECT tbl_design_id
+								FROM sql_design_table
+								WHERE sql_design_id = A.sql_design_id
+							) 
+							UNION
+							(
+								SELECT join_tbl_design_id
+								FROM sql_design_table
+								WHERE sql_design_id = A.sql_design_id
+							) 
+						)
+					]]>
+			</if>
+			<if test="criteria.sqlDesignTypes != null and criteria.sqlDesignTypes.length > 0">
+				AND design_type IN 
+				<foreach item="item" index="index" collection="criteria.sqlDesignTypes" open="(" separator="," close=")">
+						 #{item}
+				</foreach>
+			</if>
+			<if test="criteria.designStatus != null and criteria.designStatus.length > 0">
+				AND design_status IN 
+				<foreach item="item" index="index" collection="criteria.designStatus" open="(" separator="," close=")">
+						 #{item}
+				</foreach>
+			</if>
+			<if test="criteria.sqlDesignTypes == null or criteria.sqlDesignTypes.length == 0">
+				AND (design_type = 4 OR design_type = 5)
+			</if>
+		</where>
+	</sql>
+	
+	<select id="findByCriteria"
+		resultMap="resultMap">
+		SELECT A.sql_design_id,
+				A.sql_design_name,
+				A.sql_design_code,
+				A.remark,
+				A.design_type,
+				A.return_type,
+				A.omit_overlap,
+				A.sql_text,
+				A.updated_date,
+				A.sql_pattern,
+				C.project_id,
+				C.project_name,
+				B.module_id,
+				B.module_name,
+				B.module_code,
+				B.status as module_status,
+				A.design_status
+		FROM 
+			sql_design A
+				LEFT JOIN
+			module B
+				ON 		
+				A.module_id = B.module_id
+				LEFT JOIN
+			project C
+				ON
+				A.project_id = C.project_id
+		<include refid="findByCriteriaWhere" />
+		<if test="pageable.sort != null">
+			ORDER BY
+			<foreach collection="pageable.sort" item="item" separator=",">
+				${item.property} ${item.direction} 
+			</foreach>
+		</if>
+		<if test="pageable.sort == null">
+			ORDER BY
+				updated_date DESC
+		</if>
+			LIMIT
+				#{pageable.pageSize}
+			OFFSET
+				#{pageable.offset}
+		
+	</select>
+	
+	<select id="countByCriteria"
+		resultType="_long">
+		<![CDATA[
+			SELECT 
+				COUNT(*) 
+			FROM 
+				sql_design A
+					LEFT JOIN
+				module B
+					ON 		
+				A.module_id = B.module_id
+			]]>
+		<include refid="findByCriteriaWhere" />
+	</select>
+	
+	<sql id="findViewByCriteriaWhere">
+		<where>
+			A.project_id = #{criteria.projectId}
+			<if test="criteria.sqlDesignName != null and criteria.sqlDesignName != ''">
+					<bind name="sqlDesignName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.sqlDesignName)"/>
+					<![CDATA[
+						AND sql_design_name iLIKE #{sqlDesignName} ESCAPE '~'
+					]]>
+			</if>
+			<if test="criteria.sqlDesignCode != null and criteria.sqlDesignCode != ''">
+					<bind name="sqlDesignCode" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.sqlDesignCode)"/>
+					<![CDATA[
+						AND sql_design_code iLIKE #{sqlDesignCode} ESCAPE '~'
+					]]>
+			</if>
+			<if test="criteria.moduleId != null and criteria.moduleId != ''">
+					<![CDATA[
+						AND A.module_id = #{criteria.moduleId}
+					]]>
+			</if>
+			<if test="criteria.tableId != null and criteria.tableId != ''">
+					<![CDATA[
+						AND #{criteria.tableId} IN 
+						(
+							(
+								SELECT tbl_design_id
+								FROM sql_design_table
+								WHERE sql_design_id = A.sql_design_id
+							) 
+							UNION
+							(
+								SELECT join_tbl_design_id
+								FROM sql_design_table
+								WHERE sql_design_id = A.sql_design_id
+							) 
+						)
+					]]>
+			</if>
+			<if test="criteria.sqlDesignTypes != null and criteria.sqlDesignTypes.length > 0">
+				AND design_type IN				
+				<foreach item="item" index="index" collection="criteria.sqlDesignTypes" open="(" separator="," close=")">
+						 #{item}
+				</foreach>
+			</if>
+			<if test="criteria.designStatus != null and criteria.designStatus.length > 0">
+				AND design_status IN 
+				<foreach item="item" index="index" collection="criteria.designStatus" open="(" separator="," close=")">
+						 #{item}
+				</foreach>
+			</if>
+			AND (design_type = 0 OR design_type = 1)
+		</where>
+	</sql>
+	
+	<select id="findViewByCriteria"
+		parameterType="org.terasoluna.qp.domain.repository.sqldesign.SqlDesignSearchCriteria"
+		resultMap="resultMap">
+		SELECT A.sql_design_id,
+				A.sql_design_name,
+				A.sql_design_code,
+				A.remark,
+				A.design_type,
+				A.return_type,
+				A.omit_overlap,
+				A.sql_text,
+				A.updated_date,
+				A.sql_pattern,
+				C.project_id,
+				C.project_name,
+				B.module_id,
+				B.module_name,
+				B.module_code,
+				B.status as module_status,
+				A.design_status
+		FROM 
+			sql_design A
+				LEFT JOIN
+			module B
+				ON 		
+				A.module_id = B.module_id
+				LEFT JOIN
+			project C
+				ON
+				A.project_id = C.project_id
+		<include refid="findViewByCriteriaWhere" />
+		<if test="pageable.sort != null">
+			ORDER BY
+			<foreach collection="pageable.sort" item="item" separator=",">
+				${item.property} ${item.direction} 
+			</foreach>
+		</if>
+		<if test="pageable.sort == null">
+			ORDER BY
+				updated_date DESC
+		</if>
+			LIMIT
+				#{pageable.pageSize}
+			OFFSET
+				#{pageable.offset}
+		
+	</select>
+	
+	<select id="countViewByCriteria"
+		resultType="_long">
+		<![CDATA[
+			SELECT 
+				COUNT(*) 
+			FROM 
+				sql_design A
+					LEFT JOIN
+				module B
+					ON 		
+				A.module_id = B.module_id
+			]]>
+		<include refid="findViewByCriteriaWhere" />
+	</select>
+	
+	<select id="findOneById" parameterType="Long" resultMap="resultMap">
+		SELECT A.sql_design_id,
+				A.sql_design_code,
+				A.sql_design_name,
+				A.remark,
+				A.design_type,
+				A.return_type,
+				A.omit_overlap,
+				A.sql_text,
+				A.sql_pattern,
+				A.design_status,
+				A.project_id,
+				A.module_id,
+				B.module_name,
+				B.module_code,
+				A.created_by,
+				A.created_date,
+				A.updated_by,
+				A.updated_date,
+				A.pageable,
+                acc.username
+		FROM 
+		sql_design A
+		LEFT JOIN
+		module B
+				ON 
+			A.module_id = B.module_id 
+        LEFT JOIN account acc ON (acc.account_id = A.created_by)
+		WHERE sql_design_id = #{sqlDesignTypeId}
+	</select>
+	
+	<insert id="register" parameterType="SqlDesign">
+		<selectKey keyProperty="sqlDesignId" resultType="Long" order="BEFORE">
+			SELECT nextval('sql_design_seq') AS sqlDesignId
+		</selectKey>
+		INSERT INTO
+			sql_design
+		(
+			sql_design_id,
+			sql_design_code,
+			sql_design_name,
+			remark,
+			design_type,
+			omit_overlap,
+			created_by,
+			created_date,
+			updated_date,
+			sql_text,
+			project_id,
+			design_status,
+			sql_pattern,
+			return_type,
+			module_id,
+			pageable
+		)
+		VALUES
+		(
+			#{sqlDesignId},
+			#{sqlDesignCode},
+			#{sqlDesignName},
+			#{remark},
+			#{designType},
+			#{omitOverlap},
+			#{createdBy},
+			#{systemDate},
+			#{systemDate},
+			#{sqlText},
+			#{projectId},
+			#{designStatus},
+			#{sqlPattern},
+			#{returnType},
+			#{moduleId},
+			#{pageable}
+		)
+	</insert>
+	
+	<update id="modify" parameterType="SqlDesign">
+		UPDATE sql_design
+		SET sql_design_name = #{sqlDesignName},
+			sql_design_code = #{sqlDesignCode},
+			remark = #{remark},
+			omit_overlap = #{omitOverlap},
+			sql_text = #{sqlText},
+			updated_date = #{systemDate},
+			sql_pattern = #{sqlPattern},
+			return_type = #{returnType},
+			module_id = #{moduleId},
+			pageable = #{pageable}
+		WHERE
+			sql_design_id = #{sqlDesignId}
+		AND
+			(updated_date IS NULL OR updated_date = #{updatedDate})
+	</update>
+	
+	<update id="modifyAffectChangeDesign">
+		UPDATE sql_design
+		SET design_status = 1
+		WHERE
+			sql_design_id IN 
+				<foreach item="item" index="index" collection="sqlDesign" open="(" separator="," close=")">
+	            	#{item.sqlDesignId}
+	            </foreach>
+	</update>
+	
+	<update id="modifyWithDesignType" parameterType="SqlDesign">
+		UPDATE sql_design
+		SET sql_design_name = #{sqlDesignName},
+			sql_design_code = #{sqlDesignCode},
+			remark = #{remark},
+			omit_overlap = #{omitOverlap},
+			sql_text = #{sqlText},
+			updated_date = #{systemDate},
+			sql_pattern = #{sqlPattern},
+			return_type = #{returnType},
+			module_id = #{moduleId},
+			design_type=#{designType}
+		WHERE
+			sql_design_id = #{sqlDesignId}
+		AND
+			(updated_date IS NULL OR updated_date = #{updatedDate})
+	</update>
+	
+	<update id="modifyFromAutocomplete" parameterType="SqlDesign">
+		UPDATE sql_design
+		SET omit_overlap = #{omitOverlap},
+			updated_date = #{systemDate},
+			sql_design_name = #{sqlDesignName},
+			sql_design_code = #{sqlDesignCode}
+		WHERE 
+			sql_design_id = #{sqlDesignId}
+	</update>
+	
+	<update id="modifySqlText" parameterType="SqlDesign">
+		UPDATE sql_design
+		SET omit_overlap = #{omitOverlap},
+			sql_text = #{sqlText},
+			updated_date = #{systemDate},
+			design_type = #{designType}
+		WHERE 
+			sql_design_id = #{sqlDesignId}
+	</update>
+	
+	<delete id="delete" parameterType="SqlDesign">
+		DELETE FROM sql_design
+		WHERE sql_design_id = #{sqlDesignId}
+		AND
+			(updated_date IS NULL OR updated_date = #{updatedDate})
+		AND design_status != '2'
+	</delete>
+	<delete id="deleteSqlDesignChildren">
+		DELETE FROM 
+			sql_design_table_items
+        WHERE
+        	sql_design_table_id 
+        	IN 
+	        	(
+	        	SELECT sql_design_table_id
+	        	FROM sql_design_table
+	        	WHERE sql_design_id = #{sqlDesignId}
+	        	);
+	    
+	    DELETE FROM 
+			sql_design_table
+        WHERE
+        	sql_design_id = #{sqlDesignId};
+        	
+        DELETE FROM 
+			sql_design_conditions
+        WHERE
+        	sql_design_id = #{sqlDesignId};
+        	
+        DELETE FROM 
+			sql_design_order
+        WHERE
+        	sql_design_id = #{sqlDesignId};
+        	
+        DELETE FROM 
+			sql_design_group_by
+        WHERE
+        	sql_design_id = #{sqlDesignId};
+        	
+        DELETE FROM 
+			sql_design_having
+        WHERE
+        	sql_design_id = #{sqlDesignId};
+        	
+        DELETE FROM 
+			sql_design_results
+        WHERE
+        	sql_design_id = #{sqlDesignId};
+        
+        DELETE FROM 
+			sql_design_value
+        WHERE
+        	sql_design_id = #{sqlDesignId};	
+       	
+       	WITH RECURSIVE ordered_inputs(sql_design_input_id,sql_design_input_parent_id) as (
+			SELECT sql_design_input_id,sql_design_input_parent_id,sql_design_input_id as root_id
+			FROM sql_design_input
+			WHERE sql_design_id = #{sqlDesignId} AND sql_design_input_parent_id IS NULL
+		
+			UNION ALL
+		
+			SELECT A.sql_design_input_id,A.sql_design_input_parent_id,B.root_id
+			FROM 
+			sql_design_input A
+			INNER JOIN 
+			ordered_inputs B
+			ON 
+			A.sql_design_input_parent_id = B.sql_design_input_id
+		)
+		DELETE FROM sql_design_input
+		WHERE sql_design_input_id in (SELECT sql_design_input_id FROM ordered_inputs);
+		
+		WITH RECURSIVE ordered_outputs(sql_design_output_id,sql_design_output_parent_id) as (
+			SELECT sql_design_output_id,sql_design_output_parent_id,sql_design_output_id as root_id
+			FROM sql_design_output
+			WHERE sql_design_id = #{sqlDesignId} AND sql_design_output_parent_id IS NULL
+		
+			UNION ALL
+		
+			SELECT A.sql_design_output_id,A.sql_design_output_parent_id,B.root_id
+			FROM 
+			sql_design_output A
+			INNER JOIN 
+			ordered_outputs B
+			ON 
+			A.sql_design_output_parent_id = B.sql_design_output_id
+		)
+		DELETE FROM sql_design_output
+		WHERE sql_design_output_id in (SELECT sql_design_output_id FROM ordered_outputs);
+		
+	</delete>
+	<delete id="deleteSqlDesignChildrenExceptIo">
+		DELETE FROM 
+			sql_design_table_items
+        WHERE
+        	sql_design_table_id 
+        	IN 
+	        	(
+	        	SELECT sql_design_table_id
+	        	FROM sql_design_table
+	        	WHERE sql_design_id = #{sqlDesignId}
+	        	);
+	    
+	    DELETE FROM 
+			sql_design_table
+        WHERE
+        	sql_design_id = #{sqlDesignId};
+        	
+        DELETE FROM 
+			sql_design_conditions
+        WHERE
+        	sql_design_id = #{sqlDesignId};
+        	
+        DELETE FROM 
+			sql_design_order
+        WHERE
+        	sql_design_id = #{sqlDesignId};
+        	
+        DELETE FROM 
+			sql_design_group_by
+        WHERE
+        	sql_design_id = #{sqlDesignId};
+        	
+        DELETE FROM 
+			sql_design_having
+        WHERE
+        	sql_design_id = #{sqlDesignId};
+        	
+        DELETE FROM 
+			sql_design_results
+        WHERE
+        	sql_design_id = #{sqlDesignId};
+        
+        DELETE FROM 
+			sql_design_value
+        WHERE
+        	sql_design_id = #{sqlDesignId};	
+	</delete>
+	<!-- DungNN -20150613- Get information for check foreign key when delete table design-->
+	<select id="findByTableDesignId" resultMap="resultMap">
+		SELECT
+			tbl_design_id sql_design_id,
+			sql_design_code,
+			sql_design_name,
+			remark,
+			design_type,
+			omit_overlap
+		FROM
+			sql_design s INNER JOIN sql_design_table st using (sql_design_id)
+		WHERE
+			st.tbl_design_id IN
+			<foreach item="item" index="index" collection="tableDesigns" open="(" separator="," close=")">
+				<![CDATA[ #{item.tableDesignId} ]]>
+			</foreach>
+		UNION ALL
+
+		SELECT
+			join_tbl_design_id sql_design_id,
+			sql_design_code,
+			sql_design_name,
+			remark,
+			design_type,
+			omit_overlap
+		FROM
+			sql_design s INNER JOIN sql_design_table st using (sql_design_id)
+		WHERE
+			st.join_tbl_design_id IN
+			<foreach item="item" index="index" collection="tableDesigns" open="(" separator="," close=")">
+				<![CDATA[
+					#{item.tableDesignId}
+				]]>
+		</foreach>
+	</select>
+	<select id="getExistNameCode" parameterType="SqlDesign" resultType="Integer">
+		SELECT COALESCE(SUM(FLAG),0)
+		FROM 
+		(
+			(
+				SELECT 1 as FLAG
+				FROM
+					sql_design A
+				WHERE 
+					A.project_id = #{projectId} 
+					AND 
+					UPPER(A.sql_design_name) = UPPER(#{sqlDesignName})
+					<if test="sqlDesignId != null">
+						AND A.sql_design_id != #{sqlDesignId}
+					</if>
+					AND
+					(A.design_type = 4 OR A.design_type = 5) 
+				LIMIT 1
+			)
+			UNION
+			(
+				SELECT 2 AS FLAG
+				FROM
+					sql_design A
+				WHERE 
+					A.project_id = #{projectId} 
+					AND 
+					UPPER(A.sql_design_code) = UPPER(#{sqlDesignCode})
+					<if test="sqlDesignId != null">
+						AND A.sql_design_id != #{sqlDesignId}
+					</if>
+					AND
+					(A.design_type = 4 OR A.design_type = 5)
+				LIMIT 1
+			)
+		) AS A
+	</select>
+	<select id="getExistNameCodeViewDesign" parameterType="SqlDesign" resultType="Integer">
+		SELECT COALESCE(SUM(FLAG),0)
+		FROM 
+		(
+			(
+				SELECT 1 as FLAG
+				FROM
+					sql_design A
+				WHERE 
+					A.project_id = #{projectId} 
+					AND 
+					UPPER(A.sql_design_name) = UPPER(#{sqlDesignName})
+					<if test="sqlDesignId != null">
+						AND A.sql_design_id != #{sqlDesignId}
+					</if>
+					AND
+					(A.design_type = 0 OR A.design_type = 1) 
+				LIMIT 1
+			)
+			UNION
+			(
+				SELECT 2 AS FLAG
+				FROM
+					sql_design A
+				WHERE 
+					A.project_id = #{projectId} 
+					AND 
+					UPPER(A.sql_design_code) = UPPER(#{sqlDesignCode})
+					<if test="sqlDesignId != null">
+						AND A.sql_design_id != #{sqlDesignId}
+					</if>
+					AND
+					(A.design_type = 0 OR A.design_type = 1)
+				LIMIT 1
+			)
+		) AS A
+	</select>
+	<select id="getReferenceById" resultMap="resultMap2">
+		(
+			SELECT COALESCE(C.message_string,B.message_code) as module_name,COALESCE(D.message_string,A.item_code) as item_name,1 as group_type
+			FROM 
+			screen_item A
+			LEFT JOIN 
+			screen_design B
+			ON A.screen_id = B.screen_id
+			LEFT JOIN
+			message_design C 
+			ON
+			B.message_code = C.message_code AND C.language_id = #{languageId}
+			LEFT JOIN
+			message_design D
+			ON
+			A.message_code = D.message_code AND D.language_id = #{languageId}
+			WHERE A.sql_design_id = #{sqlDesignId}
+		)
+		UNION
+		(
+			SELECT A.autocomplete_name as module_name,null as item_name,2 as group_type
+			FROM 
+			autocomplete_design A
+			WHERE A.sql_design_id = #{sqlDesignId}
+		)
+	</select>
+	<update id="modifyDesignStatus" parameterType="SqlDesign">
+		<![CDATA[
+			UPDATE 
+				sql_design
+			SET 
+				design_status = #{designStatus},
+				updated_by = #{updatedBy},
+				updated_date = #{systemDate}
+			WHERE 
+				sql_design_id = #{sqlDesignId}
+			AND 
+				(updated_date = #{updatedDate} OR updated_date IS NULL)
+			
+		]]>
+	</update>
+	
+	<select id="getSequencesSqlDesign" resultType="Long">
+		select SETVAL('sql_design_seq'::regclass, NEXTVAL('sql_design_seq'::regclass) + #{size})
+	</select>
+
+	<select id="getAllSqlDesignId" resultType="_long">
+		SELECT DISTINCT
+				C.sql_design_id
+			FROM
+				sql_design as C
+			WHERE
+				C.project_id = #{projectId}
+	</select>
+	
+	<select id="getAllViewDesignByProjectId" resultMap="resultMap">
+		SELECT A.sql_design_id,
+				A.sql_design_code,
+				A.sql_design_name,
+				A.remark,
+				A.design_type,
+				A.return_type,
+				A.omit_overlap,
+				A.sql_text,
+				A.sql_pattern,
+				A.design_status,
+				A.project_id,
+				A.module_id,
+				A.created_by,
+				A.created_date,
+				A.updated_by,
+				A.updated_date,
+				A.pageable
+		FROM 
+		sql_design A
+		WHERE A.project_id = #{projectId} AND (design_type = 0 OR design_type = 1)
+	</select>
+	<select id="getAllSqlDesignByProjectId" resultMap="resultMap" flushCache="true">
+		SELECT 
+			A.sql_design_id,
+			A.sql_design_code,
+			A.sql_design_name,
+			A.remark,
+			A.design_type,
+			A.return_type,
+			A.omit_overlap,
+			A.sql_text,
+			A.sql_pattern,
+			A.design_status,
+			A.project_id,
+			A.module_id,
+			A.created_by,
+			A.created_date,
+			A.updated_by,
+			A.updated_date,
+			A.pageable,
+			B.module_id,
+			B.module_name,
+			B.module_code,
+            acc.username
+		FROM 
+			sql_design A
+		LEFT JOIN module B
+		ON A.module_id = B.module_id
+        LEFT JOIN account acc ON (acc.account_id = A.created_by)
+		WHERE A.project_id = #{projectId} AND (design_type = 4 OR design_type = 5)
+		<if test="moduleType != null">
+				AND B.module_type = #{moduleType} 
+		</if>
+	</select>
+	<select id="getAllSqlDesignByProjectIdWithCommon" resultMap="resultMap" flushCache="true">
+		SELECT 
+			A.sql_design_id,
+			A.sql_design_code,
+			A.sql_design_name,
+			A.remark,
+			A.design_type,
+			A.return_type,
+			A.omit_overlap,
+			A.sql_text,
+			A.sql_pattern,
+			A.design_status,
+			A.project_id,
+			A.module_id,
+			A.created_by,
+			A.created_date,
+			A.updated_by,
+			A.updated_date,
+			A.pageable,
+			B.module_id,
+			B.module_name,
+			B.module_code,
+            acc.username
+		FROM 
+			sql_design A
+		LEFT JOIN module B
+		ON A.module_id = B.module_id
+        LEFT JOIN account acc ON (acc.account_id = A.created_by)
+		WHERE A.project_id = #{projectId} AND (design_type = 4 OR design_type = 5)
+		<if test="moduleType != null">
+			AND (B.module_type = #{moduleType} 
+			OR B.module_type IS NULL)
+		</if>
+	</select>
+	<select id="getAllSqlDesignByModuleId" resultMap="resultMap">
+		SELECT A.sql_design_id,
+				A.sql_design_code,
+				A.sql_design_name,
+				A.remark,
+				A.design_type,
+				A.return_type,
+				A.omit_overlap,
+				A.sql_text,
+				A.sql_pattern,
+				A.design_status,
+				A.project_id,
+				A.module_id,
+				A.created_by,
+				A.created_date,
+				A.updated_by,
+				A.updated_date,
+				B.module_id,
+				B.module_name,
+				B.module_code,
+				A.pageable,
+                acc.username
+		FROM 
+		sql_design A
+		LEFT JOIN
+		module B
+		ON 		
+		A.module_id = B.module_id
+        LEFT JOIN account acc ON (acc.account_id = A.created_by)
+		<where>
+			<if test="moduleId != null and moduleId != ''">
+				A.module_id = #{moduleId} 
+			</if>
+			<if test="moduleId == null or moduleId == ''">
+				A.module_id IS NULL
+				AND
+				A.project_id = #{projectId} 
+			</if>
+			AND (design_type = 4 OR design_type = 5)
+		</where>
+	</select>
+
+	<select id="checkSqlDesignExists" resultType="_long">
+		SELECT
+			sql_design_id
+		FROM
+			sql_design
+		<where>
+			<if test="listOfId != null and listOfId.size > 0">
+				<foreach item="Id" collection="listOfId" open="sql_design_id IN (" separator="," close=")">
+					#{Id}
+				</foreach>
+			</if>
+			<if test="listOfId == null or listOfId.size == 0">
+				FALSE
+			</if>
+		</where>
+		ORDER BY sql_design_id
+	</select>
+	
+	<select id="getSQLDesignAdvanceByProjectId" resultType="long">
+		SELECT COUNT(*)
+		FROM
+			sql_design
+		WHERE project_id = #{projectId} AND (design_type = 1 OR design_type = 3 OR design_type = 5)
+	</select>
+	
+	<select id="getSQLDesignByProjectId" resultMap="resultMap">
+		SELECT 
+				A.sql_design_id,
+				A.sql_design_code,
+				A.sql_design_name,
+				A.remark,
+				A.design_type,
+				A.return_type,
+				A.omit_overlap,
+				A.sql_text,
+				A.sql_pattern,
+				A.design_status,
+				A.project_id,
+				A.module_id,
+				A.created_by,
+				A.created_date,
+				A.updated_by,
+				A.updated_date,
+				A.pageable
+		FROM 
+			sql_design A
+		WHERE A.project_id = #{projectId} AND (design_type = 0 OR design_type = 1)
+	</select>
+	<select id="findAllAffactedSqlDesignsByModuleId" resultMap="resultMap">
+		SELECT A.sql_design_id,
+				A.sql_design_code,
+				A.sql_design_name,
+				A.remark,
+				A.design_type,
+				A.return_type,
+				A.omit_overlap,
+				A.sql_text,
+				A.sql_pattern,
+				A.design_status,
+				A.project_id,
+				A.module_id,
+				A.created_by,
+				A.created_date,
+				A.updated_by,
+				A.updated_date,
+				B.module_id,
+				B.module_name,
+				B.module_code,
+				A.pageable
+		FROM
+		sql_design A
+		LEFT JOIN
+		module B
+		ON 		
+		A.module_id = B.module_id
+		WHERE
+			A.module_id != #{moduleId}
+			AND (EXISTS (
+							SELECT sql_design_input_id
+							FROM sql_design_input
+							WHERE sql_design_id = A.sql_design_id
+								AND
+								(
+									(
+										data_type = 16
+										AND
+										table_id IN (
+														SELECT common_object_definition_id
+														FROM common_object_definition
+														WHERE module_id = #{moduleId}
+													)
+									)
+									OR
+									(
+										data_type = 17
+										AND
+										table_id IN (
+														SELECT external_object_definition_id
+														FROM external_object_definition
+														WHERE module_id = #{moduleId}
+													)
+									)
+								)
+						)
+			)
+	</select>
+	
+	<select id="getAutocompleteCommonObjectForSQLDesign" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+        SELECT
+            a.common_object_definition_id AS optionValue,
+            a.common_object_definition_name AS optionLabel,
+            a.common_object_definition_code AS output01,
+            a.module_id AS output02
+        FROM 
+            common_object_definition a
+        <where>
+            <if test="searchKey != null and searchKey != ''">
+                AND a.common_object_definition_name iLIKE '%' || #{searchKey} || '%'
+            </if>
+            <if test="arg01 != null and arg01 != ''">
+                <![CDATA[
+                    AND a.project_id = CAST(#{arg01} AS numeric(16,0))
+                ]]>
+            </if>
+            <if test="arg03 != null and arg03 != ''">
+                <![CDATA[
+                    AND (a.module_id = CAST(#{arg03} AS numeric(16,0)) OR a.module_id IS NULL)
+                ]]>
+            </if>
+            <if test="arg03 == null or arg03 == ''">
+                <![CDATA[
+                    AND a.module_id IS NULL
+                ]]>
+            </if>
+            <if test="arg01 == null or arg01 == ''">
+                FALSE
+            </if>
+        </where>
+        ORDER BY common_object_definition_id ASC
+        <if test="arg02 != null and arg02 != ''">
+            LIMIT CAST(#{arg02} AS NUMERIC)
+        </if>
+        <if test="arg02 == null or arg02 == ''">
+            LIMIT 20
+        </if>
+    </select>
+    
+    <select id="getAutocompleteExternalObjectForSQLDesign" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+			a.external_object_definition_id AS optionValue,
+			a.external_object_definition_name AS optionLabel,
+			a.external_object_definition_code AS output01,
+			a.module_id AS output02
+		FROM 
+			external_object_definition a
+		<where>
+			<if test="searchKey != null and searchKey != ''">
+				AND a.external_object_definition_name iLIKE '%' || #{searchKey} || '%'
+			</if>
+			<if test="arg01 != null and arg01 != ''">
+				<![CDATA[
+					AND a.project_id = CAST(#{arg01} AS numeric(16,0))
+				]]>
+			</if>
+			 <if test="arg03 != null and arg03 != ''">
+                <![CDATA[
+                    AND (a.module_id = CAST(#{arg03} AS numeric(16,0)) OR a.module_id IS NULL)
+                ]]>
+            </if>
+            <if test="arg03 == null or arg03 == ''">
+                <![CDATA[
+                    AND a.module_id IS NULL
+                ]]>
+            </if>
+			<if test="arg01 == null or arg01 == ''">
+				FALSE
+			</if>
+		</where>
+		ORDER BY external_object_definition_id ASC
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+		<if test="arg02 == null or arg02 == ''">
+			LIMIT 20
+		</if>
+	</select>
+    
+    <!-- //TungHT -->
+    
+    <select id="getAllSQLTypeSelect" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+    	SELECT
+    		sd.sql_design_id as optionValue,
+    		sd.sql_design_code as optionLabel,
+    		design_type as arg02
+    	FROM 
+    		sql_design sd
+    	WHERE
+    		(design_type = 4 OR design_type = 5) 
+    	AND
+    		sql_pattern = 0
+    	<if test="(arg03 == null and arg03 == '') and (arg04 == null or arg04 == '')">
+    		AND
+ 				project_id is null
+    	</if>
+    	<if test="(arg03 != null and arg03 != '') and (arg04 == null or arg04 == '')">
+    		AND
+    			(project_id = CAST(#{arg03} AS numeric(16,0)) AND module_id is null )
+    		OR
+ 				(project_id is null)
+    	</if>
+   		<if test="(arg03 != null and arg03 != '') and (arg04 != null or arg04 != '')">
+    		AND
+    			(
+	    			( project_id = CAST(#{arg03} AS numeric(16,0)) AND module_id = CAST(#{arg04} AS numeric(16,0)) )
+	    				OR
+	 				(project_id is null)
+	    				OR
+	    			(project_id = CAST(#{arg03} AS numeric(16,0)) AND module_id is null )
+    			)
+    	</if>
+    </select>
+    
+    <select id="getSqlColumnOutput" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+    	<!-- //Sql Builer => get data table sql_result  -->
+    	<if test="arg02 != null and arg02 != '' and arg02 == 4">
+    		SELECT DISTINCT
+    			sdr.column_code as optionValue,
+    			sdr.column_code as optionLabel
+    		FROM 
+    			sql_design_output sdo
+    		LEFT JOIN
+    			sql_design_results sdr ON sdo.mapping_column = sdr.item_seq_no::varchar
+    		WHERE
+    			sdr.sql_design_id = CAST(#{arg01} AS numeric(16,0))
+    	</if>
+    	<!-- //Advanced SQL => get data table sql_design-->
+    	<if test="arg02 != null and arg02 != '' and arg02 == 5">
+    		SELECT 
+    			mapping_column as optionValue,
+    			mapping_column as optionLabel
+    		FROM 
+    			sql_design_output
+    		WHERE
+    			sql_design_id = CAST(#{arg01} AS numeric(16,0))
+    	</if>
+    	<if test="arg02 == null or arg02 == ''">
+    		
+    	</if>
+    </select>
+    
+    <select id="findSQLDesignByUsingExternalOb" resultMap="resultMap">
+		SELECT
+			a.sql_design_id,
+			a.sql_design_code,
+			a.sql_design_name,
+			a.module_id,
+			a.project_id
+		FROM
+			sql_design a
+		WHERE exists
+		(
+			SELECT b1.sql_design_id
+			from sql_design_input b1
+			WHERE b1.data_type = 17 and b1.design_type = 0 and b1.object_type = 1 and b1.column_id = 0 and b1.table_id = #{externalObjectDefinitionId}
+				and b1.sql_design_id = a.sql_design_id
+		)
+		OR exists
+		(
+			SELECT b1.sql_design_id
+			from sql_design_output b1
+			WHERE b1.data_type = 17 and b1.design_type = 0 and b1.object_type = 1 and b1.column_id = 0 and b1.table_id = #{externalObjectDefinitionId}
+				and b1.sql_design_id = a.sql_design_id
+		)
+	</select>
+	
+	<select id="findSQLDesignByUsingCommonOb" resultMap="resultMap">
+		SELECT
+			a.sql_design_id,
+			a.sql_design_code,
+			a.sql_design_name,
+			a.module_id,
+			a.project_id
+		FROM
+			sql_design a
+		WHERE exists
+		(
+			SELECT b1.sql_design_id
+			from sql_design_input b1
+			WHERE b1.data_type = 16 and b1.design_type = 0 and b1.object_type = 0 and b1.column_id = 0 and b1.table_id = #{commonObjectDefinitionId}
+				and b1.sql_design_id = a.sql_design_id
+		)
+		OR exists
+		(
+			SELECT b1.sql_design_id
+			from sql_design_output b1
+			WHERE b1.data_type = 16 and b1.design_type = 0 and b1.object_type = 0 and b1.column_id = 0 and b1.table_id = #{commonObjectDefinitionId}
+				and b1.sql_design_id = a.sql_design_id
+		)
+	</select>
+</mapper>

@@ -1,0 +1,3778 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.terasoluna.qp.domain.repository.project.ProjectRepository">
+	<resultMap id="projectResultMap" type="Project">
+		<id property="projectId" column="project_id" />
+		<result property="projectName" column="project_name" />
+		<result property="projectCode" column="project_code" />
+		<result property="status" column="status" />
+		<result property="remark" column="remark" />
+		<result property="selected" column="selected" /> 
+		<result property="dbType" column="db_type" />
+		<result property="dbName" column="db_name" />
+		<result property="dbHostName" column="db_host_name" />
+		<result property="dbPort" column="db_port" />
+		<result property="dbUser" column="db_user" />
+		<result property="dbPassword" column="db_password" />
+		<result property="dbDriver" column="db_driver" />
+		<result property="updatedBy" column="updated_by" />
+		<result property="updatedDate" column="updated_date" />
+		<result property="updatedByName" column="updated_by_name" />
+		<result property="createdByName" column="created_by_name" />
+		<result property="packageName" column="package_name" />
+		<result property="caseSensitivity" column="case_sensitive" />
+		<result property="webserviceFlg" column="webservice_flg" />
+		<result property="webservicePattern" column="webservice_pattern" />
+		<result property="defaultLanguageId" column="default_language" />
+		<result property="defaultLanguageIdAutocomplete" column="language_name" />
+		<result property="emailAddress" column="sender_address" />
+		<result property="emailName" column="sender_name" />
+		<result property="smtpHost" column="smtp_host" />
+		<result property="smtpEncryption" column="smtp_encryption" />
+		<result property="smtpPort" column="smtp_port" />
+		<result property="smtpUserName" column="smtp_username" />
+		<result property="smtpPassword" column="smtp_password" />
+		<association property="dataFormat" resultMap="dataFormatResult" />
+	</resultMap>
+	
+	<resultMap id="dataFormatResult" type="DataFormat">
+			<result property="integerFormat" column="integer_format"/>
+		<result property="decimalFormat" column="decimal_format"/>
+		<result property="dateFormat" column="date_format"/>
+		<result property="dateTimeFormat" column="datetime_format"/>
+		<result property="timeFormat" column="time_format"/>
+		<result property="currencyFormat" column="currency_format"/>
+		<result property="currencyCode" column="currency_code"/>
+		<result property="currencyCodePosition" column="currency_code_position"/>
+	</resultMap>
+	
+	<resultMap id="autocompleteResultMap" type="Autocomplete">
+		<result property="optionValue" column="optionValue" />
+		<result property="optionLabel" column="optionLabel" />
+		<result property="output01" column="output01" />
+	</resultMap>
+	<resultMap id="projectThemeResultMap" type="org.terasoluna.qp.domain.model.ProjectTheme">
+		<id property="projectThemeId" column="project_theme_id" />
+		<result property="projectId" column="project_id" />
+		<result property="code" column="code" />
+		<result property="value" column="value" />
+	</resultMap>
+	<resultMap id="projectItemMap" type="org.terasoluna.qp.domain.model.ProjectItem">
+		<id property="projectItemId" column="project_item_id" />
+		<result property="projectId" column="project_id" />
+		<result property="messageCode" column="message_code" />
+		<result property="messageString" column="message_string" />
+		<result property="style" column="style" />
+		<result property="hoverStyle" column="hover_style" />
+		<result property="itemPosition" column="item_position" />
+		<result property="itemType" column="item_type" />
+		<result property="componentType" column="component_type" />
+		<result property="moduleName" column="module_name" />
+		<result property="moduleId" column="module_id" />
+		<result property="screenName" column="screen_code" />
+		<result property="screenId" column="screen_id" />
+	</resultMap>
+	<!-- Count project by search condition -->
+	<select id="countBySearchCriteria" parameterType="org.terasoluna.qp.domain.repository.project.ProjectCriteria" resultType="_long">
+		<![CDATA[
+			SELECT 
+				COUNT(*) 
+			FROM 
+				project p
+		]]>
+		<include refid="findPageByCriteriaWherePhrase" />
+	</select>
+
+	<!-- Finds all projects by search condition -->
+	<select id="findPageBySearchCriteria" parameterType="org.terasoluna.qp.domain.repository.project.ProjectCriteria" resultMap="projectResultMap">
+		<![CDATA[
+			SELECT
+				project_id,
+				project_name,
+				project_code,
+				status,
+				db_type,
+				remark,
+				(
+					SELECT
+						a.username
+					FROM
+						account a
+					WHERE a.account_id = p.updated_by
+
+				) as updated_by_name,
+				(
+					SELECT
+						a.username
+					FROM
+						account a
+					WHERE a.account_id = p.created_by
+
+				) as created_by_name,
+				updated_date
+			FROM project p
+		]]>
+		<include refid="findPageByCriteriaWherePhrase" />
+		<if test="pageable.sort != null">
+			ORDER BY
+			<foreach collection="pageable.sort" item="order" separator=",">
+				${order.property} ${order.direction}
+			</foreach>
+		</if>
+		<if test="pageable.sort == null">
+			ORDER BY
+				updated_date DESC
+		</if>
+		<![CDATA[
+			LIMIT
+				#{pageable.pageSize}
+			OFFSET
+				#{pageable.offset}
+		]]>
+	</select>
+	
+	<!-- Project search criteria -->
+	<sql id="findPageByCriteriaWherePhrase">
+		<where>
+			EXISTS (
+				SELECT 1
+				FROM
+					account_project a 
+				WHERE a.project_id = p.project_id AND a.account_id = #{criteria.accountId}
+			)
+			<if test="criteria.projectName != null and criteria.projectName != ''">
+				<bind name="projectName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.projectName)" />
+				<![CDATA[
+					AND project_name ILIKE #{projectName} ESCAPE '~'
+				]]>
+			</if>
+			<if test="criteria.createdBy != null and criteria.createdBy != ''">
+					AND created_by = #{criteria.createdBy}
+			</if>
+			<if test="criteria.updatedBy != null and criteria.updatedBy != ''">
+					AND updated_by = #{criteria.updatedBy}
+			</if>
+			
+			<if test="criteria.fromCreatedDate !=null and criteria.fromCreatedDate != ''">
+				<![CDATA[AND created_date >= '${criteria.fromCreatedDate}']]>
+			</if>
+
+			<if test="criteria.toCreatedDate !=null and criteria.toCreatedDate != ''">
+				<![CDATA[AND created_date <= '${criteria.toCreatedDate}']]>
+			</if>
+			
+			<if test="criteria.fromUpdatedDate !=null and criteria.fromUpdatedDate != ''">
+				<![CDATA[AND updated_date >= '${criteria.fromUpdatedDate}']]>
+			</if>
+			
+			<if test="criteria.toUpdatedDate !=null and criteria.toUpdatedDate != ''">
+				<![CDATA[AND updated_date <= '${criteria.toUpdatedDate}']]>
+			</if>
+			
+			<if test="criteria.projectCode != null and criteria.projectCode != ''">
+				<bind name="projectCode" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.projectCode)" />
+				<![CDATA[
+					AND project_code ILIKE #{projectCode} ESCAPE '~'
+				]]>
+			</if>
+			<if test="criteria.statuses != null and criteria.statuses.length > 0">
+				AND status IN				
+				<foreach item="status" index="index" collection="criteria.statuses" open="(" separator="," close=")">
+					#{status}
+				</foreach>
+			</if>
+		</where>
+	</sql>
+	
+	<!-- Register project -->
+	<insert id="register" parameterType="Project">
+	<selectKey keyProperty="projectId" resultType="long" order="BEFORE">
+		SELECT NEXTVAL('project_seq') AS projectId
+	</selectKey>
+		<![CDATA[
+			INSERT INTO project (
+				project_id,
+				project_name,
+				project_code,
+				status,
+				remark,
+				db_type,
+				db_name,
+				db_host_name,
+				db_port,
+				db_user,
+				db_password,
+				db_driver,
+				case_sensitive,
+				package_name,
+				webservice_flg,
+				webservice_pattern,
+				created_by,
+				created_date,
+				updated_by,
+				updated_date,
+				default_language
+			) VALUES (
+				#{projectId},
+				#{projectName},
+				#{projectCode},
+				#{status},
+				#{remark},
+				#{dbType},
+				#{dbName},
+				#{dbHostName},
+				#{dbPort},
+				#{dbUser},
+				#{dbPassword},
+				#{dbDriver},
+				#{caseSensitivity},
+				#{packageName},
+				#{webserviceFlg},
+				#{webservicePattern},
+				#{createdBy},
+				#{createdDate},
+				#{updatedBy},
+				#{updatedDate},
+				#{defaultLanguageId}
+			);
+			
+			INSERT INTO project_mail_account (
+				project_id,
+				sender_address,
+				sender_name,
+				smtp_host,
+				smtp_encryption,
+				smtp_port,
+				smtp_username,
+				smtp_password,
+				created_by,
+				created_date,
+				updated_by,
+				updated_date
+			) VALUES (
+				#{projectId},
+				#{emailAddress},
+				#{emailName},
+				#{smtpHost},
+				#{smtpEncryption},
+				#{smtpPort},
+				#{smtpUserName},
+				#{smtpPassword},
+				#{createdBy},
+				#{createdDate},
+				#{updatedBy},
+				#{updatedDate}
+			);
+			
+			INSERT INTO account_project(
+				project_id,
+				account_id
+			) VALUES (
+				#{projectId},
+				#{createdBy}
+			);
+
+			UPDATE account_profile SET current_project_id = #{projectId} WHERE account_id = #{createdBy};
+
+			INSERT INTO	domain_design
+			(
+				domain_name,
+				domain_code,
+				maxlength,
+				mandatory_flg,
+				min_val,
+				max_val,
+				decimal_part,
+				default_value,
+				base_type,
+				fmt_code, 
+				remark,
+				group_base_type_id,
+				project_id,
+				created_by,
+				created_date, 
+				updated_by,
+				updated_date,
+				constrains_type,
+				datasource_type,
+				datasource_id, 
+				operator_code,
+				default_type
+			)
+			SELECT
+				domain_name,
+				domain_code,
+				maxlength,
+				mandatory_flg,
+				min_val,
+				max_val,
+				decimal_part,
+				default_value,
+				base_type,
+				fmt_code, 
+				remark,
+				group_base_type_id,
+				#{projectId},
+				#{createdBy},
+				#{createdDate},
+				#{updatedBy},
+				#{updatedDate},
+				constrains_type,
+				datasource_type,
+				datasource_id, 
+				operator_code,
+				default_type
+			FROM
+				domain_design 
+			WHERE
+				project_id IS NULL;
+				
+			INSERT INTO project_data_format
+			(	project_id ,
+				integer_format ,
+				decimal_format,
+				date_format ,
+				datetime_format ,
+				time_format ,
+				currency_format ,
+				currency_code ,
+				currency_code_position ,
+				created_by ,
+				created_date ,
+				updated_by ,
+				updated_date
+				)
+				VALUES(
+				#{projectId},
+				#{dataFormat.integerFormat},
+				#{dataFormat.decimalFormat},
+				#{dataFormat.dateFormat},
+				#{dataFormat.dateTimeFormat},
+				#{dataFormat.timeFormat},
+				#{dataFormat.currencyFormat},
+				#{dataFormat.currencyCode},
+				#{dataFormat.currencyCodePosition},
+				#{createdBy},
+			#{createdDate},
+			#{updatedBy},
+			#{updatedDate}
+			)
+		]]>
+	</insert>
+
+	<update id="modify" parameterType="map">
+		<![CDATA[
+			 UPDATE 
+				project
+			 SET 
+				project_name = #{project.projectName},
+				project_code = #{project.projectCode},
+				status = #{project.status},
+				db_type = #{project.dbType},
+				db_name = #{project.dbName},
+				db_host_name = #{project.dbHostName},
+				db_port = #{project.dbPort},
+				db_user = #{project.dbUser},
+				db_password = #{project.dbPassword},
+				db_driver = #{project.dbDriver},
+				remark = #{project.remark},
+				case_sensitive = #{project.caseSensitivity},
+				package_name = #{project.packageName},
+				webservice_flg = #{project.webserviceFlg},
+				webservice_pattern = #{project.webservicePattern},
+				updated_by = #{project.updatedBy},
+				updated_date = #{project.systemTime}
+			 WHERE 
+				project_id = #{project.projectId}
+			AND
+				updated_date = #{project.updatedDate};
+				
+		]]>
+	
+		<choose >
+			<when test="insertMailFlg != null and insertMailFlg > 0">
+				<![CDATA[
+					UPDATE
+						project_mail_account
+					SET
+						sender_address = #{project.emailAddress},
+						sender_name = #{project.emailName},
+						smtp_host = #{project.smtpHost},
+						smtp_encryption = #{project.smtpEncryption},
+						smtp_port = #{project.smtpPort},
+						smtp_username = #{project.smtpUserName},
+						smtp_password = #{project.smtpPassword},
+						updated_by = #{project.updatedBy},
+						updated_date = #{project.systemTime}
+					WHERE
+						project_id = #{project.projectId};
+				]]>
+			</when>
+			<otherwise>
+				<![CDATA[
+					INSERT INTO project_mail_account (
+						project_id,
+						sender_address,
+						sender_name,
+						smtp_host,
+						smtp_encryption,
+						smtp_port,
+						smtp_username,
+						smtp_password,
+						created_by,
+						created_date,
+						updated_by,
+						updated_date
+					) VALUES (
+						#{project.projectId},
+						#{project.emailAddress},
+						#{project.emailName},
+						#{project.smtpHost},
+						#{project.smtpEncryption},
+						#{project.smtpPort},
+						#{project.smtpUserName},
+						#{project.smtpPassword},
+						#{project.createdBy},
+						#{project.createdDate},
+						#{project.updatedBy},
+						#{project.updatedDate}
+					);
+				]]>
+			</otherwise>
+		</choose>
+		<![CDATA[
+			UPDATE 
+				project_data_format
+			SET
+				integer_format = #{project.dataFormat.integerFormat} ,
+				decimal_format = #{project.dataFormat.decimalFormat},
+				date_format = #{project.dataFormat.dateFormat},
+				datetime_format = #{project.dataFormat.dateTimeFormat},
+				time_format = #{project.dataFormat.timeFormat},
+				currency_format = #{project.dataFormat.currencyFormat},
+				currency_code = #{project.dataFormat.currencyCode},
+				currency_code_position = #{project.dataFormat.currencyCodePosition},
+				updated_by = #{project.updatedBy},
+				updated_date = #{project.systemTime}
+			WHERE
+				project_id = #{project.projectId};
+		]]>
+	</update>
+	
+	<update id="synchronizeLicenseDesign" parameterType="Project">
+		<![CDATA[
+			UPDATE license_design
+			SET	project_name = #{projectName},
+				project_code = #{projectCode}
+			WHERE	project_id = #{projectId}
+	
+		]]>
+	</update>
+
+	<delete id="delete" parameterType="Project">
+		DELETE FROM
+			domain_design 
+		WHERE
+			project_id = #{projectId};
+
+		DELETE FROM account_project WHERE project_id = #{projectId};
+		
+		DELETE FROM project_mail_account WHERE project_id = #{projectId};
+		DELETE FROM project_data_format WHERE project_id = #{projectId};
+
+		DELETE FROM message_design WHERE project_id = #{projectId};
+		DELETE FROM language_design WHERE project_id = #{projectId};
+
+		<include refid="deleteFunctionMaster" />
+		
+		<!-- Delete menu -->
+		<include refid="deleteMunudesign" />
+		
+		<include refid="deleteScreenTransitionByProject"/>
+
+		DELETE FROM
+			project
+		WHERE
+			project_id = #{projectId};
+	</delete>
+	
+	<sql id="deleteScreenTransitionByProject">
+		DELETE 
+			FROM 
+				screen_transition st
+					WHERE 
+						EXISTS
+						(
+							SELECT
+								1
+							FROM
+								module m
+							INNER JOIN
+								project p ON m.project_id = p.project_id AND p.project_id = #{projectId}
+							WHERE
+								st.module_id = m.module_id
+								
+						);
+		
+		DELETE 
+			FROM
+				screen_transition_branch_detail sbd
+					WHERE
+						EXISTS
+						(
+							SELECT 
+								1
+							FROM 
+								screen_transition_branch stb
+							INNER JOIN
+								module m ON m.module_id = stb.module_id
+							INNER JOIN
+								project p ON m.project_id = p.project_id AND p.project_id = #{projectId}
+							WHERE
+								sbd.screen_transition_branch_id = stb.screen_transition_branch_id
+						);
+		DELETE
+			FROM
+				screen_transition_branch stb
+					WHERE
+						EXISTS
+						(
+							SELECT
+								1
+							FROM
+								module m
+							INNER JOIN
+								project p ON m.project_id = p.project_id AND p.project_id = #{projectId}
+							AND stb.module_id = m.module_id
+						);
+	</sql>
+	
+	<sql id="deleteAdvance">
+		<!-- delete advance -->
+		DELETE FROM advance_input_value a
+		WHERE EXISTS
+			(
+				SELECT 1
+				FROM
+					advance_component b INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id)
+				WHERE
+					b.advance_component_id = a.advance_component_id
+				AND 
+					EXISTS
+					(
+						SELECT
+							1
+						FROM 
+							business_logic bl
+						WHERE
+							bl.business_logic_id = c.business_logic_id
+						AND
+							bl.project_id = #{projectId}
+					)
+			);
+			
+		DELETE FROM advance_output_value a
+		WHERE EXISTS
+			(
+				SELECT 1
+				FROM
+					advance_component b INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id)
+				WHERE
+					b.advance_component_id = a.advance_component_id
+				AND
+				EXISTS
+					(
+						SELECT
+							1
+						FROM 
+							business_logic bl
+						WHERE
+							bl.business_logic_id = c.business_logic_id
+						AND
+							bl.project_id = #{projectId}
+					)
+			);
+			
+		DELETE 
+		FROM advance_component a
+		WHERE EXISTS
+			( 
+			SELECT b.sequence_logic_id
+			FROM sequence_logic b INNER JOIN business_logic bl ON (bl.business_logic_id = b.business_logic_id AND bl.project_id = #{projectId})
+			WHERE 
+				b.sequence_logic_id = a.sequence_logic_id
+			);
+	</sql>
+	
+	<sql id="deleteMunudesign">
+		DELETE FROM
+			menu_design_item a
+		WHERE
+			EXISTS 
+				(
+					SELECT
+						1
+					FROM
+						menu_design b WHERE a.menu_id = b.menu_id AND b.project_id = #{projectId}
+				);
+		DELETE	FROM menu_design WHERE project_id = #{projectId};
+	</sql>
+	
+	<!-- <sql id="deleteDesignInformation">
+		DELETE FROM design_information_detail a
+		WHERE
+			EXISTS 
+				(
+					SELECT
+						1
+					FROM
+						design_information b WHERE a.design_information_id = b.design_information_id AND b.project_id = #{projectId}
+				);
+		
+		DELETE FROM design_relation_setting a
+		WHERE
+			EXISTS 
+				(
+					SELECT
+						1
+					FROM
+						design_information b WHERE a.design_information_id = b.design_information_id AND b.project_id = #{projectId}
+				);
+		
+		DELETE	FROM design_information WHERE project_id = #{projectId};
+	</sql> -->
+	
+	<sql id="deleteLog">
+		DELETE FROM log_pattern_detail lpd
+		WHERE EXISTS
+			(
+				SELECT 1 FROM log_detail ld INNER JOIN log l ON l.log_id = ld.log_id
+				WHERE l.project_id = #{projectId} 
+			);
+	
+		DELETE FROM log_detail ld
+		WHERE EXISTS
+			(
+				SELECT 1 FROM log l WHERE l.project_id = #{projectId} AND l.log_id = ld.log_id
+			);
+
+		DELETE FROM log WHERE project_id = #{projectId};
+	</sql>
+
+	<sql id="deletePatternedComponent">
+		DELETE 
+			FROM
+				patterned_detail_connector pdc	
+					WHERE
+						EXISTS
+						(
+							SELECT
+								1
+							FROM
+								patterned_component pc
+							WHERE 
+								pdc.patterned_component_id = pc.patterned_component_id
+							AND
+								pc.project_id = #{projectId}
+						);
+		DELETE 
+			FROM
+				patterned_detail pd	
+					WHERE
+						EXISTS
+						(
+							SELECT
+								1
+							FROM
+								patterned_component pc
+							WHERE 
+								pd.patterned_component_id = pc.patterned_component_id
+							AND
+								pc.project_id = #{projectId}
+						);
+		DELETE	FROM
+			patterned_component WHERE project_id = #{projectId};
+	</sql>
+	
+	<sql id="deleteCommonExternalObject">
+		DELETE 
+			FROM
+				external_object_attribute eoa
+			WHERE
+				EXISTS
+				(
+					SELECT
+						1
+					FROM
+						external_object_definition eod
+					WHERE 
+						eoa.external_object_definition_id = eod.external_object_definition_id
+					AND
+						eod.project_id = #{projectId}
+				);
+		DELETE	FROM external_object_definition WHERE project_id = #{projectId};
+
+		DELETE 
+			FROM
+				common_object_attribute coa	
+			WHERE
+				EXISTS
+				(
+					SELECT
+						1
+					FROM
+						common_object_definition cod
+					WHERE 
+						cod.common_object_definition_id = coa.common_object_definition_id
+					AND
+						cod.project_id = #{projectId}
+				);
+		DELETE	FROM common_object_definition WHERE project_id = #{projectId};
+	</sql>
+
+	<delete id="deleteAssociatedProject" parameterType="Project">
+		DELETE	FROM webservice_token WHERE project_id = #{projectId};
+		
+		<!-- Delete Common External Object -->
+		<include refid="deleteCommonExternalObject" />
+		
+		<!-- Delete Patterned Component -->
+		<include refid="deletePatternedComponent" />
+	
+		<!-- Delete Log -->
+		<include refid="deleteLog" />
+	
+		<!-- Delete generate history -->
+		DELETE	FROM job_control WHERE job_arg_nm2 = (#{projectId}::text);
+		
+		<!-- Delete project item -->
+		DELETE	FROM project_items WHERE project_id = #{projectId};
+	
+		<!-- Delete project theme -->
+		DELETE	FROM project_theme WHERE project_id = #{projectId};
+
+		<!-- Delete project mail account -->
+		DELETE FROM project_mail_account WHERE project_id = #{projectId};
+		
+		<!-- Delete project data format -->
+		DELETE FROM project_data_format WHERE project_id = #{projectId};
+		
+		<!-- Delete menu -->
+		<include refid="deleteMunudesign" />
+		
+		<!-- Delete project theme -->
+		DELETE	FROM library_management WHERE project_id = #{projectId};
+		
+		<!-- Delete design information -->
+		<!-- <include refid="deleteDesignInformation" /> -->
+		
+		<!-- delete Decision Table function -->
+		DELETE
+			FROM 
+				decision_condition_item dci
+			WHERE
+				EXISTS
+				(
+					SELECT
+						1
+					FROM
+						decision_condition_group dcg
+					WHERE
+						EXISTS
+						(
+							SELECT 
+								1
+							FROM 
+								decision_item_design did
+							WHERE
+								EXISTS
+								(
+									SELECT
+										1
+									FROM
+										decision_table dt
+									WHERE 
+										did.decision_table_id = dt.decision_table_id
+									AND
+										dt.project_id = #{projectId}
+								)
+							AND
+								dcg.decision_item_design_id = did.decision_item_design_id
+						)
+					AND
+						dci.condition_group_id = dcg.condition_group_id
+				);
+					
+		DELETE
+			FROM 
+				decision_condition_group dcg
+			WHERE
+				EXISTS
+				(
+					SELECT 
+						1
+					FROM 
+						decision_item_design did
+					WHERE
+						EXISTS
+						(
+							SELECT
+								1
+							FROM
+								decision_table dt
+							WHERE 
+								did.decision_table_id = dt.decision_table_id
+							AND
+								dt.project_id = #{projectId}
+						)
+					AND
+						dcg.decision_item_design_id = did.decision_item_design_id
+				);
+					
+		DELETE 
+			FROM
+				decision_item_design did
+			WHERE
+				EXISTS
+				(
+					SELECT
+						1
+					FROM
+						decision_table dt
+					WHERE 
+						did.decision_table_id = dt.decision_table_id
+					AND
+						dt.project_id = #{projectId}
+				);
+			
+		DELETE 
+			FROM
+				decision_input_value div
+			WHERE
+				EXISTS
+				(
+					SELECT
+						1
+					FROM
+						decision_component dc
+					WHERE
+						EXISTS
+						(
+							SELECT
+								1
+							FROM
+								decision_table dt
+							WHERE 
+								dc.decision_table_id = dt.decision_table_id
+							AND
+								dt.project_id = #{projectId}
+						)
+					AND
+						div.decision_component_id = dc.decision_component_id
+				);
+					
+		DELETE 
+			FROM
+				decision_input_bean dib
+			WHERE
+				EXISTS
+				(
+					SELECT
+						1
+					FROM
+						decision_table dt
+					WHERE 
+						dib.decision_table_id = dt.decision_table_id
+					AND
+						dt.project_id = #{projectId}
+				);
+			 
+		DELETE 
+			FROM
+				decision_output_value dov
+			WHERE
+				EXISTS
+				(
+					SELECT
+						1
+					FROM
+						decision_component dc
+					WHERE
+						EXISTS
+						(
+							SELECT
+								1
+							FROM
+								decision_table dt
+							WHERE 
+								dc.decision_table_id = dt.decision_table_id
+							AND
+								dt.project_id = #{projectId}
+						)
+					AND
+						dov.decision_component_id = dc.decision_component_id
+				);
+			
+		DELETE 
+			FROM
+				decision_output_bean dob
+			WHERE
+				EXISTS
+				(
+					SELECT
+						1
+					FROM
+						decision_table dt
+					WHERE 
+						dob.decision_table_id = dt.decision_table_id
+					AND
+						dt.project_id = #{projectId}
+				);
+			
+		DELETE
+			FROM
+				decision_component dc
+			WHERE
+				EXISTS
+				(
+					SELECT
+						1
+					FROM
+						decision_table dt
+					WHERE 
+						dc.decision_table_id = dt.decision_table_id
+					AND
+						dt.project_id = #{projectId}
+				);
+			
+		DELETE 
+			FROM 
+				decision_table 
+			WHERE 
+				project_id =	#{projectId};
+			
+		<!-- delete business design function -->
+		DELETE
+			FROM 
+				execution_input_value eiv
+			WHERE 
+				EXISTS
+				(
+					SELECT 
+						1
+					FROM
+						execution_component ec INNER JOIN sequence_logic sl ON sl.sequence_logic_id = ec.sequence_logic_id
+						<!-- AND sl.component_type = 2 -->
+					WHERE
+						EXISTS
+						(
+							SELECT
+								1
+							FROM 
+								business_logic bl
+							WHERE
+								bl.business_logic_id = sl.business_logic_id
+							AND
+								bl.project_id = #{projectId}
+						)
+					AND 
+						ec.execution_component_id = eiv.execution_component_id
+				);
+			
+		DELETE
+			FROM 
+				execution_output_value eov
+			WHERE 
+				EXISTS
+				(
+					SELECT 
+						1
+					FROM 
+						execution_component ec
+					INNER JOIN 
+						sequence_logic sl
+						ON 
+							sl.sequence_logic_id = ec.sequence_logic_id
+						<!-- AND 
+							sl.component_type = 2 -->
+					WHERE 
+						EXISTS
+						(
+							SELECT
+								1
+							FROM 
+								business_logic bl
+							WHERE
+								bl.business_logic_id = sl.business_logic_id
+							AND
+								bl.project_id = #{projectId}
+						)
+					AND 
+						ec.execution_component_id = eov.execution_component_id
+				);
+				
+		DELETE 
+			FROM 
+				execution_component ec
+			WHERE 
+				EXISTS
+				( 
+					SELECT
+						1
+					FROM 
+						sequence_logic sl
+					WHERE
+						EXISTS
+						(
+							SELECT
+								1
+							FROM 
+								business_logic bl
+							WHERE
+								bl.business_logic_id = sl.business_logic_id
+							AND
+								bl.project_id = #{projectId}
+						)
+					<!-- AND
+						sl.component_type = 2 -->
+					AND
+						sl.sequence_logic_id = ec.sequence_logic_id
+				);
+				
+		<!-- delete business check -->
+		DELETE
+			FROM 
+				business_detail_content bdc
+			WHERE 
+				EXISTS
+				(
+					SELECT 
+						1
+					FROM 
+						business_check_detail bcd
+					INNER JOIN 
+						business_check_component bcc
+					ON 
+						bcc.business_check_component_id = bcd.business_check_component_id
+					INNER JOIN 
+						sequence_logic sl
+					ON 
+						sl.sequence_logic_id = bcc.sequence_logic_id
+					WHERE 
+						EXISTS
+							(
+								SELECT
+									1
+								FROM 
+									business_logic bl
+								WHERE
+									bl.business_logic_id = sl.business_logic_id
+								AND
+									bl.project_id = #{projectId}
+							)
+					<!-- AND 
+						sl.component_type = 4 -->
+					AND 
+						bcd.business_check_detail_id = bdc.business_check_detail_id
+				);
+			
+		DELETE
+				FROM 
+					business_check_detail bcd
+			WHERE 
+				EXISTS
+				(
+					SELECT 
+						1
+					FROM	
+						business_check_component bcc
+					INNER JOIN 
+						sequence_logic sl
+					ON 
+						sl.sequence_logic_id = bcc.sequence_logic_id
+					WHERE 
+						EXISTS
+							(
+								SELECT
+									1
+								FROM 
+									business_logic bl
+								WHERE
+									bl.business_logic_id = sl.business_logic_id
+								AND
+									bl.project_id = #{projectId}
+							)
+					<!-- AND 
+						sl.component_type = 4 -->
+					AND 
+						bcc.business_check_component_id = bcd.business_check_component_id
+				);
+			
+		DELETE
+			FROM 
+				business_check_component bcc
+			WHERE 
+				EXISTS
+				( 
+					SELECT 
+						1
+					FROM 
+						sequence_logic sl
+					WHERE 
+						EXISTS
+							(
+								SELECT
+									1
+								FROM 
+									business_logic bl
+								WHERE
+									bl.business_logic_id = sl.business_logic_id
+								AND
+									bl.project_id = #{projectId}
+							)
+					<!-- AND 
+						sl.component_type = 4 -->
+					AND 
+						sl.sequence_logic_id = bcc.sequence_logic_id
+				);
+				
+		<!-- delete validation check -->
+		
+		DELETE
+			FROM 
+				validation_check_detail vcd
+			WHERE 
+				EXISTS
+					(
+						SELECT b.input_bean_id
+						FROM input_bean b
+						LEFT JOIN business_logic c ON (c.business_logic_id = b.business_logic_id)
+						WHERE 
+							c.project_id = #{projectId} AND b.input_bean_id = vcd.input_bean_id 
+					 );
+				
+		<!-- delete assign -->
+		DELETE
+			FROM 
+				assign_detail ad
+			WHERE 
+				EXISTS
+				(
+					SELECT 
+						1
+					FROM 
+						assign_component ac
+					INNER JOIN 
+						sequence_logic sl 
+						ON 
+							sl.sequence_logic_id = ac.sequence_logic_id
+						<!-- AND 
+							sl.component_type = 8 -->
+					WHERE 
+						EXISTS
+						(
+							SELECT
+								1
+							FROM 
+								business_logic bl
+							WHERE
+								bl.business_logic_id = sl.business_logic_id
+							AND
+								bl.project_id = #{projectId}
+						)
+					AND 
+						ac.assign_component_id = ad.assign_component_id
+				);
+				
+		DELETE 
+			FROM 
+				assign_component ac
+			WHERE 
+				EXISTS
+				( 
+					SELECT 
+						1
+					FROM 
+						sequence_logic sl
+					WHERE 
+						EXISTS
+						(
+							SELECT
+								1
+							FROM 
+								business_logic bl
+							WHERE
+								bl.business_logic_id = sl.business_logic_id
+							AND
+								bl.project_id = #{projectId}
+						)
+					<!-- AND 
+						sl.component_type = 8 -->
+					AND 
+						sl.sequence_logic_id = ac.sequence_logic_id
+				);
+
+		DELETE 
+			FROM 
+				utility_component uc
+			WHERE 
+				EXISTS
+				( 
+					SELECT 
+						1
+					FROM 
+						sequence_logic sl
+					WHERE 
+						EXISTS
+						(
+							SELECT
+								1
+							FROM 
+								business_logic bl
+							WHERE
+								bl.business_logic_id = sl.business_logic_id
+							AND
+								bl.project_id = #{projectId}
+						)
+					AND 
+						sl.sequence_logic_id = uc.sequence_logic_id
+				);
+		<!-- delete detail of decision component-->
+		DELETE
+			FROM 
+				decision_input_value div
+			WHERE 
+				EXISTS
+				(
+					SELECT 
+						1
+					FROM 
+						decision_component dc
+					INNER JOIN 
+						sequence_logic sl 
+						ON 
+							sl.sequence_logic_id = dc.sequence_logic_id
+						<!-- AND 
+							sl.component_type = 5 -->
+					WHERE 
+						EXISTS
+						(
+							SELECT
+								1
+							FROM 
+								business_logic bl
+							WHERE
+								bl.business_logic_id = sl.business_logic_id
+							AND
+								bl.project_id = #{projectId}
+						)
+					AND 
+						dc.decision_component_id = div.decision_component_id
+				);
+			
+		DELETE
+			FROM 
+				decision_output_value dov
+			WHERE 
+				EXISTS
+					(
+					SELECT 
+						1
+					FROM 
+						decision_component dc
+					INNER JOIN 
+						sequence_logic sl 
+						ON 
+							sl.sequence_logic_id = dc.sequence_logic_id
+						<!-- AND 
+							sl.component_type = 5 -->
+					WHERE 
+						EXISTS
+						(
+							SELECT
+								1
+							FROM 
+								business_logic bl
+							WHERE
+								bl.business_logic_id = sl.business_logic_id
+							AND
+								bl.project_id = #{projectId}
+						)
+					AND 
+						dc.decision_component_id = dov.decision_component_id
+					);
+			
+		<!-- delete decision component -->
+		DELETE 
+			FROM 
+				decision_component dc
+			WHERE 
+				EXISTS
+				( 
+					SELECT 
+						1
+					FROM 
+						sequence_logic sl
+					WHERE 
+						EXISTS
+						(
+							SELECT
+								1
+							FROM 
+								business_logic bl
+							WHERE
+								bl.business_logic_id = sl.business_logic_id
+							AND
+								bl.project_id = #{projectId}
+						)
+					<!-- AND
+						sl.component_type = 5 -->
+					AND 
+						sl.sequence_logic_id = dc.sequence_logic_id
+				);
+					
+		<!-- delete detail of loop component-->
+		DELETE 
+			FROM 
+				loop_component lc
+			WHERE 
+				EXISTS
+				( 
+					SELECT 
+						1
+					FROM 
+						sequence_logic sl
+					WHERE 
+						EXISTS
+						(
+							SELECT
+								1
+							FROM 
+								business_logic bl
+							WHERE
+								bl.business_logic_id = sl.business_logic_id
+							AND
+								bl.project_id = #{projectId}
+						)
+					<!-- AND 
+						sl.component_type = 10 -->
+					AND 
+						sl.sequence_logic_id = lc.sequence_logic_id
+				);
+			
+		<!-- delete detail of common component-->
+		DELETE
+			FROM common_input_value civ
+			WHERE 
+				EXISTS
+				(
+					SELECT 
+						1
+					FROM 
+						common_component cc
+					INNER JOIN 
+						sequence_logic sl 
+						ON 
+							sl.sequence_logic_id = cc.sequence_logic_id
+						<!-- AND 
+							sl.component_type = 7 -->
+					WHERE 
+						EXISTS
+						(
+							SELECT
+								1
+							FROM 
+								business_logic bl
+							WHERE
+								bl.business_logic_id = sl.business_logic_id
+							AND
+								bl.project_id = #{projectId}
+						)
+					AND 
+						cc.common_component_id = civ.common_component_id
+				);
+			
+		DELETE
+			FROM 
+				common_output_value cov
+			WHERE 
+				EXISTS
+				(
+					SELECT 
+						1
+					FROM 
+						common_component cc
+					INNER JOIN 
+						sequence_logic sl 
+						ON 
+							sl.sequence_logic_id = cc.sequence_logic_id
+						<!-- AND 
+							sl.component_type = 7 -->
+					WHERE 
+						EXISTS
+						(
+							SELECT
+								1
+							FROM 
+								business_logic bl
+							WHERE
+								bl.business_logic_id = sl.business_logic_id
+							AND
+								bl.project_id = #{projectId}
+						)
+					AND 
+						cc.common_component_id = cov.common_component_id
+				);
+			
+		<!-- delete common component -->
+		DELETE 
+			FROM 
+				common_component cc
+			WHERE 
+				EXISTS
+				( 
+					SELECT 
+						1
+					FROM 
+						sequence_logic sl
+					WHERE 
+						EXISTS
+						(
+							SELECT
+								1
+							FROM 
+								business_logic bl
+							WHERE
+								bl.business_logic_id = sl.business_logic_id
+							AND
+								bl.project_id = #{projectId}
+						)
+					<!-- AND 
+						sl.component_type = 7 -->
+					AND 
+						sl.sequence_logic_id = cc.sequence_logic_id
+				);
+					
+		<!-- delete navigator detail condition -->
+		DELETE
+			FROM 
+				navigator_detail nd
+			WHERE 
+				EXISTS
+				(
+				SELECT 
+					1
+				FROM 
+					navigator_component nc
+				INNER JOIN 
+					sequence_logic sl 
+					ON 
+						sl.sequence_logic_id = nc.sequence_logic_id
+					<!-- AND 
+						sl.component_type = 12 -->
+				WHERE 
+					EXISTS
+						(
+							SELECT
+								1
+							FROM 
+								business_logic bl
+							WHERE
+								bl.business_logic_id = sl.business_logic_id
+							AND
+								bl.project_id = #{projectId}
+						)
+				AND 
+					nc.navigator_component_id = nd.navigator_component_id
+				);
+					
+		<!-- delete navigator condition -->
+		DELETE 
+			FROM 
+				navigator_component nc
+			WHERE 
+				EXISTS
+				( 
+					SELECT
+						1
+			 		FROM
+			 			sequence_logic sl
+			 		WHERE 
+			 			EXISTS
+						(
+							SELECT
+								1
+							FROM 
+								business_logic bl
+							WHERE
+								bl.business_logic_id = sl.business_logic_id
+							AND
+								bl.project_id = #{projectId}
+						)
+					<!-- AND 
+						sl.component_type = 12 -->
+					AND 
+						sl.sequence_logic_id = nc.sequence_logic_id
+				);
+                    
+        <!-- delete exception detail condition -->
+        DELETE
+            FROM 
+                exception_detail ed
+            WHERE 
+                EXISTS
+                (
+                SELECT 
+                    1
+                FROM 
+                    exception_component ec
+                INNER JOIN 
+                    sequence_logic sl 
+                    ON 
+                        sl.sequence_logic_id = ec.sequence_logic_id
+                    <!-- AND 
+                        sl.component_type = 24 -->
+                WHERE 
+                    EXISTS
+                        (
+                            SELECT
+                                1
+                            FROM 
+                                business_logic bl
+                            WHERE
+                                bl.business_logic_id = sl.business_logic_id
+                            AND
+                                bl.project_id = #{projectId}
+                        )
+                AND 
+                    ec.exception_component_id = ed.exception_component_id
+                );
+                    
+        <!-- delete exception condition -->
+        DELETE 
+            FROM 
+                exception_component ec
+            WHERE 
+                EXISTS
+                ( 
+                    SELECT
+                        1
+                    FROM
+                        sequence_logic sl
+                    WHERE 
+                        EXISTS
+                        (
+                            SELECT
+                                1
+                            FROM 
+                                business_logic bl
+                            WHERE
+                                bl.business_logic_id = sl.business_logic_id
+                            AND
+                                bl.project_id = #{projectId}
+                        )
+                    <!-- AND 
+                        sl.component_type = 24 -->
+                    AND 
+                        sl.sequence_logic_id = ec.sequence_logic_id
+                );
+				
+		<!-- delete if condition -->
+		DELETE
+			FROM 
+				if_condition_detail icd
+			WHERE 
+				EXISTS
+				(
+					SELECT 
+						1
+					FROM 
+						if_component ic
+					INNER JOIN 
+						sequence_logic sl 
+						ON 
+							sl.sequence_logic_id = ic.sequence_logic_id
+						<!-- AND 
+							sl.component_type = 9 -->
+					WHERE 
+						EXISTS
+						(
+							SELECT
+								1
+							FROM 
+								business_logic bl
+							WHERE
+								bl.business_logic_id = sl.business_logic_id
+							AND
+								bl.project_id = #{projectId}
+						)
+					AND 
+						ic.if_component_id = icd.if_component_id
+				);
+				
+		<!-- delete if component -->
+		DELETE 
+			FROM 
+				if_component ic
+			WHERE 
+				EXISTS
+				( 
+					SELECT 
+						1
+			 		FROM 
+			 			sequence_logic sl
+			 		WHERE 
+			 			EXISTS
+						(
+							SELECT
+								1
+							FROM 
+								business_logic bl
+							WHERE
+								bl.business_logic_id = sl.business_logic_id
+							AND
+								bl.project_id = #{projectId}
+						)
+					<!-- AND 
+						sl.component_type = 9 -->
+					AND 
+						sl.sequence_logic_id = ic.sequence_logic_id
+				);
+	
+		<!-- delete parameter feedback -->
+		DELETE
+			FROM 
+				message_parameter mp
+			WHERE 
+				EXISTS
+				(
+					SELECT
+						1
+					FROM 
+						business_logic bl
+					WHERE
+						bl.business_logic_id = mp.business_logic_id
+					AND
+						bl.project_id = #{projectId}
+				);
+			
+		<!-- delete feedback component -->
+		DELETE 
+			FROM 
+				feedback_component fc
+			WHERE 
+				EXISTS
+				( 
+					SELECT 
+						1
+			 		FROM 
+			 			sequence_logic sl
+			 		WHERE 
+			 			EXISTS
+						(
+							SELECT
+								1
+							FROM 
+								business_logic bl
+							WHERE
+								bl.business_logic_id = sl.business_logic_id
+							AND
+								bl.project_id = #{projectId}
+						)
+					<!-- AND 
+						component_type = 11 -->
+					AND 
+						sl.sequence_logic_id = fc.sequence_logic_id
+				);
+			
+		DELETE
+ 				FROM 
+ 					sequence_connector sc
+			WHERE 
+				EXISTS	
+				(
+					SELECT 
+						1
+					FROM
+						sequence_logic sl
+					WHERE 
+						EXISTS
+						(
+							SELECT
+								1
+							FROM 
+								business_logic bl
+							WHERE
+								bl.business_logic_id = sl.business_logic_id
+							AND
+								bl.project_id = #{projectId}
+						)
+					AND 
+						sl.sequence_logic_id = sc.connector_source
+				);
+		
+		DELETE
+ 				FROM 
+ 					transaction_component tc
+			WHERE 
+				EXISTS	
+				(
+					SELECT 
+						1
+					FROM
+						sequence_logic sl
+					WHERE 
+						EXISTS
+						(
+							SELECT
+								1
+							FROM 
+								business_logic bl
+							WHERE
+								bl.business_logic_id = sl.business_logic_id
+							AND
+								bl.project_id = #{projectId}
+						)
+					AND 
+						sl.sequence_logic_id = tc.sequence_logic_id
+				);
+				
+
+		DELETE
+			FROM merge_file_detail a
+		WHERE EXISTS
+		(
+			SELECT 1
+			FROM 
+				fileoperation_component b INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id)
+			WHERE 
+				b.fileoperation_component_id = a.fileoperation_component_id
+			AND
+				EXISTS
+					(
+						SELECT
+							1
+						FROM 
+							business_logic bl
+						WHERE
+							bl.business_logic_id = c.business_logic_id
+						AND
+							bl.project_id = #{projectId}
+					)
+		);
+
+		DELETE
+			FROM fileoperation_component b
+		WHERE EXISTS
+		(
+			SELECT 1
+			FROM 
+				sequence_logic c INNER JOIN business_logic bl ON (bl.business_logic_id = c.business_logic_id AND bl.project_id = #{projectId})
+			WHERE 
+				c.sequence_logic_id = b.sequence_logic_id
+		);
+
+		<include refid="deleteAdvance"></include>
+
+		DELETE
+			FROM nestedlogic_component b
+		WHERE EXISTS
+		(
+			SELECT 1
+			FROM 
+				sequence_logic c INNER JOIN business_logic bl ON (bl.business_logic_id = c.business_logic_id AND bl.project_id = #{projectId})
+			WHERE 
+				c.sequence_logic_id = b.sequence_logic_id
+		);
+		
+		DELETE
+			FROM log_component b
+		WHERE EXISTS
+		(
+			SELECT 1
+			FROM 
+				sequence_logic c INNER JOIN business_logic bl ON (bl.business_logic_id = c.business_logic_id AND bl.project_id = #{projectId})
+			WHERE 
+				c.sequence_logic_id = b.sequence_logic_id
+		);
+		
+		
+		<include refid="deleteImportFile" />
+		<include refid="deleteExportFile" />
+		<include refid="deleteEmail" />
+		<include refid="deleteDownloadFile" />
+		
+		DELETE
+			FROM 
+				sequence_logic sl
+			WHERE 
+				EXISTS
+				(
+					SELECT
+						1
+					FROM 
+						business_logic bl
+					WHERE
+						bl.business_logic_id = sl.business_logic_id
+					AND
+						bl.project_id = #{projectId}
+				); 
+		DELETE
+				FROM 
+					outputbean_screenitem_mapping
+				WHERE 
+					outputbean_screenitem_mapping.output_bean_id In
+					(	
+						SELECT ob.output_bean_id
+							FROM 
+								output_bean ob
+							WHERE 
+								EXISTS
+								(
+									SELECT
+										1
+									FROM 
+										business_logic bl
+									WHERE
+										bl.business_logic_id = ob.business_logic_id
+									AND
+										bl.project_id = #{projectId}
+								)
+					);
+		DELETE
+			FROM 
+				output_bean ob
+			WHERE 
+				EXISTS
+				(
+					SELECT
+						1
+					FROM 
+						business_logic bl
+					WHERE
+						bl.business_logic_id = ob.business_logic_id
+					AND
+						bl.project_id = #{projectId}
+				);
+		DELETE
+			FROM 
+				input_bean ib
+			WHERE 
+				EXISTS
+				(
+					SELECT
+						1
+					FROM 
+						business_logic bl
+					WHERE
+						bl.business_logic_id = ib.business_logic_id
+					AND
+						bl.project_id = #{projectId}
+				);	
+		DELETE
+			FROM 
+				object_definition od
+			WHERE 
+				EXISTS
+				(
+					SELECT
+						1
+					FROM 
+						business_logic bl
+					WHERE
+						bl.business_logic_id = od.business_logic_id
+					AND
+						bl.project_id = #{projectId}
+				);
+
+		DELETE
+			FROM 
+				bd_parameter_index od
+			WHERE 
+				EXISTS
+				(
+					SELECT
+						1
+					FROM 
+						business_logic bl
+					WHERE
+						bl.business_logic_id = od.business_logic_id
+					AND
+						bl.project_id = #{projectId}
+				);
+		
+		
+		
+		
+		DELETE
+			FROM 
+				business_logic
+			WHERE
+				project_id = #{projectId};
+			
+		
+		
+		DELETE FROM account_project WHERE project_id = #{projectId};
+		DELETE FROM message_design WHERE project_id = #{projectId};
+		DELETE FROM language_design WHERE project_id = #{projectId};
+		
+		<!-- Delete define codelist Design -->
+		DELETE 
+			FROM
+				user_define_codelist_detail udcl
+			WHERE
+				EXISTS 
+					(
+						SELECT
+							1
+						FROM
+							table_design_details tdd
+						INNER JOIN 
+							table_design td 
+						ON 
+							tdd.tbl_design_id = td.tbl_design_id AND td.project_id = #{projectId}
+						WHERE
+							udcl.codelist_id = tdd.datasource_id
+						AND
+							tdd.constrains_type = 2
+						AND
+							tdd.datasource_type = 0
+					);
+		DELETE 
+			FROM
+				user_define_codelist udc
+			WHERE
+				EXISTS 
+				(
+					SELECT
+						1
+					FROM
+						table_design_details tdd
+					INNER JOIN 
+						table_design td 
+					ON 
+						tdd.tbl_design_id = td.tbl_design_id AND td.project_id = #{projectId}
+					WHERE
+						udc.codelist_id = tdd.datasource_id
+					AND
+						tdd.constrains_type = 2
+					AND
+						tdd.datasource_type = 0
+				);
+
+		DELETE 
+			FROM
+				user_define_codelist_detail udcl
+			WHERE
+				EXISTS 
+				(
+					SELECT
+						1
+					FROM
+						domain_design dd
+					WHERE
+						udcl.codelist_id = dd.datasource_id
+					AND
+						dd.constrains_type = 2
+					AND
+						dd.datasource_type = 0
+					AND	
+						dd.project_id = #{projectId}
+					);
+					
+		DELETE 
+			FROM
+				user_define_codelist udc
+			WHERE
+				EXISTS 
+				(
+					SELECT
+						1
+					FROM
+						domain_design dd
+					WHERE
+						udc.codelist_id = dd.datasource_id
+					AND
+						dd.constrains_type = 2
+					AND
+						dd.datasource_type = 0
+					AND	
+						dd.project_id = #{projectId}
+				);
+				
+		<!-- Delete Screen Design -->
+		DELETE FROM screen_item_event_mapping siem
+		WHERE 
+			EXISTS
+			(
+				SELECT
+					1
+				FROM
+					screen_item_event sie INNER JOIN screen_item si ON sie.screen_item_id = si.screen_item_id 
+				WHERE
+					 sie.screen_item_event_id = siem.screen_item_event_id 
+				AND 
+					EXISTS
+					(
+						SELECT 1 
+						FROM 
+							screen_design sd
+						WHERE
+							EXISTS
+							(
+								SELECT 1 FROM module m WHERE project_id = #{projectId} AND m.module_id = sd.module_id
+							)
+						AND si.screen_id = sd.screen_id
+					)
+			);
+
+		DELETE
+			FROM 
+				screen_item_event sie
+			WHERE
+			EXISTS
+			(
+				SELECT
+					1
+				FROM
+					screen_item si
+				WHERE
+					 sie.screen_item_id = si.screen_item_id 
+				AND 
+					EXISTS
+					(
+						SELECT 1 
+						FROM 
+							screen_design sd
+						WHERE
+							EXISTS
+							(
+								SELECT 1 FROM module m WHERE project_id = #{projectId} AND m.module_id = sd.module_id
+							)
+						AND si.screen_id = sd.screen_id
+					)
+			);
+		
+		DELETE
+			FROM 
+				screen_item_validation siv
+			WHERE
+			EXISTS
+			(
+				SELECT
+					1
+				FROM
+					screen_item si
+				WHERE
+					 siv.screen_item_id = si.screen_item_id 
+				AND 
+					EXISTS
+					(
+						SELECT 1 
+						FROM 
+							screen_design sd
+						WHERE
+							EXISTS
+							(
+								SELECT 1 FROM module m WHERE project_id = #{projectId} AND m.module_id = sd.module_id
+							)
+						AND si.screen_id = sd.screen_id
+					)
+			);
+
+		DELETE
+			FROM
+				screen_item_codelist sic
+			WHERE 
+			EXISTS
+			(
+				SELECT
+					1
+				FROM
+					screen_item si
+				WHERE
+					sic.screen_item_id = si.screen_item_id 
+				AND 
+					EXISTS(
+						SELECT 1 
+						FROM 
+							screen_design sd 
+						WHERE
+							EXISTS
+							(
+								SELECT 1 from module m WHERE project_id = #{projectId} AND m.module_id = sd.module_id
+							)
+						AND si.screen_id = sd.screen_id
+					)
+			);
+
+		DELETE
+			FROM
+				screen_item_status sis
+			WHERE 
+			EXISTS
+			(
+				SELECT
+					1
+				FROM
+					screen_item si
+				WHERE
+					sis.screen_item_id = si.screen_item_id 
+				AND 
+					EXISTS(
+						SELECT 1 
+						FROM 
+							screen_design sd 
+						WHERE
+							EXISTS
+							(
+								SELECT 1 from module m WHERE project_id = #{projectId} AND m.module_id = sd.module_id
+							)
+						AND si.screen_id = sd.screen_id
+					)
+			);
+		
+		DELETE
+			FROM
+				screen_item si
+			WHERE
+				EXISTS(
+					SELECT 1 
+					FROM 
+						screen_design sd 
+					WHERE
+						EXISTS
+						(
+							SELECT 1 from module m WHERE project_id = #{projectId} AND m.module_id = sd.module_id
+						)
+					AND si.screen_id = sd.screen_id
+				);
+			
+		DELETE
+			FROM 
+				screen_group_item sgi
+			WHERE 
+				EXISTS
+					( 
+						SELECT 1
+					 	FROM 
+					 		screen_area sa INNER JOIN screen_form sf USING (screen_form_id)
+					 	WHERE
+					 		sgi.screen_area_id = sa.screen_area_id
+						 AND ( 
+							EXISTS
+								( SELECT 1
+								FROM 
+									screen_design sd
+								WHERE 
+								EXISTS
+									(
+										SELECT 1
+										FROM 
+											module m
+										WHERE 
+											project_id = #{projectId}
+										AND 
+											m.module_id = sd.module_id
+									)
+								AND sf.screen_id = sd.screen_id 
+							)
+						)
+				);
+		
+		DELETE
+			FROM 
+				screen_item_sequence sis
+			WHERE 
+				EXISTS
+					( 
+						SELECT 1
+						FROM 
+							screen_area sa INNER JOIN screen_form sf USING (screen_form_id)
+						WHERE
+							sis.screen_area_id = sa.screen_area_id
+						AND ( 
+							EXISTS
+							(
+								SELECT 1
+								FROM 
+									screen_design sd
+								WHERE 
+								EXISTS
+									(
+										SELECT 1
+										FROM 
+											module m
+										WHERE 
+											project_id = #{projectId}
+										AND m.module_id = sd.module_id
+									)
+									AND sf.screen_id = sd.screen_id 
+							)
+						)
+				);
+
+		DELETE
+			FROM
+				screen_area_event sae
+			WHERE
+			EXISTS
+				(
+					SELECT
+						1
+					FROM
+						screen_form sf INNER JOIN screen_area sa ON sa.screen_form_id = sf.screen_form_id
+					WHERE
+						sa.screen_form_id = sf.screen_form_id 
+					AND 
+						sae.screen_area_id = sa.screen_area_id
+					AND 
+						EXISTS
+						(
+							SELECT 1 
+							FROM 
+								screen_design sd 
+							WHERE
+								EXISTS
+								(
+									SELECT 1 from module m WHERE project_id = #{projectId} AND m.module_id = sd.module_id
+								)
+							AND sf.screen_id = sd.screen_id	
+						)
+				);
+				
+		DELETE
+			FROM
+				screen_area sa
+			WHERE 
+			EXISTS
+				(
+					SELECT
+						1
+					FROM
+						screen_form sf
+					WHERE
+						sa.screen_form_id = sf.screen_form_id 
+					AND 
+						EXISTS
+						(
+							SELECT 1 
+							FROM 
+								screen_design sd 
+							WHERE
+								EXISTS
+								(
+									SELECT 1 from module m WHERE project_id = #{projectId} AND m.module_id = sd.module_id
+								)
+							AND sf.screen_id = sd.screen_id
+						)				
+				);
+
+
+		DELETE
+			FROM
+				screen_form_tabs sa
+			WHERE 
+			EXISTS
+				(
+					SELECT
+						1
+					FROM
+						screen_form sf
+					WHERE
+						sa.screen_form_id = sf.screen_form_id 
+					AND 
+						EXISTS
+						(
+							SELECT 1 
+							FROM 
+								screen_design sd 
+							WHERE
+								EXISTS
+								(
+									SELECT 1 from module m WHERE project_id = #{projectId} AND m.module_id = sd.module_id
+								)
+							AND sf.screen_id = sd.screen_id
+						)
+				);
+
+		DELETE
+			FROM
+				screen_form sf
+			WHERE
+				EXISTS
+				(
+					SELECT 1 
+					FROM 
+						screen_design sd 
+					WHERE
+						EXISTS 
+						( 
+							SELECT 1 FROM module m WHERE project_id = #{projectId} AND m.module_id = sd.module_id
+						)
+					AND 
+						sf.screen_id = sd.screen_id
+				);
+
+		DELETE
+			FROM
+				screen_action_param s 
+			WHERE
+			EXISTS
+			(
+				SELECT 1 
+					FROM 
+						screen_action sa 
+					WHERE 
+						s.screen_action_id = sa.screen_action_id
+					AND 
+						EXISTS
+						(
+							SELECT 1 
+							FROM 
+								screen_design sd 
+							WHERE
+								EXISTS
+								(
+									SELECT 1 from module m WHERE project_id = #{projectId} AND m.module_id = sd.module_id
+								)
+							AND 
+								(sa.from_screen_id = sd.screen_id OR sa.to_screen_id = sd.screen_id)
+						)
+			);
+		
+		DELETE
+			FROM
+				screen_action sa
+			WHERE
+				EXISTS 
+				(
+					SELECT 1 
+						FROM 
+							screen_design sd 
+						WHERE
+							EXISTS
+							(
+								SELECT 1 from module m WHERE project_id = #{projectId} AND m.module_id = sd.module_id
+							)
+						AND 
+							sa.from_screen_id = sd.screen_id
+				);
+			
+		DELETE
+			FROM
+				screen_param sp
+			WHERE
+				EXISTS 
+				(
+					SELECT 1 
+					FROM 
+						screen_design sd 
+					WHERE
+						EXISTS
+						(
+							SELECT 1 from module m WHERE project_id = #{projectId} AND m.module_id = sd.module_id
+						)
+					AND 
+						sp.screen_id = sd.screen_id
+				);
+				
+		DELETE 
+			FROM
+				screen_area_sort_mapping sasm
+					WHERE
+						EXISTS
+						(
+							SELECT 
+								1
+							FROM 
+								screen_design sd
+							WHERE
+								EXISTS
+								(
+									SELECT 1 from module m WHERE project_id = #{projectId} AND m.module_id = sd.module_id
+								)
+							AND 
+								sasm.screen_id = sd.screen_id
+						);
+		
+		DELETE 
+			FROM 
+				screen_design sd 
+			WHERE
+				EXISTS
+				(
+					SELECT 1 from module m WHERE project_id =	#{projectId} AND m.module_id = sd.module_id
+				);
+				
+		<!-- Delete Subject area Design -->
+		DELETE 
+			FROM 
+				subject_area_keyword sk 
+			WHERE 
+				EXISTS 
+				(
+					SELECT 1 FROM subject_area_design s WHERE project_id= #{projectId} AND sk.sub_area_design_id = s.sub_area_design_id
+				);
+			
+		DELETE 
+			FROM 
+				subject_area_design_table st 
+			WHERE 
+				EXISTS 
+				(
+					SELECT 1 FROM subject_area_design s WHERE project_id= #{projectId} AND st.sub_area_design_id = s.sub_area_design_id
+					UNION ALL
+					SELECT 1 from table_design td WHERE project_id= #{projectId} AND st.tbl_design_id = td.tbl_design_id
+				);
+
+		DELETE 
+			FROM 
+				subject_area_design 
+			WHERE 
+				project_id = #{projectId};
+		
+		<!-- Delete Sql Design -->
+		DELETE
+			FROM
+				sql_design_having sdh
+			WHERE
+			EXISTS 
+				(SELECT 1
+					FROM
+						sql_design sd
+					WHERE
+						project_id = #{projectId}
+					AND 
+						sdh.sql_design_id = sd.sql_design_id 
+				);
+				
+		DELETE
+			FROM
+				sql_design_results sdr
+			WHERE
+			EXISTS
+				(SELECT 1
+					FROM
+						sql_design sd
+					WHERE
+						project_id =	#{projectId}
+					AND 
+						sdr.sql_design_id = sd.sql_design_id 
+				);
+				
+		DELETE
+			FROM
+				sql_design_table_items sdti
+			WHERE
+			EXISTS 
+				(
+					SELECT 1
+						FROM 
+							sql_design_table tdt 
+						WHERE
+						EXISTS
+							(SELECT 1
+								FROM
+									sql_design sd
+								WHERE
+									project_id =	#{projectId}
+								AND 
+									tdt.sql_design_id = sd.sql_design_id 
+							)
+					AND 
+						tdt.sql_design_table_id = sdti.sql_design_table_id
+				);	
+
+		DELETE
+			FROM
+				sql_design_table sdt
+			WHERE
+			EXISTS 
+				(SELECT 1
+					FROM
+						sql_design sd
+					WHERE
+						project_id =	#{projectId}
+					AND 
+						sdt.sql_design_id = sd.sql_design_id 
+				);
+				
+		DELETE
+			FROM
+				sql_design_group_by sdgb
+			WHERE
+			EXISTS 
+				(SELECT 1
+					FROM
+						sql_design sd
+					WHERE
+						project_id =	#{projectId}
+					AND 
+						sdgb.sql_design_id = sd.sql_design_id 
+				);
+		
+		DELETE
+			FROM
+				autocomplete_design	ad
+			WHERE
+			EXISTS
+				(SELECT 1
+					FROM
+						sql_design sd
+					WHERE
+						project_id =	#{projectId}
+					AND 
+						ad.sql_design_id = sd.sql_design_id 
+				);
+			
+		DELETE
+			FROM
+				sql_design_order sdo
+			WHERE
+			EXISTS
+				(SELECT 1
+					FROM
+						sql_design sd
+					WHERE
+						project_id =	#{projectId}
+					AND 
+						sdo.sql_design_id = sd.sql_design_id 
+				);
+				
+		DELETE
+			FROM
+				sql_design_parameters sdp
+			WHERE
+			EXISTS 
+				(SELECT 1
+					FROM
+						sql_design_conditions sdc
+						WHERE
+						EXISTS 
+							(SELECT 1
+								FROM
+									sql_design sd
+								WHERE
+									project_id = #{projectId}
+								AND 
+									sdc.sql_design_id = sd.sql_design_id 
+							)
+						AND sdp.sql_design_parameter_id = sdc.sql_design_parameter_id
+				);
+						
+		DELETE
+			FROM
+				sql_design_conditions sdc
+			WHERE
+			EXISTS 
+				(SELECT 1
+					FROM
+						sql_design sd
+					WHERE
+						project_id = #{projectId}
+					AND 
+						sdc.sql_design_id = sd.sql_design_id 
+				);
+				
+		DELETE
+			FROM
+				sql_design_value sdv
+			WHERE
+			EXISTS 
+				(SELECT 1
+					FROM
+						sql_design sd
+					WHERE
+						project_id = #{projectId}
+					AND 
+						sdv.sql_design_id = sd.sql_design_id 
+				);
+		
+		DELETE
+			FROM
+				sql_design sd
+			WHERE
+				project_id =	#{projectId};	
+				
+		DELETE 
+			FROM 
+				table_design_key_items ti 
+			WHERE 
+				EXISTS 
+				(
+					SELECT 1 
+					FROM 
+						table_design_key tk 
+					WHERE 
+						EXISTS
+						(
+							SELECT 1 FROM table_design td WHERE project_id = #{projectId} AND td.tbl_design_id = tk.tbl_design_id 
+						)
+					AND 
+						ti.tbl_design_key_id = tk.tbl_design_key_id
+				);
+				
+		<!-- Delete problem list -->
+		DELETE
+			FROM 
+				problem_list 
+			WHERE 
+				project_id = #{projectId};	
+				
+		<!-- Delete Table Design -->
+		DELETE 
+			FROM 
+				table_design_key tk 
+			WHERE 
+				EXISTS 
+				(
+					select 1 from table_design td WHERE project_id =	#{projectId} AND td.tbl_design_id = tk.tbl_design_id
+				);
+			
+		DELETE
+			FROM 
+				table_design_foreign_key tf 
+			WHERE
+				EXISTS 
+				(
+					SELECT 1 FROM table_design td WHERE project_id =	#{projectId} AND td.tbl_design_id = tf.to_tbl_design_id
+					UNION ALL
+					SELECT 1 FROM table_design td WHERE project_id =	#{projectId} AND td.tbl_design_id = tf.from_tbl_design_id
+				);
+
+		DELETE 
+			FROM 
+				sql_design_table_items si 
+			WHERE
+				EXISTS 
+				(
+					SELECT 1 FROM table_design td WHERE project_id =	#{projectId} AND td.tbl_design_id = si.tbl_design_id
+				);
+						
+		DELETE 
+			FROM 
+				table_design_details tdt 
+			WHERE 
+				EXISTS 
+				(
+					SELECT 1 FROM table_design td WHERE project_id =	#{projectId} AND td.tbl_design_id = tdt.tbl_design_id
+				);
+			
+		DELETE 
+			FROM 
+				sql_design_results sr 
+			WHERE
+				EXISTS 
+				(
+					SELECT 1 FROM table_design td WHERE project_id =	#{projectId} AND sr.tbl_design_id = td.tbl_design_id
+				);
+			
+		DELETE 
+			FROM 
+				sql_design_table st 
+			WHERE 
+				EXISTS 
+				(
+					SELECT 1 FROM table_design td WHERE project_id =	#{projectId} AND st.tbl_design_id = td.tbl_design_id
+				);
+			
+		DELETE 
+			FROM 
+				table_design 
+			WHERE 
+				project_id= #{projectId}; 
+				
+		DELETE 
+			FROM 
+				domain_table_mapping_codelist dc 
+			WHERE
+				EXISTS(
+					SELECT 1 
+						FROM domain_table_mapping_items di
+						WHERE 
+							EXISTS
+							(
+								SELECT 1 FROM domain_table_mapping dm WHERE project_id = #{projectId} AND dm.domain_tbl_mapping_id = di.domain_tbl_mapping_id
+							)
+						AND dc.domain_tbl_mapping_item_id = di.domain_tbl_mapping_item_id
+				);
+		
+		DELETE 
+			FROM 
+				domain_table_mapping_items di 
+			WHERE 
+				EXISTS
+				(
+					SELECT 1 FROM domain_table_mapping dm WHERE project_id = #{projectId} AND dm.domain_tbl_mapping_id = di.domain_tbl_mapping_id
+				);
+
+		DELETE 
+			FROM 
+				domain_table_mapping 
+			WHERE 
+				project_id = #{projectId};
+				
+		DELETE 
+			FROM 
+				domain_design 
+			WHERE 
+				project_id = #{projectId};
+				
+		UPDATE 
+			account_profile 
+			SET 
+				current_project_id = null 
+			WHERE 
+				current_project_id = #{projectId};
+
+		<!-- Delete codelist	-->
+		DELETE FROM
+			codelist_detail cld
+		WHERE 
+			EXISTS 
+				(SELECT 1
+					FROM
+						codelist cl 
+					WHERE
+						cl.project_id = #{projectId}
+					AND
+						cld.codelist_id = cl.codelist_id
+				);
+
+		DELETE FROM
+			codelist cl
+		WHERE
+			cl.project_id =	#{projectId};
+		<!-- Delete codelist	-->
+		
+		<!-- Delete function design	-->
+		DELETE
+			FROM 
+				function_design f
+			WHERE 
+				EXISTS
+				(
+					SELECT 1
+					FROM module m
+					WHERE project_id = #{projectId} and f.module_id = m.module_id
+					
+				);
+		<!-- Delete function design	-->
+
+		<!-- Delete Module Design -->
+		DELETE 
+			FROM 
+				module_table_mapping ma 
+			WHERE 
+				EXISTS
+				(
+					SELECT 1 FROM module m WHERE m.project_id =	#{projectId} and m.module_id = ma.module_id
+				);
+		DELETE 
+			FROM 
+				module 
+			WHERE 
+				project_id = #{projectId};
+		<!-- Delete Module Design -->
+		
+		DELETE
+			FROM 
+				business_type 
+			WHERE 
+				project_id = #{projectId};
+
+		DELETE
+			FROM 
+				session_management
+			WHERE 
+				project_id = #{projectId};
+		
+		<!-- delete Function Master function -->
+		<include refid="deleteFunctionMaster" />
+		
+		<include refid="deleteScreenTransitionByProject"/>
+
+		DELETE
+			FROM 
+				project 
+			WHERE 
+				project_id = #{projectId}
+	</delete>
+	
+	<sql id="deleteImportFile">
+		DELETE FROM file_format a
+		WHERE EXISTS
+		(
+			SELECT 1
+			FROM 
+				import_file_component b INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id )
+			WHERE 
+				b.import_file_component_id = a.file_id
+			AND
+				EXISTS
+					(
+						SELECT
+							1
+						FROM 
+							business_logic bl
+						WHERE
+							bl.business_logic_id = c.business_logic_id
+						AND
+							bl.project_id = #{projectId}
+					)
+		);
+
+		DELETE
+			FROM import_assign_value a
+		WHERE EXISTS
+		(
+			SELECT 1
+			FROM 
+				import_file_component b INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id AND c.component_type = 16)
+			WHERE 
+				b.import_file_component_id = a.import_file_component_id
+			AND
+				EXISTS
+					(
+						SELECT
+							1
+						FROM 
+							business_logic bl
+						WHERE
+							bl.business_logic_id = c.business_logic_id
+						AND
+							bl.project_id = #{projectId}
+					)
+		);
+		
+		DELETE
+			FROM import_file_component b
+		WHERE EXISTS
+		(
+			SELECT 1
+			FROM 
+				sequence_logic c INNER JOIN business_logic bl ON (bl.business_logic_id = c.business_logic_id AND bl.project_id = #{projectId})
+			WHERE 
+				c.sequence_logic_id = b.sequence_logic_id
+		);
+	</sql>
+	
+	<sql id="deleteDownloadFile">
+		DELETE
+			FROM download_file_component b
+		WHERE EXISTS
+		(
+			SELECT 1
+			FROM 
+				sequence_logic c INNER JOIN business_logic bl ON (bl.business_logic_id = c.business_logic_id AND bl.project_id = #{projectId})
+			WHERE 
+				c.sequence_logic_id = b.sequence_logic_id
+		);
+
+	</sql>
+	
+	<sql id="deleteEmail">
+		DELETE
+			FROM email_recipient a
+		WHERE EXISTS
+		(
+			SELECT 1
+			FROM 
+				email_component b INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id)
+			WHERE 
+				b.email_component_id = a.email_component_id
+			AND
+				EXISTS
+					(
+						SELECT
+							1
+						FROM 
+							business_logic bl
+						WHERE
+							bl.business_logic_id = c.business_logic_id
+						AND
+							bl.project_id = #{projectId}
+					)
+		);
+		
+		DELETE
+			FROM email_content a
+		WHERE EXISTS
+		(
+			SELECT 1
+			FROM 
+				email_component b INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id)
+			WHERE 
+				b.email_component_id = a.email_component_id
+			AND
+				EXISTS
+					(
+						SELECT
+							1
+						FROM 
+							business_logic bl
+						WHERE
+							bl.business_logic_id = c.business_logic_id
+						AND
+							bl.project_id = #{projectId}
+					)
+		);
+
+		DELETE
+			FROM email_component b
+		WHERE EXISTS
+		(
+			SELECT 1
+			FROM 
+				sequence_logic c INNER JOIN business_logic bl ON (bl.business_logic_id = c.business_logic_id AND bl.project_id = #{projectId})
+			WHERE 
+				c.sequence_logic_id = b.sequence_logic_id
+		);
+
+	</sql>
+	
+	<sql id="deleteExportFile">
+	
+		DELETE FROM file_format a
+		WHERE EXISTS
+		(
+			SELECT 1
+			FROM 
+				export_file_component b INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id )
+			WHERE 
+				b.export_file_component_id = a.file_id
+			AND
+				EXISTS
+					(
+						SELECT
+							1
+						FROM 
+							business_logic bl
+						WHERE
+							bl.business_logic_id = c.business_logic_id
+						AND
+							bl.project_id = #{projectId}
+					)
+		);
+		
+		DELETE FROM column_file_format a
+		WHERE EXISTS
+		(
+			SELECT 1
+			FROM export_assign_value b
+				INNER JOIN export_file_component d ON b.export_file_component_id = d.export_file_component_id
+				INNER JOIN sequence_logic c ON (c.sequence_logic_id = d.sequence_logic_id)
+			WHERE
+				b.export_file_component_id = d.export_file_component_id AND a.export_assign_value_id = b.export_assign_value_id
+			AND
+				EXISTS
+					(
+						SELECT
+							1
+						FROM 
+							business_logic bl
+						WHERE
+							bl.business_logic_id = c.business_logic_id
+						AND
+							bl.project_id = #{projectId}
+					)
+		);
+		DELETE
+			FROM export_assign_value a
+		WHERE EXISTS
+		(
+			SELECT 1
+			FROM 
+				export_file_component b INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id)
+			WHERE 
+				b.export_file_component_id = a.export_file_component_id
+			AND
+				EXISTS
+					(
+						SELECT
+							1
+						FROM 
+							business_logic bl
+						WHERE
+							bl.business_logic_id = c.business_logic_id
+						AND
+							bl.project_id = #{projectId}
+					)
+		);
+
+		DELETE
+			FROM export_file_component b
+		WHERE EXISTS
+		(
+			SELECT 1
+			FROM 
+				sequence_logic c INNER JOIN business_logic bl ON (bl.business_logic_id = c.business_logic_id AND bl.project_id = #{projectId})
+			WHERE 
+				c.sequence_logic_id = b.sequence_logic_id
+		);
+
+	</sql>
+	
+	<sql id="deleteFunctionMaster">
+		DELETE 
+				FROM
+					function_method_input fmi
+				WHERE
+					EXISTS 
+					(
+						SELECT
+							1
+						FROM
+							function_method fm
+						WHERE
+							fm.function_method_id = fmi.function_method_id
+						AND
+							EXISTS
+								(
+									SELECT 
+										1 
+									FROM 
+										function_master fmas
+									WHERE
+										fmas.project_id = #{projectId}
+									AND 
+										fm.function_master_id = fmas.function_master_id
+								)
+					);
+					
+			DELETE
+				FROM
+					function_method_output fmo
+				WHERE
+					EXISTS 
+					(
+						SELECT
+							1
+						FROM
+							function_method fm
+						WHERE 
+							fm.function_method_id = fmo.function_method_id
+						AND 
+							EXISTS
+								(
+									SELECT 
+										1 
+									FROM 
+										function_master fmas
+									WHERE
+										fmas.project_id = #{projectId}
+									AND 
+										fm.function_master_id = fmas.function_master_id
+								)
+					);
+			
+			DELETE
+				FROM 
+					formula_method_input fmi
+				WHERE
+					EXISTS
+					(
+						SELECT
+							1
+						FROM 
+							formula_detail fd
+						WHERE 
+							EXISTS
+							(
+								SELECT
+									1
+								FROM
+									function_method fm
+								WHERE 
+									EXISTS
+										(
+											SELECT 
+												1 
+											FROM 
+												function_master fmas
+											WHERE
+												fmas.project_id = #{projectId}
+											AND 
+												fm.function_master_id = fmas.function_master_id
+										)
+								AND
+									fm.function_method_id = fd.function_method_id
+							)
+						AND
+							fmi.formula_detail_id = fd.formula_detail_id
+					);
+					
+			DELETE
+				FROM 
+					formula_method_output fmo
+				WHERE
+					EXISTS
+					(
+						SELECT
+							1
+						FROM
+							formula_detail fd
+						WHERE 
+							EXISTS
+							(
+								SELECT
+									1
+								FROM
+									function_method fm
+								WHERE 
+									EXISTS
+										(
+											SELECT 
+												1 
+											FROM 
+												function_master fmas
+											WHERE
+												fmas.project_id = #{projectId}
+											AND 
+												fm.function_master_id = fmas.function_master_id
+										)
+								AND
+									fm.function_method_id = fd.function_method_id
+							)
+						AND
+							fmo.formula_detail_id = fd.formula_detail_id
+					);	
+			
+			DELETE
+				FROM 
+					formula_detail fd
+				WHERE 
+					EXISTS
+					(
+						SELECT
+							1
+						FROM
+							formula_definition fde
+						WHERE
+							fde.project_id = #{projectId}
+						AND
+							fd.formula_definition_id = fde.formula_definition_id
+					);
+			DELETE
+				FROM
+					formula_detail fd
+						WHERE 
+							EXISTS
+							(
+								SELECT
+									1
+								FROM
+									function_method fm
+								WHERE 
+									EXISTS
+										(
+											SELECT 
+												1 
+											FROM 
+												function_master fmas
+											WHERE
+												fmas.project_id = #{projectId}
+											AND 
+												fm.function_master_id = fmas.function_master_id
+										)
+								AND
+									fm.function_method_id = fd.function_method_id
+							);
+			
+			DELETE 
+				FROM 
+					function_method fm
+				WHERE 
+					EXISTS
+						(
+							SELECT 
+								1 
+							FROM 
+								function_master fmas
+							WHERE
+								fmas.project_id = #{projectId}
+							AND 
+								fm.function_master_id = fmas.function_master_id
+						);	
+			
+			DELETE
+			FROM
+				screen_item_status sis
+			WHERE 
+				EXISTS
+					(
+						SELECT
+							1
+						FROM
+							formula_definition fde
+						WHERE
+							fde.project_id = #{projectId}
+						AND
+							sis.formula_definition_id = fde.formula_definition_id
+					);
+			
+			DELETE
+				FROM
+					formula_definition
+				WHERE
+					project_id = #{projectId};
+
+			DELETE
+				FROM upload_file uf 
+			WHERE
+				EXISTS (
+					SELECT	1
+					FROM
+						function_master fmas
+					WHERE
+						fmas.upload_file_id = uf.upload_file_id AND fmas.project_id = #{projectId}
+			);
+
+			DELETE 
+				FROM 
+					function_master
+				WHERE 
+					project_id = #{projectId};
+	</sql>
+	
+	<select id="findById" resultMap="projectResultMap" >
+		SELECT
+			p.project_id,
+			p.project_name,
+			p.project_code,
+			p.db_type,
+			p.db_name,
+			p.db_host_name,
+			p.db_port,
+			p.db_user,
+			p.db_password,
+			p.db_driver,
+			p.case_sensitive,
+			p.package_name,
+			p.status,
+			p.remark,
+			p.webservice_flg,
+			p.webservice_pattern,
+			p.created_by,
+			p.created_date,
+			p.updated_by,
+			p.updated_date,
+			p.default_language,
+			language_name,
+			pma.sender_address,
+			pma.sender_name,
+			pma.smtp_host,
+			pma.smtp_encryption,
+			pma.smtp_port,
+			pma.smtp_username,
+			pma.smtp_password,
+			pdf.integer_format,
+			pdf.decimal_format,
+			pdf.date_format,
+			pdf.datetime_format,
+			pdf.time_format,
+			pdf.currency_format,
+			pdf.currency_code,
+			pdf.currency_code_position
+		FROM 
+			project p 
+			LEFT JOIN project_data_format pdf ON p.project_id = pdf.project_id
+			LEFT JOIN project_mail_account pma ON p.project_id = pma.project_id
+			LEFT JOIN language_design b ON p.default_language = b.language_id
+		WHERE
+			p.project_id = #{projectId}
+		AND
+			EXISTS 
+			(
+				SELECT 1
+				FROM
+					account_project a 
+				WHERE a.project_id = p.project_id 
+				<if test="accountId != null">
+					AND a.account_id = #{accountId}
+				</if>
+			)
+	</select>
+
+	<select id="countReferenceByProjectId" parameterType="_long" resultType="hashmap">
+		SELECT 
+			(SELECT COUNT(B.domain_tbl_mapping_id) FROM domain_table_mapping AS B WHERE B.project_id = A.project_id) AS domain_table_mapping_ref_count,
+			(SELECT COUNT(C.domain_id) FROM domain_design AS C WHERE C.project_id = A.project_id) AS domain_design_ref_count,
+			(SELECT COUNT(D.module_id) FROM module AS D WHERE D.project_id = A.project_id) AS module_ref_count,
+			(SELECT COUNT(E.sub_area_design_id) FROM subject_area_design AS E WHERE E.project_id = A.project_id) AS subject_area_design_ref_count,
+			(SELECT COUNT(F.tbl_design_id) FROM table_design AS F WHERE F.project_id = A.project_id) AS table_design_ref_count,
+			(SELECT COUNT(G.business_type_id) FROM business_type AS G WHERE G.project_id = A.project_id) AS business_type_ref_count,
+			(SELECT COUNT(J.sql_design_id) FROM sql_design AS J WHERE J.project_id = A.project_id) AS sql_design_ref_count,
+			(SELECT COUNT(K.decision_table_id) FROM decision_table AS K WHERE K.project_id = A.project_id) AS decision_table_ref_count,
+			(SELECT COUNT(L.business_logic_id) FROM business_logic AS L WHERE L.project_id = A.project_id) AS business_logic_ref_count,
+			(SELECT COUNT(M.codelist_id) FROM codelist AS M WHERE M.project_id = A.project_id) AS codelist_ref_count,
+			(SELECT COUNT(md.menu_id) FROM menu_design AS md WHERE md.project_id = A.project_id) AS menu_ref_count
+		FROM 
+			project AS A
+		WHERE 
+			A.project_id = #{projectId};
+	</select>
+	
+	<select id="countNameCodeByProjectId" parameterType="Project" resultType="Long">
+		SELECT 
+			SUM(rowVal) AS totalCount 
+		FROM (
+			(	SELECT 
+					1 AS rowVal 
+				FROM 
+					project 
+				<where>
+					<if test="projectName != null and projectName != ''">
+						UPPER(project_name) = UPPER(#{projectName})
+					</if> 
+					<if test="projectId != null">AND project_id != #{projectId}</if>
+					<if test="projectName == null and projectName == ''">AND FALSE</if>
+				</where>
+				LIMIT 1
+				)
+			UNION ALL
+			(	SELECT 
+					2 AS rowVal 
+				FROM 
+					project
+				<where>
+					<if test="projectCode != null and projectCode != ''">
+						UPPER(project_code) = UPPER(#{projectCode})
+					</if> 
+					<if test="projectId != null">AND project_id != #{projectId}</if>
+					<if test="projectCode == null and projectCode == ''">AND FALSE</if>
+				</where>
+				LIMIT 1
+			)
+		) AS checkDuplicate
+	</select>
+
+	<select id="findAllProjectByAccount" resultMap="projectResultMap" parameterType="Long" >
+		<![CDATA[
+			SELECT
+				p.project_id, 
+				p.project_name, 
+				p.project_code, 
+				p.remark, 
+				p.status, 
+				p.created_by, 
+				p.created_date, 
+				p.updated_by, 
+				p.updated_date, 
+				p.db_type, 
+				p.db_name, 
+				p.db_host_name, 
+				p.db_port, 
+				p.db_user, 
+				p.db_password, 
+				p.db_driver, 
+				p.case_sensitive, 
+				p.package_name,
+				p.default_language,
+				p.webservice_flg,
+				p.webservice_pattern
+				
+			FROM 
+				project p 
+			WHERE
+				EXISTS (
+					SELECT 1
+					FROM
+						account_project a 
+					WHERE a.project_id = p.project_id AND a.account_id = #{accountId}
+				)
+			ORDER BY
+				updated_date DESC
+		]]> 
+	</select>
+	<select id="getAllProjectAssignToAccount" parameterType="_long" resultMap="projectResultMap">
+		SELECT
+			p.project_id,
+			p.project_name,
+			p.project_code,
+			case_sensitive,
+			package_name,
+			p.status,
+			p.remark ,
+			ap.project_id as selected
+			
+		FROM 
+			project p LEFT JOIN account_project ap on p.project_id = ap.project_id AND ap.account_id = #{accountId}
+		Order by p.project_id 
+	</select>
+
+	<update id="modifyDesignStatus" parameterType="Project">
+		UPDATE 
+			project
+		SET
+			status = #{status},
+			updated_by = #{updatedBy},
+			updated_date = #{systemTime}
+		WHERE
+			project_id = #{projectId}
+		AND
+			updated_date = #{updatedDate}
+	</update>
+	
+	<update id="modifyAffectChangeDesign" parameterType="long">
+		UPDATE 
+			project
+		SET
+			status = 1
+		WHERE
+			project_id = #{projectId}
+	</update>
+	
+	<update id="modifyDefaultLanguage">
+		UPDATE 
+			project
+		SET
+			default_language = #{defaultLanguageId}
+		WHERE
+			project_id = #{projectId}
+	</update>
+	
+	<select id="validateChangeStatusToFixed" parameterType="Long" resultType="long" >
+			<![CDATA[
+			SELECT 
+				sum (total)
+			FROM
+			(
+				SELECT 
+					COUNT (*)	AS total
+				FROM 
+					table_design
+				WHERE
+					design_status = 1
+				AND
+					project_id = #{projectId}
+					
+				UNION ALL
+				
+				SELECT
+					COUNT(*) AS total 
+				FROM 
+					module
+				WHERE
+					status = 1
+				AND
+					project_id = #{projectId}
+					
+				UNION ALL
+				
+				SELECT
+					COUNT(*) AS total 
+				FROM 
+					autocomplete_design
+				WHERE
+					design_status = 1
+				AND
+					project_id = #{projectId}
+					
+				UNION ALL
+				
+				SELECT
+					COUNT(*) AS total 
+				FROM 
+					sql_design
+				WHERE
+					design_status = 1
+				AND
+					project_id = #{projectId}
+					
+				UNION ALL
+				
+				SELECT
+					COUNT(*) AS total 
+				FROM 
+					decision_table dt
+				WHERE
+					design_status = 1
+				AND
+					project_id = #{projectId}
+					
+				UNION ALL
+				
+				SELECT
+					COUNT(*) AS total 
+				FROM 
+					business_logic bl
+				WHERE
+					design_status = 1
+				AND
+					project_id = #{projectId}
+				
+				UNION ALL
+					
+				SELECT
+					COUNT(*) AS total 
+				FROM 
+					problem_list
+				WHERE
+					project_id = #{projectId}
+				
+			) temp
+		]]>
+	</select>
+
+	<select id="findThemeByProjectId" parameterType="Long" resultMap="projectThemeResultMap">
+		SELECT
+			code,
+			value
+		FROM
+			project_theme
+		WHERE
+			project_id = #{projectId}
+			
+		UNION ALL
+		SELECT 
+			'projectStatus' as code,
+			status :: text as value
+		FROM
+			project
+		WHERE
+			project_id = #{projectId}
+	</select>
+	
+	<insert id="addProjectTheme" parameterType="org.terasoluna.qp.domain.model.ProjectTheme">
+		INSERT INTO project_theme(
+			project_id, 
+			code, 
+			value, 
+			created_by,
+			updated_by)
+		VALUES (#{projectId}, #{code}, #{value}, #{accountId}, #{accountId});
+	</insert>
+	
+	<delete id="deleteThemeByProjectId" parameterType="Long">
+		DELETE 
+		FROM project_theme
+		where 
+		project_id = #{projectId}
+	</delete>
+	
+	<insert id="addProjectItem">
+		<if test="list != null and list.size > 0 ">
+			INSERT INTO 
+				project_items (project_id, message_code, message_string, style, hover_style, item_position, item_type, component_type, module_id, screen_id)
+			VALUES 
+			<foreach collection="list" item="element" separator=",">
+			(
+				#{element.projectId},
+				#{element.messageCode},
+				#{element.messageString},
+				#{element.style},
+				#{element.hoverStyle},
+				#{element.itemPosition},
+				#{element.itemType},
+				#{element.componentType},
+				#{element.moduleId},
+				#{element.screenId}
+			)
+			</foreach>;
+		</if>
+		
+	</insert>
+	
+	<delete id="deleteProjectItemByProjectId" parameterType="Long">
+		DELETE 
+		FROM project_items
+		WHERE 
+		project_id = #{projectId}
+	</delete>
+	
+	<select id="getProjectItemByProjectId" resultMap="projectItemMap">
+		SELECT 
+			t1.project_id, 
+			t1.message_code,
+			CASE WHEN t2.message_string IS NULL THEN t1.message_code ELSE t2.message_string END,
+			t1.style,
+			t1.hover_style,
+			t1.item_position,
+			t1.item_type,
+			t1.component_type,
+			t3.module_name,
+			t1.module_id,
+			t5.message_string AS screen_code,
+			t1.screen_id
+		FROM 
+			project_items t1 LEFT JOIN message_design t2 ON t1.message_code = t2.message_code AND t2.language_id = #{languageId} AND t2.message_type = 'sc'
+							 LEFT JOIN module t3 ON t1.module_id = t3.module_id
+							 LEFT JOIN screen_design t4 ON t1.screen_id = t4.screen_id
+							 LEFT JOIN message_design t5 ON t4.message_code = t5.message_code AND t5.language_id = #{languageId}
+		WHERE
+			t1.project_id = #{projectId}
+		ORDER BY
+			t1.project_item_id
+	</select>
+	
+	<select id="getAllProjectForAutocomplete" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+			project_id AS optionValue,
+			project_name AS optionLabel,
+			project_code AS output01
+		FROM 
+			project
+			
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<if test="searchKey != null and searchKey != ''" >
+				<bind name="keyword" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(searchKey)" />
+				<![CDATA[ project_name ILIKE #{keyword} ESCAPE '~' ]]>
+			</if>
+		</trim>
+		ORDER BY 
+			project_name
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+		<if test="arg02 == null || arg02 == ''">
+			LIMIT 20
+		</if>
+	</select>
+	
+	
+	<select id="checkInitQpTable" parameterType="Long" resultType="long" >
+			<![CDATA[
+			SELECT 
+				count(1)
+			FROM
+				table_design
+			WHERE
+				project_id = #{projectId} AND type = 2
+		]]>
+	</select>
+	
+	<!-- delete init function master common -->
+	<delete id="deleteInitFunctionMaster">
+		DELETE 
+			FROM
+				function_method_input fmi
+			WHERE
+				EXISTS 
+				(
+					SELECT
+						1
+					FROM
+						function_method fm
+					WHERE
+						fm.function_method_id = fmi.function_method_id
+					AND
+						EXISTS
+						(
+							SELECT 
+								1 
+							FROM 
+								function_master fmas
+							WHERE
+								fmas.project_id = #{projectId} and fmas.function_master_type = 0
+							AND 
+								fm.function_master_id = fmas.function_master_id
+						)
+				);
+				
+			DELETE
+			FROM
+				function_method_output fmo
+			WHERE
+				EXISTS 
+				(
+					SELECT
+						1
+					FROM
+						function_method fm
+					WHERE 
+						fm.function_method_id = fmo.function_method_id
+					AND 
+						EXISTS
+						(
+							SELECT 
+								1 
+							FROM 
+								function_master fmas
+							WHERE
+								fmas.project_id = #{projectId} and fmas.function_master_type = 0
+							AND 
+								fm.function_master_id = fmas.function_master_id
+						)
+				);
+	
+			DELETE 
+			FROM 
+				function_method fm
+			WHERE 
+				EXISTS
+				(
+					SELECT 
+						1 
+					FROM 
+						function_master fmas
+					WHERE
+						fmas.project_id = #{projectId} and fmas.function_master_type = 0
+					AND 
+						fm.function_master_id = fmas.function_master_id
+				);
+			DELETE 
+			FROM 
+				function_master fmas
+			WHERE 
+				fmas.project_id = #{projectId} and fmas.function_master_type = 0;
+	</delete>
+	
+	<select id="findAll" resultMap="projectResultMap">
+		<![CDATA[
+		SELECT
+			p.project_id,
+			p.project_name,
+			p.project_code,
+			p.db_type,
+			p.db_name,
+			p.db_host_name,
+			p.db_port,
+			p.db_user,
+			p.db_password,
+			p.db_driver,
+			p.case_sensitive,
+			p.package_name,
+			p.status,
+			p.remark,
+			p.webservice_flg,
+			p.webservice_pattern,
+			p.created_by,
+			p.created_date,
+			p.updated_by,
+			p.updated_date,
+			p.default_language,
+			language_name,
+			pma.sender_address,
+			pma.sender_name,
+			pma.smtp_host,
+			pma.smtp_encryption,
+			pma.smtp_port,
+			pma.smtp_username,
+			pma.smtp_password,
+			pdf.integer_format,
+			pdf.decimal_format,
+			pdf.date_format,
+			pdf.datetime_format,
+			pdf.time_format,
+			pdf.currency_format,
+			pdf.currency_code,
+			pdf.currency_code_position
+		FROM 
+			project p 
+			LEFT JOIN project_data_format pdf ON p.project_id = pdf.project_id
+			LEFT JOIN project_mail_account pma ON p.project_id = pma.project_id
+			LEFT JOIN language_design b ON p.default_language = b.language_id
+		ORDER BY p.updated_date DESC
+		]]> 
+	</select>
+	
+	<select id="checkExistProjectMailAccount" parameterType="_long" resultType="_long">
+		<![CDATA[
+			SELECT COUNT(*) FROM project_mail_account WHERE project_id = #{projectId}
+		]]>
+	</select>
+	
+</mapper>

@@ -1,0 +1,941 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.businessdesigncomponent.ExceptionComponentRepository">
+
+    <resultMap id="exceptionComponentRepositoryResultMap" type="ExceptionComponent">
+        <id property="exceptionComponentId" column="exception_component_id" />
+        <result property="sequenceLogicId" column="sequence_logic_id" />
+        <result property="label" column="label" />
+        <result property="exceptionToType" column="exception_to_type" />
+        <result property="exceptionToId" column="exception_to_id" />
+        <result property="exceptionToIdAutocomplete" column="exception_to_id_autocomplete" />
+        <result property="exceptionToName" column="exception_to_name" />
+        <result property="exceptionToIdRefer" column="exception_to_id_refer" />
+        <result property="transitionType" column="transition_type" />
+        <result property="remark" column="remark" />
+        <result property="moduleId" column="module_id" />
+        <result property="moduleIdAutocomplete" column="module_name" />
+        <result property="exceptionToScreenPatternType" column="exception_to_screen_pattern_type" />
+        <result property="exceptionFromId" column="exception_from_id" />
+        <result property="businessLogicId" column="business_logic_id" />
+    </resultMap>
+    <resultMap id="exceptionDetailRepositoryResultMap" type="ExceptionDetail">
+        <id property="exceptionDetailId" column="exception_detail_id" />
+        <result property="exceptionComponentId" column="exception_component_id" />
+        <result property="inputBeanId" column="input_bean_id" />
+        <result property="inputBeanCode" column="input_bean_code" />
+        <result property="inputBeanName" column="input_bean_name" />
+        <result property="dataType" column="data_type" />
+        <result property="arrayFlg" column="array_flg" />
+        <result property="parameterScope" column="parameter_scope" />
+        <result property="parameterId" column="parameter_id" />
+        <result property="inputBeanIdRefer" column="input_bean_id_refer" />
+        <result property="inputBeanCodeRefer" column="input_bean_code_refer" />
+        <result property="inputBeanNameRefer" column="input_bean_name_refer" />
+        <result property="messageStringAutocomplete" column="messageStringAutocomplete" />
+        <result property="dataTypeRefer" column="data_type_refer" />
+        <result property="arrayFlgRefer" column="array_flg_refer" />
+        <result property="exceptionToIdRefer" column="exception_to_id_refer" />
+    </resultMap>
+    <resultMap id="autocompleteResultMap" type="Autocomplete">
+		<result property="optionValue" column="optionValue" />
+		<result property="optionLabel" column="optionLabel" />
+		<result property="output01" column="output01" />
+	</resultMap>
+	<resultMap id="sequenceLogicResultMap" type="SequenceLogic">
+        <id property="sequenceLogicId" column="sequence_logic_id" />
+        <result property="sequenceLogicName" column="sequence_logic_name" />
+        <result property="componentType" column="component_type" />
+        <result property="componentId" column="component_id" />
+        <result property="sequenceNo" column="sequence_no" />
+        <result property="xCoordinates" column="x_coordinates" />
+        <result property="yCoordinates" column="y_coordinates" />
+        <result property="remark" column="remark" />
+        <result property="businessLogicId" column="business_logic_id" />
+        <result property="parentSequenceLogicId" column="parent_sequence_logic_id" />
+        <result property="groupFlg" column="group_flg" />
+        <result property="relatedSequenceLogicId" column="related_sequence_logic_id" />
+    </resultMap>
+    <resultMap id="businessDesignResultMap" type="BusinessDesign">
+        <id property="businessLogicId" column="business_logic_id" />
+        <result property="businessLogicCode" column="business_logic_code" />
+        <result property="businessLogicName" column="business_logic_name" />
+        <result property="returnType" column="return_type" />
+        <result property="screenId" column="screen_id" />
+        <result property="moduleId" column="module_id" />
+        <result property="projectId" column="project_id" />
+        <result property="customizeFlg" column="customize_flg" />
+        <result property="uploadFileId" column="upload_file_id" />
+        <result property="createdBy" column="created_by" />
+        <result property="createdDate" column="created_date" />
+        <result property="updatedBy" column="updated_by" />
+        <result property="updatedDate" column="updated_date" />
+        <result property="designStatus" column="design_status" />
+        <result property="packageName" column="package_name" />
+        <result property="patternType" column="pattern_type" />
+        <result property="confirmFlg" column="confirm_flg" />
+        <result property="completeFlg" column="complete_flg" />
+        <result property="remark" column="remark" />
+        <result property="screenFormId" column="screen_form_id" />
+        <result property="functionId" column="function_id" />
+        <result property="batchType" column="batch_type" />
+    </resultMap>
+	<resultMap id="moduleResultMap" type="Module">
+		<id property="moduleId" column="module_id" />
+        <result property="projectId" column="project_id" />
+        <result property="moduleCode" column="module_code" />
+        <result property="moduleName" column="module_name" />
+        <result property="businessTypeId" column="business_type_id" />
+        <result property="confirmationType" column="confirmation_type" />
+        <result property="completionType" column="completion_type" />
+        <result property="status" column="status" />
+        <result property="remark" column="remark" />
+        <result property="createdBy" column="created_by" />
+        <result property="createdDate" column="created_date" />
+        <result property="updatedBy" column="updated_by" />
+        <result property="updatedDate" column="updated_date" />
+        <result property="moduleType" column="module_type" />
+	</resultMap>
+	
+    <select id="getAutocompleteBusinessLogicForExceptionBD" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+    	<![CDATA[
+			SELECT
+				a.business_logic_id as optionValue,
+				a.business_logic_name as optionLabel,
+				a.business_logic_name as output01
+			FROM 
+				business_logic a
+			LEFT JOIN module b on a.module_id = b.module_id
+			WHERE
+				b.module_type = 0 AND  a.project_id = cast(#{arg01} as numeric) AND a.blogic_type = 0
+		]]>
+		<if test="searchKey != null and searchKey != ''">
+			<![CDATA[
+				AND a.business_logic_name iLIKE '%' || #{searchKey} || '%'
+			]]>
+		</if>
+		<if test="arg03 != null and arg03 != ''">
+             AND (a.module_id =  CAST(#{arg03} AS NUMERIC))
+        </if>
+        <if test="arg03 == null || arg03 == ''">
+             AND (
+                a.module_id is null
+             )
+        </if>
+        <if test="arg04 != null and arg04 != ''">
+             AND (a.business_logic_id !=  CAST(#{arg04} AS NUMERIC))
+        </if>
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+		<if test="arg02 == null || arg02 == ''">
+			LIMIT 20
+		</if>
+	</select>
+	
+	<!-- get by screen name. temp -->
+	<select id="getAutocompleteScreenDesignForExceptionBD" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+    	<![CDATA[
+			SELECT
+				a.business_logic_id as optionValue,
+				b.message_string as optionLabel,
+				b.message_code as output01
+			FROM 
+				business_logic a
+			INNER JOIN
+	    		(
+					SELECT 
+						d1.screen_id,
+						d1.message_code,
+						d2.message_string
+					FROM screen_design d1
+					LEFT JOIN message_design d2 
+					on (d1.message_code = d2.message_code and d2.language_id = #{languageId} and d2.project_id = cast(#{arg01} as numeric))
+	    		) b on b.screen_id = a.screen_id
+			WHERE
+				a.return_type = 0 and a.blogic_type = 0
+				AND a.project_id = cast(#{arg01} as numeric)
+		]]>
+		<if test="searchKey != null and searchKey != ''">
+			<![CDATA[
+				AND b.message_string iLIKE '%' || #{searchKey} || '%'
+			]]>
+		</if>
+		<if test="arg03 != null and arg03 != ''">
+             AND (a.module_id =  CAST(#{arg03} AS NUMERIC))
+        </if>
+        <if test="arg03 == null || arg03 == ''">
+             AND (
+                a.module_id is null
+             )
+        </if>
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+		<if test="arg02 == null || arg02 == ''">
+			LIMIT 20
+		</if>
+	</select>
+	
+	<!-- Enhance 2016-04-26 : not use initial blogic-->
+	<select id="getAutocompleteScreenDesignForExceptionNode" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+    	<![CDATA[
+    		SELECT
+    			a.screen_id as optionValue,
+    			b.message_string as optionLabel,
+    			a.message_code as output01
+    		FROM screen_design a
+    		LEFT JOIN message_design b 
+					on (b.message_code = a.message_code and b.language_id = #{languageId} and b.project_id = cast(#{arg01} as numeric))
+			LEFT JOIN module c on (c.module_id = a.module_id)
+			WHERE c.project_id = cast(#{arg01} as numeric) AND a.design_mode = 2
+		]]>
+		<if test="searchKey != null and searchKey != ''">
+			<![CDATA[
+				AND b.message_string iLIKE '%' || #{searchKey} || '%'
+			]]>
+		</if>
+		<if test="arg03 != null and arg03 != ''">
+             AND (a.module_id =  CAST(#{arg03} AS NUMERIC))
+        </if>
+        <if test="arg03 == null || arg03 == ''">
+             AND (
+                a.module_id is null
+             )
+        </if>
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+		<if test="arg02 == null || arg02 == ''">
+			LIMIT 20
+		</if>
+	</select>
+	
+    <select id="getSequencesExceptionComponent" resultType="Long">
+    	select SETVAL('exception_component_seq'::regclass, NEXTVAL('exception_component_seq'::regclass) + #{size})
+    </select>
+    <select id="getSequencesExceptionDetail" resultType="Long">
+    	select SETVAL('exception_detail_seq'::regclass, NEXTVAL('exception_detail_seq'::regclass) + #{size})
+    </select>
+    
+    <insert id="registerExceptionComponent" >
+    	<foreach item="item" collection="exceptionComponentItems" separator=";">
+			INSERT INTO exception_component
+			(
+            	exception_component_id, 
+            	sequence_logic_id, 
+            	label, 
+            	exception_to_type, 
+            	exception_to_id,
+            	exception_to_name,
+            	transition_type, 
+            	remark
+            )
+    		VALUES
+			(
+				#{item.exceptionComponentId},
+				#{item.sequenceLogicId}, 
+				#{item.label}, 
+				#{item.exceptionToType}, 
+				#{item.exceptionToId},
+				#{item.exceptionToName},
+            	#{item.transitionType},
+            	#{item.remark}
+            );
+            <if test="item.parameterInputBeans != null and item.parameterInputBeans.size() > 0 ">
+            	<foreach item="itemInput" collection="item.parameterInputBeans" separator=";">
+	            	INSERT INTO exception_detail
+					(
+						exception_detail_id,
+		            	exception_component_id, 
+		            	input_bean_id, 
+		            	input_bean_code,
+		            	input_bean_name, 
+		            	data_type,
+		            	array_flg,
+		            	parameter_scope, 
+		            	parameter_id
+		            )
+		    		VALUES
+					(
+						#{itemInput.exceptionDetailId},
+						#{item.exceptionComponentId}, 
+						#{itemInput.inputBeanId}, 
+						#{itemInput.inputBeanCode}, 
+						#{itemInput.inputBeanName}, 
+						#{itemInput.dataType},
+						#{itemInput.arrayFlg},
+		            	#{itemInput.parameterScope},
+		            	cast(#{itemInput.parameterId} as numeric)
+		            );
+		            <if test="itemInput.lstParameterIndex != null and  itemInput.lstParameterIndex.size() > 0 ">
+		            	INSERT INTO bd_parameter_index
+		            	(
+		            		table_type, 
+		            		table_id, 
+		            		parameter_id, 
+		            		parameter_index_type, 
+		            		parameter_index_id,
+		            		business_logic_id
+		            	)
+		    			VALUES
+		    			<foreach item="itemIndex" collection="itemInput.lstParameterIndex" separator=",">
+			    			(
+			    				#{itemIndex.tableType}, 
+			    				#{itemInput.exceptionDetailId},
+			    				CAST(#{itemIndex.parameterId} AS numeric(16,0)),
+			    				#{itemIndex.parameterIndexType}, 
+			            		CAST(#{itemIndex.parameterIndexId} AS numeric(16,0)),
+			            		#{itemIndex.businessLogicId}
+			            	)
+		    			</foreach>;
+		    		</if>
+				</foreach>;
+            </if>
+    	</foreach>
+    </insert>
+    <select id="findExceptionComponentByBusinessLogic" resultMap="exceptionComponentRepositoryResultMap">
+       	SELECT 
+			a.exception_component_id, 
+			a.sequence_logic_id, 
+			a.label, 
+			a.exception_to_type, 
+       		a.exception_to_id, 
+       		a.exception_to_name,
+       		a.transition_type, 
+       		a.remark,
+       		CASE a.exception_to_type
+				WHEN 0 THEN b.message_string
+				ELSE c.business_logic_name
+			END AS exception_to_id_autocomplete,
+			c.business_logic_id as exception_to_id_refer,
+			CASE a.exception_to_type
+				WHEN 0 THEN b.module_id
+				ELSE c.module_id
+			END AS module_id,
+			CASE a.exception_to_type
+				WHEN 0 THEN b.module_name
+				ELSE c.module_name
+			END AS module_name
+  		FROM exception_component a
+  		LEFT JOIN (
+  					SELECT 
+  						c1.business_logic_id,
+  						c1.business_logic_name,
+  						c2.module_id,
+  						c2.module_name
+  					FROM 
+  						business_logic c1
+  					LEFT JOIN module c2 on (c2.module_id = c1.module_id)
+  				) c on c.business_logic_id = a.exception_to_id
+		LEFT JOIN (
+					SELECT 
+						d1.screen_id,
+						d1.message_code,
+						d2.message_string,
+						d3.module_id,
+						d3.module_name
+					FROM screen_design d1
+					LEFT JOIN message_design d2 
+					on (d1.message_code = d2.message_code and d2.language_id = #{languageId} and d2.project_id = #{projectId})
+					LEFT JOIN module d3
+					on (d1.module_id = d3.module_id)
+	    		) b on b.screen_id = a.exception_to_id
+		WHERE EXISTS
+    		( 
+    		SELECT b.sequence_logic_id
+     		FROM sequence_logic b
+     		WHERE b.business_logic_id = #{businessLogicId}
+       			AND component_type = 24
+       			AND b.sequence_logic_id = a.sequence_logic_id
+       		)
+    </select>
+    
+    <!-- //TungHT -->
+    <select id="findExceptionComponentByLstBusinessLogic" resultMap="exceptionComponentRepositoryResultMap">
+       	SELECT 
+			a.exception_component_id, 
+			a.sequence_logic_id, 
+			a.label, 
+			a.exception_to_type, 
+			a.exception_to_id,
+			sd.screen_pattern_type AS exception_to_screen_pattern_type,
+			c.business_logic_id AS exception_to_id_refer,
+			sl.business_logic_id AS exception_from_id
+  		FROM 
+			exception_component a
+  		LEFT JOIN 
+			business_logic c ON c.business_logic_id = a.exception_to_id
+		LEFT JOIN 
+			screen_design sd ON sd.screen_id = c.screen_id
+		LEFT JOIN
+			sequence_logic sl ON sl.sequence_logic_id = a.sequence_logic_id
+		WHERE EXISTS
+    		( 
+    		SELECT b.sequence_logic_id
+     		FROM sequence_logic b
+     		WHERE 
+     			<if test="lstBusinessDesign != null and lstBusinessDesign.size > 0">
+     				b.business_logic_id IN 
+     				<foreach collection="lstBusinessDesign" item="item" separator="," open="(" close=")">
+	     				#{item.businessLogicId}
+	     			</foreach>
+	     			AND
+     			</if>
+       			component_type = 24
+       				AND b.sequence_logic_id = a.sequence_logic_id
+       		)
+    </select>
+    
+    <select id="findExceptionDetailByBusinessLogic" resultMap="exceptionDetailRepositoryResultMap">
+		SELECT	A.*,
+				A1.*
+		FROM 
+		(	
+			SELECT 
+				a.exception_detail_id, 
+				a.exception_component_id, 
+				a.input_bean_id, 
+				a.input_bean_code, 
+				a.input_bean_name, 
+				a.array_flg, 
+				a.data_type, 
+				a.parameter_scope, 
+				a.parameter_id,
+				b.exception_to_id,
+				md.message_string as messageStringAutocomplete
+	  		FROM exception_detail a
+			LEFT JOIN exception_component b
+				on (b.exception_component_id = a.exception_component_id )
+			LEFT JOIN message_design md on (a.input_bean_name = md.message_code and md.language_id = #{languageId} and md.project_id = #{projectId})
+			WHERE EXISTS
+			    (
+					SELECT c.sequence_logic_id
+					FROM sequence_logic c
+					WHERE c.business_logic_id = #{businessLogicId}
+						AND component_type = 24
+						AND c.sequence_logic_id = b.sequence_logic_id
+				)
+			ORDER BY a.exception_detail_id
+		) as A
+		FULL OUTER JOIN 
+		(
+			SELECT 
+				a.input_bean_id as input_bean_id_refer,
+				a.input_bean_code as input_bean_code_refer,
+				a.input_bean_name as input_bean_name_refer,
+				a.data_type as data_type_refer,
+				a.array_flg as array_flg_refer,
+				a.business_logic_id as exception_to_id_refer,
+				CASE a.input_bean_type
+					WHEN 0 THEN md.message_string
+					ELSE a.input_bean_name
+				END AS messageStringAutocomplete
+			FROM input_bean a
+			LEFT JOIN message_design md on (a.input_bean_name = md.message_code and md.language_id = #{languageId} and md.project_id = #{projectId})
+			WHERE EXISTS
+			    (
+			    	SELECT b.exception_to_id
+					FROM exception_component b
+					LEFT JOIN sequence_logic c
+						on (b.sequence_logic_id = c.sequence_logic_id)
+					WHERE c.business_logic_id = #{businessLogicId}
+						AND c.component_type = 24
+						AND b.exception_to_id = a.business_logic_id
+				)
+			ORDER BY a.item_sequence_no
+		) A1 
+		on (A1.input_bean_id_refer = A.input_bean_id)
+    </select>
+    
+    <select id="findAllExceptionbDetailByUsedBusinessLogic" resultMap="exceptionDetailRepositoryResultMap">
+		SELECT 
+			a.exception_detail_id, 
+			a.exception_component_id, 
+			a.input_bean_id, 
+			a.input_bean_code, 
+			a.input_bean_name, 
+			a.array_flg, 
+			a.data_type, 
+			a.parameter_scope, 
+			a.parameter_id,
+			d.business_logic_id,
+			d.module_id
+		FROM exception_detail a
+		LEFT JOIN exception_component b
+			on b.exception_component_id = a.exception_component_id
+		LEFT JOIN sequence_logic c
+			on c.sequence_logic_id = b.sequence_logic_id
+		LEFT JOIN business_logic d
+			on d.business_logic_id = c.business_logic_id
+		WHERE b.exception_to_id = #{businessLogicId}
+		ORDER BY
+			a.exception_detail_id
+    </select>
+    
+    <delete id="deleteExceptionInputById">
+    	DELETE 
+    	FROM exception_detail a
+    	WHERE a.input_bean_id =  #{inputBeanId}
+    	and EXISTS
+    	(
+    		SELECT b.exception_component_id
+    		FROM exception_component b
+			LEFT JOIN sequence_logic c
+				on c.sequence_logic_id = b.sequence_logic_id
+			WHERE c.business_logic_id = #{businessLogicId}
+    		and b.exception_component_id = a.exception_component_id
+    	)
+    </delete>
+    
+    <!-- For generate source code -->
+    <select id="findAllExceptionComponentByModuleId" resultMap="exceptionComponentRepositoryResultMap">
+        SELECT 
+			a.exception_component_id, 
+			a.sequence_logic_id, 
+			a.label, 
+			a.exception_to_type, 
+       		a.exception_to_id, 
+       		a.exception_to_name,
+       		a.transition_type, 
+       		a.remark,
+       		CASE a.exception_to_type
+				WHEN 0 THEN b.message_string
+				ELSE c.business_logic_name
+			END AS exception_to_id_autocomplete,
+			c.business_logic_id as exception_to_id_refer,
+			CASE a.exception_to_type
+				WHEN 0 THEN b.module_id
+				ELSE c.module_id
+			END AS module_id,
+			CASE a.exception_to_type
+				WHEN 0 THEN b.module_name
+				ELSE c.module_name
+			END AS module_name
+  		FROM exception_component a
+  		LEFT JOIN (
+  					SELECT 
+  						c1.business_logic_id,
+  						c1.business_logic_name,
+  						c2.module_id,
+  						c2.module_name
+  					FROM 
+  						business_logic c1
+  					LEFT JOIN module c2 on (c2.module_id = c1.module_id)
+  				) c on c.business_logic_id = a.exception_to_id
+		LEFT JOIN (
+					SELECT 
+						d1.screen_id,
+						d1.message_code,
+						d2.message_string,
+						d3.module_id,
+						d3.module_name
+					FROM screen_design d1
+					LEFT JOIN message_design d2 
+					on (d1.message_code = d2.message_code and d2.language_id = #{languageId} and d2.module_id = #{moduleId})
+					LEFT JOIN module d3
+					on (d1.module_id = d3.module_id)
+	    		) b on b.screen_id = a.exception_to_id
+		WHERE EXISTS
+    		( 
+    		SELECT b.sequence_logic_id
+     		FROM sequence_logic b
+     		INNER JOIN business_logic blogic ON b.business_logic_id = blogic.business_logic_id
+     		WHERE blogic.module_id = #{moduleId}
+       			AND component_type = 24
+       			AND b.sequence_logic_id = a.sequence_logic_id
+       		)
+    </select>
+    
+    <select id="findAllExceptionDetailByModuleId" resultMap="exceptionDetailRepositoryResultMap">
+		SELECT	A.*,
+				A1.*
+		FROM 
+		(	
+			SELECT 
+				a.exception_detail_id, 
+				a.exception_component_id, 
+				a.input_bean_id, 
+				a.input_bean_code, 
+				a.input_bean_name, 
+				a.array_flg, 
+				a.data_type, 
+				a.parameter_scope, 
+				a.parameter_id,
+				b.exception_to_id,
+				md.message_string as messageStringAutocomplete
+	  		FROM exception_detail a
+			LEFT JOIN exception_component b
+				on (b.exception_component_id = a.exception_component_id )
+			LEFT JOIN message_design md on (a.input_bean_name = md.message_code and md.language_id = #{languageId} and md.module_id = #{moduleId})
+			WHERE EXISTS
+			    (
+					SELECT c.sequence_logic_id
+					FROM sequence_logic c
+					INNER JOIN business_logic blogic ON c.business_logic_id = blogic.business_logic_id
+					WHERE blogic.module_id = #{moduleId}
+						AND component_type = 24
+						AND c.sequence_logic_id = b.sequence_logic_id
+				)
+			ORDER BY a.exception_detail_id
+		) as A
+		FULL OUTER JOIN 
+		(
+			SELECT 
+				a.input_bean_id as input_bean_id_refer,
+				a.input_bean_code as input_bean_code_refer,
+				a.input_bean_name as input_bean_name_refer,
+				a.data_type as data_type_refer,
+				a.array_flg as array_flg_refer,
+				a.business_logic_id as exception_to_id_refer,
+				CASE a.input_bean_type
+					WHEN 0 THEN md.message_string
+					ELSE a.input_bean_name
+				END AS messageStringAutocomplete
+			FROM input_bean a
+			LEFT JOIN message_design md on (a.input_bean_name = md.message_code and md.language_id = #{languageId} and md.module_id = #{moduleId})
+			WHERE EXISTS
+			    (
+			    	SELECT b.exception_to_id
+					FROM exception_component b
+					LEFT JOIN sequence_logic c
+						on (b.sequence_logic_id = c.sequence_logic_id)
+					INNER JOIN business_logic blogic ON c.business_logic_id = blogic.business_logic_id
+					WHERE blogic.module_id = #{moduleId}
+						AND c.component_type = 24
+						AND b.exception_to_id = a.business_logic_id
+				)
+			ORDER BY a.item_sequence_no
+		) A1 
+		on (A1.input_bean_id_refer = A.input_bean_id)
+    </select>
+    
+    <!-- Base on project -->
+    <select id="findAllExceptionComponentByProjectId" resultMap="exceptionComponentRepositoryResultMap">
+        SELECT 
+			a.exception_component_id, 
+			a.sequence_logic_id, 
+			a.label, 
+			a.exception_to_type, 
+       		a.exception_to_id, 
+       		a.exception_to_name,
+       		a.transition_type, 
+       		a.remark,
+			CASE a.exception_to_type
+				WHEN 0 THEN b.message_string
+				ELSE c.business_logic_name
+			END AS exception_to_id_autocomplete,
+			c.business_logic_id as exception_to_id_refer
+
+  		FROM exception_component a
+  		LEFT JOIN (
+  					SELECT 
+  						c1.business_logic_id,
+  						c1.business_logic_name,
+  						c2.module_id,
+  						c2.module_name
+  					FROM 
+  						business_logic c1
+  					LEFT JOIN module c2 on (c2.module_id = c1.module_id)
+  				) c on c.business_logic_id = a.exception_to_id
+		LEFT JOIN (
+					SELECT 
+						d1.screen_id,
+						d1.message_code,
+						d2.message_string,
+						d3.module_id,
+						d3.module_name
+					FROM screen_design d1
+					LEFT JOIN message_design d2 
+					on (d1.message_code = d2.message_code and d2.language_id = #{languageId} and d2.project_id = #{projectId})
+					LEFT JOIN module d3
+					on (d1.module_id = d3.module_id)
+	    		) b on b.screen_id = a.exception_to_id
+		WHERE EXISTS
+    		( 
+    		SELECT a1.sequence_logic_id
+     		FROM sequence_logic a1
+     		INNER JOIN business_logic b1 ON b1.business_logic_id = a1.business_logic_id
+     		WHERE b1.project_id = #{projectId}
+       			AND a1.component_type = 24
+       			AND a1.sequence_logic_id = a.sequence_logic_id
+       		)
+    </select>
+    
+    <select id="findAllExceptionDetailByProjectId" resultMap="exceptionDetailRepositoryResultMap">
+		SELECT	A.*,
+				A1.*
+		FROM 
+		(	
+			SELECT 
+				a.exception_detail_id, 
+				a.exception_component_id, 
+				a.input_bean_id, 
+				a.input_bean_code, 
+				a.input_bean_name, 
+				a.array_flg, 
+				a.data_type, 
+				a.parameter_scope, 
+				a.parameter_id,
+				b.exception_to_id,
+				md.message_string as messageStringAutocomplete
+	  		FROM exception_detail a
+			LEFT JOIN exception_component b
+				on (b.exception_component_id = a.exception_component_id )
+			LEFT JOIN message_design md on (a.input_bean_name = md.message_code and md.language_id = #{languageId} and md.project_id = #{projectId})
+			WHERE EXISTS
+			    (
+					SELECT c.sequence_logic_id
+					FROM sequence_logic c
+					INNER JOIN business_logic blogic ON c.business_logic_id = blogic.business_logic_id
+					WHERE blogic.project_id = #{projectId}
+						AND component_type = 24
+						AND c.sequence_logic_id = b.sequence_logic_id
+				)
+			ORDER BY a.exception_detail_id
+		) as A
+		FULL OUTER JOIN 
+		(
+			SELECT 
+				a.input_bean_id as input_bean_id_refer,
+				a.input_bean_code as input_bean_code_refer,
+				a.input_bean_name as input_bean_name_refer,
+				a.data_type as data_type_refer,
+				a.array_flg as array_flg_refer,
+				a.business_logic_id as exception_to_id_refer,
+				CASE a.input_bean_type
+					WHEN 0 THEN md.message_string
+					ELSE a.input_bean_name
+				END AS messageStringAutocomplete
+			FROM input_bean a
+			LEFT JOIN message_design md on (a.input_bean_name = md.message_code and md.language_id = #{languageId} and md.project_id = #{projectId})
+			WHERE EXISTS
+			    (
+			    	SELECT b.exception_to_id
+					FROM exception_component b
+					LEFT JOIN sequence_logic c
+						on (b.sequence_logic_id = c.sequence_logic_id)
+					INNER JOIN business_logic blogic ON c.business_logic_id = blogic.business_logic_id
+					WHERE blogic.project_id = #{projectId}
+						AND c.component_type = 24
+						AND b.exception_to_id = a.business_logic_id
+				)
+			ORDER BY a.item_sequence_no
+		) A1 
+		on (A1.input_bean_id_refer = A.input_bean_id)
+    </select>
+    
+    <select id="getSequenceLogicCommonComponentGeneration" resultMap="sequenceLogicResultMap">
+		SELECT
+			t2.*
+		FROM
+			exception_component t1
+			INNER JOIN sequence_logic t2 ON t1.sequence_logic_id = t2.sequence_logic_id
+		WHERE t1.exception_component_id = #{exceptionComponentId}
+    </select>
+    
+    <select id="getBusinessDesignCommonComponentGeneration" resultMap="businessDesignResultMap">
+		SELECT
+			t3.*
+		FROM
+			exception_component t1
+			INNER JOIN sequence_logic t2 ON t1.sequence_logic_id = t2.sequence_logic_id
+			INNER JOIN business_logic t3 ON t2.business_logic_id = t3.business_logic_id
+		WHERE t1.exception_component_id = #{exceptionComponentId}
+    </select>
+    
+    <select id="getModuleCommonComponentGeneration" resultMap="moduleResultMap">
+		SELECT
+			t4.*
+		FROM
+			exception_component t1
+			INNER JOIN sequence_logic t2 ON t1.sequence_logic_id = t2.sequence_logic_id
+			INNER JOIN business_logic t3 ON t2.business_logic_id = t3.business_logic_id
+			INNER JOIN module t4 ON t3.module_id = t4.module_id
+		WHERE t1.exception_component_id = #{exceptionComponentId}
+    </select>
+    
+    <!-- generate source code of commmon blogic -->
+    <select id="findAllExceptionComponentByModuleCommon" resultMap="exceptionComponentRepositoryResultMap">
+        SELECT 
+			a.exception_component_id, 
+			a.sequence_logic_id, 
+			a.label, 
+			a.exception_to_type, 
+       		a.exception_to_id, 
+       		a.exception_to_name,
+       		a.transition_type, 
+       		a.remark,
+       		CASE a.exception_to_type
+				WHEN 0 THEN b.message_string
+				ELSE a.exception_to_name
+			END AS exception_to_id_autocomplete,
+			c.business_logic_id as  exception_to_id_refer
+  		FROM exception_component a
+  		LEFT JOIN business_logic c
+			on c.business_logic_id = a.exception_to_id
+  		LEFT JOIN message_design b 
+						on (b.message_code = a.exception_to_name and b.language_id = #{languageId} and b.project_id = #{projectId})
+		WHERE EXISTS
+    		( 
+    		SELECT b.sequence_logic_id
+     		FROM sequence_logic b
+     		INNER JOIN business_logic blogic ON b.business_logic_id = blogic.business_logic_id
+     		WHERE blogic.project_id = #{projectId} AND blogic.module_id is null and blogic.blogic_type = 1
+       			AND component_type = 24
+       			AND b.sequence_logic_id = a.sequence_logic_id
+       		)
+    </select>
+    
+    <!-- generate source code of commmon blogic -->
+    <select id="findAllExceptionDetailByModuleCommon" resultMap="exceptionDetailRepositoryResultMap">
+		SELECT	A.*,
+				A1.*
+		FROM 
+		(	
+			SELECT 
+				a.exception_detail_id, 
+				a.exception_component_id, 
+				a.input_bean_id, 
+				a.input_bean_code, 
+				a.input_bean_name, 
+				a.array_flg, 
+				a.data_type, 
+				a.parameter_scope, 
+				a.parameter_id,
+				b.exception_to_id,
+				md.message_string as messageStringAutocomplete
+	  		FROM exception_detail a
+			LEFT JOIN exception_component b
+				on (b.exception_component_id = a.exception_component_id )
+			LEFT JOIN message_design md on (a.input_bean_name = md.message_code and md.language_id = #{languageId} and md.project_id = #{projectId})
+			WHERE EXISTS
+			    (
+					SELECT c.sequence_logic_id
+					FROM sequence_logic c
+					INNER JOIN business_logic blogic ON c.business_logic_id = blogic.business_logic_id
+					WHERE blogic.project_id = #{projectId} AND blogic.module_id is null and blogic.blogic_type = 1
+						AND component_type = 24
+						AND c.sequence_logic_id = b.sequence_logic_id
+				)
+			ORDER BY a.exception_detail_id
+		) as A
+		FULL OUTER JOIN 
+		(
+			SELECT 
+				a.input_bean_id as input_bean_id_refer,
+				a.input_bean_code as input_bean_code_refer,
+				a.input_bean_name as input_bean_name_refer,
+				a.data_type as data_type_refer,
+				a.array_flg as array_flg_refer,
+				a.business_logic_id as exception_to_id_refer,
+				CASE a.input_bean_type
+					WHEN 0 THEN md.message_string
+					ELSE a.input_bean_name
+				END AS messageStringAutocomplete
+			FROM input_bean a
+			LEFT JOIN message_design md on (a.input_bean_name = md.message_code and md.language_id = #{languageId} and md.project_id = #{projectId})
+			WHERE EXISTS
+			    (
+			    	SELECT b.exception_to_id
+					FROM exception_component b
+					LEFT JOIN sequence_logic c
+						on (b.sequence_logic_id = c.sequence_logic_id)
+					INNER JOIN business_logic blogic ON c.business_logic_id = blogic.business_logic_id
+					WHERE blogic.project_id = #{projectId} AND blogic.module_id is null and blogic.blogic_type = 1
+						AND c.component_type = 24
+						AND b.exception_to_id = a.business_logic_id
+				)
+			ORDER BY a.item_sequence_no
+		) A1 
+		on (A1.input_bean_id_refer = A.input_bean_id)
+    </select>
+    <update id="modifyExceptionNodeWhenModifyBLogic">
+    	UPDATE exception_component
+		SET exception_to_name=#{businessDesign.businessLogicName}
+		WHERE exception_to_id = #{businessDesign.businessLogicId} and exception_to_type = 1;
+    </update>
+    
+    <delete id="deleteExceptionInputValueWhenModifyBLogic">
+    	DELETE FROM exception_detail
+    	WHERE 
+			<if test="lstInputBeans != null and lstInputBeans.size > 0">
+				input_bean_id IN
+				<foreach collection="lstInputBeans" item="item" open="(" close=")" separator=",">
+					Cast(#{item.inputBeanId} as numeric)
+				</foreach>
+			</if>
+			<if test="lstInputBeans == null or lstInputBeans.size == 0">
+				FALSE
+			</if>
+    </delete>
+    <update id="modifyExceptionInputValueWhenModifyBLogic" >
+    	<if test="lstInputBeans != null and  lstInputBeans.size() > 0 ">
+    		<foreach item="item" collection="lstInputBeans" separator=";">
+	    		UPDATE exception_detail
+	   			SET input_bean_code = #{item.inputBeanCode}, 
+	   				input_bean_name = #{item.inputBeanName}
+	 			WHERE input_bean_id = Cast(#{item.inputBeanId} as numeric)
+			</foreach>
+		</if>
+    </update>
+    
+    <select id="findExceptionComponentByNavigatorBlogicId" resultMap="exceptionComponentRepositoryResultMap">
+		SELECT 
+			a.exception_component_id, 
+			a.label, 
+			a.exception_to_type, 
+			a.exception_to_id, 
+			a.exception_to_name,
+			a.transition_type, 
+			a.remark, 
+			a.sequence_logic_id,
+			b.business_logic_id
+  		FROM exception_component a
+  		LEFT JOIN sequence_logic b on (b.sequence_logic_id = a.sequence_logic_id)
+		WHERE a.exception_to_type = 1 and a.exception_to_id = #{businessLogicId}
+    </select>
+    
+    <select id="findExceptionDetailByNavigatorBlogicId" resultMap="exceptionDetailRepositoryResultMap">
+		SELECT 
+			a.exception_detail_id, 
+			a.exception_component_id, 
+			a.input_bean_id, 
+			a.input_bean_code, 
+       		a.input_bean_name, 
+       		a.array_flg, 
+       		a.data_type
+  		FROM exception_detail a
+ 	 	LEFT JOIN exception_component b on (a.exception_component_id= b.exception_component_id)
+ 	 	WHERE b.exception_to_type = 1 and b.exception_to_id = #{businessLogicId}
+    </select>
+    
+    <delete id="deleteExceptionDetailByNavigatorComponent">
+		DELETE FROM exception_detail
+		WHERE
+		<if test="lstComponents != null and lstComponents.size > 0">
+			exception_component_id IN
+			<foreach collection="lstComponents" item="item" open="(" close=")" separator=",">
+				Cast(#{item.exceptionComponentId} as numeric)
+			</foreach>
+		</if>
+		<if test="lstComponents == null or lstComponents.size == 0">
+			FALSE
+		</if>
+    </delete>
+    
+    <delete id="deleteExceptionDetailByNavigatorBlogicId">
+		DELETE FROM exception_detail
+		WHERE exception_detail_id in
+		(
+			SELECT a.exception_detail_id
+			FROM exception_detail a
+			LEFT JOIN exception_component b on ( a.exception_component_id = b.exception_component_id)
+			LEFT JOIN input_bean c on ( c.input_bean_id = a.input_bean_id)
+			WHERE b.exception_to_type = 1 and b.exception_to_id = #{businessLogicId}
+			and c.input_bean_id is null
+		)
+    </delete>
+</mapper>

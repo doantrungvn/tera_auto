@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.message.MessageRepository">
+	<resultMap id="messageResultMap" type="org.terasoluna.qp.domain.model.Message">
+		<id property="messageId" column="message_id" />
+		<result property="messageCode" column="message_code" />
+		<result property="messageString" column="message_string" />
+		<result property="language.languageCode" column="language_code" />
+		<result property="language.countryCode" column="country_code" />
+		<result property="language.languageName" column="language_name" />
+		<result property="moduleResource" column="module_resource" />
+		<result property="remark" column="remark" />
+	</resultMap>
+
+	<!-- Count message rows by search condition -->
+	<select id="countByCriteria"
+		parameterType="org.terasoluna.qp.domain.repository.message.MessageSearchCriteria"
+		resultType="_long">
+        <![CDATA[
+             SELECT      
+                COUNT(*)
+            FROM
+                message AS m
+            LEFT JOIN 
+                language AS l
+            ON m.language_code = l.language_code AND m.country_code = l.country_code
+        ]]>
+		<include refid="findPageByCriteriaWherePhrase" />
+	</select>
+
+	<!-- Finds all message by search condition -->
+	<select id="findPageByCriteria"
+		parameterType="org.terasoluna.qp.domain.repository.message.MessageSearchCriteria"
+		resultMap="messageResultMap">
+		<![CDATA[
+            SELECT  	
+                m.message_id,
+	          	m.message_code,
+	            m.message_string,
+                m.language_code,
+                l.language_name,
+                m.country_code,
+                m.module_resource,
+                m.remark
+            FROM
+                message AS m
+            LEFT JOIN 
+                language AS l
+            ON 
+                m.language_code = l.language_code 
+            AND 
+                m.country_code = l.country_code
+   		]]>
+		<include refid="findPageByCriteriaWherePhrase" />
+		<if test="pageable.sort != null">
+			ORDER BY
+			<foreach collection="pageable.sort" item="order" separator=",">
+				${order.property} ${order.direction}
+			</foreach>
+		</if>
+		<if test="pageable.sort == null">
+			ORDER BY
+			m.message_code ,
+			m.language_code
+		</if>
+        <![CDATA[
+             LIMIT
+                 #{pageable.pageSize}
+             OFFSET
+                 #{pageable.offset}
+        ]]>
+	</select>
+
+	<!-- Get all parent of message -->
+	<select id="findAllModuleResource" resultMap="messageResultMap">
+		<![CDATA[
+			SELECT 
+	            DISTINCT
+			    message_code,
+			    message_string
+			FROM 
+			    message
+		    WHERE 
+		        module_resource IS NULL
+			ORDER BY 
+	            message_string ASC
+        ]]>
+	</select>
+
+	<!-- Search condition -->
+	<sql id="findPageByCriteriaWherePhrase">
+		<where>
+			<if test="criteria != null">
+				<if
+					test="criteria.messageString != null and criteria.messageString != '' ">
+					<bind name="messageString"
+						value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.messageString)" />
+					<![CDATA[
+						m.message_string ILIKE #{messageString} ESCAPE '~'
+				 	]]>
+				</if>
+				<if test="criteria.messageCode != null and criteria.messageCode != ''">
+					<bind name="messageCode"
+						value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.messageCode)" />
+					<![CDATA[
+						AND m.message_code ILIKE #{messageCode} ESCAPE '~'
+				 	]]>
+				</if>
+				<if
+					test="criteria.moduleResource != null and criteria.moduleResource != ''">
+                    <![CDATA[
+                        AND m.module_resource = #{criteria.moduleResource}
+                    ]]>
+				</if>
+				<if test="criteria.languageCode != null and criteria.languageCode != ''">
+					<![CDATA[
+						AND (COALESCE(l.language_code, '')|| '_' || COALESCE(l.country_code, '')) =  #{criteria.languageCode}
+				 	]]>
+				</if>
+				<if
+					test="criteria.messageTypes != null and criteria.messageTypes.length > 0">
+					<foreach item="messageType" collection="criteria.messageTypes"
+						open=" AND (" separator="OR" close=")">
+	                   <![CDATA[
+                            m.message_code ILIKE #{messageType} || '%'
+                        ]]>
+					</foreach>
+				</if>
+			</if>
+		</where>
+	</sql>
+
+	<!-- Finds message by identify -->
+	<select id="findOne" parameterType="_long" resultMap="messageResultMap">
+		SELECT
+			message_id,
+			message_string,
+			message_code,
+			module_resource,
+			language_code,
+			country_code,
+			remark
+		FROM
+			message
+		WHERE
+			message_id = #{messageId}
+	</select>
+
+	<!-- Modify message by identify -->
+	<update id="modify" parameterType="Message">
+		UPDATE
+			message
+		SET
+			message_string = #{messageString}
+		WHERE
+			message_id = #{messageId}
+	</update>
+
+	<select id="findToTranslate" parameterType="Language" resultMap="messageResultMap">
+		SELECT
+			message_id,
+			message_code,
+			message_string,
+			remark
+		FROM
+			message
+		WHERE
+			language_code = #{language.languageCode} AND country_code = #{language.countryCode}
+	</select>
+
+	<update id="updateByTranslate" parameterType="map">
+		<foreach item="item" collection="messages" separator=";" close=";">
+			UPDATE
+				message
+			SET
+				message_string=#{item.messageString}
+			WHERE
+				message_id = #{item.messageId}
+		</foreach>
+	</update>
+
+	<select id="getDefaultForExportProject" parameterType="map" resultMap="messageResultMap">
+		SELECT
+			message_id,
+			message_string,
+			message_code,
+			module_resource,
+			language_code,
+			country_code,
+			remark
+		FROM
+			message m
+		WHERE
+			(language_code || '_' ||  country_code ) = #{locale}
+		AND
+			reuse_flg IN ('1','2')
+		AND NOT EXISTS 
+		(
+			SELECT 1 FROM message_design md WHERE project_id = #{projectId} AND m.message_code = md.message_code
+		)
+	</select>
+	
+	<select id="countByLanguage" parameterType="Language" resultType="java.lang.Integer">
+		SELECT
+			1 as total
+		FROM
+			message
+		WHERE
+			<![CDATA[ language_code = #{language.languageCode}]]>
+		AND
+			<![CDATA[ country_code = #{language.countryCode}]]>
+		GROUP BY total
+	</select>
+
+</mapper>

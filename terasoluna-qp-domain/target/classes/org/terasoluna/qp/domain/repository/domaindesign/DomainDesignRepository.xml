@@ -1,0 +1,767 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.terasoluna.qp.domain.repository.domaindesign.DomainDesignRepository">
+	<resultMap type="org.terasoluna.qp.domain.model.DomainDesign" id="domainResultMap">
+		<id property="domainId" column="domain_id" />
+		<result property="domainName" column="domain_name" />
+		<result property="domainCode" column="domain_code" />
+		<result property="maxLength" column="maxlength" />
+		<result property="mandatoryflg" column="mandatory_flg" />
+		<result property="minVal" column="min_val" />
+		<result property="maxVal" column="max_val" />
+		<result property="precision" column="decimal_part" />
+		<result property="defaultValue" column="default_value" />
+		<result property="defaultType" column="default_type" />
+		<result property="baseType" column="base_type" />
+		<result property="groupBasetypeId" column="group_base_type_id" />
+		<result property="fmtCode" column="fmt_code" />
+		<result property="remark" column="remark" />
+		<result property="createdBy" column="created_by" />
+		<result property="createdDate" column="created_date" />
+		<result property="updatedBy" column="update_by" />
+		<result property="updatedDate" column="updated_date" />
+		<result property="projectId" column="project_id" />
+		<result property="tableName" column="table_name" />
+		<result property="projectIdAutocomplete" column="project_name" />
+		<result property="baseTypeAutocomplete" column="base_type_name" />
+		<result property="majorClassification" column="major_classification" />
+		<result property="subClassification" column="sub_classification" />
+		<result property="minorClassification" column="minor_classification" />
+		<result property="optionLabel" column="option_label" />
+		<result property="optionValue" column="option_value" />
+		<result property="optionLabelAutocomplete" column="option_label_autocomplete" />
+		<result property="optionValueAutocomplete" column="option_value_autocomplete" />
+	</resultMap>
+
+	<resultMap type="org.terasoluna.qp.domain.model.Basetype" id="basetypeQp">
+		<id property="basetyeId" column="value2" />
+		<result property="primitiveId" column="basetye_id" />
+		<result property="basetypeName" column="value1" />
+		<result property="basetypeValue" column="value2" />
+		<result property="groupBaseTypeId" column="value3" />
+		<result property="basetypeGroupName" column="value4" />
+		<result property="groupColor" column="value5" />
+		<result property="itemSeqNo" column="item_seq_no" />
+		<result property="dataTypeFlg" column="data_type_flg" />
+		<result property="domainName" column="value1" />
+		<result property="length" column="maxlength" />
+		<result property="precision" column="decimal_part" />
+		<result property="mandatory" column="mandatory_flg" />
+		<result property="validationRule" column="fmt_code" />
+		<result property="defaultValue" column="default_value" />
+		<result property="maxValue" column="max_val" />
+		<result property="minValue" column="min_val" />
+		<result property="constrainsType" column="constrains_type" />
+		<result property="datasourceType" column="datasource_type" />
+		<result property="datasourceId" column="datasource_id" />
+		<result property="operatorCode" column="operator_code" />
+		<result property="remark" column="remark" />
+	</resultMap>
+	
+	<resultMap id="autocomplete" type="Autocomplete">
+		<result property="optionValue" column="optionValue" />
+		<result property="optionLabel" column="optionLabel" />
+		<result property="output01" column="output01" />
+		<result property="output02" column="output02" />
+		<result property="output03" column="output03" />
+	</resultMap>
+
+	<sql id="findPageByCriteriaWhere">
+		<where>
+			<if test="criteria.domainName != null and criteria.domainName != ''">
+				<bind name="domainName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.domainName)" />
+				<![CDATA[
+					AND D.domain_name ILIKE #{domainName} ESCAPE '~'
+				]]>
+			</if>
+
+			<if test="criteria.domainCode != null and criteria.domainCode != ''">
+				<bind name="domainCode" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.domainCode)" />
+				<![CDATA[
+					AND D.domain_code ILIKE #{domainCode} ESCAPE '~'
+				]]>
+			</if>
+
+			<if test="criteria.domainBaseType != null and criteria.domainBaseType != ''">
+				<![CDATA[
+					AND D.base_type = #{criteria.domainBaseType}
+				]]>
+			</if>
+
+			<if test="criteria.projectId != null and criteria.projectId != ''"> 
+				<![CDATA[ 
+					AND D.project_id = #{criteria.projectId} 
+				]]>
+			</if>
+		</where>
+	</sql>
+	<select id="findPageByCriteria" parameterType="org.terasoluna.qp.domain.repository.domaindesign.DomainDesignCriteria" resultMap="domainResultMap">
+		SELECT
+			D.domain_id as domain_id,
+			D.domain_name as domain_name,
+			D.domain_code as domain_code,
+			D.maxlength as maxlength,
+			D.mandatory_flg as mandatory_flg,
+			D.min_val as min_val,
+			D.max_val as max_val,
+			D.decimal_part as decimal_part,
+			D.default_value as default_value,
+			D.base_type as base_type,
+			D.group_base_type_id as group_base_type_id,
+			D.fmt_code as fmt_code,
+			D.remark as remark,
+			D.constrains_type as constrains_type,
+			D.datasource_id as datasource_id,
+			D.datasource_type as datasource_type,
+			D.operator_code as operator_code,
+			P.project_name as project_name,
+			(
+				SELECT 
+					value1
+				FROM
+					resources
+				WHERE
+					category_cd='clBasetype' AND CAST (value2 AS numeric) = base_type
+			) base_type_name,
+			D.major_classification as major_classification,
+			D.sub_classification as sub_classification,
+			D.minor_classification as minor_classification,
+			D.option_label,
+			D.option_value,
+			CASE 
+				WHEN D.datasource_type = 3 then 
+					(
+						SELECT sql_design_output_name
+						FROM sql_design_output
+						WHERE sql_design_output_id = D.option_label
+					)
+			END AS option_label_autocomplete,
+			CASE 
+				WHEN D.datasource_type = 3 then 
+					(
+						SELECT sql_design_output_name
+						FROM sql_design_output
+						WHERE sql_design_output_id = D.option_value
+					)
+			END AS option_value_autocomplete
+		FROM
+			domain_design as D INNER JOIN project as P
+		ON 
+			D.project_id= P.project_id 
+
+		<include refid="findPageByCriteriaWhere" />
+
+		<if test="pageable.sort != null">
+			ORDER BY
+			<foreach collection="pageable.sort" item="domain" separator=",">
+				<![CDATA[
+					${domain.property} ${domain.direction}
+				]]>
+			</foreach>
+		</if>
+		<if test="pageable.sort == null">
+			ORDER BY
+				D.updated_date DESC, D.project_id
+		</if>
+		<![CDATA[
+			LIMIT
+				#{pageable.pageSize}
+			OFFSET
+				#{pageable.offset}
+		]]>
+	</select>
+	<select id="countByCriteria" parameterType="org.terasoluna.qp.domain.repository.domaindesign.DomainDesignCriteria" resultType="_long">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM 
+				domain_design as D INNER JOIN project as P
+			On
+				D.project_id= P.project_id
+		]]>
+		<include refid="findPageByCriteriaWhere" />
+	</select>
+	
+	<select id="checkForeignKey" parameterType="Long" resultType="Long">
+		<![CDATA[
+			SELECT 
+				COUNT(domain_mapping_data_type)
+			FROM 
+				domain_table_mapping_items 
+			WHERE 
+				domain_mapping_data_type = #{domainId}
+		]]>
+	</select>
+	
+	<select id="getReferenceById" parameterType="Long" resultMap="domainResultMap">
+		<![CDATA[
+			SELECT
+				DISTINCT
+				dmd.domain_name,
+				dtm.domain_tbl_mapping_name table_name
+			FROM domain_design dmd INNER JOIN domain_table_mapping_items dtmi on dmd.domain_id = dtmi.domain_mapping_data_type
+				INNER JOIN domain_table_mapping dtm on dtmi.domain_tbl_mapping_id = dtm.domain_tbl_mapping_id
+			where dmd.domain_id= #{domainId}
+		]]>
+	</select>
+	
+
+	<insert id="registerDomain" parameterType="DomainDesign" useGeneratedKeys="true" keyProperty="DomainDesign.domainId" keyColumn="domainId">
+		<selectKey keyProperty="domainId" resultType="Long" order="BEFORE">
+			SELECT nextval('domain_design_seq'::regclass)
+		</selectKey>
+		<![CDATA[
+			INSERT INTO
+				domain_design
+			(
+				domain_id,
+				domain_name,
+				domain_code,
+				maxlength,
+				mandatory_flg,
+				min_val,
+				max_val,
+				decimal_part,
+				default_value,
+				base_type,
+				group_base_type_id,
+				fmt_code,
+				remark,
+				project_id,
+				constrains_type,
+				datasource_id,
+				datasource_type,
+				operator_code,
+				default_type,
+				created_by,
+				created_date,
+				updated_by,
+				updated_date,
+				major_classification,
+				sub_classification,
+				minor_classification,
+				option_label,
+				option_value,
+				pattern_format
+			)
+			VALUES
+			(
+				#{domainId},
+				#{domainName},
+				#{domainCode},
+				#{maxLength},
+				#{mandatoryflg},
+				#{minVal},
+				#{maxVal},
+				#{precision},
+				#{defaultValue},
+				#{baseType},
+				#{groupBasetypeId},
+				#{fmtCode},
+				#{remark},
+				#{projectId},
+				#{constrainsType},
+				#{datasourceId},
+				#{datasourceType},
+				#{operatorCode},
+				#{defaultType},
+				#{createdBy},
+				#{createdDate},
+				#{updatedBy},
+				#{updatedDate},
+				#{majorClassification},
+				#{subClassification},
+				#{minorClassification},
+				#{optionLabel},
+				#{optionValue},
+				#{patternFormat}
+			);
+		]]>
+	</insert>
+	
+	<insert id="registerMultiple"> 
+			INSERT INTO
+				domain_design
+			(				
+				domain_name,
+				domain_code,
+				maxlength,
+				mandatory_flg,
+				min_val,
+				max_val,
+				decimal_part,
+				default_value,
+				base_type,
+				group_base_type_id,
+				fmt_code,
+				remark,
+				project_id,
+				constrains_type,
+				datasource_id,
+				datasource_type,
+				operator_code,
+				default_type,
+				created_by,
+				created_date,
+				updated_by,
+				updated_date,
+				major_classification,
+				sub_classification,
+				minor_classification,
+				option_label,
+				option_value
+			)
+			VALUES
+			<foreach item="item" collection="domainDesigns" separator=",">
+			(				
+				#{domainName},
+				#{domainCode},
+				#{maxLength},
+				#{mandatoryflg},
+				#{minVal},
+				#{maxVal},
+				#{precision},
+				#{defaultValue},
+				#{baseType},
+				#{groupBasetypeId},
+				#{fmtCode},
+				#{remark},
+				#{projectId},
+				#{constrainsType},
+				#{datasourceId},
+				#{datasourceType},
+				#{operatorCode},
+				#{defaultType},
+				#{createdBy},
+				#{createdDate},
+				#{updatedBy},
+				#{updatedDate},
+				#{majorClassification},
+				#{subClassification},
+				#{minorClassification},
+				#{optionLabel},
+				#{optionValue}
+			)
+			</foreach>;
+	</insert>
+
+	<select id="findOne" parameterType="Long" resultMap="domainResultMap">
+		<![CDATA[
+			SELECT
+				D.domain_id as domain_id,
+				D.domain_name as domain_name,
+				D.domain_code as domain_code,
+				D.maxlength as maxlength,
+				D.mandatory_flg as mandatory_flg,
+				D.min_val as min_val,
+				D.max_val as max_val,
+				D.decimal_part as decimal_part,
+				D.default_value as default_value,
+				D.base_type as base_type,
+				D.group_base_type_id as group_base_type_id,
+				D.fmt_code as fmt_code,
+				D.remark as remark,
+				D.constrains_type as constrains_type,
+				D.datasource_id as datasource_id,
+				D.datasource_type as datasource_type,
+				D.operator_code as operator_code,
+				D.default_type as default_type,
+				D.project_id as project_id,
+				D.created_by,
+				D.created_date,
+				D.updated_by,
+				D.updated_date,
+				(
+					SELECT 
+						project_name
+					FROM 
+						project p
+					WHERE
+						p.project_id= d.project_id
+				) project_name,
+				(
+					SELECT 
+						value1
+					FROM
+						resources
+					WHERE
+						category_cd='clBasetype' AND CAST (value2 AS numeric) = base_type
+				) base_type_name,
+				D.major_classification as major_classification,
+				D.sub_classification as sub_classification,
+				D.minor_classification as minor_classification,
+				D.option_label,
+				D.option_value,
+				D.pattern_format,
+				CASE 
+					WHEN D.datasource_type = 3 then 
+						(
+							SELECT sql_design_output_name
+							FROM sql_design_output
+							WHERE sql_design_output_id = D.option_label
+						)
+				END AS option_label_autocomplete,
+				CASE 
+					WHEN D.datasource_type = 3 then 
+						(
+							SELECT sql_design_output_name
+							FROM sql_design_output
+							WHERE sql_design_output_id = D.option_value
+						)
+				END AS option_value_autocomplete
+			FROM
+				domain_design as D INNER JOIN project as P 
+			ON 
+				D.project_id= P.project_id 
+			WHERE
+				domain_id=#{domainId}
+		]]>
+	</select>
+
+	<update id="modifyDomain" parameterType="DomainDesign">
+		<![CDATA[
+			UPDATE
+				domain_design
+			SET
+				domain_name=#{domainName},
+				domain_code=#{domainCode},
+				maxlength=#{maxLength},
+				mandatory_flg=coalesce(#{mandatoryFlg}, 0),
+				min_val=#{minVal},
+				max_val=#{maxVal},
+				decimal_part=#{precision},
+				default_value=#{defaultValue},
+				base_type=#{baseType},
+				group_base_type_id=#{groupBasetypeId},
+				fmt_code=#{fmtCode},
+				remark=#{remark},
+				constrains_type=#{constrainsType},
+				datasource_id=#{datasourceId},
+				datasource_type=#{datasourceType},
+				operator_code=#{operatorCode},
+				default_type=#{defaultType},
+				updated_by=#{updatedBy},
+				major_classification= #{majorClassification},
+				sub_classification=#{subClassification},
+				minor_classification=#{minorClassification},
+				updated_date = now(),
+				option_label = #{optionLabel},
+				option_value = #{optionValue},
+				pattern_format = #{patternFormat}
+			WHERE
+				domain_id=#{domainId} AND updated_date = #{updatedDate}
+		]]>
+	</update>
+	<delete id="deleteDomain" parameterType="Long">
+		<![CDATA[
+			DELETE FROM
+				domain_design
+			WHERE
+				domain_id=#{domainId}
+		]]>
+	</delete>
+	
+	<delete id="deleteDomainDesignByProjectId" parameterType="_long">
+        <![CDATA[
+            DELETE FROM
+                domain_design
+            WHERE
+                project_id=#{projectId}
+        ]]>
+    </delete>
+
+	<select id="findAllByProjectId" parameterType="Long" resultMap="domainResultMap">
+		<![CDATA[
+			SELECT
+				domain_id,
+				domain_name,
+				domain_code,
+				maxlength,
+				mandatory_flg,
+				min_val,
+				max_val,
+				decimal_part,
+				default_value,
+				base_type,
+				fmt_code,
+				remark,
+				group_base_type_id
+			FROM
+				domain_design
+			WHERE
+				project_id=#{projectId}
+			ORDER BY
+				group_base_type_id
+		]]>
+	</select>
+	<select id="findAllDomainDesignsBySqlDesignId" parameterType="Long" resultMap="domainResultMap">
+		<![CDATA[
+			SELECT
+				domain_id,
+				domain_name,
+				domain_code,
+				maxlength,
+				mandatory_flg,
+				min_val,
+				max_val,
+				decimal_part,
+				default_value,
+				base_type,
+				fmt_code,
+				remark,
+				group_base_type_id
+			FROM
+				domain_design
+			WHERE
+				datasource_type = 2 AND datasource_id = #{sqlDesignId} AND project_id = #{projectId}
+		]]>
+	</select>
+	
+	<select id="findAllDomainDesignsByModuleId" parameterType="Long" resultMap="domainResultMap">
+		<![CDATA[
+			SELECT
+				domain_id,
+				domain_name,
+				domain_code,
+				maxlength,
+				mandatory_flg,
+				min_val,
+				max_val,
+				decimal_part,
+				default_value,
+				base_type,
+				fmt_code,
+				remark,
+				group_base_type_id
+			FROM
+				domain_design
+			WHERE
+				(
+					(
+						datasource_type = 2 
+						AND 
+						datasource_id IN (
+				 							SELECT autocomplete_id
+				 							FROM autocomplete_design
+				 							WHERE module_id = #{moduleId}
+				 							) 
+			 		)
+			 		OR
+			 		(
+				 		datasource_type = 3 
+						AND 
+						datasource_id IN (
+				 							SELECT sql_design_id
+				 							FROM sql_design
+				 							WHERE module_id = #{moduleId}
+				 							) 
+			 		)
+			 		OR
+			 		(
+				 		datasource_type = 1
+						AND 
+						datasource_id IN (
+				 							SELECT codelist_id
+				 							FROM codelist
+				 							WHERE module_id = #{moduleId}
+				 							) 
+			 		)
+		 		)
+				AND project_id = #{projectId}
+		]]>
+	</select>
+	
+	<select id="getAllBasetype" parameterType="long" resultMap="basetypeQp">
+		SELECT
+			value1,
+			value2,
+			value3,
+			'Primitive' as value4,
+			value5,
+			resource_type as item_seq_no,
+			0 as data_type_flg,
+			(''::text) as maxlength,
+			(''::text) as decimal_part,
+			(''::text) as mandatory_flg,
+			value4 as fmt_code,
+			(''::text) as max_val,
+			(''::text) as min_val,
+			null as constrains_type,
+			null as datasource_type,
+			null as datasource_id,
+			null as operator_code,
+			'' as remark,
+			'' as default_value, 
+			(value2::numeric) as basetye_id
+		FROM
+			resources
+		WHERE
+			category_cd='clBasetype'
+
+		UNION ALL
+	
+		SELECT
+			domain_name AS value1,
+			(domain_id::text) AS value2 ,
+			(group_base_type_id::text) as value3,
+			'Domain type' as value4,
+			(
+			select value5 from resources r where r.category_cd='clBasetype' and
+			d.base_type = (r.value2::numeric)
+		
+			) as value5,
+			'0' as item_seq_no,
+			1 AS data_type_flg,
+			(maxlength::text),
+			(decimal_part::text),
+			(mandatory_flg::text),
+			fmt_code,
+			max_val,
+			min_val,
+			constrains_type,
+			datasource_type,
+			datasource_id,
+			operator_code,
+			remark,
+			default_value,
+			base_type as basetye_id
+		FROM
+			domain_design as D
+		WHERE
+			D.project_id = #{projectId}
+		ORDER BY
+			data_type_flg, item_seq_no, value3, value1
+	</select>
+
+	<select id="listOfTableDeignUsed" parameterType="long" resultMap="autocomplete">
+		<![CDATA[
+			SELECT 
+				t.tbl_design_name output01,
+				d.column_name output02,
+				d.column_id output03,
+				t.design_status output04,
+				t.tbl_design_code output05,
+				d.column_code output06
+			FROM 
+				table_design_details d INNER JOIN table_design t ON d.tbl_design_id = t.tbl_design_id
+			WHERE 
+				d.data_type_flg = 1
+			AND 
+				data_type = #{domainDesignId}
+			ORDER BY t.tbl_design_name
+		]]>
+	</select>
+	
+	<select id="countNameCodeByDomainId" parameterType="DomainDesign" resultType="Long">
+    	<bind name="clName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toLikeCondition(domainName)" />
+		<bind name="clCode" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toLikeCondition(domainCode)" />
+        SELECT 
+            SUM(rowVal) AS totalCount 
+        FROM (
+                (SELECT 
+                        1 AS rowVal 
+                 FROM 
+                        domain_design
+                 <where>
+                        <if test="domainName != null and domainName != ''">
+                            domain_name iLIKE #{clName} ESCAPE '~'
+                        </if> 
+                        <if test="domainId != null">AND domain_id != #{domainId}</if>
+                        <if test="projectId != null">AND project_id = #{projectId}</if>
+                        <if test="domainName == null and domainName == ''">AND FALSE</if>
+                 </where>
+                 LIMIT 1
+                 ) 
+                 UNION
+                (SELECT
+                        2 AS rowVal
+                 FROM
+                        domain_design
+                 <where>
+                        <if test="domainCode != null and domainCode != ''">
+                            domain_code iLIKE #{clCode} ESCAPE '~'
+                        </if> 
+                        <if test="domainId != null">AND domain_id != #{domainId}</if>
+                        <if test="projectId != null">AND project_id = #{projectId}</if>
+                        <if test="domainCode == null and domainCode == ''">AND FALSE</if>
+                 </where>
+                 LIMIT 1
+                 )
+              ) AS foo
+    </select>
+    
+    <select id="getAllValidationRule" resultType="String">
+    	SELECT validation_rule_code
+    	FROM validation_rule
+    </select>
+    
+    <select id="getAllBasetypeOnly" parameterType="long" resultMap="basetypeQp">
+		SELECT
+			value1,
+			value2,
+			value3,
+			'Primitive' as value4,
+			value5,
+			resource_type as item_seq_no,
+			0 as data_type_flg,
+			(''::text) as maxlength,
+			(''::text) as decimal_part,
+			(''::text) as mandatory_flg,
+			value4 as fmt_code,
+			(''::text) as max_val,
+			(''::text) as min_val,
+			null as constrains_type,
+			null as datasource_type,
+			null as datasource_id,
+			null as operator_code,
+			'' as remark,
+			'' as default_value, 
+			(value2::numeric) as basetye_id
+		FROM
+			resources
+		WHERE
+			category_cd='clBasetype'
+	</select>
+	<select id="getNameByDomainId">
+		SELECT
+			domain_name
+		FROM
+			domain_design
+		WHERE 
+			domain_id = #{domainId}	
+		LIMIT 1		
+	</select>
+	<select id="getListDomainDesignByAutocompleteId" resultMap="domainResultMap">
+		SELECT
+			domain_id,
+			domain_code,
+			domain_name
+		FROM
+			domain_design
+		WHERE
+			datasource_type = 2 AND datasource_id = #{autocompleteId}	
+	</select>
+	
+	<!-- //TungHT -->
+	<select id="findListByScreenDesignOutput" resultMap="domainResultMap">
+		SELECT
+			domain_id,
+			base_type,
+			maxlength
+		FROM 
+			domain_design
+		WHERE
+			<if test="lstScreenDesignOutput != null and lstScreenDesignOutput.size() > 0">
+				domain_id IN
+				<foreach collection="lstScreenDesignOutput" item="item" open="(" close=")" separator=",">
+					#{item.datatypeIdDomainType}
+				</foreach>
+			</if>
+			<if test="lstScreenDesignOutput == null or lstScreenDesignOutput.size() == 0">
+				FALSE
+			</if>
+	</select>
+	
+	
+</mapper>

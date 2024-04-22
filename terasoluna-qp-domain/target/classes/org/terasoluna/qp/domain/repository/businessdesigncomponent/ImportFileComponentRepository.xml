@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.businessdesigncomponent.ImportFileComponentRepository">
+
+    <resultMap id="importFileComponentResultMap" type="ImportFileComponent">
+        <id property="importFileComponentId" column="import_file_component_id" />
+        <result property="label" column="label" />
+        <result property="remark" column="remark" />
+        <result property="sourcePathType" column="source_path_type" />
+        <result property="sourcePathContent" column="source_path_content" />
+        <result property="sourcePathFormulaId" column="source_path_formula_id" />
+        <result property="targetScope" column="target_scope" />
+        <result property="targetId" column="target_id" />
+        <result property="sequenceLogicId" column="sequence_logic_id" />
+        <result property="objectDefinition.objectDefinitionId" column="object_definition_id" />
+        <result property="objectDefinition.objectDefinitionCode" column="object_definition_code" />
+        <result property="objectDefinition.arrayFlg" column="array_flg" />
+        <result property="objectDefinition.dataType" column="data_type" />
+        <result property="fileFormat.fileType" column="file_type" />
+        <result property="fileFormat.fileEncoding" column="file_encoding" />
+        <result property="fileFormat.lineFeedCharType" column="line_feed_char_type" />
+        <result property="fileFormat.lineFeedChar" column="line_feed_char" />
+        <result property="fileFormat.delimiter" column="delimiter" />
+        <result property="fileFormat.encloseCharType" column="enclose_char_type" />
+        <result property="fileFormat.encloseChar" column="enclose_char" />
+        <result property="fileFormat.headLineCount" column="head_line_count" />
+        <result property="fileFormat.trailerLineCount" column="trailer_line_count" />
+        <result property="fileFormat.overwriteFlg" column="overwrite_flg" />
+    </resultMap>
+	<resultMap id="importAssignValueResultMap" type="ImportAssignValue">
+        <id property="importAssignValueId" column="import_assign_value_id" />
+        <result property="importFileComponentId" column="import_file_component_id" />
+        <result property="targetScope" column="target_scope" />
+        <result property="targetId" column="target_id" />
+        <result property="columnNo" column="column_no" />
+    </resultMap>
+	<resultMap id="fileFormatResultMap" type="FileFormat">
+        <id property="fileType" column="file_type" />
+        <id property="fileId" column="file_id" />
+        <result property="fileEncoding" column="file_encoding" />
+        <result property="lineFeedCharType" column="line_feed_char_type" />
+        <result property="lineFeedChar" column="line_feed_char" />
+        <result property="delimiter" column="delimiter" />
+        <result property="encloseCharType" column="enclose_char_type" />
+        <result property="encloseChar" column="enclose_char" />
+        <result property="headLineCount" column="head_line_count" />
+        <result property="trailerLineCount" column="trailer_line_count" />
+        <result property="overwriteFlg" column="overwrite_flg" />
+    </resultMap>
+    <select id="getSequencesImportFileComponent" resultType="Long">
+    	select SETVAL('import_file_component_seq'::regclass, NEXTVAL('import_file_component_seq'::regclass) + #{size})
+    </select>
+    <insert id="registerImportFileComponent" >
+		<foreach item="item" collection="importFileComponentItems">
+			INSERT INTO import_file_component
+				(
+            		import_file_component_id, 
+            		label, 
+            		remark, 
+            		sequence_logic_id,
+            		source_path_type, 
+            		source_path_content, 
+            		source_path_formula_id, 
+            		target_scope, 
+            		target_id
+            	)
+	    		VALUES 
+	    		(
+					#{item.importFileComponentId},
+					#{item.label},
+	            	#{item.remark},
+	            	#{item.sequenceLogicId},
+					#{item.sourcePathType},
+					#{item.sourcePathContent},
+					#{item.sourcePathFormulaId},
+					#{item.targetScope},
+	            	CAST(#{item.targetId} AS numeric(16,0))
+	            );
+	        INSERT INTO file_format
+				(
+            		file_type, 
+            		file_id, 
+            		file_encoding, 
+            		line_feed_char_type,
+            		line_feed_char,
+            		delimiter, 
+            		enclose_char_type, 
+            		enclose_char, 
+            		head_line_count, 
+            		trailer_line_count, 
+            		overwrite_flg
+            	)
+	    		VALUES 
+	    		(
+					0,
+					#{item.importFileComponentId},
+	            	#{item.fileFormat.fileEncoding},
+	            	#{item.fileFormat.lineFeedCharType},
+	            	#{item.fileFormat.lineFeedChar},
+					#{item.fileFormat.delimiter},
+					#{item.fileFormat.encloseCharType},
+					#{item.fileFormat.encloseChar},
+					#{item.fileFormat.headLineCount},
+					#{item.fileFormat.trailerLineCount},
+	            	#{item.fileFormat.overwriteFlg}
+	            );
+	        <if test="item.lstImportAssignValues.size() > 0">
+	        	INSERT INTO import_assign_value
+	        	(
+           			import_file_component_id, 
+           			target_scope,
+           			target_id,
+           			column_no
+           		)
+	    		VALUES 
+	    		<foreach item="detail" collection="item.lstImportAssignValues" separator=",">
+				(
+					#{item.importFileComponentId},
+					#{detail.targetScope},
+					CAST(#{detail.targetId} AS numeric(16,0)),
+					#{detail.columnNo}
+	            )
+				</foreach>;
+	        </if>
+		</foreach>
+    </insert>
+    
+    <select id="findImportFileComponentByBusinessLogic" resultMap="importFileComponentResultMap">
+    	SELECT 
+    		a.import_file_component_id, 
+    		a.label, 
+    		a.remark, 
+    		a.sequence_logic_id, 
+       		a.source_path_type, 
+       		a.source_path_content, 
+       		a.source_path_formula_id, 
+       		a.target_scope, 
+       		a.target_id
+  		FROM import_file_component a
+  		WHERE EXISTS
+		    (
+			    SELECT sl.sequence_logic_id
+			    FROM sequence_logic sl
+			    WHERE sl.business_logic_id = #{businessLogicId}
+			       	AND component_type = 16
+			       	AND sl.sequence_logic_id = a.sequence_logic_id 
+		     )
+		ORDER BY a.import_file_component_id
+    </select>
+    
+    <select id="findImportAssignValueByBusinessLogic" resultMap="importAssignValueResultMap">
+    	SELECT 
+    		a.import_assign_value_id, 
+    		a.import_file_component_id, 
+    		a.target_scope,
+    		a.target_id, 
+    		a.column_no 
+  		FROM import_assign_value a
+  		LEFT JOIN import_file_component b on (b.import_file_component_id = a.import_file_component_id)
+  		WHERE EXISTS
+		    (
+			    SELECT sl.sequence_logic_id
+			    FROM sequence_logic sl
+			    WHERE sl.business_logic_id = #{businessLogicId}
+			       	AND component_type = 16
+			       	AND sl.sequence_logic_id = b.sequence_logic_id 
+		     )
+		ORDER BY a.import_assign_value_id
+    </select>
+    
+    <select id="findFileFormatByBusinessLogic" resultMap="fileFormatResultMap">
+    	SELECT 
+    		a.file_type, 
+       		a.file_id, 
+       		a.file_encoding, 
+       		a.line_feed_char_type,
+       		a.line_feed_char,
+       		a.delimiter, 
+       		a.enclose_char_type, 
+       		a.enclose_char, 
+       		a.head_line_count, 
+       		a.trailer_line_count, 
+       		a.overwrite_flg
+  		FROM file_format a
+  		LEFT JOIN import_file_component b on (b.import_file_component_id = a.file_id)
+		LEFT JOIN export_file_component c on (c.export_file_component_id = a.file_id)
+  		WHERE EXISTS
+		    (
+			    SELECT sl.sequence_logic_id
+			    FROM sequence_logic sl
+			    WHERE sl.business_logic_id = #{businessLogicId}
+			       	AND (component_type = 16)  
+			       	AND sl.sequence_logic_id = b.sequence_logic_id 
+		     )
+		     OR EXISTS
+		    (
+			    SELECT sl.sequence_logic_id
+			    FROM sequence_logic sl
+			    WHERE sl.business_logic_id = #{businessLogicId}
+			       	AND (component_type = 17)  
+			       	AND sl.sequence_logic_id = c.sequence_logic_id 
+		     )
+        AND a.file_type = 0
+		ORDER BY a.file_id
+    </select>
+    
+    <select id="findAllImportFileComponentByModule" resultMap="importFileComponentResultMap">
+    	SELECT 
+    		a.import_file_component_id, 
+    		a.label, 
+    		a.remark, 
+    		a.sequence_logic_id, 
+       		a.source_path_type, 
+       		a.source_path_content, 
+       		a.source_path_formula_id, 
+       		a.target_scope, 
+       		a.target_id,
+       		b.object_definition_id,
+       		b.object_definition_code,
+       		b.array_flg,
+       		b.data_type,
+       		f.file_type, 
+			f.file_encoding, 
+			f.line_feed_char_type,
+			f.line_feed_char,
+			f.delimiter, 
+			f.enclose_char_type, 
+			f.enclose_char, 
+			f.head_line_count, 
+			f.trailer_line_count, 
+			f.overwrite_flg      		
+  		FROM import_file_component a
+		LEFT JOIN object_definition b ON b.object_definition_id = a.target_id
+		LEFT JOIN file_format f ON f.file_id = a.import_file_component_id	
+  		WHERE EXISTS
+		    (
+			    SELECT sl.sequence_logic_id
+			    FROM sequence_logic sl
+			    INNER JOIN business_logic bl ON bl.business_logic_id = sl.business_logic_id
+			    WHERE bl.module_id = #{moduleId}
+			       	AND component_type = 16
+			       	AND sl.sequence_logic_id = a.sequence_logic_id 
+		     )
+        AND f.file_type = 0
+		ORDER BY a.import_file_component_id
+    </select>
+    
+    <select id="findAllImportAssignValueByModule" resultMap="importAssignValueResultMap">
+    	SELECT 
+    		a.import_assign_value_id, 
+    		a.import_file_component_id, 
+    		a.target_scope,
+    		a.target_id, 
+    		a.column_no 
+  		FROM import_assign_value a
+  		LEFT JOIN import_file_component b on (b.import_file_component_id = a.import_file_component_id)
+  		WHERE EXISTS
+		    (
+			   SELECT sl.sequence_logic_id
+			    FROM sequence_logic sl
+			    INNER JOIN business_logic bl ON bl.business_logic_id = sl.business_logic_id
+			    WHERE bl.module_id = #{moduleId}
+			       	AND component_type = 16
+			       	AND sl.sequence_logic_id = b.sequence_logic_id 
+		     )
+		ORDER BY a.import_assign_value_id
+    </select>
+    
+    <select id="findAllFileFormatByModule" resultMap="fileFormatResultMap">
+    	SELECT 
+    		a.file_type, 
+       		a.file_id, 
+       		a.file_encoding, 
+       		a.line_feed_char_type,
+       		a.line_feed_char,
+       		a.delimiter, 
+       		a.enclose_char_type, 
+       		a.enclose_char, 
+       		a.head_line_count, 
+       		a.trailer_line_count, 
+       		a.overwrite_flg
+  		FROM file_format a
+  		LEFT JOIN import_file_component b on (b.import_file_component_id = a.file_id)
+		LEFT JOIN export_file_component c on (c.export_file_component_id = a.file_id)
+  		WHERE EXISTS
+		    (
+			    SELECT sl.sequence_logic_id
+			    FROM sequence_logic sl
+			    LEFT JOIN business_logic bl on (bl.business_logic_id = sl.business_logic_id)
+			    WHERE bl.module_id = #{moduleId}
+			       	AND (component_type = 16)  
+			       	AND sl.sequence_logic_id = b.sequence_logic_id 
+		     )
+		     OR EXISTS
+		    (
+			    SELECT sl.sequence_logic_id
+			    FROM sequence_logic sl
+			   	LEFT JOIN business_logic bl on (bl.business_logic_id = sl.business_logic_id)
+			    WHERE bl.module_id = #{moduleId}
+			       	AND (component_type = 17)  
+			       	AND sl.sequence_logic_id = c.sequence_logic_id 
+		     )
+        AND a.file_type = 0
+		ORDER BY a.file_id
+    </select>
+    
+    <!-- generate source code of commmon blogic -->
+    <select id="findAllImportFileComponentByModuleCommon" resultMap="importFileComponentResultMap">
+        SELECT 
+            a.import_file_component_id, 
+            a.label, 
+            a.remark, 
+            a.sequence_logic_id, 
+            a.source_path_type, 
+            a.source_path_content, 
+            a.source_path_formula_id, 
+            a.target_scope, 
+            a.target_id,
+            b.object_definition_id,
+            b.object_definition_code,
+            b.array_flg,
+            b.data_type,
+            f.file_type, 
+            f.file_encoding, 
+            f.line_feed_char_type,
+            f.line_feed_char,
+            f.delimiter, 
+            f.enclose_char_type, 
+            f.enclose_char, 
+            f.head_line_count, 
+            f.trailer_line_count, 
+            f.overwrite_flg             
+        FROM import_file_component a
+        LEFT JOIN object_definition b ON b.object_definition_id = a.target_id
+        LEFT JOIN file_format f ON f.file_id = a.import_file_component_id   
+        WHERE EXISTS
+            (
+                SELECT sl.sequence_logic_id
+                FROM sequence_logic sl
+                INNER JOIN business_logic bl ON bl.business_logic_id = sl.business_logic_id
+                WHERE bl.project_id = #{projectId} AND bl.module_id is null and bl.blogic_type = 1   
+                    AND component_type = 16
+                    AND sl.sequence_logic_id = a.sequence_logic_id 
+             )
+        AND f.file_type = 0
+        ORDER BY a.import_file_component_id
+    </select>
+    
+    <select id="findAllImportAssignValueByModuleCommon" resultMap="importAssignValueResultMap">
+        SELECT 
+            a.import_assign_value_id, 
+            a.import_file_component_id, 
+            a.target_scope,
+            a.target_id, 
+            a.column_no 
+        FROM import_assign_value a
+        LEFT JOIN import_file_component b on (b.import_file_component_id = a.import_file_component_id)
+        WHERE EXISTS
+            (
+               SELECT sl.sequence_logic_id
+                FROM sequence_logic sl
+                INNER JOIN business_logic bl ON bl.business_logic_id = sl.business_logic_id
+                WHERE bl.project_id = #{projectId} AND bl.module_id is null and bl.blogic_type = 1   
+                    AND component_type = 16
+                    AND sl.sequence_logic_id = b.sequence_logic_id 
+             )
+        ORDER BY a.import_assign_value_id
+    </select>
+    
+    <select id="findAllFileFormatByModuleCommon" resultMap="fileFormatResultMap">
+        SELECT 
+            a.file_type, 
+            a.file_id, 
+            a.file_encoding, 
+            a.line_feed_char_type,
+            a.line_feed_char,
+            a.delimiter, 
+            a.enclose_char_type, 
+            a.enclose_char, 
+            a.head_line_count, 
+            a.trailer_line_count, 
+            a.overwrite_flg
+        FROM file_format a
+        LEFT JOIN import_file_component b on (b.import_file_component_id = a.file_id)
+        LEFT JOIN export_file_component c on (c.export_file_component_id = a.file_id)
+        WHERE EXISTS
+            (
+                SELECT sl.sequence_logic_id
+                FROM sequence_logic sl
+                LEFT JOIN business_logic bl on (bl.business_logic_id = sl.business_logic_id)
+                WHERE bl.project_id = #{projectId} AND bl.module_id is null and bl.blogic_type = 1   
+                    AND (component_type = 16)  
+                    AND sl.sequence_logic_id = b.sequence_logic_id 
+             )
+             OR EXISTS
+            (
+                SELECT sl.sequence_logic_id
+                FROM sequence_logic sl
+                LEFT JOIN business_logic bl on (bl.business_logic_id = sl.business_logic_id)
+                WHERE bl.project_id = #{projectId} AND bl.module_id is null and bl.blogic_type = 1   
+                    AND (component_type = 17)  
+                    AND sl.sequence_logic_id = c.sequence_logic_id 
+             )
+        AND a.file_type = 0
+        ORDER BY a.file_id
+    </select>
+</mapper>

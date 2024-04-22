@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozer.sourceforge.net" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://dozer.sourceforge.net
+          http://dozer.sourceforge.net/schema/beanmapping.xsd">
+    <mapping>
+    	<class-a>org.terasoluna.qp.app.codelist.CodeListForm</class-a>
+    	<class-b>org.terasoluna.qp.domain.model.CodeList</class-b>
+    	<field>
+    		<a>codeListDetails</a>
+    		<b>codeListDetails</b>
+    	</field>    	
+    </mapping>
+	<mapping map-null="false">
+		<class-a>org.terasoluna.qp.domain.model.CodeListDetail</class-a>
+		<class-b>org.terasoluna.qp.app.codelist.CodeListDetailForm</class-b>
+
+		<field>
+			<a>name</a>
+			<b>name</b>
+		</field>
+		<field>
+			<a>value</a>
+			<b>value</b>
+		</field>
+		<field>
+			<a>value1</a>
+			<b>value1</b>
+		</field>
+		<field>
+			<a>value2</a>
+			<b>value2</b>
+		</field>
+		<field>
+			<a>value3</a>
+			<b>value3</b>
+		</field>
+		<field>
+			<a>value4</a>
+			<b>value4</b>
+		</field>
+		<field>
+			<a>value5</a>
+			<b>value5</b>
+		</field>
+		<field>
+			<a>isDefault</a>
+			<b>isDefault</b>
+		</field>
+		<field>
+			<a>clDeatailId</a>
+			<b>clDeatailId</b>
+		</field>
+		<field>
+			<a>codeListId</a>
+			<b>codeListId</b>
+		</field>
+	</mapping>
+
+	<mapping map-null="false">
+		<class-a>org.terasoluna.qp.domain.repository.codelist.CodeListSearchCriteria
+		</class-a>
+		<class-b>org.terasoluna.qp.app.codelist.CodeListSearchForm</class-b>
+		<field>
+			<a>codeListName</a>
+			<b>codeListName</b>
+		</field>
+		<field>
+			<a>codeListCode</a>
+			<b>codeListCode</b>
+		</field>
+		<field>
+			<a>moduleId</a>
+			<b>moduleId</b>
+		</field>
+		<field>
+			<a>OptionValude</a>
+			<b>OptionValude</b>
+		</field>
+	</mapping>
+
+</mappings> 

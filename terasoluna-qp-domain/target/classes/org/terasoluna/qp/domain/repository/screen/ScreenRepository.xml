@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.screen.ScreenRepository">
+
+	<resultMap id="screenResultMap" type="Screen">
+		<id property="screen_id" column="screen_id" />
+		<result property="screen_cd" column="screen_cd" />
+		<result property="module_id" column="system_module_id" />
+		<result property="screen_desc_cd" column="screen_desc_cd" />
+		<result property="parent" column="parent" />
+	</resultMap>
+	<resultMap id="autocomplete" type="Autocomplete">
+		<result property="optionValue" column="optionValue" />
+		<result property="optionLabel" column="optionLabel" />
+	</resultMap>
+
+	<select id="getAll" resultMap="screenResultMap">
+    <![CDATA[
+  SELECT screen_id, screen_cd, system_module_id, screen_desc_cd, parent
+		FROM screen  
+    ]]>
+	</select>
+	<!-- <select id="getScreenById" parameterType="int" resultMap="screenResultMap"> 
+		SELECT screen_cd, system_module_id, screen_desc_cd FROM m_screen WHERE system_module_id= 
+		#{system_module_id} </select> -->
+
+	<select id="getScreenById" parameterType="long" resultMap="screenResultMap">
+		SELECT
+		screen_id, screen_cd,system_module_id, screen_desc_cd, parent
+		FROM
+		screen where system_module_id= #{system_module_id}
+	</select>
+		<!--  Auto complete functions -->
+	<select id="getAllScreenAC"
+		parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput"
+		resultMap="autocomplete">
+		SELECT
+		screen_id AS optionValue,
+		screen_cd AS optionLabel
+		FROM screen
+		ORDER by screen_id
+	</select>
+</mapper>

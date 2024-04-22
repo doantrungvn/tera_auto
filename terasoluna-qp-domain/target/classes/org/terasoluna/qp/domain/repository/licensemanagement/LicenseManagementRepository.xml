@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="org.terasoluna.qp.domain.repository.licensemanagement.LicenseManagementRepository">
+	<resultMap id="licenseManagementResultMap" type="LicenseManagement">
+		<id property="licenseId" column="license_id" />
+		<result property="customerName" column="customer_name" />
+		<result property="customerCode" column="customer_code" />
+		<result property="tel" column="phone_number" />
+		<result property="email" column="email" />
+		<result property="address" column="address" />
+		<result property="num" column="number_of_user" />
+		<result property="startDate" column="start_date" />
+		<result property="expiredDate" column="expired_date" />
+		<result property="appliedDate" column="applied_date" />
+		<result property="appliedBy" column="applied_by" />
+		<result property="status" column="status" />
+	</resultMap>
+
+	<!-- Mapping for autocomplete result -->
+	<resultMap id="autocompleteResultMap" type="Autocomplete">
+		<result property="optionValue" column="optionValue" />
+		<result property="optionLabel" column="optionLabel" />
+	</resultMap>
+
+	<!-- Count license management by search condition -->
+	<select id="countBySearchCriteria"
+		parameterType="org.terasoluna.qp.domain.repository.licensemanagement.LicenseManagementRepository"
+		resultType="_long">
+		<![CDATA[
+			SELECT 
+				COUNT(*) 
+			FROM 
+				license_management a
+		]]>
+		<include refid="findPageByCriteriaWherePhrase" />
+	</select>
+
+	<!-- Finds all license management by search condition -->
+	<select id="findPageBySearchCriteria"
+		parameterType="org.terasoluna.qp.domain.repository.licensemanagement.LicenseManagementRepository"
+		resultMap="licenseManagementResultMap">
+		<![CDATA[
+			SELECT
+				a.license_id,
+				a.customer_code,
+				a.customer_name,
+				a.project_name,
+				a.project_code,
+				a.version,
+				a.phone_number,
+				a.email,
+				a.address,
+				a.number_of_user,
+				a.start_date,
+				a.expired_date,
+				a.applied_date,
+				a.status
+			FROM 
+				license_management a
+		]]>
+		<include refid="findPageByCriteriaWherePhrase" />
+		<if test="pageable.sort != null">
+			ORDER BY
+			<foreach collection="pageable.sort" item="order" separator=",">
+				${order.property} ${order.direction}
+			</foreach>
+		</if>
+		<if test="pageable.sort == null">
+			ORDER BY
+			start_date DESC
+		</if>
+		<![CDATA[
+			LIMIT
+				#{pageable.pageSize}
+			OFFSET
+				#{pageable.offset}
+		]]>
+	</select>
+
+	<!-- License management search criteria -->
+	<sql id="findPageByCriteriaWherePhrase">
+		<where>
+			<if test="criteria.customerName != null and criteria.customerName != ''">
+				<bind name="customerName"
+					value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.customerName)" />
+				<![CDATA[
+					customer_name ILIKE #{customerName} ESCAPE '~'
+				]]>
+			</if>
+			<if test="criteria.customerCode != null and criteria.customerCode != ''">
+				<bind name="customerCode"
+					value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.customerCode)" />
+				<![CDATA[
+					AND customer_code ILIKE #{customerCode} ESCAPE '~'
+				]]>
+			</if>
+			<if test="criteria.projectCode != null and criteria.projectCode != ''">
+				<![CDATA[
+					AND a.project_code ILIKE '%' || #{criteria.projectCode} || '%' ESCAPE '~'
+				]]>
+			</if>
+			<if test="criteria.projectName != null and criteria.projectName != ''">
+				<![CDATA[ 
+					AND a.project_name ILIKE '%' || #{criteria.projectName} || '%' ESCAPE '~'
+				]]>
+			</if>
+			<if test="criteria.num != null and criteria.num != ''">
+				<![CDATA[
+					AND a.number_of_user = #{criteria.num}
+				]]>
+			</if>
+			<if test="criteria.status !=null and criteria.status.length > 0 ">
+				AND a.status IN
+				<foreach item="status" index="index" collection="criteria.status"
+					open="(" separator="," close=")">
+					#{status}
+				</foreach>
+			</if>
+			<if test="criteria.email != null and criteria.email != ''">
+				<![CDATA[
+					AND a.email ILIKE '%' || #{criteria.email} || '%' ESCAPE '~'
+				]]>
+			</if>
+
+			<if test="criteria.fromStartDate !=null and criteria.fromStartDate != ''">
+				<![CDATA[AND a.start_date >= '${criteria.fromStartDate}']]>
+			</if>
+
+			<if test="criteria.toStartDate !=null and criteria.toStartDate != ''">
+				<![CDATA[AND a.start_date <= '${criteria.toStartDate}']]>
+			</if>
+
+			<if
+				test="criteria.fromExpiredDate !=null and criteria.fromExpiredDate != ''">
+				<![CDATA[AND a.expired_date >= '${criteria.fromExpiredDate}']]>
+			</if>
+
+			<if test="criteria.toExpiredDate !=null and criteria.toExpiredDate != ''">
+				<![CDATA[AND a.expired_date <= '${criteria.toExpiredDate}']]>
+			</if>
+
+			<if
+				test="criteria.fromAppliedDate !=null and criteria.fromAppliedDate != ''">
+				<![CDATA[AND a.applied_date >= '${criteria.fromAppliedDate}']]>
+			</if>
+
+			<if test="criteria.toAppliedDate !=null and criteria.toAppliedDate != ''">
+				<![CDATA[AND a.applied_date <= '${criteria.toAppliedDate}']]>
+			</if>
+		</where>
+	</sql>
+
+	<insert id="registerLicenseManagement" parameterType="LicenseManagement">
+		<selectKey keyProperty="licenseId" resultType="long" order="BEFORE">
+			SELECT NEXTVAL('license_seq') AS licenseId
+		</selectKey>
+		<![CDATA[
+			INSERT INTO license_management 
+			(
+				license_id,
+				customer_code,
+				customer_name,
+				project_name,
+				project_code,
+				version,
+				phone_number,
+				email,
+				address,
+				number_of_user,
+				start_date,
+				expired_date,
+				applied_date,
+				status,
+				license_file_name,
+				applied_by
+			)
+			VALUES
+			(
+				#{licenseId},
+				#{customerCode},
+				#{customerName},
+				#{projectName},
+				#{projectCode},
+				#{version},
+				#{num},
+				#{email},
+				#{address},
+				#{num},
+				#{startDate},
+				#{expiredDate},
+				#{appliedDate},
+				#{status},
+				#{licenseFileName},
+				#{appliedBy}
+			)
+		]]>
+	</insert>
+
+	<select id="findLicenseManagementById" parameterType="Long"
+		resultMap="licenseManagementResultMap">
+		SELECT
+		a.license_id,
+		a.customer_code,
+		a.customer_name,
+		a.project_name as project_name,
+		a.project_code as project_code,
+		a.version,
+		a.phone_number,
+		a.email,
+		a.address,
+		a.number_of_user,
+		a.start_date,
+		a.expired_date,
+		a.applied_date,
+		a.status
+		FROM
+		license_management a
+		WHERE
+		license_id = #{licenseId}
+	</select>
+
+	<update id="changeStatus" parameterType="LicenseManagement">
+		<![CDATA[
+			UPDATE
+				license_management
+			SET
+				status = 0
+			WHERE
+				expired_date < now()
+		]]>
+	</update>
+
+	<delete id="delete" parameterType="LicenseManagement">
+		DELETE FROM
+		license_management
+		WHERE
+		license_id = #{licenseId}
+	</delete>
+
+	<select id="getSequencesLicensemanagement" resultType="Long">
+		select
+		SETVAL('license_seq'::regclass, NEXTVAL('license_seq'::regclass) +
+		#{size})
+	</select>
+
+
+</mapper>

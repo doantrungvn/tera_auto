@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.language.LanguageRepository">
+	<resultMap id="languageResultMap" type="org.terasoluna.qp.domain.model.Language">
+		<id property="languageCode" column="language_code" />
+		<result property="languageName" column="language_name" />
+		<result property="countryCode" column="country_code" />
+		<result property="regionCode" column="region_code" />
+	</resultMap>
+	
+	<resultMap id="autocompleteResultMap" type="Autocomplete">
+		<result property="optionValue" column="optionValue" />
+		<result property="optionLabel" column="optionLabel" />
+		<result property="output01" column="output01" />
+		<result property="output02" column="output02" />
+		<result property="output03" column="output03" />
+		<result property="output04" column="output04" />
+		<result property="output05" column="output05" />
+	</resultMap>
+	
+	<select id="findAllLanguage" resultMap="languageResultMap">
+		SELECT
+			language_code,
+			language_name,
+			country_code
+		FROM
+			language
+		ORDER BY
+			language_code 
+	</select>
+	
+	<!-- register -->
+	
+	<insert id="register">
+		INSERT INTO 
+			language
+			(
+				language_code,
+				language_name,
+				country_code
+			)
+		VALUES
+			(
+				#{languageCode},
+				#{languageName},
+				#{countryCode}
+			);
+			
+		INSERT INTO message(
+				language_code,
+				message_code,
+				message_string,
+				remark,
+				country_code,
+				module_resource
+		)
+		SELECT 
+				#{languageCode},
+				message_code,
+				message_string,
+				remark,
+				#{countryCode},
+				module_resource
+  		FROM 
+  				message
+  		WHERE 
+  				language_code = 'en'
+	</insert>
+	
+	<!-- Register default message design -->
+	
+	<!-- <insert id="registerMessageFromDefaultLanguageCode" parameterType="Language">
+		INSERT INTO message(
+				language_code,
+				message_code,
+				message_string,
+				country_code, 
+				remark,
+				module_resource
+		)
+		SELECT 
+				#{languageCode},
+				message_code,
+				message_string,
+				#{countryCode},
+				remark,
+				module_resource
+  		FROM 
+  				message
+  		WHERE 
+  				language_code = 'en'
+	</insert> -->
+	
+	<!-- find language -->
+	
+	 <select id="findLanguage" parameterType="Language" resultMap="languageResultMap">
+		<![CDATA[
+			SELECT
+				language_code,
+				language_name,
+				country_code,
+				region_code
+			FROM
+			 	language 
+			WHERE 
+				language_code  LIKE '%' || #{languageCode} || '%'
+			AND country_code LIKE '%' || #{countryCode} || '%'
+		]]>
+	</select>
+	
+	<!-- update language -->
+	
+	<update id="modify" >		
+		UPDATE 
+			language
+		SET 			
+			language_name = #{languageName}
+		WHERE 
+		 	language_code = #{languageCode}
+		 AND country_code = #{countryCode}
+	</update>
+	
+	<!-- delete language -->
+	
+	 <delete id="delete">
+		DELETE FROM 
+			language
+		WHERE 
+			language_code = #{languageCode}
+		AND country_code = #{countryCode}
+	</delete>
+	
+	<delete id="deleteReferenceMessage" parameterType="Language">
+		DELETE FROM 
+			message
+		WHERE
+			language_code = #{languageCode}
+		AND country_code = #{countryCode}
+	</delete>
+	<!-- check exits to register -->
+	
+	<select id="checkExitsCode" parameterType="Language"
+		resultMap="languageResultMap">
+		<![CDATA[
+			SELECT 
+				language_code
+			FROM 
+				language 
+			WHERE
+				(
+					language_code iLIKE #{languageCode} AND country_code iLIKE #{countryCode}
+				)
+		]]>
+	</select>
+	
+	<select id="findAllBingInfor" resultType="HashMap">
+		SELECT
+			resource_cd,
+			value2 
+		FROM
+			resources
+		WHERE 
+			category_cd = 'clBingInfor'
+	</select>
+	
+	<select id="countByCriteria" parameterType="org.terasoluna.qp.domain.repository.language.LanguageCriteria" resultType="Long">
+			SELECT
+				count(1)
+			FROM
+				language
+			WHERE
+				TRUE
+				<if test="criteria.languageCode != null and criteria.languageCode != ''">
+					<bind name="languageCode" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.languageCode)" />
+					AND language_code ILIKE #{languageCode} ESCAPE '~'
+				</if>
+				<if test="criteria.languageName != null and criteria.languageName != ''">
+					<bind name="languageName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.languageName)" />
+					AND language_name ILIKE #{languageName} ESCAPE '~'
+				</if>
+	</select>
+	<select id="findPageByCriteria" parameterType="org.terasoluna.qp.domain.repository.language.LanguageCriteria" resultMap="languageResultMap">
+			SELECT
+				language_code,
+				language_name,
+				country_code,
+				region_code
+			FROM
+				language
+			WHERE
+				TRUE
+				<if test="criteria.languageCode != null and criteria.languageCode != ''">
+					<bind name="languageCode" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.languageCode)" />
+					AND language_code ILIKE #{languageCode} ESCAPE '~'
+				</if>
+				<if test="criteria.languageName != null and criteria.languageName != ''">
+					<bind name="languageName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.languageName)" />
+					AND language_name ILIKE #{languageName} ESCAPE '~'
+				</if>
+			<if test="pageable.sort != null">
+			ORDER BY
+			<foreach collection="pageable.sort" item="language" separator=",">
+				<![CDATA[
+					${language.property} ${language.direction}
+				]]>
+			</foreach>
+			</if>
+			<if test="pageable.sort == null">
+			ORDER BY
+					language_name ASC
+			</if>
+			<![CDATA[
+				LIMIT
+					#{pageable.pageSize}
+				OFFSET
+					#{pageable.offset}
+			]]>
+	</select>
+	<select id="getLanguageForAutocomplete" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+			language_code AS optionValue,
+			language_name AS optionLabel,
+			country_code AS output01,
+			region_code AS output02
+		FROM
+			language
+		<where>
+			<if test="arg01 != null and arg01 != ''">
+				<![CDATA[
+					AND Trim(language_code) != #{arg01}
+				]]>
+			</if>
+		</where>
+	</select>
+	
+	<select id="findLanguageByKey" parameterType="org.terasoluna.qp.domain.model.Language" resultMap="languageResultMap">
+		<![CDATA[
+			SELECT
+				language_code,
+				language_name,
+				country_code,
+				region_code
+			FROM
+				language 
+			WHERE 
+				language_code = #{criteria.languageCode}
+		]]>
+	</select>
+</mapper>

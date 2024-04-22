@@ -1,0 +1,17 @@
+eclipse.preferences.version=1
+encoding//src/main/java=UTF-8
+encoding//src/main/resources=UTF-8
+encoding//src/main/webapp/WEB-INF/tags/item_per_page.tag=UTF-8
+encoding//src/main/webapp/WEB-INF/views/accountprofile/profileForm.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/accountprofile/settingForm.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/businessdesign/component/loopComponent.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/businessdesign/searchForm.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/loggingmanagement/modifyForm.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/project/modifyForm.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/project/registerForm.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/sample/searchForm.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/screenpermission/modifyForm.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/sqldefinition/registerForm.jsp=UTF-8
+encoding//src/test/java=UTF-8
+encoding//src/test/resources=UTF-8
+encoding/<project>=UTF-8

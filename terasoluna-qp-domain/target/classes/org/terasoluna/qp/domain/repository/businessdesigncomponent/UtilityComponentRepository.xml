@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.businessdesigncomponent.UtilityComponentRepository">
+
+    <resultMap id="UtilityComponentResultMap" type="UtilityComponent">
+        <id property="utilityComponentId" column="utility_component_id" />
+        <result property="label" column="label" />
+        <result property="remark" column="remark" />
+        <result property="type" column="type" />
+        <result property="targetScope" column="target_scope" />
+        <result property="targetId" column="target_id" />
+        <result property="parameterScope" column="parameter_scope" />
+        <result property="parameterId" column="parameter_id" />
+        <result property="indexType" column="index_type" />
+        <result property="indexId" column="index_id" />
+        <result property="sequenceLogicId" column="sequence_logic_id" />
+    </resultMap>
+    <select id="getSequencesUtilityComponent" resultType="Long">
+    	select SETVAL('utility_component_seq'::regclass, NEXTVAL('utility_component_seq'::regclass) + #{size})
+    </select>
+    <insert id="registerUtilityComponent" >
+		<foreach item="item" collection="utilityComponentItems">
+			INSERT INTO utility_component
+				(
+            		utility_component_id, 
+            		label, 
+            		remark, 
+                    type, 
+            		sequence_logic_id,
+            		target_scope, 
+            		target_id, 
+            		parameter_scope,
+            		parameter_id, 
+            		index_scope, 
+            		index_id
+            	)
+	    		VALUES 
+	    		(
+					#{item.utilityComponentId},
+					#{item.label},
+	            	#{item.remark},
+                    #{item.type},
+	            	#{item.sequenceLogicId},
+					#{item.targetScope},
+                    CAST(#{item.targetId} AS numeric(16,0)),
+					#{item.parameterScope},
+                    CAST(#{item.parameterId} AS numeric(16,0)),
+					#{item.indexScope},
+                    CAST(#{item.indexId} AS numeric(16,0))
+	            );
+                <if test="item.lstParameterIndex != null and  item.lstParameterIndex.size() > 0 ">
+                    INSERT INTO bd_parameter_index
+                    (
+                        table_type, 
+                        table_id, 
+                        parameter_id, 
+                        parameter_index_type, 
+                        parameter_index_id,
+                        business_logic_id
+                    )
+                    VALUES
+                    <foreach item="itemIndex" collection="item.lstParameterIndex" separator=",">
+                        (
+                            #{itemIndex.tableType}, 
+                            #{item.utilityComponentId},
+                            CAST(#{itemIndex.parameterId} AS numeric(16,0)),
+                            #{itemIndex.parameterIndexType}, 
+                            CAST(#{itemIndex.parameterIndexId} AS numeric(16,0)),
+                            #{itemIndex.businessLogicId}
+                        )
+                    </foreach>;
+                </if>
+                <if test="item.lstIndex != null and  item.lstIndex.size() > 0 ">
+                    INSERT INTO bd_parameter_index
+                    (
+                        table_type, 
+                        table_id, 
+                        parameter_id, 
+                        parameter_index_type, 
+                        parameter_index_id,
+                        business_logic_id
+                    )
+                    VALUES
+                    <foreach item="itemIndex" collection="item.lstIndex" separator=",">
+                        (
+                            #{itemIndex.tableType}, 
+                            #{item.utilityComponentId},
+                            CAST(#{itemIndex.parameterId} AS numeric(16,0)),
+                            #{itemIndex.parameterIndexType}, 
+                            CAST(#{itemIndex.parameterIndexId} AS numeric(16,0)),
+                            #{itemIndex.businessLogicId}
+                        )
+                    </foreach>;
+                </if>
+		</foreach>
+    </insert>
+    
+    <select id="findUtilityComponentByBusinessLogic" resultMap="UtilityComponentResultMap">
+    	SELECT 
+    		a.utility_component_id, 
+    		a.label, 
+    		a.remark, 
+            a.type, 
+    		a.sequence_logic_id,
+			a.target_scope, 
+			a.target_id, 
+			a.parameter_scope,
+			a.parameter_id, 
+			a.index_scope, 
+			a.index_id
+  		FROM utility_component a
+  		WHERE EXISTS
+		    (
+			    SELECT sl.sequence_logic_id
+			    FROM sequence_logic sl
+			    WHERE sl.business_logic_id = #{businessLogicId}
+			       	AND component_type = 22
+			       	AND sl.sequence_logic_id = a.sequence_logic_id 
+		     )
+		ORDER BY a.utility_component_id
+    </select>
+    
+    <select id="findAllUtilityComponent" resultMap="UtilityComponentResultMap">
+    	SELECT 
+    		a.utility_component_id, 
+    		a.label, 
+    		a.remark, 
+            a.type, 
+    		a.sequence_logic_id,
+			a.target_scope, 
+			a.target_id, 
+			a.parameter_scope,
+			a.parameter_id, 
+			a.index_scope, 
+			a.index_id  		
+  		FROM utility_component a
+  		WHERE EXISTS
+		    (
+			    SELECT sl.sequence_logic_id
+			    FROM sequence_logic sl
+			    INNER JOIN business_logic bl ON bl.business_logic_id = sl.business_logic_id
+			    WHERE bl.module_id = #{moduleId}
+			       	AND component_type = 22
+			       	AND sl.sequence_logic_id = a.sequence_logic_id 
+		     )
+		ORDER BY a.utility_component_id
+    </select>
+    
+    <!-- For generate source code -->
+    <select id="findAllUtilityComponentByModuleId" resultMap="UtilityComponentResultMap">
+        SELECT 
+    		a.utility_component_id, 
+    		a.label, 
+    		a.remark, 
+            a.type, 
+    		a.sequence_logic_id,
+			a.target_scope, 
+			a.target_id, 
+			a.parameter_scope,
+			a.parameter_id, 
+			a.index_scope, 
+			a.index_id  
+        FROM utility_component a
+        WHERE EXISTS
+            ( 
+            SELECT b.sequence_logic_id
+            FROM sequence_logic b
+            INNER JOIN business_logic blogic ON b.business_logic_id = blogic.business_logic_id
+            WHERE blogic.module_id = #{moduleId}
+                AND component_type = 22
+                AND b.sequence_logic_id = a.sequence_logic_id
+            )
+    </select>
+    
+    <!-- generate source code of commmon blogic -->
+    <select id="findAllUtilityComponentByModuleCommon" resultMap="UtilityComponentResultMap">
+        SELECT 
+            a.utility_component_id, 
+            a.label, 
+            a.remark, 
+            a.type, 
+            a.sequence_logic_id,
+            a.target_scope, 
+            a.target_id, 
+            a.parameter_scope,
+            a.parameter_id, 
+            a.index_scope, 
+            a.index_id  
+        FROM utility_component a
+        WHERE EXISTS
+            ( 
+            SELECT b.sequence_logic_id
+            FROM sequence_logic b
+            INNER JOIN business_logic blogic ON b.business_logic_id = blogic.business_logic_id
+            WHERE blogic.project_id = #{projectId} AND blogic.module_id is null and blogic.blogic_type = 1   
+                AND component_type = 22
+                AND b.sequence_logic_id = a.sequence_logic_id
+            )
+    </select>
+</mapper>

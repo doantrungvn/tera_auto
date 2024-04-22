@@ -1,0 +1,1691 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<bean id="jdbcTemplateForCodeList" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource" />
+		<property name="fetchSize" value="${codelist.jdbc.fetchSize:1000}" />
+	</bean>
+
+	<bean id="AbstractJdbcCodeList" class="org.terasoluna.qp.app.wraper.JdbcCodeList"
+		abstract="true">
+		<property name="jdbcTemplate" ref="jdbcTemplateForCodeList" />
+	</bean>
+
+	<bean id="CL_LANGUAGE_LIST" parent="AbstractJdbcCodeList">
+		<property name="querySql"
+			value="SELECT (language_code || '_' || country_code) AS locale_code, language_name FROM language" />
+		<property name="valueColumn" value="locale_code" />
+		<property name="labelColumn" value="language_name" />
+	</bean>
+
+	<!-- Default system setting: format -->
+	<bean id="CL_SYSTEM_SETTING" parent="AbstractJdbcCodeList">
+		<property name="querySql"
+			value="SELECT resource_cd , value1 FROM resources where category_cd='systemSettings'" />
+		<property name="valueColumn" value="resource_cd" />
+		<property name="labelColumn" value="value1" />
+	</bean>
+
+	<!-- Bean for Theme format -->
+	<bean id="CL_THEME_COLOR" parent="AbstractJdbcCodeList">
+		<property name="querySql"
+			value="SELECT resource_cd , value1 FROM resources where category_cd='clThemeDefault'" />
+		<property name="valueColumn" value="resource_cd" />
+		<property name="labelColumn" value="value1" />
+	</bean>
+	<bean id="CL_SAMPLE" parent="AbstractJdbcCodeList">
+		<property name="querySql" value="SELECT id, name_type FROM sample_type" />
+		<property name="valueColumn" value="id" />
+		<property name="labelColumn" value="name_type" />
+	</bean>
+
+	<!-- Bean for display type -->
+	<bean id="CL_DISPLAY_TYPE" parent="AbstractJdbcCodeList">
+		<property name="querySql"
+			value="SELECT resource_cd , value2 FROM resources where category_cd='clDisplayType'" />
+		<property name="valueColumn" value="value2" />
+		<property name="labelColumn" value="resource_cd" />
+	</bean>
+
+	<!-- SonLD Change to using static codelist -->
+	<bean id="CL_QP_ITEMTYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="sc.screendesign.0041" /><!-- AUTO COMPLETE -->
+				<entry key="1" value="sc.screendesign.0182" /><!-- NAME -->
+				<entry key="2" value="sc.screendesign.0052" /><!-- INTEGER -->
+				<entry key="3" value="sc.screendesign.0044" /><!-- DECIMAL -->
+				<entry key="4" value="sc.screendesign.0053" /><!-- DATE -->
+				<entry key="5" value="sc.screendesign.0049" /><!-- RADIO -->
+				<entry key="6" value="sc.screendesign.0047" /><!-- CHECKBOX -->
+				<entry key="7" value="sc.screendesign.0048" /><!-- SELECT -->
+				<entry key="8" value="sc.screendesign.0042" /><!-- CURRENCY -->
+				<entry key="9" value="sc.screendesign.0046" /><!-- TIME -->
+				<entry key="10" value="sc.screendesign.0057" /><!-- REMARK -->
+				<entry key="11" value="sc.screendesign.0039" /><!-- LINK -->
+				<entry key="12" value="sc.screendesign.0043" /><!-- FILEUPLOAD -->
+				<entry key="13" value="sc.screendesign.0128" /><!-- BUTTON -->
+				<entry key="14" value="sc.screendesign.0045" /><!-- DATETIME -->
+				<entry key="15" value="sc.screendesign.0055" /><!-- EMAIL -->
+				<entry key="16" value="sc.screendesign.0056" /><!-- PHONE -->
+				<entry key="17" value="sc.screendesign.0129" /><!--BOOLEAN -->
+				<entry key="18" value="sc.screendesign.0054" /><!-- CODE -->
+				<entry key="20" value="sc.screendesign.0050" /><!-- LABEL -->
+				<entry key="21" value="sc.screendesign.0181" /><!-- LABEL_DYNAMIC -->
+				<entry key="22" value="sc.screendesign.0431" /><!-- LINK_DYNAMIC -->
+				<entry key="23" value="sc.screendesign.0302" /><!-- CUSTOM_ITEM -->
+				<entry key="24" value="sc.screendesign.0434" /><!-- CUSTOM_SECTION -->
+			</util:map>
+		</property>
+	</bean>
+
+	<!-- DatLD Operator Codelist -->
+	<bean id="CL_QP_OPERATOR_CODE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="sc.sys.0030" /><!-- Select -->
+				<entry key="1" value="cl.sys.0001" /><!-- = -->
+				<entry key="2" value="cl.sys.0002" /><!-- < -->
+				<entry key="3" value="cl.sys.0003" /><!-- <= -->
+				<entry key="4" value="cl.sys.0004" /><!-- > -->
+				<entry key="5" value="cl.sys.0005" /><!-- >= -->
+				<entry key="6" value="cl.sys.0006" /><!-- <> -->
+				<entry key="7" value="cl.sys.0007" /><!-- LIKE -->
+				<entry key="8" value="cl.sys.0008" /><!-- BETWEEN -->
+			</util:map>
+		</property>
+	</bean>
+
+	<!-- HungHX Change to using static codelist -->
+	<bean id="CL_QP_OPERATORTYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="1" value="cl.sys.0001" /><!-- = -->
+				<entry key="2" value="cl.sys.0002" /><!-- < -->
+				<entry key="3" value="cl.sys.0003" /><!-- <= -->
+				<entry key="4" value="cl.sys.0004" /><!-- > -->
+				<entry key="5" value="cl.sys.0005" /><!-- >= -->
+				<entry key="6" value="cl.sys.0006" /><!-- <> -->
+			</util:map>
+		</property>
+	</bean>
+
+	<!-- static code list datatype not include Object -->
+	<bean id="CL_QP_DATATYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="16" value="Common object" />
+				<entry key="17" value="External object" />
+				<entry key="0" value="Object" />
+				<entry key="1" value="Byte" />
+				<entry key="2" value="Short" />
+				<entry key="3" value="Integer" />
+				<entry key="4" value="Long" />
+				<entry key="5" value="Float" />
+				<entry key="6" value="Double" />
+				<entry key="7" value="Char" />
+				<entry key="8" value="Boolean" />
+				<entry key="9" value="String" />
+				<entry key="10" value="BigDecimal" />
+				<entry key="11" value="Timestamp" />
+				<entry key="12" value="Datetime" />
+				<entry key="13" value="Time" />
+				<entry key="15" value="Date" />
+			</util:map>
+		</property>
+	</bean>
+
+	<!-- Bean for Page size setting -->
+	<bean id="CL_PAGESIZE" parent="AbstractJdbcCodeList">
+		<property name="querySql"
+			value="SELECT value1 FROM resources where category_cd='clPageSize' order by resource_cd ASC" />
+		<property name="valueColumn" value="value1" />
+		<property name="labelColumn" value="value1" />
+	</bean>
+
+	<bean id="CL_TABLE_SETTING" parent="AbstractJdbcCodeList">
+		<property name="querySql"
+			value="SELECT value1, value2 FROM resources where category_cd='clTableSetting'" />
+		<property name="valueColumn" value="value1" />
+		<property name="labelColumn" value="value2" />
+	</bean>
+
+	<!-- Bean for Subject area design -->
+	<bean id="CL_DEFAULT_TYPE" parent="AbstractJdbcCodeList">
+		<property name="querySql"
+			value="SELECT value1, value2 FROM resources WHERE category_cd = 'clDefaultType' order by value2" />
+		<property name="valueColumn" value="value2" />
+		<property name="labelColumn" value="value1" />
+	</bean>
+
+	<!-- Static codelist by TienND -->
+	<!-- Bean for Screen Pattern Types -->
+	<bean id="CL_SCREEN_PARTTERN_TYPES" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="1" value="sc.screendesign.0019" />
+				<entry key="2" value="sc.screendesign.0021" />
+				<entry key="3" value="sc.screendesign.0030" />
+				<entry key="4" value="sc.screendesign.0029" />
+			</util:map>
+		</property>
+	</bean>
+	<bean id="CL_SYSTEM_PATH_FLAG" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="1" value="sc.librarymanagement.0025" />
+				<entry key="2" value="sc.librarymanagement.0026" />
+			</util:map>
+		</property>
+	</bean>
+	<!-- Bean for Screen Template Types -->
+	<bean id="CL_TEMPLATE_TYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="1" value="Normal" />
+				<entry key="2" value="Popup" />
+			</util:map>
+		</property>
+	</bean>
+	<!-- Bean for Message type format -->
+	<bean id="CL_MESSAGE_TYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="sc" value="cl.sys.0020" />
+				<entry key="inf" value="cl.sys.0017" />
+				<entry key="wrn" value="cl.sys.0018" />
+				<entry key="err" value="cl.sys.0019" />
+				<entry key="cl" value="cl.sys.0016" />
+			</util:map>
+		</property>
+	</bean>
+	<!-- Bean for Message level format -->
+	<bean id="CL_MESSAGE_LEVEL" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="sc.databasedesign.0092" />
+				<entry key="1" value="sc.screendesign.0322" />
+				<entry key="2" value="tqp.screendesign" />
+				<!-- <entry key="3" value="sc.messagedesign.0010" />
+				<entry key="4" value="sc.messagedesign.0015" /> -->
+				<entry key="5" value="sc.businesslogicdesign.0008" />
+				<entry key="6" value="tqp.menudesign" />
+			</util:map>
+		</property>
+	</bean>
+	<!-- Bean for Design status -->
+	<bean id="CL_DESIGN_STATUS" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="1" value="cl.sys.0009" /> <!-- Under design -->
+				<entry key="2" value="cl.sys.0010" /> <!-- Fixed design -->
+				<!-- <entry key="3" value="Change design" /> -->
+			</util:map>
+		</property>
+	</bean>
+	
+	<bean id="CL_GENERATE_DDL_MODE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="sc.databasedesign.0098" /> <!-- All -->
+				<entry key="1" value="sc.databasedesign.0120" /> <!-- Custom table -->
+			</util:map>
+		</property>
+	</bean>
+
+	<!-- Bean for Type of Table -->
+	<bean id="CL_TABLE_TYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="1" value="cl.sys.0012" /> <!-- Master table -->
+				<entry key="0" value="cl.sys.0011" /> <!-- Transaction table -->
+			</util:map>
+		</property>
+	</bean>
+
+	<!-- Bean for Type of Table -->
+	<bean id="CL_TABLE_TYPE_ALL" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="1" value="cl.sys.0012" /> <!-- Master table -->
+				<entry key="0" value="cl.sys.0011" /> <!-- Transaction table -->
+				<entry key="2" value="cl.sys.0015" /> <!-- QP Common table -->
+			</util:map>
+		</property>
+	</bean>
+
+	<!-- Bean for Type of Table -->
+	<bean id="CL_MENU_TYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="1" value="sc.menudesign.0001" /> <!-- Horizontal -->
+				<entry key="0" value="sc.menudesign.0000" /> <!-- Vertical -->
+			</util:map>
+		</property>
+	</bean>
+
+	<!-- Bean for Role Status -->
+	<bean id="CL_ROLE_STATUS" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="1" value="Active" />
+				<entry key="0" value="InActive" />
+			</util:map>
+		</property>
+	</bean>
+	<bean id="CL_FUNCTION_TYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="sc.sys.0092" />
+				<entry key="1" value="sc.blogiccomponent.0166" />
+			</util:map>
+		</property>
+	</bean>
+
+	<!-- Bean for true false -->
+	<bean id="CL_TRUE_FALSE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="1" value="True" />
+				<entry key="0" value="False" />
+			</util:map>
+		</property>
+	</bean>
+	<!-- Bean for Confirmation type -->
+	<bean id="CL_MODULE_CONFIRM_TYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="sc.screendesign.0207" />
+				<entry key="1" value="sc.module.0031" />
+				<entry key="2" value="sc.screendesign.0157" />
+			</util:map>
+		</property>
+	</bean>
+	<!-- Bean for completion type -->
+	<bean id="CL_MODULE_COMPLETE_TYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="1" value="sc.module.0031" />
+				<entry key="2" value="sc.screendesign.0157" />
+			</util:map>
+		</property>
+	</bean>
+
+	<!-- Bean for matching type -->
+	<bean id="CL_MATCHING_TYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="sc.sqldesign.0045" />
+				<entry key="1" value="sc.sqldesign.0046" />
+			</util:map>
+		</property>
+	</bean>
+
+	<!-- Bean for SUPPORT_OPTION_VALUE_FLAG -->
+	<bean id="CL_SUPPORT_OPTION_VALUE_FLAG" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="1" value="sc.sys.0011" />
+				<entry key="0" value="sc.sys.0012" />
+			</util:map>
+		</property>
+	</bean>
+
+	<!-- Bean for entity type -->
+	<bean id="CL_ENTITY_TYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="Single" />
+				<entry key="1" value="List" />
+			</util:map>
+		</property>
+	</bean>
+
+	<!-- Bean for area pattern type -->
+	<bean id="CL_QP_AREAPATTERNTYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="1" value="Register" />
+				<entry key="2" value="Modify" />
+				<entry key="3" value="View" />
+			</util:map>
+		</property>
+	</bean>
+
+	<!-- Bean for language code format -->
+	<bean id="CL_LANGUAGE_CODE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="ar_AE" value="cl.language.0013" />
+				<entry key="bs_LATN" value="cl.language.0014" />
+				<entry key="bg_BG" value="cl.language.0015" />
+				<entry key="ca_ES" value="cl.language.0016" />
+				<entry key="zh_CHS" value="cl.language.0017" />
+				<entry key="zh_CHT" value="cl.language.0018" />
+				<entry key="hr_BA" value="cl.language.0019" />
+				<entry key="cs_CZ" value="cl.language.0020" />
+				<entry key="da_DK" value="cl.language.0021" />
+				<entry key="nl_BE" value="cl.language.0022" />
+				<entry key="en_US" value="cl.language.0023" />
+				<entry key="et_EE" value="cl.language.0024" />
+				<entry key="fi_FI" value="cl.language.0025" />
+				<entry key="fr_FR" value="cl.language.0026" />
+				<entry key="de_DE" value="cl.language.0027" />
+				<entry key="el_GR" value="cl.language.0028" />
+				<entry key="ht_HT" value="cl.language.0029" />
+<!-- 				<entry key="iw_IL" value="cl.language.0030" /> -->
+				<entry key="hi_IN" value="cl.language.0031" />
+				<entry key="mww_MWW" value="cl.language.0032" />
+				<entry key="hu_HU" value="cl.language.0033" />
+				<entry key="in_ID" value="cl.language.0034" />
+				<entry key="it_IT" value="cl.language.0035" />
+				<entry key="ja_JP" value="cl.language.0036" />
+				<entry key="tlh_QAAK" value="cl.language.0037" />
+				<entry key="ko_KR" value="cl.language.0038" />
+				<entry key="lv_LV" value="cl.language.0039" />
+				<entry key="lt_LT" value="cl.language.0040" />
+				<entry key="ms_MY" value="cl.language.0041" />
+				<entry key="mt_MT" value="cl.language.0042" />
+				<entry key="no_no" value="cl.language.0043" />
+				<entry key="fa_IR" value="cl.language.0044" />
+				<entry key="pl_PL" value="cl.language.0045" />
+				<entry key="pt_PT" value="cl.language.0046" />
+				<entry key="otq_OTQ" value="cl.language.0047" />
+				<entry key="ro_RO" value="cl.language.0048" />
+				<entry key="ru_RU" value="cl.language.0049" />
+				<entry key="sr_CYRL" value="cl.language.0050" />
+				<entry key="sr_LATN" value="cl.language.0051" />
+				<entry key="sk_SK" value="cl.language.0052" />
+				<entry key="sl_SI" value="cl.language.0053" />
+				<entry key="es_ES" value="cl.language.0054" />
+				<entry key="sv_SE" value="cl.language.0055" />
+				<entry key="th_TH" value="cl.language.0056" />
+				<entry key="tr_TR" value="cl.language.0057" />
+				<entry key="uk_UA" value="cl.language.0058" />
+				<entry key="ur_PK" value="cl.language.0059" />
+				<entry key="vi_VN" value="cl.language.0060" />
+				<entry key="cy_GB" value="cl.language.0061" />
+				<entry key="yua_GW" value="cl.language.0062" />
+			</util:map>
+		</property>
+	</bean>
+
+	<!-- Bean for language code format -->
+	<bean id="CL_COUNTRY_CODE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="AD" value="Andorra" />
+				<entry key="AE" value="United Arab Emirates" />
+				<entry key="AF" value="Afghanistan" />
+				<entry key="AG" value="Antigua and Barbuda" />
+				<entry key="AI" value="Anguilla" />
+				<entry key="AL" value="Albania" />
+				<entry key="AM" value="Armenia" />
+				<entry key="AN" value="Netherlands Antilles" />
+				<entry key="AO" value="Angola" />
+				<entry key="AQ" value="Antarctica" />
+				<entry key="AR" value="Argentina" />
+				<entry key="ARPA" value="Old style Arpanet" />
+				<entry key="AS" value="American Samoa" />
+				<entry key="AT" value="Austria" />
+				<entry key="AU" value="Australia" />
+				<entry key="AW" value="Aruba" />
+				<entry key="AZ" value="Azerbaidjan" />
+				<entry key="BA" value="Bosnia-Herzegovina" />
+				<entry key="BB" value="Barbados" />
+				<entry key="BD" value="Bangladesh" />
+				<entry key="BE" value="Belgium" />
+				<entry key="BF" value="Burkina Faso" />
+				<entry key="BG" value="Bulgaria" />
+				<entry key="BH" value="Bahrain" />
+				<entry key="BI" value="Burundi" />
+				<entry key="BJ" value="Benin" />
+				<entry key="BM" value="Bermuda" />
+				<entry key="BN" value="Brunei Darussalam" />
+				<entry key="BO" value="Bolivia" />
+				<entry key="BR" value="Brazil" />
+				<entry key="BS" value="Bahamas" />
+				<entry key="BT" value="Bhutan" />
+				<entry key="BV" value="Bouvet Island" />
+				<entry key="BW" value="Botswana" />
+				<entry key="BY" value="Belarus" />
+				<entry key="BZ" value="Belize" />
+				<entry key="CA" value="Canada" />
+				<entry key="CC" value="Cocos (Keeling) Islands" />
+				<entry key="CF" value="Central African Republic" />
+				<entry key="CG" value="Congo" />
+				<entry key="CH" value="Switzerland" />
+				<entry key="CI" value="Ivory Coast (Cote DIvoire)" />
+				<entry key="CK" value="Cook Islands" />
+				<entry key="CL" value="Chile" />
+				<entry key="CM" value="Cameroon" />
+				<entry key="CN" value="China" />
+				<entry key="CO" value="Colombia" />
+				<entry key="COM" value="Commercial" />
+				<entry key="CR" value="Costa Rica" />
+				<entry key="CS" value="Former Czechoslovakia" />
+				<entry key="CU" value="Cuba" />
+				<entry key="CV" value="Cape Verde" />
+				<entry key="CX" value="Christmas Island" />
+				<entry key="CY" value="Cyprus" />
+				<entry key="CZ" value="Czech Republic" />
+				<entry key="DE" value="Germany" />
+				<entry key="DJ" value="Djibouti" />
+				<entry key="DK" value="Denmark" />
+				<entry key="DM" value="Dominica" />
+				<entry key="DO" value="Dominican Republic" />
+				<entry key="DZ" value="Algeria" />
+				<entry key="EC" value="Ecuador" />
+				<entry key="EDU" value="USA Educational" />
+				<entry key="EE" value="Estonia" />
+				<entry key="EG" value="Egypt" />
+				<entry key="EH" value="Western Sahara" />
+				<entry key="ER" value="Eritrea" />
+				<entry key="ES" value="Spain" />
+				<entry key="ET" value="Ethiopia" />
+				<entry key="FI" value="Finland" />
+				<entry key="FJ" value="Fiji" />
+				<entry key="FK" value="Falkland Islands" />
+				<entry key="FM" value="Micronesia" />
+				<entry key="FO" value="Faroe Islands" />
+				<entry key="FR" value="France" />
+				<entry key="FX" value="France (European Territory)" />
+				<entry key="GA" value="Gabon" />
+				<entry key="GB" value="Great Britain" />
+				<entry key="GD" value="Grenada" />
+				<entry key="GE" value="Georgia" />
+				<entry key="GF" value="French Guyana" />
+				<entry key="GH" value="Ghana" />
+				<entry key="GI" value="Gibraltar" />
+				<entry key="GL" value="Greenland" />
+				<entry key="GM" value="Gambia" />
+				<entry key="GN" value="Guinea" />
+				<entry key="GOV" value="USA Government" />
+				<entry key="GP" value="Guadeloupe (French)" />
+				<entry key="GQ" value="Equatorial Guinea" />
+				<entry key="GR" value="Greece" />
+				<entry key="GS" value="S. Georgia and S. Sandwich Isls." />
+				<entry key="GT" value="Guatemala" />
+				<entry key="GU" value="Guam (USA)" />
+				<entry key="GW" value="Guinea Bissau" />
+				<entry key="GY" value="Guyana" />
+				<entry key="HK" value="Hong Kong" />
+				<entry key="HM" value="Heard and McDonald Islands" />
+				<entry key="HN" value="Honduras" />
+				<entry key="HR" value="Croatia" />
+				<entry key="HT" value="Haiti" />
+				<entry key="HU" value="Hungary" />
+				<entry key="ID" value="Indonesia" />
+				<entry key="IE" value="Ireland" />
+<!-- 				<entry key="IL" value="Israel" /> -->
+				<entry key="IN" value="India" />
+				<entry key="INT" value="International" />
+				<entry key="IO" value="British Indian Ocean Territory" />
+				<entry key="IQ" value="Iraq" />
+				<entry key="IR" value="Iran" />
+				<entry key="IS" value="Iceland" />
+				<entry key="IT" value="Italy" />
+				<entry key="JM" value="Jamaica" />
+				<entry key="JO" value="Jordan" />
+				<entry key="JP" value="Japan" />
+				<entry key="KE" value="Kenya" />
+				<entry key="KG" value="Kyrgyzstan" />
+				<entry key="KH" value="Cambodia" />
+				<entry key="KI" value="Kiribati" />
+				<entry key="KM" value="Comoros" />
+				<entry key="KN" value="Saint Kitts and Nevis Anguilla" />
+				<entry key="KP" value="North Korea" />
+				<entry key="KR" value="South Korea" />
+				<entry key="KW" value="Kuwait" />
+				<entry key="KY" value="Cayman Islands" />
+				<entry key="KZ" value="Kazakhstan" />
+				<entry key="LA" value="Laos" />
+				<entry key="LB" value="Lebanon" />
+				<entry key="LC" value="Saint Lucia" />
+				<entry key="LI" value="Liechtenstein" />
+				<entry key="LK" value="Sri Lanka" />
+				<entry key="LR" value="Liberia" />
+				<entry key="LS" value="Lesotho" />
+				<entry key="LT" value="Lithuania" />
+				<entry key="LU" value="Luxembourg" />
+				<entry key="LV" value="Latvia" />
+				<entry key="LY" value="Libya" />
+				<entry key="MA" value="Morocco" />
+				<entry key="MC" value="Monaco" />
+				<entry key="MD" value="Moldavia" />
+				<entry key="MG" value="Madagascar" />
+				<entry key="MH" value="Marshall Islands" />
+				<entry key="MIL" value="USA Military" />
+				<entry key="MK" value="Macedonia" />
+				<entry key="ML" value="Mali" />
+				<entry key="MM" value="Myanmar" />
+				<entry key="MN" value="Mongolia" />
+				<entry key="MO" value="Macau" />
+				<entry key="MP" value="Northern Mariana Islands" />
+				<entry key="MQ" value="Martinique (French)" />
+				<entry key="MR" value="Mauritania" />
+				<entry key="MS" value="Montserrat" />
+				<entry key="MT" value="Malta" />
+				<entry key="MU" value="Mauritius" />
+				<entry key="MV" value="Maldives" />
+				<entry key="MW" value="Malawi" />
+				<entry key="MX" value="Mexico" />
+				<entry key="MY" value="Malaysia" />
+				<entry key="MZ" value="Mozambique" />
+				<entry key="NA" value="Namibia" />
+				<entry key="NATO" value="NATO (this was purged in 1996 - see hq.nato.int)" />
+				<entry key="NC" value="New Caledonia (French)" />
+				<entry key="NE" value="Niger" />
+				<entry key="NET" value="Network" />
+				<entry key="NF" value="Norfolk Island" />
+				<entry key="NG" value="Nigeria" />
+				<entry key="NI" value="Nicaragua" />
+				<entry key="NL" value="Netherlands" />
+				<entry key="NO" value="Norway" />
+				<entry key="NP" value="Nepal" />
+				<entry key="NR" value="Nauru" />
+				<entry key="NT" value="Neutral Zone" />
+				<entry key="NU" value="Niue" />
+				<entry key="NZ" value="New Zealand" />
+				<entry key="OM" value="Oman" />
+				<entry key="ORG" value="Non-Profit Making Organisations (sic)" />
+				<entry key="PA" value="Panama" />
+				<entry key="PE" value="Peru" />
+				<entry key="PF" value="Polynesia (French)" />
+				<entry key="PG" value="Papua New Guinea" />
+				<entry key="PH" value="Philippines" />
+				<entry key="PK" value="Pakistan" />
+				<entry key="PL" value="Poland" />
+				<entry key="PM" value="Saint Pierre and Miquelon" />
+				<entry key="PN" value="Pitcairn Island" />
+				<entry key="PR" value="Puerto Rico" />
+				<entry key="PT" value="Portugal" />
+				<entry key="PW" value="Palau" />
+				<entry key="PY" value="Paraguay" />
+				<entry key="QA" value="Qatar" />
+				<entry key="RE" value="Reunion (French)" />
+				<entry key="RO" value="Romania" />
+				<entry key="RU" value="Russian Federation" />
+				<entry key="RW" value="Rwanda" />
+				<entry key="SA" value="Saudi Arabia" />
+				<entry key="SB" value="Solomon Islands" />
+				<entry key="SC" value="Seychelles" />
+				<entry key="SD" value="Sudan" />
+				<entry key="SE" value="Sweden" />
+				<entry key="SG" value="Singapore" />
+				<entry key="SH" value="Saint Helena" />
+				<entry key="SI" value="Slovenia" />
+				<entry key="SJ" value="Svalbard and Jan Mayen Islands" />
+				<entry key="SK" value="Slovak Republic" />
+				<entry key="SL" value="Sierra Leone" />
+				<entry key="SM" value="San Marino" />
+				<entry key="SN" value="Senegal" />
+				<entry key="SO" value="Somalia" />
+				<entry key="SR" value="Suriname" />
+				<entry key="ST" value="Saint Tome (Sao Tome) and Principe" />
+				<entry key="SU" value="Former USSR" />
+				<entry key="SV" value="El Salvador" />
+				<entry key="SY" value="Syria" />
+				<entry key="SZ" value="Swaziland" />
+				<entry key="TC" value="Turks and Caicos Islands" />
+				<entry key="TD" value="Chad" />
+				<entry key="TF" value="French Southern Territories" />
+				<entry key="TG" value="Togo" />
+				<entry key="TH" value="Thailand" />
+				<entry key="TJ" value="Tadjikistan" />
+				<entry key="TK" value="Tokelau" />
+				<entry key="TM" value="Turkmenistan" />
+				<entry key="TN" value="Tunisia" />
+				<entry key="TO" value="Tonga" />
+				<entry key="TP" value="East Timor" />
+				<entry key="TR" value="Turkey" />
+				<entry key="TT" value="Trinidad and Tobago" />
+				<entry key="TV" value="Tuvalu" />
+				<entry key="TW" value="Taiwan" />
+				<entry key="TZ" value="Tanzania" />
+				<entry key="UA" value="Ukraine" />
+				<entry key="UG" value="Uganda" />
+				<entry key="UK" value="United Kingdom" />
+				<entry key="UM" value="USA Minor Outlying Islands" />
+				<entry key="US" value="United States" />
+				<entry key="UY" value="Uruguay" />
+				<entry key="UZ" value="Uzbekistan" />
+				<entry key="VA" value="Vatican City State" />
+				<entry key="VC" value="Saint Vincent and Grenadines" />
+				<entry key="VE" value="Venezuela" />
+				<entry key="VG" value="Virgin Islands (British)" />
+				<entry key="VI" value="Virgin Islands (USA)" />
+				<entry key="VN" value="Vietnam" />
+				<entry key="VU" value="Vanuatu" />
+				<entry key="WF" value="Wallis and Futuna Islands" />
+				<entry key="WS" value="Samoa" />
+				<entry key="YE" value="Yemen" />
+				<entry key="YT" value="Mayotte" />
+				<entry key="YU" value="Yugoslavia" />
+				<entry key="ZA" value="South Africa" />
+				<entry key="ZM" value="Zambia" />
+				<entry key="ZR" value="Zaire" />
+				<entry key="ZW" value="Zimbabwe" />
+			</util:map>
+		</property>
+	</bean>
+	<bean id="CL_DATABASE_TYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="1" value="PostgreSQL" />
+				<entry key="2" value="Oracle" />
+			</util:map>
+		</property>
+	</bean>
+
+	<bean id="CL_GENERATED_STATUS" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="sc.messagedesign.0027" />
+				<entry key="1" value="sc.messagedesign.0028" />
+				<entry key="2" value="sc.messagedesign.0029" />
+			</util:map>
+		</property>
+	</bean>
+
+	<!-- scope of input bean -->
+	<bean id="CL_BD_INPUT_SCOPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="sc.businesslogicdesign.0195" />
+				<entry key="1" value="sc.businesslogicdesign.0043" />
+			</util:map>
+		</property>
+	</bean>
+
+	<!-- type of data type -->
+	<bean id="CL_BD_DATATYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="14" value="Entity" />
+				<entry key="16" value="Common object" />
+				<entry key="17" value="External object" />
+				<entry key="0" value="Object" />
+				<entry key="1" value="Byte" />
+				<entry key="2" value="Short" />
+				<entry key="3" value="Integer" />
+				<entry key="4" value="Long" />
+				<entry key="5" value="Float" />
+				<entry key="6" value="Double" />
+				<entry key="7" value="Char" />
+				<entry key="8" value="Boolean" />
+				<entry key="9" value="String" />
+				<entry key="10" value="BigDecimal" />
+				<entry key="11" value="Timestamp" />
+				<entry key="12" value="Datetime" />
+				<entry key="13" value="Time" />
+				<entry key="15" value="Date" />
+			</util:map>
+		</property>
+	</bean>
+
+	<!-- type of data type -->
+	<bean id="CL_EX_DATATYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="16" value="Common Object" />
+				<entry key="17" value="External Object" />
+				<entry key="0" value="Object" />
+				<entry key="1" value="Byte" />
+				<entry key="2" value="Short" />
+				<entry key="3" value="Integer" />
+				<entry key="4" value="Long" />
+				<entry key="5" value="Float" />
+				<entry key="6" value="Double" />
+				<entry key="7" value="Char" />
+				<entry key="8" value="Boolean" />
+				<entry key="9" value="String" />
+				<entry key="10" value="BigDecimal" />
+				<entry key="11" value="Timestamp" />
+				<entry key="12" value="Datetime" />
+				<entry key="13" value="Time" />
+				<entry key="15" value="Date" />
+			</util:map>
+		</property>
+	</bean>
+	
+	<!-- type of data type -->
+	<bean id="CL_EX_DATATYPE_NOT_OBJECT" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="16" value="Common Object" />
+				<entry key="17" value="External Object" />
+				<entry key="1" value="Byte" />
+				<entry key="2" value="Short" />
+				<entry key="3" value="Integer" />
+				<entry key="4" value="Long" />
+				<entry key="5" value="Float" />
+				<entry key="6" value="Double" />
+				<entry key="7" value="Char" />
+				<entry key="8" value="Boolean" />
+				<entry key="9" value="String" />
+				<entry key="10" value="BigDecimal" />
+				<entry key="11" value="Timestamp" />
+				<entry key="12" value="Datetime" />
+				<entry key="13" value="Time" />
+				<entry key="15" value="Date" />
+			</util:map>
+		</property>
+	</bean>
+
+	<!-- type of data type -->
+	<bean id="CL_EX_DATATYPE_NOT_COMMON_OBJECT" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="17" value="External Object" />
+				<entry key="1" value="Byte" />
+				<entry key="2" value="Short" />
+				<entry key="3" value="Integer" />
+				<entry key="4" value="Long" />
+				<entry key="5" value="Float" />
+				<entry key="6" value="Double" />
+				<entry key="7" value="Char" />
+				<entry key="8" value="Boolean" />
+				<entry key="9" value="String" />
+				<entry key="10" value="BigDecimal" />
+				<entry key="11" value="Timestamp" />
+				<entry key="12" value="Datetime" />
+				<entry key="13" value="Time" />
+				<entry key="15" value="Date" />
+			</util:map>
+		</property>
+	</bean>
+	
+	<!-- type of data type -->
+	<bean id="CL_EX_DATATYPE_NOT_COMMON_EXTERNAL_ENTITY" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="Object" />
+				<entry key="1" value="Byte" />
+				<entry key="2" value="Short" />
+				<entry key="3" value="Integer" />
+				<entry key="4" value="Long" />
+				<entry key="5" value="Float" />
+				<entry key="6" value="Double" />
+				<entry key="7" value="Char" />
+				<entry key="8" value="Boolean" />
+				<entry key="9" value="String" />
+				<entry key="10" value="BigDecimal" />
+				<entry key="11" value="Timestamp" />
+				<entry key="12" value="Datetime" />
+				<entry key="13" value="Time" />
+				<entry key="15" value="Date" />
+			</util:map>
+		</property>
+	</bean>
+
+	<!-- type of data type -->
+	<bean id="CL_BD_DATATYPE_NOT_ENTITY" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="16" value="Common object" />
+				<entry key="17" value="External object" />
+				<entry key="0" value="Object" />
+				<entry key="1" value="Byte" />
+				<entry key="2" value="Short" />
+				<entry key="3" value="Integer" />
+				<entry key="4" value="Long" />
+				<entry key="5" value="Float" />
+				<entry key="6" value="Double" />
+				<entry key="7" value="Char" />
+				<entry key="8" value="Boolean" />
+				<entry key="9" value="String" />
+				<entry key="10" value="BigDecimal" />
+				<entry key="11" value="Timestamp" />
+				<entry key="12" value="Datetime" />
+				<entry key="13" value="Time" />
+				<entry key="15" value="Date" />
+			</util:map>
+		</property>
+	</bean>
+
+	<!-- type of data type not contain object -->
+	<bean id="CL_BD_DATATYPE_NOT_OBJECT_ENTITY" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="1" value="Byte" />
+				<entry key="2" value="Short" />
+				<entry key="3" value="Integer" />
+				<entry key="4" value="Long" />
+				<entry key="5" value="Float" />
+				<entry key="6" value="Double" />
+				<entry key="7" value="Char" />
+				<entry key="8" value="Boolean" />
+				<entry key="9" value="String" />
+				<entry key="10" value="BigDecimal" />
+				<entry key="11" value="Timestamp" />
+				<entry key="12" value="Datetime" />
+				<entry key="13" value="Time" />
+				<entry key="15" value="Date" />
+			</util:map>
+		</property>
+	</bean>
+
+	<!-- Bean for business logic type -->
+	<bean id="CL_RETURN_TYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="sc.businesslogicdesign.0159" />
+				<entry key="1" value="sc.businesslogicdesign.0159" />
+				<entry key="2" value="sc.businesslogicdesign.0160" />
+				<entry key="3" value="sc.businesslogicdesign.0161" />
+			</util:map>
+		</property>
+	</bean>
+
+	<!-- Bean for register business logic type -->
+	<bean id="CL_RETURN_TYPE_MODIFY" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="sc.businesslogicdesign.0159" />
+				<entry key="1" value="sc.businesslogicdesign.0159" />
+				<entry key="2" value="sc.businesslogicdesign.0160" />
+				<entry key="3" value="sc.businesslogicdesign.0161" />
+			</util:map>
+		</property>
+	</bean>
+
+	<!-- Bean for register business logic type -->
+	<bean id="CL_RETURN_TYPE_REGISTER" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="1" value="sc.businesslogicdesign.0159" />
+				<entry key="2" value="sc.businesslogicdesign.0160" />
+				<entry key="3" value="sc.businesslogicdesign.0161" />
+			</util:map>
+		</property>
+	</bean>
+	
+	<!-- Bean for return type of webservice -->
+	<bean id="CL_RETURN_TYPE_WEBSERVICE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="4" value="JSON" />
+				<entry key="5" value="XML" />
+			</util:map>
+		</property>
+	</bean>
+	
+	<!-- Bean for request method of webservice -->
+	<bean id="CL_REQUEST_METHOD_WEBSERVICE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="sc.sys.0091" />
+				<entry key="1" value="sc.sys.0005" />
+				<entry key="2" value="sc.sys.0006" />
+				<entry key="3" value="sc.sys.0008" />
+			</util:map>
+		</property>
+	</bean>
+	
+	<!-- Bean for request method of standard blogic -->
+	<bean id="CL_REQUEST_METHOD_STANDARD_BLOGIC" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="sc.sys.0089" />
+				<entry key="4" value="sc.sys.0090" />
+			</util:map>
+		</property>
+	</bean>
+	
+	<!-- Bean for business logic type -->
+	<bean id="CL_BLOGIC_TYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="sc.businesslogicdesign.0268"/>
+				<entry key="1" value="sc.sys.0058" />
+				<entry key="2" value="sc.project.0036" />
+				<entry key="3" value="sc.businesslogicdesign.0269"/>
+			</util:map>
+		</property>
+	</bean>
+	
+	<!-- Bean for design type of common blogic -->
+	<bean id="CL_DESIGN_TYPE_COMMON_BLOGIC" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="false" value="sc.sys.0087" />
+				<entry key="true" value="sc.sys.0088" />
+			</util:map>
+		</property>
+	</bean>
+
+	<bean id="CL_POSTGRESQL_CONFIG" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="dbHostName" value="127.0.0.1" />
+				<entry key="dbPort" value="5432" />
+				<entry key="dbUser" value="admin" />
+				<entry key="dbPassword" value="admin" />
+				<entry key="dbDriver" value="org.postgresql.Driver" />
+			</util:map>
+		</property>
+	</bean>
+
+	<bean id="CL_ORACLE_CONFIG" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="dbHostName" value="127.0.0.1" />
+				<entry key="dbPort" value="1521" />
+				<entry key="dbUser" value="admin" />
+				<entry key="dbPassword" value="admin" />
+				<entry key="dbDriver" value="oracle.jdbc.driver.OracleDriver" />
+			</util:map>
+		</property>
+	</bean>
+
+	<bean id="CL_BD_FEEDBACK_MESSAGE_TYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="inf" value="sc.blogiccomponent.0018" />
+				<entry key="wrn" value="sc.blogiccomponent.0019" />
+				<entry key="err" value="sc.blogiccomponent.0020" />
+			</util:map>
+		</property>
+	</bean>
+	<bean id="CL_BD_DATATYPE_PARAMETER" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="1" value="Byte" />
+				<entry key="2" value="Short" />
+				<entry key="3" value="Integer" />
+				<entry key="4" value="Long" />
+				<entry key="5" value="Float" />
+				<entry key="6" value="Double" />
+				<entry key="7" value="Char" />
+				<entry key="8" value="Boolean" />
+				<entry key="9" value="String" />
+				<entry key="10" value="BigDecimal" />
+				<entry key="11" value="Timestamp" />
+				<entry key="12" value="Datetime" />
+				<entry key="13" value="Time" />
+				<entry key="15" value="Date" />
+			</util:map>
+		</property>
+	</bean>
+	<bean id="CL_SCREEN_DESIGN_MODE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="1" value="Prototype mode" />
+				<entry key="2" value="Business mode" />
+			</util:map>
+		</property>
+	</bean>
+
+	<!-- TungHT Resource type -->
+	<bean id="CL_RESOURCE_TYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="sc.databasedesign.0118"/><!-- Other -->
+				<entry key="1" value="sc.problemlist.0006" /><!-- Blogic -->
+				<entry key="2" value="tqp.screendesign" /><!-- Screen design -->
+				<entry key="3" value="sc.problemlist.0007" /><!-- SQL design -->
+				<entry key="4" value="sc.domaindesign.0027" /><!-- Domain design -->
+				<entry key="5" value="tqp.tabledesign" /><!-- Table Design -->
+				<entry key="6" value="tqp.decisiontable" /><!-- Decision Table -->
+				<entry key="7" value="sc.menudesign.0008" /><!-- Menu design -->
+ 				<entry key="10" value="sc.businesslogicdesign.0041" /><!--Screen item -->
+ 				<entry key="11" value="tqp.functionmaster" /><!--Function master-->
+ 				<entry key="12" value="tqp.sessionmanagement" /><!--Session management-->
+ 				<entry key="13" value="tqp.externalobjectdefinition" /><!--External object-->
+ 				<entry key="14" value="tqp.commonobjectdefinition" /><!--Common object-->
+ 				<entry key="15" value="Common business logic" /><!--Common object-->
+			</util:map>
+		</property>
+	</bean>
+
+	<!-- TungHT Problem type -->
+	<bean id="CL_PROBLEM_TYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="1" value="sc.problemlist.0008" /><!-- Unmatched -->
+				<entry key="2" value="sc.problemlist.0010" /><!-- Miss setting -->
+			</util:map>
+		</property>
+	</bean>
+
+	<!-- TungHT Url id -->
+	<bean id="CL_PROBLEM_RESOURCE_URL" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="1" value="businessdesign/modify?businessLogicId=" />	 <!-- Modify business type design scree -->
+				<entry key="2" value="screendesign/design?screenId=" />	<!-- Modify screen design screen -->
+				<entry key="3" value="sqldesign/modify?sqlDesignForm.sqlDesignId=" />	<!-- Modify module screen -->
+				<entry key="4" value="decisiontable/modify?decisionTbId=" />	<!-- Modify decision design screen -->
+				<entry key="5" value="domaindesign/modify?domainId=" />	<!-- Modify domain design screen -->
+				<entry key="6" value="tabledesign/modify?tableDesignId=" />	<!-- Modify table design screen -->
+				<entry key="9" value="tabledesign/modify?tableDesignId=" />	<!-- Modify table design screen -->
+				<entry key="10" value="sessionmanagement/modify?sessionManagementType=1&amp;sessionManagementId=" />	<!-- Modify session management screen -->
+				<entry key="11" value="functionmaster/modify?functionMasterId=" />	<!-- Modify function master screen -->
+				<entry key="12" value="externalobjectdefinition/modify?externalObjectType=1&amp;externalObjectDefinitionId=" />	<!-- Modify external object screen -->
+				<entry key="13" value="commonobjectdefinition/modify?commonObjectDefinitionId=" />	<!-- Modify common object screen -->
+			</util:map>
+		</property>
+	</bean>
+
+	<bean id="CL_DATATYPE_DB_COLUMN" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="1" value="Text" />
+				<entry key="2" value="Integer" />
+				<entry key="3" value="Decimal" />
+				<entry key="4" value="Date" />
+				<entry key="5" value="Char" />
+				<entry key="6" value="Currency" />
+				<entry key="7" value="Boolean" />
+				<entry key="8" value="Time" />
+				<entry key="9" value="DateTime" />
+				<entry key="10" value="Binary" />
+			</util:map>
+		</property>
+	</bean>
+
+	<bean id="CL_SCREEN_AREA_TYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="sc.businesslogicdesign.0153" />
+				<entry key="1" value="sc.businesslogicdesign.0154" />
+				<entry key="2" value="sc.businesslogicdesign.0155" />
+				<entry key="3" value="sc.businesslogicdesign.0156" />
+			</util:map>
+		</property>
+	</bean>
+
+	<bean id="CL_FUNCTION_DESIGN_TYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="sc.functiondesign.0000" /> <!-- Online -->
+				<entry key="1" value="sc.functiondesign.0001" /> <!-- Batch -->
+			</util:map>
+		</property>
+	</bean>
+	
+	<bean id="CL_DEFAULT_GENERATION_SETTING" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="sc.module.0037" /> <!-- Normal -->
+				<entry key="1" value="sc.module.0038" /> <!-- Blank -->
+			</util:map>
+		</property>
+	</bean>
+
+	<bean id="CL_GENERATE_DOCUMENT_PROJECT_RD_TYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="Business list (*.xlsx)" />
+				<entry key="1" value="Digit code define doc (*.xlsx)" />
+				<entry key="2" value="Domain define doc (*.xlsx)" />
+				<entry key="3" value="Entity list (*.xlsx)" />
+				<entry key="4" value="Er diagram data model define (*.xlsx)" />
+				<entry key="5" value="Er diagram data model design (*.xlsx)" />
+				<entry key="6" value="Function list (*.xlsx)" />
+				<entry key="7" value="Job list (*.xlsx)" />
+				<entry key="8" value="Processing list (*.xlsx)" />
+				<entry key="9" value="Report list (*.xlsx)" />
+				<entry key="10" value="Screen list (*.xlsx)" />	
+				<entry key="11" value="Table Design (*.xlsx)" />
+				<entry key="12" value="Online Processing (*.xlsx)" />
+			</util:map>
+		</property>
+	</bean>
+
+	<bean id="CL_GENERATE_DOCUMENT_PROJECT_RD_NAME" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="BusinessList.xlsx" />
+				<entry key="1" value="DigitCodeDefineDocument.xlsx" />
+				<entry key="2" value="DomainDefineDocument.xlsx" />
+				<entry key="3" value="EntityList.xlsx" />
+				<entry key="4" value="ErDiagramDataModelDefine.xlsx" />
+				<entry key="5" value="ErDiagramDataModelDesign.xlsx" />
+				<entry key="6" value="FunctionList.xlsx" />
+				<entry key="7" value="JobList.xlsx" />
+				<entry key="8" value="ProcessingList.xlsx" />
+				<entry key="9" value="ReportList.xlsx" />
+				<entry key="10" value="ScreenList.xlsx" />
+				<entry key="11" value="TableDesign.xlsx" />
+				<entry key="12" value="OnlineProcessing.xlsx" />
+			</util:map>
+		</property>
+	</bean>
+
+	<bean id="CL_GENERATE_DOCUMENT_PROJECT_ED_TYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="CRUD matrix function level (*.xlsx)" />			
+				<entry key="1" value="Function define doc (*.xlsx)" />
+				<entry key="2" value="Job design doc (*.xlsx)" />
+				<entry key="3" value="Message design (*.xlsx)" />				
+				<entry key="4" value="Report define doc (*.xlsx)" />
+				<entry key="5" value="Screen transition diagram (*.xlsx)" />
+				<entry key="6" value="View design (*.xlsx)" />
+				<entry key="7" value="View list (*.xlsx)" />				
+				<entry key="8" value="Code list (*.xlsx)" />
+			</util:map>
+		</property>
+	</bean>
+
+	<bean id="CL_GENERATE_DOCUMENT_PROJECT_ED_NAME" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="CRUDMatrixFunctionLevel.xlsx" />
+				<entry key="1" value="FunctionDefineDocument.xlsx" />
+				<entry key="2" value="JobDesignDocument.xlsx" />
+				<entry key="3" value="MessageDesign.xlsx" />
+				<entry key="4" value="ReportDefineDoc.xlsx" />
+				<entry key="5" value="ScreenTransitionDiagram.xlsx" />
+				<entry key="6" value="ViewDesignDocument.xlsx" />
+				<entry key="7" value="ViewList.xlsx" />
+				<entry key="8" value="Codelist.xlsx" />
+			</util:map>
+		</property>
+	</bean>
+
+	<bean id="CL_GENERATE_DOCUMENT_MODULE_ED_TYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="CRUD matrix (function level) (*.xlsx)" />
+				<entry key="1" value="CRUD matrix (processing level) (*.xlsx)" />
+				<entry key="2" value="Design doc of online processing (*.xlsx)" />
+				<entry key="3" value="Screen define doc (*.xlsx)" />
+				<entry key="4" value="Screen design doc (*.xlsx)" />	
+				<entry key="5" value="Screen transition diagram (*.xlsx)" />				
+			</util:map>
+		</property>
+	</bean>
+
+	<bean id="CL_GENERATE_DOCUMENT_MODULE_ED_NAME" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="CRUDMatrixFunctionLevel.xlsx" />
+				<entry key="1" value="CRUDMatrixProcessingLevel.xlsx" />
+				<entry key="2" value="DesignDocumentOfOnlineProcessing.xlsx" />
+				<entry key="3" value="ScreenDefineDoc.xlsx" />
+				<entry key="4" value="ScreenDesignDoc.xlsx" />
+				<entry key="5" value="ScreenTransitionDiagram.xlsx" />
+			</util:map>
+		</property>
+	</bean>
+
+	<bean id="CL_GENERATE_SOURCE_TYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="Business logic (*.java)" />
+				<entry key="1" value="SQL Script (*.xml, *.java)" />
+				<entry key="2" value="Screen (*.jsp)" />
+			</util:map>
+		</property>
+	</bean>
+
+	<bean id="CL_GENERATE_DOCUMENT_" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="Business logic (*.java)" />
+				<entry key="1" value="SQL Script (*.xml, *.java)" />
+				<entry key="2" value="Screen (*.jsp)" />
+			</util:map>
+		</property>
+	</bean>
+
+	<!-- type of data type of common & external object definition -->
+	<bean id="CL_OD_DATATYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="14" value="Entity" />
+				<entry key="0" value="Object" />
+				<entry key="1" value="Byte" />
+				<entry key="2" value="Short" />
+				<entry key="3" value="Integer" />
+				<entry key="4" value="Long" />
+				<entry key="5" value="Float" />
+				<entry key="6" value="Double" />
+				<entry key="7" value="Char" />
+				<entry key="8" value="Boolean" />
+				<entry key="9" value="String" />
+				<entry key="10" value="BigDecimal" />
+				<entry key="11" value="Timestamp" />
+				<entry key="12" value="Datetime" />
+				<entry key="13" value="Time" />
+				<entry key="15" value="Date" />
+			</util:map>
+		</property>
+	</bean>
+
+	<!-- type of scope of library -->
+	<bean id="CL_LIBRARY_SCOPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="compile" />
+				<entry key="1" value="provided" />
+				<entry key="2" value="runtime" />
+				<entry key="3" value="test" />
+				<entry key="4" value="system" />
+			</util:map>
+		</property>
+	</bean>
+
+	<!-- type of type of library -->
+	<bean id="CL_LIBRARY_TYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="jar" />
+				<entry key="1" value="war" />
+				<entry key="2" value="rar" />
+				<entry key="3" value="ear" />
+				<entry key="4" value="parejb" />
+				<entry key="5" value="ejb-client" />
+				<entry key="6" value="test-jar" />
+				<entry key="7" value="java-source" />
+				<entry key="8" value="javadoc" />
+				<entry key="9" value="maven-plugin" />
+				<entry key="10" value="pom" />
+			</util:map>
+		</property>
+	</bean>
+
+	<bean id="CL_BATCH_TYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="sc.sys.0085" />
+				<entry key="1" value="sc.sys.0086" />
+			</util:map>
+		</property>
+	</bean>
+	<bean id="CL_GENERATE_MODE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="Document" />
+				<entry key="1" value="Source code" />
+				<entry key="2" value="War file" />
+			</util:map>
+		</property>
+	</bean>
+	<bean id="CL_GENERATE_STATUS" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="Generating" />
+				<entry key="1" value="Generated" />
+				<entry key="2" value="Generate error" />
+				<entry key="3" value="Generate time out" />
+			</util:map>
+		</property>
+	</bean>
+	<!-- Bean for Log CONFIG MODE -->
+	<bean id="CL_LOG_CONFIG_MODE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="1" value="NORMAL" />
+				<entry key="2" value="DEBUG" />
+				<entry key="3" value="ADVANCE" />
+			</util:map>
+		</property>
+	</bean>
+	<!-- Bean for Log LEVEL -->
+	<bean id="CL_LOG_LEVEL" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="TRACE" />
+				<entry key="1" value="DEBUG" />
+				<entry key="2" value="INFO" />
+				<entry key="3" value="WARN" />
+				<entry key="4" value="ERROR" />
+			</util:map>
+		</property>
+	</bean>
+	<!-- Bean for appender type -->
+	<bean id="CL_LOG_APPENDER" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="org.apache.log4j.ConsoleAppender" value="org.apache.log4j.ConsoleAppender" />
+				<entry key="org.apache.log4j.FileAppender" value="org.apache.log4j.FileAppender" />
+				<entry key="org.apache.log4j.RollingFileAppender" value="org.apache.log4j.RollingFileAppender" />
+				<entry key="org.apache.log4j.DailyRollingFileAppender" value="org.apache.log4j.DailyRollingFileAppender" />
+				<entry key="org.apache.log4j.jdbc.JDBCAppender" value="org.apache.log4j.jdbc.JDBCAppender" />
+			</util:map>
+		</property>
+	</bean>
+	<!-- Bean for log layout -->
+	<bean id="CL_LOG_LAYOUT" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="1" value="XMLLayout" />
+				<entry key="2" value="HTMLLayout" />
+				<entry key="3" value="PatternLayout" />
+			</util:map>
+		</property>
+	</bean>
+	<!-- Bean for log RollingPolicy -->
+	<bean id="CL_LOG_ROLLING_POLICY" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="1" value="TimeBasedRollingPolicy" />
+				<!-- <entry key="2" value="SizeAndTimeBasedRollingPolicy" /> -->
+				<entry key="3" value="FixedWindowRollingPolicy" />
+			</util:map>
+		</property>
+	</bean>
+	<!-- Bean for log TriggeringPolicy -->
+	<bean id="CL_LOG_TRIGGERING_POLICY" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="1" value="SizeBasedTriggeringPolicy" />
+			</util:map>
+		</property>
+	</bean>
+	<!-- Bean for log target -->
+	<bean id="CL_LOG_TARGET" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="System.out" value="System.out" />
+				<entry key="System.err" value="System.err" />
+			</util:map>
+		</property>
+	</bean>
+	<!-- Bean for log file type -->
+	<bean id="CL_LOG_FILE_TYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="1" value="sc.loggingmanagement.0021" />
+				<entry key="2" value="sc.loggingmanagement.0022" />
+			</util:map>
+		</property>
+	</bean>
+	<!-- Bean for Insert Headers -->
+	<bean id="CL_INSERT_HEADERS" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="1" value="True" />
+				<entry key="0" value="False" />
+			</util:map>
+		</property>
+	</bean>
+	<!-- Bean for immediate flush -->
+	<bean id="CL_IMMEDIATE_FLUSH" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="1" value="True" />
+				<entry key="0" value="False" />
+			</util:map>
+		</property>
+	</bean>
+	<!-- Bean for batch directory type -->
+	<bean id="CL_BATCH_DIRECTORY_TYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="sc.accountprofile.0049" />
+				<entry key="1" value="sc.accountprofile.0050" />
+			</util:map>
+		</property>
+	</bean>
+
+	<!-- scope of input bean -->
+	<bean id="CL_INITIAL_DISPLAY" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="No display" />
+				<entry key="1" value="Display" />
+			</util:map>
+		</property>
+	</bean>
+	<bean id="CL_INITIAL_DISPLAY_ITEM" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="No display" />
+				<entry key="1" value="Display" />
+				<entry key="2" value="Read only" />
+			</util:map>
+		</property>
+	</bean>
+	
+	<!-- Bean for true false -->
+	<bean id="CL_ENABLE_DISABLE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="true" value="cl.sys.0021" />
+				<entry key="false" value="cl.sys.0022" />
+			</util:map>
+		</property>
+	</bean>
+	
+	<!-- Bean for message parameter type -->
+	<bean id="CL_MESSAGE_PARAMETER_TYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="sc.messagedesign.0012" />
+				<entry key="1" value="sc.codelist.0010" />
+				<entry key="2" value="sc.sys.0084" />
+			</util:map>
+		</property>
+	</bean>
+
+	<!-- type of data type -->
+	<bean id="CL_SM_DATATYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="14" value="Entity" />
+				<entry key="16" value="Common object" />
+				<entry key="17" value="External object" />
+				<entry key="1" value="Byte" />
+				<entry key="2" value="Short" />
+				<entry key="3" value="Integer" />
+				<entry key="4" value="Long" />
+				<entry key="5" value="Float" />
+				<entry key="6" value="Double" />
+				<entry key="7" value="Char" />
+				<entry key="8" value="Boolean" />
+				<entry key="9" value="String" />
+				<entry key="10" value="BigDecimal" />
+				<entry key="11" value="Timestamp" />
+				<entry key="12" value="Datetime" />
+				<entry key="13" value="Time" />
+				<entry key="15" value="Date" />
+			</util:map>
+		</property>
+	</bean>
+	
+	<!-- Bean for import setting -->
+	<bean id="CL_IMPORT_SETTING" parent="AbstractJdbcCodeList">
+		<property name="querySql"
+			value="SELECT resource_cd , value1 FROM resources where category_cd='clImportSetting'" />
+		<property name="valueColumn" value="resource_cd" />
+		<property name="labelColumn" value="value1" />
+	</bean>
+	<bean id="CL_PRIMITIVE_DATATYPE" parent="AbstractJdbcCodeList">
+		<property name="querySql"
+			value="SELECT value2 , value1 FROM resources where category_cd='clBasetype'" />
+		<property name="valueColumn" value="value2" />
+		<property name="labelColumn" value="value1" />
+	</bean>
+	
+	<!-- Encryption type -->
+	<bean id="CL_ENCRYPTION_TYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="sc.project.0043" />
+				<entry key="1" value="sc.project.0044" />
+			</util:map>
+		</property>
+	</bean>
+	
+	<bean id="CL_CURRENCY_CODE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="" value="" />
+				<entry key="¥" value="¥-CNY" />
+				<entry key="₩" value="₩-KPW" />
+				<entry key="Rp" value="Rp-IDR" />
+				<entry key="¥" value="¥-JPY" />
+				<entry key="RM" value="RM-MYR" />
+				<entry key="$" value="$-SGD" />
+				<entry key="฿" value="฿-THB" />
+				<entry key="£" value="£-GBP" />
+				<entry key="$" value="$-USD" />
+				<entry key="₫" value="₫-VND" />
+			</util:map>
+		</property>
+	</bean>
+	
+	<bean id="CL_CURRENCY_CODE_POSITION" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="" value="" />
+				<entry key="p" value="cl.accountprofile.0041" />
+				<entry key="s" value="cl.accountprofile.0042" />
+			</util:map>
+		</property>
+	</bean>
+	
+	<bean id="CL_SM_TYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="Common" />
+				<entry key="1" value="Customize" />
+			</util:map>
+		</property>
+	</bean>
+	
+	<!-- Bean for Role Status -->
+	<bean id="CL_LICENSEMANAGEMENT_STATUS" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="1" value="Active" />
+				<entry key="0" value="InActive" />
+			</util:map>
+		</property>
+	</bean>
+	<bean id="CL_QP_VALUE_TYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="sc.sqldesign.0061" /> <!-- Parameters -->
+				<entry key="1" value="sc.sqldesign.0062" /><!-- Value -->
+				<entry key="2" value="sc.sqldesign.0063" /> <!-- Entity -->
+			</util:map>
+		</property>
+	</bean>
+<!-- 	Type Ulity Node Component -->
+	<bean id="CL_UL_TYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="sc.blogiccomponent.0170" /> <!-- Appends the specified element to the end of this list -->
+				<entry key="1" value="sc.blogiccomponent.0171" /> <!-- Inserts the specified element at the specified position in this list -->
+				<entry key="2" value="sc.blogiccomponent.0172" /> <!-- Appends all of the elements -->
+				<entry key="3" value="sc.blogiccomponent.0173" /> <!-- Inserts all of the elements at the specified position -->
+				<entry key="4" value="sc.blogiccomponent.0174" /> <!-- Removes all of the elements -->
+				<entry key="5" value="sc.blogiccomponent.0175" /> <!-- Removes the element at the specified position -->
+				<entry key="6" value="sc.blogiccomponent.0176" /> <!-- Removes the first occurrence of the specified element -->
+				<entry key="7" value="sc.blogiccomponent.0177" /> <!-- Removes from this list all of its elements -->
+			</util:map>
+		</property>
+	</bean>
+<!-- NinhNV Boolean default value -->
+	<bean id="CL_BOOLEAN_DEFAULT_VALUE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="1" value="sc.sys.0009" /><!-- True -->
+				<entry key="0" value="sc.sys.0010" /><!-- False -->
+				<entry key="" value="sc.sys.0095" /><!-- None -->
+			</util:map>
+		</property>
+	</bean>
+	<bean id="CL_BD_DESIGN_MODE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="sc.messagedesign.0028" /> <!-- Auto -->
+				<entry key="1" value="sc.messagedesign.0029" /><!-- Manual -->
+			</util:map>
+		</property>
+	</bean>
+	<bean id="CL_COMMON_ERROR" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="Access Denied Error" /> <!-- Access Denied Error -->
+				<entry key="1" value="Business Error" /><!-- Business Error -->
+				<entry key="2" value="Data Access Error" /><!-- Data Access Error -->
+				<entry key="3" value="Invalid Csrf Token Error" /><!-- Invalid Csrf Token Error -->
+				<entry key="4" value="Missing Csrf Token Error" /><!-- Missing Csrf Token Error -->
+				<entry key="5" value="Resource Not Found Error" /><!-- Resource Not Found Error -->
+				<entry key="6" value="Session Expired Error" /><!-- Session Expired Error -->
+				<entry key="7" value="System Error" /><!-- System Error -->
+				<entry key="8" value="Template Error" /><!-- Template Error -->
+				<entry key="9" value="Transaction Token Error" /><!-- Transaction Token Error -->
+				<entry key="10" value="Unhandled System Error" /><!-- Unhandled System Error -->
+			</util:map>
+		</property>
+	</bean>
+	
+	<bean id="CL_DATE_FORMAT_SETTING" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="1" value="YYYY/MM/DD" />
+				<entry key="2" value="DD/MM/YYYY" />
+			</util:map>
+		</property>
+	</bean>
+	
+	<bean id="CL_DATETIME_FORMAT_SETTING" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="1" value="YYYY/MM/DD HH:mm:ss" />
+				<entry key="2" value="YYYY/MM/DD hh:mm:ss A" />
+				<entry key="3" value="DD/MM/YYYY HH:mm:ss" />
+				<entry key="4" value="DD/MM/YYYY hh:mm:ss A" />
+			</util:map>
+		</property>
+	</bean>
+
+	<bean id="CL_TIME_FORMAT_SETTING" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="1" value="HH:mm:ss" />
+				<entry key="2" value="hh:mm:ss A" />
+			</util:map>
+		</property>
+	</bean>
+	
+	<bean id="CL_COMMON_ERROR_PATH" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="0" value="common/error/accessDeniedError" /> <!-- Access Denied Error -->
+				<entry key="1" value="common/error/businessError" /><!-- Business Error -->
+				<entry key="2" value="common/error/dataAccessError" /><!-- Data Access Error -->
+				<entry key="3" value="common/error/invalidCsrfTokenError" /><!-- Invalid Csrf Token Error -->
+				<entry key="4" value="common/error/missingCsrfTokenError" /><!-- Missing Csrf Token Error -->
+				<entry key="5" value="common/error/resourceNotFoundError" /><!-- Resource Not Found Error -->
+				<entry key="6" value="common/error/sessionExpiredError" /><!-- Session Expired Error -->
+				<entry key="7" value="common/error/systemError" /><!-- System Error -->
+				<entry key="8" value="common/error/templateError" /><!-- Template Error -->
+				<entry key="9" value="common/error/transactionTokenError" /><!-- Transaction Token Error -->
+				<entry key="10" value="common/error/unhandledSystemError" /><!-- Unhandled System Error -->
+			</util:map>
+		</property>
+	</bean>
+	
+	<bean id="CL_HTTP_STATUS" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="200" value="OK" />
+				<entry key="201" value="Created" />
+				<entry key="202" value="Accepted" />
+				<entry key="204" value="No Content" />
+			</util:map>
+		</property>
+	</bean>
+	
+	<bean id="CL_HTTP_STATUS_CODE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+		<property name="map">
+			<util:map>
+				<entry key="200" value="HttpStatus.OK" />
+				<entry key="201" value="HttpStatus.CREATED" />
+				<entry key="202" value="HttpStatus.ACCEPTED" />
+				<entry key="204" value="HttpStatus.NO_CONTENT" />
+			</util:map>
+		</property>
+	</bean>
+</beans>

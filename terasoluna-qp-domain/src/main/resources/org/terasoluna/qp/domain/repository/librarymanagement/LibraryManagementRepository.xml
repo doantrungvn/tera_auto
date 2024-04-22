@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="org.terasoluna.qp.domain.repository.librarymanagement.LibraryManagementRepository">
+	<resultMap id="resultMap" type="LibraryManagement">
+		<result property="libraryId" column="library_id" />
+		<result property="groupId" column="group_id" />
+		<result property="artifactId" column="artifact_id" />
+		<result property="version" column="version" />
+		<result property="classifier" column="classifier" />
+		<result property="scope" column="scope" />
+		<result property="type" column="type" />
+		<result property="uploadFileName" column="upload_file_name" />
+		<result property="uploadFileContent" column="upload_file_content" />
+		<result property="optionalFlg" column="optional" />
+		<result property="projectId" column="project_id" />
+		<result property="systemPath" column="system_path" />
+		<result property="systemFlag" column="system_flag" />
+	</resultMap>
+	
+	<sql id="findPageBySearchCriteriaWhere">
+		<where>
+			<if test="criteria.groupId != null and criteria.groupId != ''">
+				<bind name="groupId"
+					value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.groupId)" />
+					<![CDATA[
+						group_id iLIKE #{groupId}  ESCAPE '~'
+					]]>
+			</if>
+			<if test="criteria.artifactId != null and criteria.artifactId != ''">
+				<bind name="artifactId"
+					value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.artifactId)" />
+					<![CDATA[
+						AND artifact_id iLIKE #{artifactId}  ESCAPE '~'
+					]]>
+			</if>
+			<if test="criteria.scope != null and criteria.scope != ''">
+					<![CDATA[
+						AND scope = #{criteria.scope}
+					]]>
+			</if>
+			<if test="criteria.type != null and criteria.type != ''">
+					<![CDATA[
+						AND type = #{criteria.type}
+					]]>
+			</if>
+			<if test="criteria.projectId != null and criteria.projectId != ''">
+				<![CDATA[
+					AND project_id = #{criteria.projectId}
+				]]>
+			</if>		
+		</where>
+	</sql>
+
+	<!-- Finds all library by search condition -->
+	<select id="findPageBySearchCriteria" resultMap="resultMap">
+		<![CDATA[
+		SELECT
+			t1.library_id,
+			t1.group_id,
+			t1.artifact_id,
+			t1.version,
+			t1.scope,
+			t1.type
+		FROM 
+			library_management t1
+		]]>
+		<include refid="findPageBySearchCriteriaWhere" />
+		<if test="pageable.sort != null">
+			ORDER BY
+			<foreach collection="pageable.sort" item="order" separator=",">
+				${order.property} ${order.direction}
+			</foreach>
+		</if>
+		<if test="pageable.sort == null">
+			ORDER BY
+			t1.updated_date DESC
+		</if>
+        <![CDATA[
+	         LIMIT
+	             #{pageable.pageSize}
+	         OFFSET
+	             #{pageable.offset}
+        ]]>
+	</select>
+
+	<!-- Count library by search condition -->
+	<select id="countBySearchCriteria" resultType="_long">
+        <![CDATA[
+            SELECT 
+                COUNT(*) 
+            FROM 
+                library_management
+        ]]>
+        <include refid="findPageBySearchCriteriaWhere" />
+	</select> 
+	
+	<!-- Finds library by id -->
+	<select id="findLibrary" resultMap="resultMap">
+		<![CDATA[
+		SELECT *
+		FROM 
+			library_management
+		WHERE
+			library_id = #{libraryId}
+		]]>		
+	</select>
+	
+	<!-- Insert library-->
+	<insert id="registerLibrary" parameterType="org.terasoluna.qp.domain.model.LibraryManagement"
+		useGeneratedKeys="true" keyProperty="LibraryManagement.libraryId" keyColumn="library_id">
+		<selectKey keyProperty="libraryId" resultType="long" order="BEFORE">
+			SELECT NEXTVAL('library_management_seq'::regclass)
+		</selectKey>
+		<![CDATA[
+		INSERT INTO 
+			library_management
+			(
+			library_id,
+			group_id,
+			artifact_id,
+			version,
+			classifier,
+			scope,
+			type,
+			upload_file_name,
+			upload_file_content,
+			optional,
+			project_id,
+			created_by,
+			created_date,
+			updated_by,
+			updated_date,
+			system_flag,
+			system_path
+			)
+		VALUES 
+			(
+			#{libraryId},
+			#{groupId},
+			#{artifactId},
+			#{version},
+			#{classifier},
+			#{scope},
+			#{type},
+			#{uploadFileName},
+			#{uploadFileContent},
+			#{optionalFlg},
+			#{projectId},
+			#{createdBy},
+			#{createdDate},
+			#{updatedBy},
+			#{updatedDate},
+			#{systemFlag},
+			#{systemPath}
+			)
+		]]>
+	</insert>
+	
+	<!-- modify library -->
+	<update id="modifyLibrary" parameterType="CodeList">
+	<![CDATA[	
+		UPDATE 
+			library_management 
+		SET 
+			group_id = #{groupId},
+			artifact_id = #{artifactId},
+			version = #{version},
+			classifier = #{classifier},
+			scope = #{scope},
+			type = #{type},
+		]]>	
+		<if test="uploadFileContentChange">
+			upload_file_name = #{uploadFileName},
+			upload_file_content = #{uploadFileContent},
+		</if>
+		<![CDATA[	
+			optional = #{optionalFlg},
+			updated_by = #{updatedBy},
+			updated_date = #{systemDate},
+			system_path = #{systemPath},
+			system_flag = #{systemFlag}
+		WHERE 
+			library_id= #{libraryId} AND updated_date = #{updatedDate}
+		]]>	
+	</update>
+
+	<!-- modify library -->
+	<delete id="deleteLibrary" parameterType="long">
+	<![CDATA[
+		DELETE FROM
+			library_management
+		WHERE
+			library_id = #{libraryId}
+	]]>
+	</delete>
+	
+	<!-- Count library by group id and artifact id -->
+	<select id="countLibraryByGroup" resultType="_long" parameterType="org.terasoluna.qp.domain.model.LibraryManagement">
+        <![CDATA[
+            SELECT
+                COUNT(*)
+            FROM
+                library_management
+            WHERE
+           		artifact_id = #{artifactId} AND project_id = #{projectId}	 
+        ]]>
+       	<if test="libraryId != null and libraryId != ''">
+			<![CDATA[
+				AND library_id != #{libraryId}
+			]]>
+		</if>	
+	</select>
+	
+	<!-- Finds all library by project id -->
+	<select id="findAllLibrary" resultMap="resultMap">
+		<![CDATA[
+		SELECT
+			t1.library_id,
+			t1.group_id,
+			t1.artifact_id,
+			t1.version,
+			t1.scope,
+			t1.type,
+			t1.classifier,
+			t1.upload_file_name,
+			t1.upload_file_content,
+			t1.optional,
+			t1.system_path,
+			t1.system_flag	
+		FROM 
+			library_management t1
+		WHERE
+			t1.project_id = #{projectId}
+		]]>
+	</select>
+	
+	<select id="findAllLibraryWithFileContent" resultMap="resultMap">
+		<![CDATA[
+		SELECT
+			t1.library_id,
+			t1.group_id,
+			t1.artifact_id,
+			t1.version,
+			t1.scope,
+			t1.type,
+			t1.classifier,
+			t1.upload_file_name,
+			t1.upload_file_content,
+			t1.optional,
+			t1.system_path,
+			t1.system_flag
+		FROM 
+			library_management t1
+		WHERE
+			t1.project_id = #{projectId} AND upload_file_name IS NOT NULL
+		]]>
+	</select>
+	
+	
+</mapper>

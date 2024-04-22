@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Implementation-Title: terasoluna-qp-env
+Implementation-Version: 1.0
+Built-By: mac
+Implementation-Vendor-Id: terasoluna-qp
+Build-Jdk: 1.8.0_101
+Created-By: Maven Integration for Eclipse
+Implementation-Vendor: TERASOLUNA Framework Team
+

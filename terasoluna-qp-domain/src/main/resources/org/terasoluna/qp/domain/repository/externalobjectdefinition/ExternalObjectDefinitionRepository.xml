@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="org.terasoluna.qp.domain.repository.externalobjectdefinition.ExternalObjectDefinitionRepository">
+	<resultMap id="resultMap" type="ExternalObjectDefinition">
+		<result property="externalObjectDefinitionId" column="external_object_definition_id" />
+		<result property="externalObjectDefinitionCode" column="external_object_definition_code" />
+		<result property="externalObjectDefinitionName" column="external_object_definition_name" />
+		<result property="className" column="class_name" />
+		<result property="packageName" column="package_name" />
+		<result property="moduleId" column="module_id" />
+		<result property="moduleIdAutocomplete" column="module_name" />
+		<result property="remark" column="remark" />
+		<result property="createdBy" column="created_by" />
+		<result property="createdDate" column="created_date" />
+		<result property="updatedBy" column="updated_by" />
+		<result property="updatedDate" column="updated_date" />
+	</resultMap>
+
+	<resultMap id="autocompleteResultMap" type="Autocomplete">
+		<result property="optionValue" column="optionValue" />
+		<result property="optionLabel" column="optionLabel" />
+		<result property="output01" column="output01" />
+	</resultMap>
+	
+	<sql id="findPageBySearchCriteriaWhere">
+		<where>
+			<if test="criteria.externalObjectDefinitionName != null and criteria.externalObjectDefinitionName != ''">
+				<bind name="externalObjectDefinitionName"
+					value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.externalObjectDefinitionName)" />
+					<![CDATA[
+						external_object_definition_name iLIKE #{externalObjectDefinitionName}  ESCAPE '~'
+					]]>
+			</if>
+			<if test="criteria.externalObjectDefinitionCode != null and criteria.externalObjectDefinitionCode != ''">
+				<bind name="externalObjectDefinitionCode"
+					value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.externalObjectDefinitionCode)" />
+					<![CDATA[
+						AND external_object_definition_code iLIKE #{externalObjectDefinitionCode}  ESCAPE '~'
+					]]>
+			</if>
+			<if test="criteria.moduleId != null and criteria.moduleId != ''">
+				AND a.module_id = #{criteria.moduleId}
+			</if>
+			<if test="criteria.projectId != null and criteria.projectId != ''">
+				AND a.project_id = #{criteria.projectId}
+			</if>
+		</where>
+	</sql>
+
+	<!-- Finds all external object definition by search condition -->
+	<select id="findPageBySearchCriteria" resultMap="resultMap">
+		<![CDATA[
+		SELECT
+			a.external_object_definition_id,
+			a.external_object_definition_code,
+			a.external_object_definition_name,
+			a.class_name,
+			a.package_name,
+			a.project_id,
+			a.external_object_type,
+			b.module_name
+		FROM 
+			external_object_definition a
+		LEFT JOIN 
+			module b ON (a.module_id = b.module_id)
+		]]>
+		<include refid="findPageBySearchCriteriaWhere" />
+		<if test="pageable.sort != null">
+			ORDER BY
+			<foreach collection="pageable.sort" item="order" separator=",">
+				${order.property} ${order.direction}
+			</foreach>
+		</if>
+		<if test="pageable.sort == null">
+			ORDER BY
+			a.updated_date DESC
+		</if>
+        <![CDATA[
+	         LIMIT
+	             #{pageable.pageSize}
+	         OFFSET
+	             #{pageable.offset}
+        ]]>
+	</select>
+
+	<!-- Count external object definition by search condition -->
+	<select id="countBySearchCriteria" resultType="_long">
+        <![CDATA[
+            SELECT 
+                COUNT(*) 
+            FROM 
+                external_object_definition a
+        ]]>
+        <include refid="findPageBySearchCriteriaWhere" />
+	</select> 
+	
+	<!-- Finds external object definition by id -->
+	<select id="findExternalObjectDefinition" resultMap="resultMap">
+		<![CDATA[
+		SELECT
+			a.external_object_definition_id,
+			a.external_object_definition_code,
+			a.external_object_definition_name,
+			a.class_name,
+			a.package_name,
+			a.updated_date,
+			a.module_id,
+			b.module_name,
+			a.remark,
+			a.external_object_type,
+			a.project_id
+		FROM 
+			external_object_definition a
+		LEFT JOIN module b ON (a.module_id = b.module_id)
+		WHERE
+			a.external_object_definition_id = #{externalObjectDefinitionId}
+		]]>		
+	</select>
+	
+	<!-- register -->
+	<insert id="registerExternalObjectDefinition" parameterType="ExternalObjectDefinition"
+		useGeneratedKeys="true" keyProperty="ExternalObjectDefinition.externalObjectDefinitionId" keyColumn="external_object_definition_id">
+		<selectKey keyProperty="externalObjectDefinitionId" resultType="long" order="BEFORE">
+			SELECT NEXTVAL('external_object_definition_seq'::regclass)
+		</selectKey>
+		<![CDATA[
+		INSERT INTO 
+			external_object_definition(
+            	external_object_definition_id, 
+            	external_object_definition_code, 
+            	external_object_definition_name,
+            	class_name,
+            	package_name, 
+            	module_id, 
+            	remark, 
+            	created_by, 
+            	created_date,
+            	item_seq_no,
+            	external_object_type,
+            	project_id,
+            	updated_by,
+            	updated_date)
+		VALUES 
+			(
+			#{externalObjectDefinitionId},
+			#{externalObjectDefinitionCode},
+			#{externalObjectDefinitionName},
+			#{className},
+			#{packageName},
+			#{moduleId},
+			#{remark},
+			#{createdBy},
+			#{createdDate},
+			#{itemSeqNo},
+			#{externalObjectType},
+			#{projectId},
+			#{updatedBy},
+			#{updatedDate}
+			)
+		]]>
+	</insert>
+	
+	<delete id="deleteExternalObjectDefinition" parameterType="long">
+	<![CDATA[
+		DELETE FROM
+			external_object_definition
+		WHERE
+			external_object_definition_id = #{externalObjectDefinitionId}
+	]]>
+	</delete>
+	
+	<select id="countNameCodeByExternalObjectDefinitionId" parameterType="ExternalObjectDefinition" resultType="Long">
+		<bind name="extObjectDefinitionName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toLikeCondition(externalObjectDefinitionName)" />
+		<bind name="extObjectDefinitionCode" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toLikeCondition(externalObjectDefinitionCode)" />
+		<bind name="packageName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toLikeCondition(packageName)" />
+		SELECT
+			SUM(rowVal) AS totalCount
+		FROM (
+			(SELECT
+				1 AS rowVal
+			FROM
+				external_object_definition c
+				<where>
+					c.project_id = #{projectId}
+					<if test="externalObjectDefinitionId != null">AND external_object_definition_id != #{externalObjectDefinitionId}</if>
+					<if test="externalObjectDefinitionName != null and externalObjectDefinitionName != ''">
+						AND external_object_definition_name iLIKE #{extObjectDefinitionName} ESCAPE '~'
+					</if>
+					<if test="externalObjectDefinitionName == null and externalObjectDefinitionName == ''">AND FALSE</if>
+				</where>
+				LIMIT 1
+			)
+			UNION
+			(SELECT
+				2 AS rowVal
+			FROM
+			external_object_definition c
+			<where>
+				c.project_id = #{projectId}
+				
+				<if test="externalObjectDefinitionId != null">AND external_object_definition_id != #{externalObjectDefinitionId}</if>
+				<if test="externalObjectDefinitionCode == null and externalObjectDefinitionCode == ''">AND FALSE</if>
+				<if test="externalObjectDefinitionCode != null and externalObjectDefinitionCode != ''">
+					AND external_object_definition_code iLIKE #{extObjectDefinitionCode} ESCAPE '~'
+				</if>
+				<if test="packageName != null and packageName != ''">
+					AND package_name iLIKE #{packageName} ESCAPE '~'
+				</if>
+				<if test="packageName == null and packageName == ''">AND FALSE</if>
+			</where>
+			LIMIT 1
+			)
+		) AS foo
+    </select>
+    
+    <!-- modify -->
+	<update id="modifyExternalObjectDefinition" parameterType="ExternalObjectDefinition">
+	<![CDATA[	
+		UPDATE 
+			external_object_definition 
+		SET 
+			external_object_definition_name=#{externalObjectDefinitionName},
+			external_object_definition_code=#{externalObjectDefinitionCode},
+			class_name=#{className},
+			package_name=#{packageName},
+			remark=#{remark}, 
+			module_id = #{moduleId},
+			updated_by=#{updatedBy},
+			updated_date=#{systemTime},
+			item_seq_no=#{itemSeqNo}
+		WHERE 
+			external_object_definition_id= #{externalObjectDefinitionId} AND updated_date = #{updatedDate}
+	]]>
+	</update>
+	
+	
+	<!-- DungNN Finds all common object definition in project and module -->
+	<select id="findAllOfProject" resultMap="resultMap">
+		<![CDATA[
+		SELECT
+			eod.external_object_definition_id,
+			eod.external_object_definition_code,
+			COALESCE (md.message_string, eod.external_object_definition_name) AS external_object_definition_name,
+			eod.module_id,
+			eod.class_name,
+			eod.package_name,
+			b.module_name,
+			eod.remark,
+			eod.updated_date,
+			eod.external_object_type
+		FROM 
+			external_object_definition eod LEFT JOIN message_design md 
+		ON (eod.external_object_definition_name = md.message_code AND md.language_id = #{criteria.languageId} and md.project_id = #{criteria.projectId})
+		LEFT JOIN module b ON (eod.module_id = b.module_id)
+		WHERE
+			eod.project_id = #{criteria.projectId}
+		]]>
+		<if test="criteria.moduleId != null and criteria.moduleId != ''">
+			AND (eod.module_id IS NULL OR eod.module_id = #{criteria.moduleId})
+		</if>
+	</select>
+		
+	<select id="getAutocompleteGetExternalObjectForEO" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+			a.external_object_definition_id AS optionValue,
+			a.external_object_definition_name AS optionLabel,
+			a.external_object_definition_code AS output01,
+			a.module_id AS output02
+		FROM 
+			external_object_definition a
+		<where>
+			<if test="searchKey != null and searchKey != ''">
+				AND a.external_object_definition_name iLIKE '%' || #{searchKey} || '%'
+			</if>
+			<if test="arg01 != null and arg01 != ''">
+				<![CDATA[
+					AND a. project_id = CAST(#{arg01} AS numeric(16,0))
+				]]>
+			</if>
+			<if test="arg01 == null or arg01 == ''">
+				FALSE
+			</if>
+			<if test="arg03 != null and arg03 != ''">
+				AND a.external_object_definition_id != CAST(#{arg03} AS numeric(16,0))
+			</if>
+			<if test="arg04 != null and arg04 != ''">
+				AND (a.module_id is NULL OR a.module_id = CAST(#{arg04} AS numeric(16,0)))
+			</if>
+			<if test="arg04 == null or arg04 == ''">
+				AND a.module_id is NULL
+			</if>
+		</where>
+		ORDER BY external_object_definition_id ASC
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+		<if test="arg02 == null or arg02 == ''">
+			LIMIT 20
+		</if>
+	</select>
+	
+	<select id="getSequencesExternalObjectAttribute" resultType="Long">
+		select
+		SETVAL('external_object_attribute_seq'::regclass,NEXTVAL('external_object_attribute_seq'::regclass)
+		+ #{size})
+	</select>
+	
+	<select id="findExtObjDefIsMultipartFileByProjectId" resultMap="resultMap">
+		<![CDATA[
+		SELECT
+			a.external_object_definition_id,
+			a.external_object_definition_code,
+			a.external_object_definition_name,
+			a.class_name,
+			a.package_name,
+			a.updated_date,
+			a.module_id,
+			a.remark
+		FROM 
+			external_object_definition a
+		WHERE
+			a.project_id = #{projectId}
+			AND a.package_name = 'org.springframework.web.multipart'
+			AND a.external_object_definition_code = 'multipartFile'
+		LIMIT 1
+		]]>		
+	</select>
+	<select id = "checkExternalObjectDefinitionById" resultType="int">
+		SELECT COUNT(*)
+        FROM external_object_definition a
+        WHERE a.external_object_definition_id = #{externalObjectDefinitionId}
+	</select>
+	<!-- modify -->
+	<update id="modifyExternalObNameForAffectedFunction" parameterType="ExternalObjectDefinition">
+	<![CDATA[
+		UPDATE 
+			external_object_attribute
+		SET external_object_attribute_name = #{externalObjectDefinitionName}
+		WHERE data_type = 17 and object_definition_id = #{externalObjectDefinitionId};
+		
+		UPDATE 
+			common_object_attribute
+		SET common_object_attribute_name = #{externalObjectDefinitionName}
+		WHERE data_type = 17 and object_definition_id = #{externalObjectDefinitionId};
+		
+		UPDATE 
+			function_method_input
+		SET method_input_name = #{externalObjectDefinitionName}
+		WHERE data_type = 17 and object_type = 1 and object_id = #{externalObjectDefinitionId};
+		
+		UPDATE 
+			function_method_output
+		SET method_output_name = #{externalObjectDefinitionName}
+		WHERE data_type = 17 and object_type = 1 and object_id = #{externalObjectDefinitionId};
+		
+		UPDATE 
+			decision_input_bean
+		SET decision_input_bean_name = #{externalObjectDefinitionName}
+		WHERE data_type = 17 and object_type = 1 and object_id = #{externalObjectDefinitionId};
+		
+		UPDATE 
+			decision_output_bean
+		SET decision_output_bean_name = #{externalObjectDefinitionName}
+		WHERE data_type = 17 and object_type = 1 and object_id = #{externalObjectDefinitionId};
+		
+		UPDATE 
+			input_bean
+		SET input_bean_name = #{externalObjectDefinitionName}
+		WHERE data_type = 17 and object_type = 1 and object_id = #{externalObjectDefinitionId};
+		
+		UPDATE 
+			output_bean
+		SET output_bean_name = #{externalObjectDefinitionName}
+		WHERE data_type = 17 and object_type = 1 and object_id = #{externalObjectDefinitionId};
+		
+		UPDATE 
+			object_definition
+		SET object_definition_name = #{externalObjectDefinitionName}
+		WHERE data_type = 17 and object_type = 1 and object_id = #{externalObjectDefinitionId};
+		
+		UPDATE 
+			sql_design_input
+		SET sql_design_input_name = #{externalObjectDefinitionName}
+		WHERE data_type = 17 and design_type = 0 and object_type = 1 and column_id = 0 and table_id = #{externalObjectDefinitionId};
+		
+		UPDATE 
+			sql_design_output
+		SET sql_design_output_name = #{externalObjectDefinitionName}
+		WHERE data_type = 17 and design_type = 0 and object_type = 1 and column_id = 0 and table_id = #{externalObjectDefinitionId};
+		
+	]]>
+	</update>
+	<select id="findExternalObjectByUsingExternalObject" resultMap="resultMap">
+		<![CDATA[
+		SELECT
+			a.external_object_definition_id,
+			a.external_object_definition_code,
+			a.external_object_definition_name,
+			a.module_id,
+			a.project_id
+		FROM 
+			external_object_definition a
+		WHERE
+			Exists
+			(
+				SELECT b.external_object_definition_id
+				FROM external_object_attribute b
+				WHERE b.data_type = 17 and b.object_definition_id = #{externalObjectDefinitionId}
+					and b.external_object_definition_id = a.external_object_definition_id
+			)
+		]]>		
+	</select>
+</mapper>

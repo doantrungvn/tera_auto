@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="org.terasoluna.qp.domain.repository.loggingmanagement.LogDetailRepository">
+		
+	<resultMap id="resultMapLogDetail" type="org.terasoluna.qp.domain.model.LogDetail">
+		<result property="logDetailId" column="log_detail_id" />
+		<result property="logId" column="log_id" />
+		<result property="logLevel" column="log_level" />
+		<result property="layout" column="layout" />
+		<result property="logTarget" column="log_target" />
+		<result property="logFileType" column="log_file_type" />
+		<result property="patternFileName" column="pattern_file_name" />
+		<result property="filePath" column="file_path" />
+		<result property="immediateFlush" column="immediate_flush" />
+		<result property="appendType" column="append_flg" />
+		<result property="maxFileSize" column="max_file_size" />
+		<result property="maxBackupIndex" column="max_backup_index" />
+		<result property="datePattern" column="date_pattern" />
+		<result property="conversionPattern" column="conversion_pattern" />
+		<result property="dbDriver" column="db_driver" />
+		<result property="dbUrl" column="db_url" />
+		<result property="dbUserName" column="db_user_name" />
+		<result property="dbPassword" column="db_password" />
+		<result property="sqlString" column="sql_string" />
+		<result property="charset" column="charset" />
+		<result property="rollingPolicy" column="rolling_policy" />
+		<result property="triggeringPolicy" column="triggering_policy" />
+		<result property="maxHistory" column="max_history" />
+		<result property="totalSizeCap" column="total_size_cap" />
+		<result property="minIndex" column="min_index" />
+		<result property="maxIndex" column="max_index" />
+		<result property="dbType" column="db_type" />
+		<result property="insertHeaders" column="insert_headers" />
+		<result property="configMode" column="config_mode" />
+	</resultMap>
+	
+	<!-- Finds Log Details by log id -->
+	<select id="findLogDetailByLogId" resultMap = "resultMapLogDetail">
+	<![CDATA[
+		SELECT * 
+		FROM log_detail
+		WHERE log_id = #{logId}
+		]]>		
+	</select>
+	
+	<insert id="registerLogDetail" parameterType="org.terasoluna.qp.domain.model.LogDetail"
+		useGeneratedKeys="true" keyProperty="LogDetail.logDetailId" keyColumn="log_id">
+		<selectKey keyProperty="logDetailId" resultType="long" order="BEFORE">
+			SELECT NEXTVAL('log_detail_seq'::regclass)
+		</selectKey>
+		<![CDATA[
+		INSERT INTO log_detail(
+            log_detail_id, 
+            log_id, 
+            log_level, 
+            layout, 
+            log_target, 
+            conversion_pattern, 
+            log_file_type, 
+            pattern_file_name, 
+            file_path, 
+            immediate_flush, 
+            append_flg, 
+            max_file_size, 
+            max_backup_index, 
+            date_pattern, 
+            db_driver, 
+            db_url, 
+            db_user_name, 
+            db_password, 
+            sql_string,
+            charset,
+            rolling_policy,
+            triggering_policy,
+            max_history,
+            total_size_cap,
+            min_index,
+            max_index,
+            db_type,
+            insert_headers,
+            config_mode
+            )
+   		VALUES (
+   			#{logDetailId}, 
+            #{logId}, 
+            #{logLevel}, 
+            #{layout}, 
+            #{logTarget}, 
+            #{conversionPattern}, 
+            #{logFileType}, 
+            #{patternFileName}, 
+            #{filePath}, 
+            #{immediateFlush}, 
+            #{appendType}, 
+            #{maxFileSize}, 
+            #{maxBackupIndex}, 
+            #{datePattern}, 
+            #{dbDriver}, 
+            #{dbUrl}, 
+            #{dbUserName}, 
+            #{dbPassword}, 
+            #{sqlString},
+            #{charset},
+            #{rollingPolicy},
+            #{triggeringPolicy},
+            #{maxHistory},
+            #{totalSizeCap},
+            #{minIndex},
+            #{maxIndex},
+            #{dbType},
+            #{insertHeaders},
+            #{configMode}
+            )
+		]]>
+	</insert>
+	
+	<delete id="deleteAllLogDetailByLogId" parameterType="long">
+	<![CDATA[
+		DELETE FROM
+			log_detail
+		WHERE
+			log_id = #{logId}
+	]]>
+	</delete>
+	
+</mapper>

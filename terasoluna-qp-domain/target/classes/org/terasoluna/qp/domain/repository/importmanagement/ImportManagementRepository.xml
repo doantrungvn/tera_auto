@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="org.terasoluna.qp.domain.repository.importmanagement.ImportManagementRepository">
+	
+	
+	<resultMap type="org.terasoluna.qp.domain.model.ValidationRule" id="validationRuleMap">
+		<id property="validationRuleCode" column="validation_rule_code" />
+		<result property="validationRuleName" column="validation_rule_name" />
+		<result property="include" column="include" />
+		<result property="baseTypeGroup" column="basetype_group" />
+		<result property="itemType" column="item_type_id" />
+		<result property="remark" column="remark" />
+	</resultMap>
+	
+	<!-- For message design -->
+	<select id="getModuleIdByProjectId" resultType="HashMap">
+		SELECT module_id as id, module_code as name
+		FROM module
+		WHERE project_id = #{projectId}
+	</select>
+	
+	<select id="getLanguageIdByLanguageName" parameterType="String" resultType="long">
+		SELECT language_id
+		FROM language_design
+		WHERE language_name = #{languageName}
+	</select>
+	
+	<select id="getCodeKeyOfMessageDesign" resultType="HashMap">
+		SELECT message_design_id as id, message_code || '_' || language_id as name   
+	  	FROM message_design
+	  	WHERE project_id = #{projectId}
+	</select>
+	
+	<insert id="insertMessageDesign">
+		INSERT INTO message_design
+		(
+			message_string,
+			module_id,
+			message_level,
+			remark,
+			created_by,
+			created_date,
+			updated_by,
+			updated_date,
+			message_code,
+			message_type,
+			project_id,
+			generated_status,
+			language_id
+		)
+		VALUES
+		<foreach item="item" collection="listMessageDesignForInsert" separator=",">
+		(
+			#{item.messageString},
+			#{item.moduleId},
+			#{item.messageLevel},
+			#{item.remark},
+			#{item.createdBy},
+			#{item.createdDate},
+			#{item.updatedBy},
+			#{item.updatedDate},
+			#{item.messageCode},
+			#{item.messageType},
+			#{item.projectId},
+			#{item.generatedStatus},
+			#{item.languageId}
+		)
+		</foreach>;
+	</insert>
+	
+	<update id="updateMessageDesign">
+		<foreach item="item" collection="listMessageDesignForUpdate" separator=";">
+		UPDATE message_design
+		SET
+			message_string = #{item.messageString},
+			module_id = #{item.moduleId},
+			message_level = #{item.messageLevel},
+			remark = #{item.remark},
+			updated_by = #{item.updatedBy},
+			updated_date = CURRENT_TIMESTAMP,
+			message_type = #{item.messageType}
+		WHERE
+			project_id = #{item.projectId}
+		AND
+			language_id = #{item.languageId}
+		AND
+			message_code = #{item.messageCode}
+		</foreach> 
+	</update>
+	
+	<delete id="deleteMessageDesign">
+		DELETE FROM message_design
+		WHERE
+			project_id = #{projectId}
+	</delete>
+	
+	<!--For domain design  -->
+	<select id="getCodeKeyOfDomainDesign" resultType="HashMap">
+		SELECT domain_id as id, domain_code as name   
+		FROM domain_design
+		WHERE project_id = #{projectId}
+	</select>
+	
+	<insert id="insertDomainDesign"> 
+			INSERT INTO
+				domain_design
+			(				
+				domain_name,
+				domain_code,
+				maxlength,
+				mandatory_flg,
+				min_val,
+				max_val,
+				decimal_part,
+				default_value,
+				base_type,
+				group_base_type_id,
+				fmt_code,
+				remark,
+				project_id,
+				constrains_type,
+				datasource_id,
+				datasource_type,
+				operator_code,
+				default_type,
+				created_by,
+				created_date,
+				updated_by,
+				updated_date,
+				major_classification,
+				sub_classification,
+				minor_classification
+			)
+			VALUES
+			<foreach item="item" collection="listDomainDesign" separator=",">
+			(				
+				#{item.domainName},
+				#{item.domainCode},
+				#{item.maxLength},
+				#{item.mandatoryflg},
+				#{item.minVal},
+				#{item.maxVal},
+				#{item.precision},
+				#{item.defaultValue},
+				#{item.baseType},
+				#{item.groupBasetypeId},
+				#{item.fmtCode},
+				#{item.remark},
+				#{item.projectId},
+				#{item.constrainsType},
+				#{item.datasourceId},
+				#{item.datasourceType},
+				#{item.operatorCode},
+				#{item.defaultType},
+				#{item.createdBy},
+				#{item.createdDate},
+				#{item.updatedBy},
+				#{item.updatedDate},
+				#{item.majorClassification},
+				#{item.subClassification},
+				#{item.minorClassification}
+			)
+			</foreach>;
+	</insert>
+	
+	<update id="updateDomainDesign">
+		<foreach item="item" collection="listDomainDesign" separator=";">
+			UPDATE
+				domain_design
+			SET
+				domain_name=#{item.domainName},
+				domain_code=#{item.domainCode},
+				maxlength=#{item.maxLength},
+				mandatory_flg=#{item.mandatoryFlg},
+				min_val=#{item.minVal},
+				max_val=#{item.maxVal},
+				default_value=#{item.defaultValue},
+				base_type=#{item.baseType},
+				group_base_type_id=#{item.groupBasetypeId},
+				fmt_code=#{item.fmtCode},
+				remark=#{item.remark},				
+				major_classification= #{item.majorClassification},
+				sub_classification=#{item.subClassification},
+				minor_classification=#{item.minorClassification},
+				updated_by=#{item.updatedBy},
+				updated_date = #{item.updatedDate}
+			WHERE
+				domain_code=#{item.domainCode} and project_id=#{item.projectId}
+		</foreach> 
+	</update>
+	
+	<delete id="deleteDomainDesign" parameterType="Long">
+		DELETE FROM domain_design
+		WHERE
+			domain_id = #{domainId}
+	</delete>
+	
+	<select id="getBaseType" resultType="HashMap">	
+		SELECT
+			value2 || '_' || value3 AS id,
+			value1 AS name		
+		FROM
+			resources
+		WHERE 
+			category_cd='clBasetype'
+	</select>
+	
+	<select id="getValidationRule" resultType="HashMap">
+		SELECT 
+			t1.validation_rule_code as id,
+			t1.validation_rule_code as name		
+		FROM
+			validation_rule t1
+	</select>
+	
+	<select id="getReferenceDomainDesign" resultType="HashMap">
+		SELECT DISTINCT
+		   t1.domain_id AS id,
+		   t1.domain_code AS name
+		FROM domain_design t1 INNER JOIN table_design_details t2 on t1.domain_id = t2.data_type
+		where t1.project_id= #{projectId}
+	</select>
+	
+	<select id="getModuleId" resultType="HashMap">
+		SELECT module_id AS id, module_name as name
+		FROM module
+		WHERE project_id = #{projectId}
+			AND module_name = #{moduleName} 
+	</select>
+	
+	<select id="getCodeKeyOfCodelistDesign" resultType="HashMap">
+		SELECT codelist_id AS id, codelist_code AS name
+		FROM codelist
+		WHERE codelist_code = #{codelistCode}
+		AND project_id = #{projectId}
+	</select>
+	
+	<select id="getReferenceCodelistDesign" resultType="HashMap">
+		SELECT DISTINCT
+		   t1.codelist_id AS id,
+		   t1.codelist_code AS name
+		FROM codelist t1 INNER JOIN module t2 on t1.module_id = t2.module_id
+		where t1.project_id= #{projectId}
+	</select>
+	
+	<insert id="insertCodelistDesign">
+		INSERT INTO
+			codelist
+		(
+			codelist_code,
+			codelist_name,
+			remark,
+			option_value_flg,
+			created_by,
+			updated_by,
+			module_id,
+			multivalue_flg,
+			project_id
+		)
+		VALUES
+		<foreach item="item" collection="listCodelistDesign" separator=",">
+		(
+			#{item.codeListCode},
+			#{item.codeListName},
+			#{item.remark},
+			#{item.isOptionValude},
+			#{item.createdBy},
+			#{item.updatedBy},
+			#{item.moduleId},
+			#{item.multivalueFlg},
+			#{item.projectId}
+		)
+		</foreach>;
+	</insert>
+	
+	<update id="updateCodelistDesign">
+		<foreach item="item" collection="listCodelistDesign" separator=";">
+			UPDATE
+				codelist
+			SET
+				codelist_code = #{item.codeListCode},
+				codelist_name = #{item.codeListName},
+				remark = #{item.remark},
+				option_value_flg = #{item.isOptionValude},
+				updated_by = #{item.updatedBy},
+				module_id = #{item.moduleId},
+				multivalue_flg = #{item.multivalueFlg}
+			WHERE
+				codelist_code = #{item.codeListCode} and project_id = #{item.projectId}
+		</foreach> 
+	</update>
+	
+	<delete id="deleteCodelistDesign" parameterType="Long">
+		DELETE FROM codelist
+		WHERE
+			codelist_id = #{codelistId}
+	</delete>
+	
+	<select id="getSequencesCodelist" resultType="Long">
+		SELECT CURRVAL('codelist_seq'::regclass)
+	</select>
+	
+	<insert id="insertCodelistDetailDesign">
+		INSERT INTO
+			codelist_detail
+		(
+			codelist_id,
+			key,
+			value,
+			value1,
+			value2,
+			value3,
+			value4,
+			value5,
+			default_flg,
+			created_by,
+			created_date,
+			updated_by,
+			updated_date
+		)
+		VALUES
+		<foreach item="item" collection="listCodelistDetailDesign" separator=",">
+		(
+			#{item.codeListId},
+			#{item.name},
+			#{item.value},
+			#{item.value1},
+			#{item.value2},
+			#{item.value3},
+			#{item.value4},
+			#{item.value5},
+			#{item.isDefault},
+			#{item.createdBy},
+			#{item.createdDate},
+			#{item.updatedBy},
+			#{item.updatedDate}
+		)
+		</foreach>;
+	</insert>
+	
+	<update id="updateCodelistDetailDesign">
+		<foreach item="item" collection="listCodelistDetailDesign" separator=";">
+			UPDATE
+				codelist_detail
+			SET
+				codelist_id = #{item.codeListId},
+				key = #{item.name},
+				value = #{item.value},
+				value1 = #{item.value1},
+				value2 = #{item.value2},
+				value3 = #{item.value3},
+				value4 = #{item.value4},
+				value5 = #{item.value5},
+				updated_by = #{item.updatedBy},
+				updated_date = #{item.updatedDate}
+			WHERE
+				codelist_detail_id = #{item.clDeatailId}
+		</foreach> 
+	</update>
+	
+	<delete id="deleteCodelistDetailDesign" parameterType="Long">
+		DELETE FROM codelist_detail
+		WHERE codelist_detail_id = #{codelistDetailId}
+	</delete>
+	
+	<select id="getCodelistIdByCodelistCode" resultType="Long">
+		SELECT codelist_id
+		FROM codelist
+		WHERE codelist_code = #{codelistCode} AND project_id = #{projectId}
+	</select>
+	
+	<select id="getCodelistDetailId" resultType="Long">
+		SELECT codelist_detail_id
+		FROM codelist_detail
+		WHERE codelist_id = #{codelistId} AND key = #{key} AND value = #{value}
+	</select>
+	
+	<delete id="deleteCodelistDetailDesignBeforeUpdate" parameterType="Long">
+		DELETE FROM codelist_detail
+		WHERE codelist_id = #{codelistId}
+	</delete>
+</mapper>

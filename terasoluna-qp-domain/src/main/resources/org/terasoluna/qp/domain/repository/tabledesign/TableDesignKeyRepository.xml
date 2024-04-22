@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="org.terasoluna.qp.domain.repository.tabledesign.TableDesignKeyRepository">
+
+	<resultMap id="resultMap" type="TableDesignKey">
+		<result property="keyId" column="tbl_design_key_id" />
+		<result property="code" column="tbl_design_key_code" />
+		<result property="type" column="tbl_design_key_type" />
+		<result property="tableDesignId" column="tbl_design_id" />
+		<result property="strKeyItems" column="key_items" />
+		<result property="columnId" column="column_id" />
+	</resultMap>
+	
+	<resultMap id="resultMap1" type="TableDesignKeyItem">
+		<result property="tableDesignKeyId" column="tbl_design_key_id" />
+		<result property="columnId" column="column_id" />
+		<result property="keyId" column="tbl_design_key_id" />
+		<result property="type" column="tbl_design_key_type" />
+		<result property="tableDesignId" column="tbl_design_id" />
+		<result property="tableName" column="tbl_design_name" />
+		<result property="columnName" column="column_name" />
+	</resultMap>
+	
+	<select id="findOne" parameterType="Long" resultMap="resultMap">
+		<![CDATA[
+			SELECT 
+				tbl_design_key_id,
+				tbl_design_key_code,
+				tbl_design_key_type,
+				tbl_design_id
+			FROM 
+				table_design_key
+			WHERE
+				tbl_design_key_id = #{tableDesignKeyId}
+		]]>
+	</select>
+
+	<select id="findAllByTableDesign" parameterType="Long" resultMap="resultMap">
+		<![CDATA[
+			SELECT
+				tbl_design_key_id,
+				tbl_design_key_code,
+				tbl_design_key_type,
+				tbl_design_id
+			FROM 
+				table_design_key
+			WHERE
+				tbl_design_id = #{tableDesignId}
+		]]>
+	</select>
+	
+	<select id="findAllByTableDesignKey" parameterType="Long" resultMap="resultMap1">
+		<![CDATA[
+			SELECT
+				tbl_design_key_id,
+				column_id
+			FROM 
+				table_design_key_items
+			WHERE
+				tbl_design_key_id = #{tableDesignKeyId}
+		]]>
+	</select>
+	
+	<select id="selectMinTblDesignKeyValue" parameterType="Long" resultType="Long">
+		<![CDATA[
+			SELECT 
+				MIN(tbl_design_key_id) 
+			FROM table_design_key
+			WHERE 
+				tbl_design_id = #{tableDesignId}
+		]]>
+	</select>
+
+	<select id="findAllKeyByProjectId" parameterType="Long" resultMap="resultMap">
+		<![CDATA[
+			SELECT
+				b.tbl_design_key_id,
+				b.tbl_design_key_code,
+				b.tbl_design_key_type,
+				b.tbl_design_id
+			FROM 
+				table_design a INNER JOIN table_design_key b ON a.tbl_design_id = b.tbl_design_id
+			WHERE
+				a.project_id = #{projectId}
+			ORDER BY b.tbl_design_id, b.tbl_design_key_type
+		]]>
+	</select>
+	
+	<insert id="create" parameterType="TableDesignKey">
+		<selectKey keyProperty="keyId" resultType="long" order="BEFORE">
+			SELECT nextval('tbl_design_key_seq') AS keyId
+		</selectKey>
+		<![CDATA[
+			INSERT INTO
+				table_design_key
+			(
+				tbl_design_key_id,
+				tbl_design_key_code,
+				tbl_design_key_type,
+				tbl_design_id
+			)
+			VALUES
+			(
+				#{keyId},
+				#{code},
+				#{type},
+				#{tableDesignId}
+			)
+		]]>
+	</insert>
+	
+	<insert id="createArray" parameterType="TableDesignKey">
+		<selectKey keyProperty="keyId" resultType="long" order="BEFORE">
+			SELECT nextval('tbl_design_key_seq') AS keyId
+		</selectKey>
+			INSERT INTO
+				table_design_key
+			(
+				tbl_design_key_code,
+				tbl_design_key_type,
+				tbl_design_id
+			)
+			VALUES
+			<foreach item="item" collection="tableDesignKeys" separator=",">
+			(
+				<![CDATA[
+					#{item.code},
+					#{item.type},
+					#{item.tableDesignId}
+				]]>
+			)
+			</foreach>
+	</insert>
+
+	<update id="update" parameterType="TableDesignKey">
+		<![CDATA[
+			UPDATE 
+				table_design_key
+			SET 
+				tbl_design_key_id = #{keyId},
+				tbl_design_key_code = #{code},
+				tbl_design_key_type = #{type},
+				tbl_design_id = #{tableDesignId}
+			WHERE
+				tbl_design_key_id = #{keyId}
+		]]>
+	</update>
+
+	<delete id="delete" parameterType="Long">
+		<![CDATA[
+			DELETE FROM 
+				table_design_key
+			WHERE 
+				tbl_design_key_id = #{keyId}
+		]]>
+	</delete>
+
+	<delete id="deleteAllKeyItems" parameterType="Long">
+		<![CDATA[
+			DELETE FROM
+				table_design_key_items
+			WHERE
+				tbl_design_key_id = #{keyId}
+		]]>
+	</delete>
+	
+	<delete id="deleteKeyItemsByColumnId" parameterType="map">
+		<![CDATA[
+			DELETE FROM
+				table_design_key_items
+			WHERE
+				column_id BETWEEN #{columnIdStart} AND #{columnIdEnd}
+		]]>
+	</delete>
+
+	<delete id="deleteByTableDesign" parameterType="Long">
+		<![CDATA[
+			DELETE FROM
+				table_design_key
+			WHERE
+				tbl_design_id = #{tableDesignId}
+		]]>
+	</delete>
+
+	<delete id="deleteAllKeyItemsByTableDesign" parameterType="Long">
+		<![CDATA[
+			DELETE FROM
+				table_design_key_items
+			WHERE
+				EXISTS 
+					(
+						SELECT
+							1
+						FROM
+							table_design_key t
+						WHERE
+							i.tbl_design_key_id = t.tbl_design_key_id
+						AND
+							t.tbl_design_id = #{tableDesignId}
+					)
+		]]>
+	</delete>
+	
+	<insert id="insertArray" parameterType="TableDesignKeyItem">
+         INSERT INTO
+				table_design_key_items
+			(
+				tbl_design_key_id,
+				column_id
+			)
+         VALUES
+         <foreach item="item" collection="tableDesignKeyItems" separator=",">
+         (
+             <![CDATA[
+                 #{item.tableDesignKeyId},
+				 #{item.columnId}
+             ]]>
+         )
+         </foreach>
+    </insert>
+
+	<insert id="createTableKeyItem" parameterType="TableDesignKeyItem">
+		<![CDATA[
+			INSERT INTO
+				table_design_key_items
+			(
+				tbl_design_key_id,
+				column_id
+			)
+			VALUES
+			(
+				#{tableDesignKeyId},
+				#{columnId}
+			)
+		]]>
+	</insert>
+	
+	<select id="findAllKeyItemByKeyId" parameterType="Long" resultMap="resultMap1">
+		WITH 
+			table_design_key_temp AS(
+				SELECT 
+					tbl_design_key_id
+				FROM 
+					table_design_key
+				WHERE
+					<![CDATA[ tbl_design_id = #{tableId} ]]>
+			)
+			SELECT
+				tbl_design_key_id,
+				column_id
+			FROM
+				table_design_key_items s
+			WHERE 
+				EXISTS 
+				(
+					SELECT
+						1
+					FROM 
+						table_design_key_temp t
+					WHERE 
+						t.tbl_design_key_id = s.tbl_design_key_id
+				)
+	</select>
+
+	<!-- DungNN get all by project and subject area -->
+	<select id="getAllByProjectAndSubArea" parameterType="Long" resultMap="resultMap">
+		WITH 
+			table_design_temp AS (
+				SELECT 
+					tbl_design_id
+				FROM 
+					table_design t
+				WHERE
+					<![CDATA[ t.project_id = #{projectId} ]]>
+			
+			<if test="areaId != null and areaId > 0">
+					AND
+						EXISTS
+							(
+								SELECT
+									1
+								FROM
+									subject_area_design_table s
+								WHERE
+									t.tbl_design_id = s.tbl_design_id AND s.sub_area_design_id = #{areaId}
+							)
+			</if>
+
+			<!-- get all table does not belong to subject area -->
+			<if test="areaId != null and areaId == -2">
+				EXCEPT 
+		
+				SELECT 
+					tbl_design_id
+				FROM 
+					subject_area_design_table st 
+				WHERE EXISTS
+				(
+					SELECT
+						1 
+					FROM 
+						subject_area_design s 
+					WHERE 
+						s.sub_area_design_id  = st.sub_area_design_id
+					AND
+						<![CDATA[s.project_id = #{projectId}]]>
+				)
+			</if>
+		)
+		
+		SELECT 
+			tbl_design_key_id,
+			tbl_design_key_code,
+			tbl_design_key_type,
+			tbl_design_id,
+			(
+				SELECT
+					string_agg( distinct (d.column_code), ', ')
+				FROM 
+					table_design_key_items i INNER JOIN table_design_details d ON i.column_id = d.column_id
+				WHERE
+					k.tbl_design_key_id = i.tbl_design_key_id
+			) key_items
+		FROM
+			table_design_key k
+		WHERE 
+			EXISTS 
+				(
+					SELECT
+						1
+					FROM 
+						table_design_temp t
+					WHERE 
+						t.tbl_design_id = k.tbl_design_id
+				)
+	</select>
+	
+	<select id="getAllByTableId" parameterType="Long" resultMap="resultMap">
+		WITH 
+			table_design_temp AS (
+				SELECT 
+					tbl_design_id
+				FROM 
+					table_design t
+				WHERE
+					t.tbl_design_id IN
+						<foreach item="item" collection="listTableId" open="(" close=")" separator=",">
+							#{item}
+						</foreach>
+		)
+		
+		SELECT 
+			tbl_design_key_id,
+			tbl_design_key_code,
+			tbl_design_key_type,
+			tbl_design_id,
+			(
+				SELECT
+					string_agg( distinct (d.column_code), ', ')
+				FROM 
+					table_design_key_items i INNER JOIN table_design_details d ON i.column_id = d.column_id
+				WHERE
+					k.tbl_design_key_id = i.tbl_design_key_id
+			) key_items
+		FROM
+			table_design_key k
+		WHERE 
+			EXISTS 
+				(
+					SELECT
+						1
+					FROM 
+						table_design_temp t
+					WHERE 
+						t.tbl_design_id = k.tbl_design_id
+				)
+	</select>
+	
+	<select id="findKeyItem" parameterType="Long" resultMap="resultMap1">
+		<![CDATA[
+			SELECT
+				a.tbl_design_key_id,
+				a.column_id,
+				b.tbl_design_key_type,
+				b.tbl_design_id,
+				c.column_name,
+				d.tbl_design_name
+			FROM 
+				table_design_key_items a
+			LEFT JOIN 
+				table_design_key b ON a.tbl_design_key_id = b.tbl_design_key_id
+			LEFT JOIN 
+				table_design_details c ON a.column_id = c.column_id
+			LEFT JOIN 
+				table_design d ON c.tbl_design_id = d.tbl_design_id
+			WHERE
+				d.project_id = #{projectId}
+		]]>
+	</select>
+	
+	<delete id="deleteKeyByTableDesignId" parameterType="Long">
+		DELETE FROM
+			table_design_key_items a
+		WHERE
+			EXISTS 
+				(
+					SELECT
+						1
+					FROM
+						
+						table_design_key c 
+					WHERE
+						 a.tbl_design_key_id = c.tbl_design_key_id
+						AND c.tbl_design_id = #{tableDesignId}
+					
+				);
+		DELETE FROM
+			table_design_key
+		WHERE
+			tbl_design_id = #{tableDesignId}
+	
+	</delete>
+	
+	<delete id="multiDelete" >
+		<foreach item="keyId" collection="listOfId" >
+			<![CDATA[
+				DELETE FROM
+					table_design_key_items
+				WHERE
+					tbl_design_key_id = #{keyId};
+					
+				DELETE FROM 
+					table_design_key
+				WHERE 
+					tbl_design_key_id = #{keyId};
+			]]>
+		</foreach>
+	</delete>
+	
+	<!-- VinhHV get all by project include common table -->
+	<select id="getAllByProject" parameterType="Long" resultMap="resultMap">
+		WITH 
+			table_design_temp AS (
+				SELECT 
+					tbl_design_id
+				FROM 
+					table_design t
+				WHERE
+					t.project_id = #{projectId}
+		)
+		
+		SELECT 
+			tbl_design_key_id,
+			tbl_design_key_code,
+			tbl_design_key_type,
+			tbl_design_id,
+			(
+				SELECT
+					string_agg( distinct (d.column_code), ', ')
+				FROM 
+					table_design_key_items i INNER JOIN table_design_details d ON i.column_id = d.column_id
+				WHERE
+					k.tbl_design_key_id = i.tbl_design_key_id
+			) key_items
+		FROM
+			table_design_key k
+		WHERE 
+			EXISTS 
+				(
+					SELECT
+						1
+					FROM 
+						table_design_temp t
+					WHERE 
+						t.tbl_design_id = k.tbl_design_id
+				)
+	</select>
+	
+	<select id="getSequencesTableDesignKey" resultType="Long">
+		select SETVAL('tbl_design_key_seq'::regclass,NEXTVAL('tbl_design_key_seq'::regclass) + #{size})
+	</select>
+	
+</mapper>

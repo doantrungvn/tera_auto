@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.subjectarea.SubjectAreaRepository">
+
+	<resultMap id="resultMapArea" type="SubjectArea">
+		<id property="areaId" column="sub_area_design_id" />
+		<result property="areaName" column="sub_area_name" />
+		<result property="areaIdAutocomplete" column="sub_area_name" />
+		<result property="areaCode" column="sub_area_code" />
+		<result property="projectId" column="project_id" />
+		<result property="defaultFlg" column="default_flg" />
+		<result property="remark" column="remark" />
+		<result property="projectName" column="project_name" />
+		<result property="itemSeqNo" column="item_seq_no" />
+		<result property="createdBy" column="created_by" />
+		<result property="createdDate" column="created_date" />
+		<result property="updatedBy" column="updated_by" />
+		<result property="updatedDate" column="updated_date" />
+	</resultMap>
+	
+	<!-- Process for display and search -->
+	<sql id="findPageByCriteriaWhere">
+		<where>
+			<if test="criteria.areaName != null and criteria.areaName != ''">
+				<bind name="areaName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.areaName)" />
+				<![CDATA[
+					AND a.sub_area_name iLIKE #{areaName} ESCAPE '~'
+				]]>
+			</if>
+			<if test="criteria.areaCode != null and criteria.areaCode != ''">
+				<bind name="areaCode" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.areaCode)" />
+				<![CDATA[
+					AND a.sub_area_code iLIKE #{areaCode} ESCAPE '~'
+				]]>
+			</if>
+			<if test="criteria.tableName != null and criteria.tableName != ''">
+				<bind name="tableName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.tableName)" />
+				<![CDATA[
+					AND b.tbl_design_name iLIKE #{tableName} ESCAPE '~'
+				]]>
+			</if>
+			<if test="criteria.tableCode != null and criteria.tableCode != ''">
+				<bind name="tableCode" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.tableCode)" />
+				<![CDATA[
+					AND b.tbl_design_code iLIKE #{tableCode} ESCAPE '~'
+				]]>
+			</if>
+			<if test="criteria.projectId != null and criteria.projectId != ''">
+				<![CDATA[
+					AND d.project_id = #{criteria.projectId}
+				]]>
+			</if>
+			<if test="criteria.keyword != null and criteria.keyword != ''">
+				<bind name="keyword" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.keyword)" />
+				<![CDATA[
+					AND c.keyword_value iLIKE #{keyword} ESCAPE '~'
+				]]>
+			</if>
+		</where>
+	</sql>
+	
+	<select id="findPageBySearchCriteria"
+		parameterType="org.terasoluna.qp.domain.repository.subjectarea.SubjectAreaSearchCriteria"
+		resultMap="resultMapArea">
+		SELECT DISTINCT(a.sub_area_design_id) AS sub_area_design_id,
+				d.project_id,
+				d.project_name,
+				a.sub_area_name,
+				a.sub_area_code,
+				a.default_flg, 
+				a.created_by,
+				a.created_date,
+				a.updated_by,
+				a.updated_date
+		FROM 
+			subject_area_design a 
+			LEFT JOIN subject_area_design_table x ON a.sub_area_design_id = x.sub_area_design_id
+			LEFT JOIN table_design b ON x.tbl_design_id = b.tbl_design_id
+			LEFT JOIN subject_area_keyword c ON c.sub_area_design_id = a.sub_area_design_id
+			LEFT JOIN project d ON a.project_id = d.project_id
+		<include refid="findPageByCriteriaWhere" />
+		ORDER BY 
+		<if test="pageable.sort != null">
+			<foreach collection="pageable.sort" item="area" separator=",">
+				${area.property} ${area.direction}
+			</foreach>
+		</if>
+		<if test="pageable.sort == null">
+			a.updated_date DESC
+		</if>
+		<![CDATA[
+				LIMIT
+					#{pageable.pageSize}
+				OFFSET
+					#{pageable.offset}
+		 ]]>
+	</select>
+
+	<select id="countBySearchCriteria"
+		parameterType="org.terasoluna.qp.domain.repository.subjectarea.SubjectAreaSearchCriteria"
+		resultType="_long">
+		<![CDATA[
+			SELECT 
+				COUNT(DISTINCT a.sub_area_design_id) 
+			FROM 
+				subject_area_design a 
+				LEFT JOIN subject_area_design_table x ON a.sub_area_design_id = x.sub_area_design_id
+				LEFT JOIN table_design b ON x.tbl_design_id = b.tbl_design_id
+				LEFT JOIN subject_area_keyword c ON c.sub_area_design_id = a.sub_area_design_id
+				LEFT JOIN project d ON a.project_id = d.project_id
+			]]>
+		<include refid="findPageByCriteriaWhere" />
+	</select>
+
+	<!-- Process for display view and modify -->
+	<select id="findOneById" parameterType="_long" resultMap="resultMapArea">
+		<![CDATA[
+		  SELECT 
+			  a.sub_area_design_id,
+			  a.sub_area_name,
+			  a.sub_area_code,
+			  a.remark,
+			  a.item_seq_no,
+			  a.default_flg,
+			  b.project_name,
+			  b.project_id, 
+			  a.created_by,
+			  a.created_date,
+			  a.updated_by,
+			  a.updated_date
+		FROM 
+			  subject_area_design a LEFT JOIN project b ON a.project_id = b.project_id
+		WHERE 
+			  a.sub_area_design_id = #{areaId}
+		]]>
+	</select>
+	
+	<select id="getAllByProjectId" parameterType="_long" resultMap="resultMapArea">
+		SELECT 
+			sub_area_design_id,
+			sub_area_name,
+			sub_area_code,
+			remark,
+			default_flg,
+			project_id
+		FROM 
+			subject_area_design
+		WHERE 
+			project_id = #{projectId}
+		ORDER BY
+				item_seq_no
+	</select>
+	
+	<select id="getAll" parameterType="_long" resultMap="resultMapArea">
+		SELECT 
+			sub_area_design_id,
+			sub_area_name,
+			sub_area_code,
+			remark,
+			default_flg,
+			project_id
+		FROM 
+			subject_area_design
+		ORDER BY
+				item_seq_no
+	</select>
+
+	<!-- Process for modify -->
+	<!-- Get subject area id by subject area code -->
+	<select id="getExitsSubAreaNameOrCode" parameterType="SubjectArea" resultType="Integer">
+		SELECT 
+			SUM(rowVal) AS totalCount 
+		FROM (
+				(SELECT 
+					1 AS rowVal 
+				 FROM 
+					subject_area_design 
+				 <where>
+					 <if test="areaName != null and areaName != ''">sub_area_name = #{areaName}</if> 
+					 <if test="areaId != null"><![CDATA[ AND sub_area_design_id != #{areaId} ]]></if>
+					 <if test="areaName == null and areaName == ''">AND FALSE</if>
+					 <![CDATA[
+						 AND project_id = #{projectId} 
+					 ]]>  
+				 </where>
+				 LIMIT 1
+				 ) 
+				 UNION
+				(SELECT 
+					2 AS rowVal 
+				 FROM 
+					subject_area_design
+				 <where>
+					 <if test="areaCode != null and areaCode != ''">sub_area_code ILIKE #{areaCode}</if> 
+					 <if test="areaId != null"><![CDATA[  AND sub_area_design_id != #{areaId} ]]></if>
+					 <if test="areaCode == null and areaCode == ''">AND FALSE</if>
+					 <![CDATA[
+						 AND project_id = #{projectId} 
+					 ]]>
+				 </where>
+				 LIMIT 1
+				 )
+			 ) AS A
+	</select>
+
+	<!-- Mix update position by project id -->
+
+	<!-- Update subject area information by subjectAreaId -->
+	<update id="updateAreaInforById" parameterType="SubjectArea">
+	  <![CDATA[
+		UPDATE
+			 subject_area_design
+		SET
+			 sub_area_name=#{areaName},
+			 sub_area_code=#{areaCode},
+			 default_flg=#{defaultFlg},
+			 remark=#{remark}, 
+			 updated_date = #{sysDatetime},
+			 updated_by = #{updatedBy}
+		WHERE
+			 sub_area_design_id=#{areaId}
+		AND
+			updated_date = #{updatedDate};
+	  ]]>
+		
+	  <if test="defaultFlg != null and defaultFlg == 1">
+		UPDATE subject_area_design
+		SET default_flg = 0
+		WHERE 
+			<![CDATA[sub_area_design_id != #{areaId}]]>
+		AND
+		  	<![CDATA[project_id = #{projectId}]]>
+	  </if> 
+	</update>  
+	
+	<!-- Process for display modify and View -->
+	<select id="getAllSubAreaByTableId" parameterType="_long" resultMap="resultMapArea">
+		<![CDATA[
+			SELECT 
+			  a.sub_area_design_id,
+			  a.sub_area_name,
+			  a.sub_area_code,
+			  a.project_id,
+			  a.item_seq_no
+			FROM subject_area_design a 
+			  LEFT JOIN subject_area_design_table c ON a.sub_area_design_id = c.sub_area_design_id
+			 	WHERE c.tbl_design_id = #{tableId}
+		 ]]>
+	</select>
+	
+
+	<!-- Process for display register -->
+	<!-- Process Json data -->
+	<!-- select list position by project id -->
+	<select id="getAllPosLstByProjectId" parameterType="_long" resultMap="resultMapArea">
+		<![CDATA[
+			SELECT 
+				  a.sub_area_design_id,
+				  a.sub_area_name,
+				  a.sub_area_code,
+				  a.default_flg,
+				  a.item_seq_no
+			FROM 
+				  subject_area_design a
+			WHERE 
+				  a.project_id = #{projectId}
+			ORDER BY
+				a.item_seq_no ASC
+		 ]]>
+	</select>
+	
+	<!-- Process register -->
+	<!-- Insert new subject area information without position -->
+	<!-- Insert keyword information -->
+	<insert id="insertSubAreaInfor" parameterType="SubjectArea">
+		<selectKey keyProperty="areaId" resultType="_long" order="BEFORE">
+			SELECT NEXTVAL('sub_area_design_seq'::REGCLASS) as areaId
+		</selectKey>
+		<![CDATA[
+		INSERT INTO
+			 subject_area_design
+			(
+				sub_area_design_id,
+				sub_area_name,
+				sub_area_code,
+				project_id,
+				default_flg,
+				item_seq_no,
+				remark, 
+				created_by,
+				created_date,
+				updated_by,
+				updated_date
+			 ) VALUES (
+				#{areaId},
+				#{areaName},
+				#{areaCode},
+				#{projectId},
+				#{defaultFlg},
+				#{itemSeqNo},
+				#{remark},
+				#{createdBy},
+				#{createdDate},
+				#{updatedBy},
+				#{updatedDate}
+			);
+		 ]]>
+		 
+		<if test="defaultFlg != null and defaultFlg == 1">
+			UPDATE subject_area_design
+			SET default_flg = 0
+			WHERE 
+				<![CDATA[sub_area_design_id != #{areaId}]]>
+			AND
+				<![CDATA[project_id = #{projectId}]]>
+		</if> 
+	</insert>
+
+	<!-- Update position of subject area by subjectAreaId -->
+	<update id="updatePosByAreaId" parameterType="SubjectArea">
+		<foreach collection="posList" item="pos" separator=";">
+			UPDATE
+				subject_area_design
+			SET
+				 <![CDATA[item_seq_no=#{pos.itemSeqNo}]]>
+			WHERE
+				 <![CDATA[sub_area_design_id=#{pos.areaId}]]>
+		</foreach>
+	</update>
+	
+	
+	
+	<!-- Delete subject area design by subject area indentify -->
+	<update id="deleteSubArea" parameterType="SubjectArea">
+		<![CDATA[
+		DELETE
+			FROM
+				 subject_area_design a 
+			WHERE
+				a.sub_area_design_id = #{areaId}
+		]]>
+	</update>
+
+</mapper>

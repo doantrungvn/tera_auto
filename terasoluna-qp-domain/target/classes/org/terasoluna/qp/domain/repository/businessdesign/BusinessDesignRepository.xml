@@ -1,0 +1,4291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.businessdesign.BusinessDesignRepository">
+
+	<resultMap id="businessDesignResultMap" type="BusinessDesign">
+		<id property="businessLogicId" column="business_logic_id" />
+		<result property="businessLogicCode" column="business_logic_code" />
+		<result property="businessLogicName" column="business_logic_name" />
+		<result property="returnType" column="return_type" />
+		<result property="screenId" column="screen_id" />
+		<result property="moduleId" column="module_id" />
+		<result property="moduleName" column="module_name" />
+		<result property="moduleStatus" column="module_status" />
+		<result property="moduleIdAutocomplete" column="module_name" />
+		<result property="projectId" column="project_id" />
+		<result property="customizeFlg" column="customize_flg" />
+		<result property="uploadFileId" column="upload_file_id" />
+		<result property="createdBy" column="created_by" />
+		<result property="createdDate" column="created_date" />
+		<result property="updatedBy" column="updated_by" />
+		<result property="updatedDate" column="updated_date" />
+		<result property="fileName" column="file_name" />
+		<result property="file" column="content" />
+		<result property="designStatus" column="design_status" />
+		<result property="packageName" column="package_name" />
+		<result property="screenIdAutocomplete" column="screen_name" />
+		<result property="screenCode" column="screen_name_code" />
+		<result property="screenDesignCode" column="screen_design_code" />
+		<result property="messageString" column="message_string" />
+		<result property="patternType" column="pattern_type" />
+		<result property="confirmFlg" column="confirm_flg" />
+		<result property="completeFlg" column="complete_flg" />
+		<result property="remark" column="remark" />
+		<result property="functionDesignId" column="function_id" />
+		<result property="functionDesignIdAutocomplete" column="function_name" />
+		<result property="moduleType" column="module_type" />
+		<result property="screenFormId" column="screen_form_id" />
+		<result property="batchType" column="batch_type" />
+		<result property="blogicType" column="blogic_type" />
+		<result property="requestMethod" column="request_method" />
+		<result property="authenticatedFlg" column="authenticated_flg" />
+		<result property="screenFormIdAutocomplete" column="screen_form_id_autocomplete" />
+        <result property="moduleCode" column="module_code" />
+        <result property="screenTemplateType" column="screen_template_type" />
+       	<result property="designMode" column="design_mode" />
+        <result property="author" column="username" />
+        <result property="httpStatus" column="http_status" />
+	</resultMap>
+	
+	<resultMap id="inputbeanResultMap" type="InputBean">
+		<id property="inputBeanId" column="input_bean_id" />
+		<result property="inputBeanCode" column="input_bean_code" />
+		<result property="inputBeanName" column="input_bean_name" />
+		<result property="messageDesign.messageString" column="message_string" />
+		<result property="messageString" column="message_string" />
+		<result property="messageStringAutocomplete" column="message_string_autocomplete" />
+		<result property="inputBeanType" column="input_bean_type" />
+		<result property="dataType" column="data_type" />
+		<result property="arrayFlg" column="array_flg" />
+		<result property="screenItemId" column="screen_item_id" />
+		<result property="businessLogicId" column="business_logic_id" />
+		<result property="parentInputBeanId" column="parent_input_bean_id" />
+		<result property="itemSequenceNo" column="item_sequence_no" />
+		<result property="tblDesignId" column="tbl_design_id" />
+		<result property="tblDesignName" column="tbl_design_name" />
+		<result property="columnId" column="column_id" />
+		<result property="columnName" column="column_name" />
+		<result property="objectType" column="object_type" />
+		<result property="objectId" column="object_id" />
+		<result property="objectFlg" column="object_flg" />
+		<result property="scopeType" column="scope_type" />
+		<result property="scopeValue" column="scope_value" />
+		<result property="displayType" column="display_type" />
+		<result property="scopeValueAutocomplete" column="scope_value_autocomplete" />
+		<result property="autoincrementFlg" column="autoincrement_flg" />
+		<result property="groupBaseTypeId" column="group_base_type_id" />
+        <result property="screenItemIdAutocomplete" column="screen_item_id_autocomplete" />
+        <result property="dataTypeSession" column="dataTypeSession" />
+        <result property="arrayFlagSession" column="arrayFlagSession" />
+        <result property="businessLogicCode" column="business_logic_code" />
+        <result property="moduleId" column="module_id" />
+        <result property="projectId" column="project_id" />
+	</resultMap>
+	
+	<resultMap id="outputbeanResultMap" type="OutputBean">
+		<id property="outputBeanId" column="output_bean_id" />
+		<result property="outputBeanCode" column="output_bean_code" />
+		<result property="outputBeanName" column="output_bean_name" />
+		<result property="messageDesign.messageString" column="message_string" />
+		<result property="messageString" column="message_string" />
+		<result property="messageStringAutocomplete" column="message_string" />
+		<result property="dataType" column="data_type" />
+		<result property="arrayFlg" column="array_flg" />
+		<result property="businessLogicId" column="business_logic_id" />
+		<result property="parentOutputBeanId" column="parent_output_bean_id" />
+		<result property="itemSequenceNo" column="item_sequence_no" />
+		<result property="tblDesignId" column="tbl_design_id" />
+		<result property="tblDesignName" column="tbl_design_name" />
+		<result property="columnId" column="column_id" />
+		<result property="columnName" column="column_name" />
+		<result property="columnCode" column="column_code" />
+		<result property="groupBaseTypeId" column="group_base_type_id" />
+		<result property="impactStatus" column="impact_status" />
+		<result property="screenItemId" column="screen_item_id" />
+		<result property="screenItemIdAutocomplete" column="screen_item_id_autocomplete" />
+		<result property="objectType" column="object_type" />
+		<result property="objectId" column="object_id" />
+		<result property="objectFlg" column="object_flg" />
+		<result property="scopeType" column="scope_type" />
+		<result property="scopeValue" column="scope_value" />
+		<result property="scopeValueAutocomplete" column="scope_value_autocomplete" />
+        <result property="dataTypeSession" column="dataTypeSession" />
+        <result property="arrayFlagSession" column="arrayFlagSession" />
+        <result property="businessLogicCode" column="business_logic_code" />
+        <result property="moduleId" column="module_id" />
+        <result property="projectId" column="project_id" />
+	</resultMap>
+	
+	<resultMap id="objectdefinitionResultMap" type="ObjectDefinition">
+		<id property="objectDefinitionId" column="object_definition_id" />
+		<result property="objectDefinitionCode" column="object_definition_code" />
+		<result property="objectDefinitionName" column="object_definition_name" />
+		<result property="dataType" column="data_type" />
+		<result property="arrayFlg" column="array_flg" />
+		<result property="businessLogicId" column="business_logic_id" />
+		<result property="parentObjectDefinitionId" column="parent_object_definition_id" />
+		<result property="itemSequenceNo" column="item_sequence_no" />
+		<result property="tblDesignId" column="tbl_design_id" />
+		<result property="tblDesignName" column="tbl_design_name" />
+		<result property="tblDesignCode" column="tbl_design_code" />
+		<result property="columnId" column="column_id" />
+		<result property="columnName" column="column_name" />
+		<result property="columnCode" column="column_code" />
+		<result property="groupBaseTypeId" column="group_base_type_id" />
+		<result property="impactStatus" column="impact_status" />
+		<result property="baseType" column="base_type" />
+		<result property="objectFlg" column="object_flg" />
+		<result property="displayType" column="display_type" />
+		<result property="autoincrementFlg" column="autoincrement_flg" />
+		<result property="businessLogicCode" column="business_logic_code" />
+        <result property="moduleId" column="module_id" />
+	</resultMap>
+	
+	<resultMap id="sequenceLogicResultMap" type="SequenceLogic">
+		<id property="sequenceLogicId" column="sequence_logic_id" />
+		<result property="sequenceLogicName" column="sequence_logic_name" />
+		<result property="componentType" column="component_type" />
+		<result property="componentId" column="component_id" />
+		<result property="sequenceNo" column="sequence_no" />
+		<result property="xCoordinates" column="x_coordinates" />
+		<result property="yCoordinates" column="y_coordinates" />
+		<result property="remark" column="remark" />
+		<result property="businessLogicId" column="business_logic_id" />
+		<result property="parentSequenceLogicId" column="parent_sequence_logic_id" />
+		<result property="groupFlg" column="group_flg" />
+		<result property="relatedSequenceLogicId" column="related_sequence_logic_id" />
+		<result property="businessLogicCode" column="business_logic_code" />
+		<result property="businessLogicName" column="business_logic_name" />
+		<result property="moduleId" column="module_id" />
+		<result property="moduleName" column="module_name" />
+		<result property="formulaDetailId" column="formula_detail_id" />
+	</resultMap>
+	
+	<resultMap id="sequenceConnectorResultMap" type="SequenceConnector">
+		<id property="sequenceConnectorId" column="sequence_connector_id" />
+		<result property="connectorSource" column="connector_source" />
+		<result property="connectorDest" column="connector_dest" />
+		<result property="connectorType" column="connector_type" />
+	</resultMap>
+	
+	<resultMap id="screenAreaResultMap" type="ScreenArea">
+		<id property="screenAreaId" column="screen_area_id" />
+		<result property="messageDesign.messageCode" column="message_code" />
+		<result property="messageDesign.messageString" column="message_string" />
+	</resultMap>
+	
+	<resultMap id="itemValidationResultMap" type="ItemValidation">
+		<result property="screenAreaId" column="screen_area_id" />
+		<result property="screenItemId" column="screen_item_id" />
+		<result property="itemCode" column="item_code" />
+		<result property="maxlength" column="maxlength" />
+		<result property="mandatoryFlg" column="mandatory_flg" />
+		<result property="minVal" column="min_val" />
+		<result property="maxVal" column="max_val" />
+		<result property="fmtCode" column="fmt_code" />
+		<result property="messageString" column="message_string" />
+		<result property="messageCode" column="message_code" />
+		<result property="screenFormId" column="screen_form_id" />
+		<result property="screenFormCode" column="form_code" />
+		<result property="areaName" column="area_name" />
+		<result property="areaType" column="area_type" />
+	</resultMap>
+	<resultMap id="autocompleteResultMap" type="Autocomplete">
+		<result property="optionValue" column="optionValue" />
+		<result property="optionLabel" column="optionLabel" />
+		<result property="output01" column="output01" />
+        <result property="output04" column="output04" />
+        <result property="output05" column="output05" />
+	</resultMap>
+	<resultMap id="tableDesignDetailsResultMap" type="TableDesignDetailsOutput">
+		<result property="columnId" column="column_id" />
+		<result property="tableDesignId" column="tbl_design_id" />
+		<result property="columnName" column="column_name" />
+		<result property="columnCode" column="column_code" />
+		<result property="baseType" column="base_type" />
+		<result property="itemSeqNo" column="item_seq_no" />
+	</resultMap>
+	<resultMap id="commonObjectAttributesResultMap" type="CommonObjectAttribute">
+		<result property="commonObjectAttributeId" column="common_object_attribute_id" />
+		<result property="commonObjectAttributeCode" column="common_object_attribute_code" />
+		<result property="commonObjectAttributeName" column="common_object_attribute_name" />
+		<result property="arrayFlg" column="array_flg" />
+		<result property="commonObjectDefinitionId" column="common_object_definition_id" />
+		<result property="dataType" column="data_type" />
+		<result property="parentId" column="parent_id" />
+	</resultMap>
+	<resultMap id="externalObjectAttributesResultMap" type="ExternalObjectAttribute">
+		<result property="externalObjectAttributeId" column="external_object_attribute_id" />
+		<result property="externalObjectAttributeCode" column="external_object_attribute_code" />
+		<result property="externalObjectAttributeName" column="external_object_attribute_name" />
+		<result property="arrayFlg" column="array_flg" />
+		<result property="externalObjectDefinitionId" column="external_object_definition_id" />
+		<result property="dataType" column="data_type" />
+	</resultMap>
+	 <resultMap id="screenItemOutputResultMap" type="ScreenItemOutput">
+		<result property="screenItemId" column="screen_item_id" />
+		<result property="screenFormId" column="screen_form_id" />
+		<result property="formCode" column="form_code" />
+		<result property="screenAreaId" column="screen_area_id" />
+		<result property="areaName" column="area_name" />
+		<result property="areaType" column="area_type" />
+		<result property="areaTypeAction" column="area_type_action" />
+		<result property="itemName" column="item_name" />
+		<result property="physicalDataType" column="physical_data_type" />
+		<result property="logicalDataType" column="logical_data_type" />
+		<result property="outputBeanId" column="output_bean_id" />
+        <result property="inputBeanId" column="input_bean_id" />
+		<result property="mappingType" column="mapping_type" />
+		<result property="displayFromTo" column="from_to" />
+	</resultMap>
+	<resultMap id="inputbeanDeleteResultMap" type="InputBean">
+		<id property="inputBeanId" column="input_bean_id" />
+		<result property="inputBeanCode" column="input_bean_code" />
+		<result property="inputBeanName" column="input_bean_name" />
+		<result property="parentInputBeanId" column="parent_input_bean_id" />
+	</resultMap>
+	<!-- Count business_logic by search condition -->
+	<select id="countBySearchCriteria" parameterType="org.terasoluna.qp.domain.repository.businessdesign.BusinessDesignCriteria" resultType="_long">
+		<![CDATA[
+			SELECT 
+				COUNT(*) 
+			FROM 
+				business_logic a
+		]]>
+		<include refid="findPageByCriteriaWherePhrase" />
+	</select>
+	
+	<!-- Finds all business logic by search condition -->
+	<select id="findPageBySearchCriteria" parameterType="org.terasoluna.qp.domain.repository.businessdesign.BusinessDesignCriteria" resultMap="businessDesignResultMap">
+		<![CDATA[
+			SELECT
+				a.business_logic_id,
+				a.business_logic_code,
+				a.business_logic_name,
+				a.return_type,
+				a.screen_id,
+				a.module_id,
+				b.status as module_status,
+				b.module_type,
+				a.project_id,
+				a.customize_flg,
+				a.upload_file_Id,
+				a.design_status,
+				a.remark,
+				d.message_string as screen_name,
+				a.blogic_type,
+				a.design_mode,
+                acc.username,
+                a.http_status
+			FROM business_logic a
+			LEFT JOIN module b
+				on b.module_id = a.module_id
+			LEFT JOIN
+				(
+					select d1.screen_id,d2.message_string from screen_design d1
+					left join message_design d2 on ( d1.message_code = d2.message_code and d2.language_id = #{languageId} and d2.project_id = #{projectId} )
+				) d on d.screen_id = a.screen_id
+            LEFT JOIN account acc ON (acc.account_id = a.created_by)
+		]]>
+		<include refid="findPageByCriteriaWherePhrase" />
+		<if test="pageable.sort != null">
+			ORDER BY
+			<foreach collection="pageable.sort" item="order" separator=",">
+				${order.property} ${order.direction}
+			</foreach>
+		</if>
+		<if test="pageable.sort == null">
+			ORDER BY
+				a.updated_date DESC,a.business_logic_id ASC
+		</if>
+		<![CDATA[
+			 LIMIT
+				 #{pageable.pageSize}
+			 OFFSET
+				 #{pageable.offset}
+		]]>
+	</select>
+	
+	<!-- business_logic search criteria -->
+	<sql id="findPageByCriteriaWherePhrase">
+		<where>
+	   		a.project_id = #{criteria.projectId} 
+			<if test="criteria.businessLogicName != null and criteria.businessLogicName != ''">
+				<bind name="businessLogicName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.businessLogicName)" />
+				<![CDATA[
+					AND a.business_logic_name ILIKE #{businessLogicName} ESCAPE '~'
+				]]>
+			</if>
+			<if test="criteria.businessLogicCode != null and criteria.businessLogicCode != ''">
+				<bind name="businessLogicCode" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.businessLogicCode)" />
+				<![CDATA[
+					AND a.business_logic_code ILIKE #{businessLogicCode} ESCAPE '~'
+				]]>
+			</if>
+			<if test="criteria.moduleId != null ">
+				<bind name="moduleId" value="criteria.moduleId" />
+				<![CDATA[
+					AND a.module_id = #{moduleId}
+				]]>
+			</if>
+			<if test="criteria.screenId != null ">
+				<bind name="screenId" value="criteria.screenId" />
+				<![CDATA[
+					AND a.screen_id = #{screenId}
+				]]>
+			</if>
+			<if test="criteria.blogicType != null and criteria.blogicType.length > 0">
+				AND a.blogic_type IN
+				<foreach item="blogicType" index="index" collection="criteria.blogicType" open="(" separator="," close=")">
+					#{blogicType}
+				</foreach>
+			</if>
+			<if test="criteria.designStatus != null and criteria.designStatus.length > 0">
+				AND a.design_status IN			  
+				<foreach item="designStatus" index="index" collection="criteria.designStatus" open="(" separator="," close=")">
+					#{designStatus}
+				</foreach>
+			</if>
+			<if test="criteria.designMode != null and criteria.designMode.length > 0">
+				AND a.design_mode IN			  
+				<foreach item="designMode" index="index" collection="criteria.designMode" open="(" separator="," close=")">
+					#{designMode}
+				</foreach>
+			</if>
+		</where>
+	</sql>
+	
+	<select id="countNameCodeExist" parameterType="BusinessDesign" resultType="Long">
+		SELECT 
+			SUM(rowVal) AS totalCount 
+		FROM (
+				(SELECT 
+						1 AS rowVal 
+				 FROM 
+						business_logic 
+				 <where>
+				 	 project_id = #{projectId} and 
+					 <if test="businessLogicName != null and businessLogicName != ''">
+						UPPER(business_logic_name) = UPPER(#{businessLogicName})
+					 </if> 
+					 <if test="businessLogicId != null">AND business_logic_id != #{businessLogicId}</if>
+					 <if test="businessLogicName == null and businessLogicName == ''">AND FALSE</if>
+				 </where>
+				 LIMIT 1
+				 ) 
+				 UNION
+				(SELECT 
+						2 AS rowVal 
+				 FROM 
+						business_logic
+				 <where>
+				 		project_id = #{projectId} and 
+						<if test="businessLogicCode != null and businessLogicCode != ''">
+							UPPER(business_logic_code) = UPPER(#{businessLogicCode})
+						</if> 
+						<if test="businessLogicId != null">AND business_logic_id != #{businessLogicId}</if>
+						<if test="businessLogicCode == null and businessLogicCode == ''">AND FALSE</if>
+				 </where>
+				 LIMIT 1
+				 )
+			 ) AS foo
+	</select>
+	
+	<select id="findBusinessLogicInformation" resultMap="businessDesignResultMap">
+		<![CDATA[
+			SELECT
+				a.business_logic_id,
+				a.business_logic_code,
+				a.business_logic_name,
+				a.return_type,
+				a.screen_id,
+				a.module_id,
+				a.project_id,
+				a.customize_flg,
+				a.upload_file_Id,
+				a.created_by,
+				a.created_date,
+				a.updated_by,
+				a.updated_date,
+				a.batch_type,
+				b.module_name as module_name,
+				b.status as module_status,
+				b.module_type,
+				f.file_name as file_name,
+				f.content as content,
+				a.design_status,
+				a.package_name,
+				d.message_string as screen_name,
+				d.message_code as screen_name_code,
+				a.pattern_type,
+				a.remark,
+				e.function_id,
+				e.function_name,
+				a.blogic_type,
+				a.request_method,
+				a.authenticated_flg,
+                b.module_code as module_code,
+                a.screen_form_id,
+                sf.form_code as screen_form_id_autocomplete,
+                sd.template_type as screen_template_type,
+                sd.screen_code as screen_design_code,
+                a.design_mode,
+                acc.username,
+                a.http_status
+			FROM 
+				business_logic a
+			LEFT JOIN
+				module b ON a.module_id = b.module_id
+			LEFT JOIN 
+				upload_file f ON a.upload_file_id = f.upload_file_id
+			LEFT JOIN 
+				screen_form sf on sf.screen_form_id = a.screen_form_id 
+			LEFT JOIN
+				(
+					SELECT 
+						d1.screen_id,
+						d1.message_code,
+						d2.message_string 
+					FROM screen_design d1
+					LEFT JOIN message_design d2 on (d1.message_code = d2.message_code and d2.language_id = #{languageId} and d2.project_id = #{projectId})
+				) d on d.screen_id = a.screen_id
+			LEFT JOIN
+				function_design e on a.function_id = e.function_id
+			LEFT JOIN 
+				screen_design sd ON sd.screen_id = a.screen_id
+            LEFT JOIN account acc ON (acc.account_id = a.created_by)
+			WHERE
+				a.business_logic_id = #{businessLogicId}
+		]]>
+	</select>
+	
+	 <select id="getSequencesInputBean" resultType="Long">
+		select SETVAL('input_bean_seq'::regclass, NEXTVAL('input_bean_seq'::regclass) + #{size})
+	</select>
+	
+	<select id="getSequencesOutputBean" resultType="Long">
+		select SETVAL('output_bean_seq'::regclass, NEXTVAL('output_bean_seq'::regclass) + #{size})
+	</select>
+	
+	<select id="getSequencesObjectDefinition" resultType="Long">
+		select SETVAL('object_definition_seq'::regclass, NEXTVAL('object_definition_seq'::regclass) + #{size})
+	</select>
+	
+	<select id="getSequencesConnector" resultType="Long">
+		select SETVAL('sequence_connector_seq'::regclass, NEXTVAL('sequence_connector_seq'::regclass) + #{size})
+	</select>
+	
+	<select id="getSequencesLogic" resultType="Long">
+		select SETVAL('sequence_logic_seq'::regclass, NEXTVAL('sequence_logic_seq'::regclass) + #{size})
+	</select>
+	
+	<insert id="register" parameterType="BusinessDesign">
+		<selectKey keyProperty="businessLogicId" resultType="long" order="BEFORE">
+			SELECT NEXTVAL('business_logic_seq') AS businessLogicId
+		</selectKey>
+		<![CDATA[
+			INSERT INTO business_logic (
+				business_logic_id,
+				business_logic_name,
+				business_logic_code,
+				return_type,
+				screen_id,
+				module_id,
+				project_id,
+				upload_file_id,
+				customize_flg,
+				created_by,
+				created_date,
+				updated_by,
+				updated_date,
+				package_name,
+				pattern_type,
+				confirm_flg,
+				complete_flg,
+				remark,
+				function_id,
+				screen_form_id,
+				batch_type,
+				blogic_type,
+				request_method,
+				authenticated_flg,
+				design_mode,
+                http_status
+			) VALUES (
+				#{businessLogicId},
+				#{businessLogicName},
+				#{businessLogicCode},
+				#{returnType},
+				#{screenId},
+				#{moduleId},
+				#{projectId},
+				#{uploadFileId},
+				#{customizeFlg},
+				#{createdBy},
+				#{createdDate},
+				#{updatedBy},
+				#{updatedDate},
+				#{packageName},
+				#{patternType},
+				#{confirmFlg},
+				#{completeFlg},
+				#{remark},
+				#{functionDesignId},
+				#{screenFormId},
+				#{batchType},
+				#{blogicType},
+				#{requestMethod},
+				#{authenticatedFlg},
+				#{designMode},
+				#{httpStatus}
+			);
+		]]>
+	</insert>
+	
+	<insert id="registerOneInputBean" parameterType="InputBean">
+		<![CDATA[
+		INSERT INTO input_bean
+			(
+				input_bean_id,
+				input_bean_code, 
+				input_bean_name, 
+				input_bean_type, 
+				data_type, 
+				array_flg, 
+				screen_item_id, 
+				business_logic_id, 
+				parent_input_bean_id,
+				item_sequence_no,
+				tbl_design_id,
+				column_id,
+				group_base_type_id, 
+				object_type,
+				object_id,
+				object_flg,
+				scope_type,
+				scope_value
+			)
+			VALUES 
+			(
+				CAST(#{inputBeanId} AS numeric(16,0)),
+				#{inputBeanCode}, 
+				#{messageString}, 
+				#{inputBeanType}, 
+				#{dataType},  
+				#{arrayFlg}, 
+				#{screenItemId}, 
+				#{businessLogicId},
+				CAST(#{parentInputBeanId} AS numeric(16,0)),
+				#{itemSequenceNo},
+				#{tblDesignId},
+				#{columnId},
+				#{groupBaseTypeId},
+				CAST(#{objectType} AS numeric(16,0)),
+				CAST(#{objectId} AS numeric(16,0)), 
+				#{objectFlg},
+				#{scopeType},
+				#{scopeValue}
+			)
+		]]>
+	</insert>
+	
+	<insert id="registerOneOutputBean" parameterType="OutputBean">
+		<![CDATA[
+		INSERT INTO output_bean
+			(
+				output_bean_id,
+				output_bean_code, 
+				output_bean_name, 
+				data_type, 
+				array_flg, 
+				business_logic_id, 
+				parent_output_bean_id,
+				item_sequence_no,
+				tbl_design_id, 
+				column_id,
+				group_base_type_id, 
+				impact_status, 
+				screen_item_id, 
+				object_type, 
+				object_id, 
+				object_flg,
+				scope_type,
+				scope_value
+			)
+			VALUES 
+			(
+				CAST(#{outputBeanId} AS numeric(16,0)),
+				#{outputBeanCode}, 
+				#{outputBeanName}, 
+				#{dataType},  
+				#{arrayFlg}, 
+				#{businessLogicId},
+				CAST(#{parentOutputBeanId} AS numeric(16,0)),
+				#{itemSequenceNo},
+				#{tblDesignId},
+				#{columnId},
+				#{groupBaseTypeId},
+				#{impactStatus},
+				#{screenItemId},
+		   		CAST(#{objectType} AS numeric(16,0)),
+		   		CAST(#{objectId} AS numeric(16,0)), 
+				#{objectFlg},
+				#{scopeType},
+				#{scopeValue}
+			)
+		]]>
+	</insert>
+	
+	<insert id="registerOneObjectDefinition" parameterType="ObjectDefinition">
+		<![CDATA[
+		INSERT INTO object_definition
+			(
+				object_definition_id,
+				object_definition_code, 
+				object_definition_name, 
+				data_type, 
+				array_flg, 
+				business_logic_id, 
+				parent_object_definition_id,
+				item_sequence_no,
+				tbl_design_id, 
+				column_id,
+				group_base_type_id, 
+				impact_status, 
+				object_type, 
+				object_id, 
+				object_flg
+			)
+			VALUES 
+			(
+				CAST(#{objectDefinitionId} AS numeric(16,0)),
+				#{objectDefinitionCode}, 
+				#{objectDefinitionName}, 
+				#{dataType},  
+				#{arrayFlg}, 
+				#{businessLogicId},
+				CAST(#{parentObjectDefinitionId} AS numeric(16,0)),
+				#{itemSequenceNo},
+				#{tblDesignId},
+				#{columnId},
+				#{groupBaseTypeId},
+				#{impactStatus},
+		   		CAST(#{objectType} AS numeric(16,0)),
+		   		CAST(#{objectId} AS numeric(16,0)), 
+				#{objectFlg}
+			)
+		]]>
+	</insert>
+	
+	<insert id="registerInputBean" >
+		<if test="inputbeanItems != null and  inputbeanItems.size() > 0 ">
+			INSERT INTO input_bean
+				(
+				input_bean_id, 
+				input_bean_code, 
+				input_bean_name, 
+				input_bean_type, 
+				data_type, 
+				array_flg, 
+				screen_item_id, 
+				business_logic_id, 
+				parent_input_bean_id,
+				item_sequence_no,
+				tbl_design_id,
+				column_id,
+				group_base_type_id,
+				object_type,
+				object_id,
+				object_flg,
+				scope_type,
+				scope_value
+				)
+				VALUES 
+				<foreach item="item" collection="inputbeanItems" separator=",">
+				(
+					CAST(#{item.inputBeanId} AS numeric(16,0)), 
+					#{item.inputBeanCode}, 
+					#{item.inputBeanName}, 
+					#{item.inputBeanType}, 
+					#{item.dataType},  
+					#{item.arrayFlg}, 
+					#{item.screenItemId}, 
+					#{item.businessLogicId},
+					CAST(#{item.parentInputBeanId} AS numeric(16,0)),
+					#{item.itemSequenceNo},
+					#{item.tblDesignId},
+					#{item.columnId},
+					#{item.groupBaseTypeId},
+					CAST(#{item.objectType} AS numeric(16,0)),
+					CAST(#{item.objectId} AS numeric(16,0)),
+					#{item.objectFlg},
+					#{item.scopeType},
+					#{item.scopeValue}
+				)
+				</foreach>;
+		</if>
+	</insert>
+	<insert id="registerOutputBean" >
+		<!-- Modify by HungHX -->
+		<if test="outputbeanItems != null and  outputbeanItems.size() > 0 ">
+			<foreach item="item" collection="outputbeanItems" separator=";">
+				INSERT INTO output_bean
+				(
+					output_bean_id, 
+					output_bean_code, 
+					output_bean_name, 
+					data_type, 
+					array_flg, 
+					business_logic_id, 
+					parent_output_bean_id,
+					item_sequence_no,
+					tbl_design_id, 
+					column_id,
+					group_base_type_id, 
+					impact_status,
+					object_type,
+					object_id,
+					object_flg,
+					scope_type,
+					scope_value
+				)
+				VALUES 
+					(
+						CAST(#{item.outputBeanId} AS numeric(16,0)), 
+						#{item.outputBeanCode}, 
+						#{item.outputBeanName},
+						#{item.dataType},  
+						#{item.arrayFlg},
+						#{item.businessLogicId},
+						CAST(#{item.parentOutputBeanId} AS numeric(16,0)),
+						#{item.itemSequenceNo},
+						#{item.tblDesignId},
+						#{item.columnId},
+						#{item.groupBaseTypeId},
+						#{item.impactStatus},
+						CAST(#{item.objectType} AS numeric(16,0)),
+						CAST(#{item.objectId} AS numeric(16,0)),
+						#{item.objectFlg},
+						#{item.scopeType},
+						#{item.scopeValue}
+					);
+					
+				<foreach item="screenItem" collection="item.lstScreenItemMapping" separator=";">
+					INSERT INTO outputbean_screenitem_mapping
+					(
+						output_bean_id,
+						screen_item_id,
+						mapping_type
+					)
+					VALUES 
+						(
+							CAST(#{item.outputBeanId} AS numeric(16,0)), 
+							CAST(#{screenItem.screenItemId} AS numeric(16,0)),
+							#{screenItem.mappingType}
+						)
+				</foreach>
+			</foreach>
+		</if>
+	</insert>
+	<insert id="registerObjectDefinition" >
+		<if test="objectdefinitionItems != null and  objectdefinitionItems.size() > 0 ">
+			INSERT INTO object_definition
+			(
+				object_definition_id, 
+				object_definition_code, 
+				object_definition_name, 
+				data_type, 
+				array_flg,
+				business_logic_id, 
+				parent_object_definition_id,
+				item_sequence_no,
+				tbl_design_id, 
+				column_id,
+				group_base_type_id, 
+				impact_status,
+				object_type,
+				object_id,
+				object_flg
+			)
+			VALUES 
+				<foreach item="item" collection="objectdefinitionItems" separator=",">
+				(
+					CAST(#{item.objectDefinitionId} AS numeric(16,0)), 
+					#{item.objectDefinitionCode}, 
+					#{item.objectDefinitionName},
+					#{item.dataType}, 
+					#{item.arrayFlg},
+					#{item.businessLogicId},
+					CAST(#{item.parentObjectDefinitionId} AS numeric(16,0)),
+					#{item.itemSequenceNo},
+					#{item.tblDesignId},
+					#{item.columnId},
+					#{item.groupBaseTypeId},
+					#{item.impactStatus},
+					CAST(#{item.objectType} AS numeric(16,0)),
+					CAST(#{item.objectId} AS numeric(16,0)),
+					#{item.objectFlg}
+				)
+				</foreach>;
+		</if>
+	</insert>
+	
+	<insert id="registerSequenceLogic" >
+		<if test="sequenceLogicItems != null and  sequenceLogicItems.size() > 0 ">
+			INSERT INTO sequence_logic
+			(
+				sequence_logic_id, 
+				sequence_logic_name, 
+				component_type, 
+				component_id, 
+				sequence_no, 
+				x_coordinates, 
+				y_coordinates, 
+				remark, 
+				business_logic_id, 
+				parent_sequence_logic_id,
+				group_flg,
+				related_sequence_logic_id
+			)
+			VALUES 
+				<foreach item="item" collection="sequenceLogicItems" separator=",">
+				(
+					CAST(#{item.sequenceLogicId} AS numeric(16,0)), 
+					#{item.sequenceLogicName}, 
+					#{item.componentType},
+					#{item.componentId},  
+					#{item.sequenceNo},
+					#{item.xCoordinates},
+					#{item.yCoordinates},
+					#{item.remark},
+					#{item.businessLogicId},
+					CAST(#{item.parentSequenceLogicId} AS numeric(16,0)),
+					#{item.groupFlg},
+					CAST(#{item.relatedSequenceLogicId} AS numeric(16,0))
+				)
+				</foreach>;
+		</if>
+	</insert>
+	
+	 <insert id="registerSequenceConnector" >
+		<if test="sequenceConnectorItems != null and  sequenceConnectorItems.size() > 0 ">
+			INSERT INTO sequence_connector
+			(
+				sequence_connector_id, 
+				connector_source, 
+				connector_dest, 
+				connector_type
+			)
+			VALUES 
+				<foreach item="item" collection="sequenceConnectorItems" separator=",">
+				(
+					#{item.sequenceConnectorId},
+					CAST(#{item.connectorSource} AS numeric(16,0)), 
+					CAST( #{item.connectorDest} AS numeric(16,0)), 
+					#{item.connectorType}
+				)
+				</foreach>;
+		</if>
+	</insert>
+	
+	<select id="findInputBean" resultMap="inputbeanResultMap">
+		<![CDATA[
+			WITH RECURSIVE 
+            input_bean_tree AS (
+				SELECT 
+	                input_bean_id,
+					input_bean_code,
+					input_bean_name,
+					input_bean_type,
+					data_type,
+					array_flg,
+					screen_item_id,
+					business_logic_id,
+					parent_input_bean_id,
+					item_sequence_no,
+					tbl_design_id,
+					column_id, 					
+					object_type, 
+					object_id, 
+					object_flg,
+					scope_type,
+					scope_value,
+	                input_bean_id || '' AS path	                    
+                FROM 
+                    input_bean ib
+                WHERE 
+                    parent_input_bean_id IS NULL
+                AND
+                	business_logic_id = #{businessLogicId}
+                UNION ALL
+	                
+                SELECT 
+                    ib.input_bean_id,
+					ib.input_bean_code,
+					ib.input_bean_name,
+					ib.input_bean_type,
+					ib.data_type,
+					ib.array_flg,
+					ib.screen_item_id,
+					ib.business_logic_id,
+					ib.parent_input_bean_id,
+					ib.item_sequence_no,
+					ib.tbl_design_id,
+					ib.column_id, 					
+					ib.object_type, 
+					ib.object_id, 
+					ib.object_flg,
+					ib.scope_type,
+					ib.scope_value,
+	                ft.path || ib.input_bean_id as path
+	                    
+                FROM 
+                    input_bean ib, 
+                    input_bean_tree ft 
+                WHERE 
+                    ib.parent_input_bean_id = ft.input_bean_id
+                AND
+                	ib.business_logic_id = #{businessLogicId}
+	        )
+ 			SELECT
+				ib.input_bean_id,
+				ib.input_bean_code,
+				ib.input_bean_name,
+				ib.input_bean_name as message_string,
+				ib.input_bean_type,
+				ib.data_type,
+				ib.array_flg,
+				ib.screen_item_id,
+				ib.business_logic_id,
+				ib.parent_input_bean_id,
+				ib.item_sequence_no,
+				ib.tbl_design_id,
+				ib.column_id, 
+				CASE ib.input_bean_type
+					WHEN 0 THEN COALESCE(md.message_string,ib.input_bean_name) 
+				ELSE ib.input_bean_name
+				END AS message_string_autocomplete, 
+				ib.object_type, 
+				ib.object_id, 
+				ib.object_flg,
+				ib.scope_type,
+				ib.scope_value,
+				sm.session_management_name as scope_value_autocomplete,
+                sm.data_type as dataTypeSession,
+                sm.array_flg as arrayFlagSession
+			FROM input_bean_tree ib
+			LEFT JOIN message_design md on (ib.input_bean_name = md.message_code and md.language_id = #{languageId} and md.project_id = #{projectId})
+			LEFT JOIN session_management sm on CAST(ib.scope_value AS numeric(16,0)) = sm.session_management_id
+			WHERE
+				ib.business_logic_id = #{businessLogicId}
+			ORDER BY
+				ib.path , ib.item_sequence_no
+		]]>
+	</select>
+	<select id="findInputBeanById" resultMap="inputbeanResultMap">
+		<![CDATA[
+			SELECT
+				ib.input_bean_id,
+				ib.input_bean_code,
+				ib.input_bean_name,
+				ib.input_bean_name as message_string,
+				ib.input_bean_type,
+				ib.data_type,
+				ib.array_flg,
+				ib.screen_item_id,
+				ib.business_logic_id,
+				ib.parent_input_bean_id,
+				ib.item_sequence_no,
+				ib.tbl_design_id,
+				ib.column_id,
+				CASE ib.input_bean_type
+					WHEN 0 THEN md.message_string
+					ELSE ib.input_bean_name
+				END AS message_string_autocomplete, 
+				ib.object_type, 
+				ib.object_id, 
+				ib.object_flg,
+				ib.scope_type,
+				ib.scope_value,
+				sm.session_management_name as scope_value_autocomplete,
+                sm.data_type as dataTypeSession,
+                sm.array_flg as arrayFlagSession
+			FROM 
+				input_bean ib
+			LEFT JOIN message_design md on (ib.input_bean_name = md.message_code and md.language_id = #{languageId} and md.project_id = #{projectId})
+			LEFT JOIN session_management sm on CAST(ib.scope_value AS numeric(16,0)) = sm.session_management_id
+			WHERE
+				ib.input_bean_id = #{inputBeanId}
+			ORDER BY
+				ib.item_sequence_no
+		]]>
+	</select>
+	<select id="findInputBeanByBlogicIds" resultMap="inputbeanResultMap">
+		
+		SELECT
+			ib.input_bean_id,
+			ib.input_bean_code,
+			ib.input_bean_name,
+			md.message_string,
+			ib.input_bean_type,
+			ib.data_type,
+			ib.array_flg,
+			ib.screen_item_id,
+			ib.business_logic_id,
+			ib.parent_input_bean_id,
+			ib.item_sequence_no,
+			ib.tbl_design_id,
+			ib.column_id, 
+			CASE ib.input_bean_type
+				WHEN 0 THEN md.message_string
+				ELSE ib.input_bean_name
+			END AS message_string_autocomplete, 
+			ib.object_type, 
+			ib.object_id, 
+			ib.object_flg,
+			ib.scope_type,
+			ib.scope_value,
+			sm.session_management_name as scope_value_autocomplete,
+            sm.data_type as dataTypeSession,
+            sm.array_flg as arrayFlagSession
+		FROM 
+			input_bean ib
+		LEFT JOIN message_design md on (ib.input_bean_name = md.message_code and md.language_id = #{languageId} and md.project_id = #{projectId})
+		LEFT JOIN session_management sm on CAST(ib.scope_value AS numeric(16,0)) = sm.session_management_id
+		<where>
+			<if test="businessDesigns != null and businessDesigns.size() > 0">
+				ib.business_logic_id IN
+				<foreach collection="businessDesigns" item="item" open="(" close=")" separator=",">
+					#{item.businessLogicId}
+				</foreach>
+			</if>
+			<if test="businessDesigns == null or businessDesigns.size() == 0">
+				FALSE
+			</if>
+		</where>
+		ORDER BY
+			ib.item_sequence_no
+		
+	</select>
+	
+	<!-- temp : name -->
+	<select id="findOutputBean" parameterType="_long" resultMap="outputbeanResultMap">
+		<![CDATA[
+			SELECT
+				ob.output_bean_id,
+				ob.output_bean_code,
+				ob.output_bean_name,
+				ob.data_type,
+				ob.array_flg,
+				ob.business_logic_id,
+				ob.parent_output_bean_id,
+				ob.item_sequence_no,
+				ob.tbl_design_id, 
+				ob.column_id, 
+				ob.group_base_type_id, 
+				ob.impact_status, 
+				ob.object_type, 
+				ob.object_id, 
+				ob.object_flg,
+				ob.scope_type,
+				ob.scope_value,
+				sm.session_management_name as scope_value_autocomplete,
+                sm.data_type as dataTypeSession,
+                sm.array_flg as arrayFlagSession
+			FROM 
+				output_bean ob
+			LEFT JOIN session_management sm on CAST(ob.scope_value AS numeric(16,0)) = sm.session_management_id
+			WHERE
+				ob.business_logic_id = #{businessLogicId}
+			ORDER BY
+				ob.item_sequence_no
+		]]>
+	</select>
+	
+	<!-- HungHX -->
+	<select id="findAllScreenItemMappingByOutputBeanId" resultMap="screenItemOutputResultMap">
+			SELECT 
+				a.output_bean_id, 
+				a.screen_item_id,
+				b.item_code as item_name,
+				b.logical_data_type,
+				a.mapping_type
+			FROM 
+				outputbean_screenitem_mapping a
+			LEFT JOIN 
+				screen_item b on b.screen_item_id = a.screen_item_id
+			WHERE
+				EXISTS
+				(
+					SELECT a1.output_bean_id
+					FROM output_bean a1
+					WHERE a1.business_logic_id = #{businessLogicId}
+						and a1.output_bean_id = a.output_bean_id
+				)
+	</select>
+	
+	<select id="findAllScreenItemMappingByOutputBeanBlogic" resultMap="screenItemOutputResultMap">
+			SELECT 
+				a.output_bean_id, 
+				a.screen_item_id,
+				b.item_code as item_name,
+				b.logical_data_type,
+				a.mapping_type
+			FROM 
+				outputbean_screenitem_mapping a
+			INNER JOIN screen_item b on b.screen_item_id = a.screen_item_id
+			WHERE
+				EXISTS
+				(
+					SELECT a1.output_bean_id
+					FROM output_bean a1
+					WHERE a1.business_logic_id = #{businessLogicId}
+						and a1.output_bean_id = a.output_bean_id
+				)
+	</select>
+	
+	<select id="findObjectDefinition" parameterType="_long" resultMap="objectdefinitionResultMap">
+		<![CDATA[
+			SELECT
+				a.object_definition_id,
+				a.object_definition_code,
+				a.object_definition_name,
+				a.data_type,
+				a.array_flg,
+				a.business_logic_id,
+				a.parent_object_definition_id,
+				a.item_sequence_no,
+				a.tbl_design_id, 
+				a.column_id, 
+				a.group_base_type_id, 
+				a.impact_status,  
+				a.object_type, 
+				a.object_id, 
+				a.object_flg
+			FROM 
+				object_definition a
+			WHERE
+				a.business_logic_id = #{businessLogicId}
+			ORDER BY
+				a.item_sequence_no
+		]]>
+	</select>
+	
+	<select id="findSequenceLogic" parameterType="_long" resultMap="sequenceLogicResultMap">
+		<![CDATA[
+			SELECT 
+				sequence_logic_id, 
+				sequence_logic_name, 
+				component_type, 
+				component_id, 
+	   			sequence_no, 
+	   			x_coordinates, 
+	   			y_coordinates, 
+	   			remark, 
+	   			business_logic_id, 
+	   			parent_sequence_logic_id,
+	   			group_flg,
+	   			related_sequence_logic_id
+  			FROM sequence_logic
+			WHERE
+				business_logic_id = #{businessLogicId}
+			ORDER BY
+				sequence_logic_id
+		]]>
+	</select>
+	
+	<select id="findSequenceConnector" parameterType="_long" resultMap="sequenceConnectorResultMap">
+		<![CDATA[
+			SELECT 
+				sequence_connector_id, 
+				connector_source, 
+				connector_dest, 
+				connector_type
+  			FROM sequence_connector
+			where EXISTS  
+				(
+					select sequence_logic.sequence_logic_id
+					from sequence_logic
+					where 
+						sequence_logic.business_logic_id = #{businessLogicId} and 
+						sequence_logic.sequence_logic_id = sequence_connector.connector_source
+				)
+		]]>
+	</select>
+	
+	<update id="modifyBusinessDesign" parameterType="BusinessDesign">
+	<![CDATA[
+		UPDATE business_logic
+   		SET 
+   			business_logic_code = #{businessLogicCode}, 
+   			business_logic_name = #{businessLogicName}, 
+	   		module_id = #{moduleId},
+	   		customize_flg = #{customizeFlg}, 
+	   		upload_file_id = #{uploadFileId},
+	   		updated_by = #{updatedBy}, 
+	   		updated_date = #{sysDatetime},
+	   		package_name = #{packageName},
+	   		remark = #{remark},
+	   		function_id = #{functionDesignId},
+	   		batch_type = #{batchType},
+	   		blogic_type = #{blogicType},
+	   		request_method = #{requestMethod},
+	   		authenticated_flg = #{authenticatedFlg},
+	   		return_type = #{returnType},
+	   		screen_id = #{screenId},
+	   		screen_form_id = #{screenFormId},
+	   		http_status = #{httpStatus}
+ 		WHERE
+ 			business_logic_id = #{businessLogicId}
+ 		AND
+			updated_date = #{updatedDate}
+	]]>
+	</update>
+	
+	<update id="modifyInputBean" >
+		<foreach item="item" collection="inputbeanItems" separator=";">
+			<![CDATA[
+				UPDATE input_bean
+		   		SET 
+		   			input_bean_code= #{item.inputBeanCode},
+		   			input_bean_name= #{item.inputBeanName},
+			   		data_type= #{item.dataType},
+			   		array_flg= #{item.arrayFlg},
+			   		parent_input_bean_id= CAST(#{item.parentInputBeanId} AS numeric(16,0)), 
+			   		item_sequence_no= #{item.itemSequenceNo},
+			   		object_type= CAST(#{item.objectType} AS numeric(16,0)),
+			   		object_id= CAST(#{item.objectId} AS numeric(16,0)),
+			   		object_flg= #{item.objectFlg},
+			   		scope_type= #{item.scopeType},
+			   		scope_value= #{item.scopeValue},
+			   		tbl_design_id= #{item.tblDesignId},
+			   		column_id= #{item.columnId},
+			   		group_base_type_id= #{item.groupBaseTypeId}
+				WHERE input_bean_id = CAST(#{item.inputBeanId} AS numeric(16,0))
+			]]>
+		</foreach>
+	</update>
+	
+	<update id="modifyOutputBean" >
+		<foreach item="item" collection="outputbeanItems" separator=";">
+				UPDATE output_bean
+		   		SET 
+		   			output_bean_code= #{item.outputBeanCode},
+		   			output_bean_name= #{item.outputBeanName},
+			   		data_type= #{item.dataType}, 
+			   		array_flg= #{item.arrayFlg},
+			   		parent_output_bean_id= CAST(#{item.parentOutputBeanId} AS numeric(16,0)), 
+			   		item_sequence_no= #{item.itemSequenceNo} ,
+			   		tbl_design_id= #{item.tblDesignId},
+			   		column_id= #{item.columnId},
+			   		group_base_type_id= #{item.groupBaseTypeId},
+			   		impact_status= #{item.impactStatus},
+			   		screen_item_id= #{item.screenItemId},
+			   		object_type= CAST(#{item.objectType} AS numeric(16,0)),
+			   		object_id= CAST(#{item.objectId} AS numeric(16,0)),
+			   		object_flg= #{item.objectFlg},
+			   		scope_type= #{item.scopeType},
+			   		scope_value= #{item.scopeValue}
+				 WHERE output_bean_id = CAST(#{item.outputBeanId} AS numeric(16,0));
+				 
+				<if test="item.lstScreenItemMapping != null and  item.lstScreenItemMapping.size() > 0 ">
+					<foreach item="screenItem" collection="item.lstScreenItemMapping" separator=";">
+						INSERT INTO outputbean_screenitem_mapping
+						(
+							output_bean_id,
+							screen_item_id,
+							mapping_type
+						)
+						VALUES 
+							(
+								CAST(#{item.outputBeanId} AS numeric(16,0)), 
+								CAST(#{screenItem.screenItemId} AS numeric(16,0)),
+								#{screenItem.mappingType}
+							)
+					</foreach>
+				</if>
+		</foreach>
+	</update>
+	
+	<update id="modifyObjectDefinition" >
+		<foreach item="item" collection="objectDefinitionItems" separator=";">
+			<![CDATA[
+				UPDATE object_definition
+		   		SET 
+		   			object_definition_code= #{item.objectDefinitionCode},
+		   			object_definition_name= #{item.objectDefinitionName},
+			   		data_type= #{item.dataType}, 
+			   		array_flg= #{item.arrayFlg},
+			   		parent_object_definition_id= CAST(#{item.parentObjectDefinitionId} AS numeric(16,0)), 
+			   		item_sequence_no= #{item.itemSequenceNo},
+			   		tbl_design_id= #{item.tblDesignId},
+			   		column_id= #{item.columnId},
+			   		group_base_type_id= #{item.groupBaseTypeId},
+			   		impact_status= #{item.impactStatus},
+			   		object_type= CAST(#{item.objectType} AS numeric(16,0)),
+			   		object_id= CAST(#{item.objectId} AS numeric(16,0)),
+			   		object_flg= #{item.objectFlg}
+				 WHERE object_definition_id = CAST(#{item.objectDefinitionId} AS numeric(16,0))
+			]]>
+		</foreach>
+	</update>
+	
+	<delete id="deleteBeforModifyInputBean">
+			DELETE
+			FROM validation_check_detail a
+			WHERE EXISTS
+						(
+							SELECT b.input_bean_id
+							FROM input_bean b
+							WHERE 
+								b.business_logic_id = #{businessLogicId}
+						 		and b.input_bean_id = a.input_bean_id 
+						 );
+			
+	
+			delete 
+			from input_bean 
+			where 
+				business_logic_id = #{businessLogicId}
+			<if test="inputbeanItems != null and  inputbeanItems.size() > 0 ">
+				and input_bean_id not in 
+				<foreach item="item" index="index" collection="inputbeanItems" open="(" separator="," close=")">
+						CAST(#{item.inputBeanId} AS numeric(16,0))
+				</foreach>
+			</if>
+	</delete>
+	
+	<delete id="deleteBeforModifyOutputBean">
+		<!-- Adding HungHX -->
+   		DELETE
+   		FROM outputbean_screenitem_mapping a
+   		WHERE EXISTS 
+		(
+			SELECT b.output_bean_id
+			FROM output_bean b
+  				WHERE 
+  					b.business_logic_id = #{businessLogicId}
+			   		and a.output_bean_id = b.output_bean_id
+				)
+		;
+		
+   		delete 
+   		from output_bean 
+   		where 
+   			business_logic_id = #{businessLogicId}
+   		<if test="outputbeanItems != null and  outputbeanItems.size() > 0 ">
+			and output_bean_id not in 
+			<foreach item="item" index="index" collection="outputbeanItems" open="(" separator="," close=")">
+					CAST(#{item.outputBeanId} AS numeric(16,0))
+			</foreach>
+		   </if>
+	</delete>
+	
+	<delete id="deleteBeforModifyObjectDefinition">
+			delete 
+			from object_definition 
+			where 
+				business_logic_id = #{businessLogicId}
+			<if test="objectDefinitionItems != null and  objectDefinitionItems.size() > 0 ">
+				and object_definition_id not in 
+				<foreach item="item" index="index" collection="objectDefinitionItems" open="(" separator="," close=")">
+						CAST(#{item.objectDefinitionId} AS numeric(16,0))
+				</foreach>
+			</if>
+	</delete>
+	
+	<delete id="deleteSequenceByBlogicId">
+			delete
+  			FROM sequence_connector
+			where EXISTS  
+				(
+					select sequence_logic.sequence_logic_id
+					from sequence_logic
+					where 
+						sequence_logic.business_logic_id = #{businessLogicId} and 
+						sequence_logic.sequence_logic_id = sequence_connector.connector_source
+				);
+			delete
+			FROM sequence_logic
+			where business_logic_id = #{businessLogicId}; 
+	</delete>
+	
+	<delete id="deleteSequenceAndComponentByBlogicId">
+            <!-- delete bd_parameter_index -->
+            DELETE 
+            FROM bd_parameter_index
+            WHERE business_logic_id = #{businessLogicId};
+			<!-- delete transaction -->
+			DELETE 
+			FROM transaction_component a
+			WHERE EXISTS
+				( 
+				SELECT b.sequence_logic_id
+				FROM sequence_logic b
+				WHERE b.business_logic_id = #{businessLogicId}
+					AND b.component_type = 18
+					AND b.sequence_logic_id = a.sequence_logic_id
+				);
+            <!-- delete download file-->
+            DELETE 
+            FROM download_file_component a
+            WHERE EXISTS
+                ( 
+                SELECT b.sequence_logic_id
+                FROM sequence_logic b
+                WHERE b.business_logic_id = #{businessLogicId}
+                    AND b.component_type = 23
+                    AND b.sequence_logic_id = a.sequence_logic_id
+                );
+            <!-- delete email -->
+            DELETE
+            FROM email_recipient a
+            WHERE EXISTS
+                (SELECT b.email_component_id
+                 FROM email_component b
+                 INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+                                                 AND c.component_type = 20)
+                 WHERE c.business_logic_id =  #{businessLogicId}
+                   AND b.email_component_id = a.email_component_id);
+                   
+            DELETE
+            FROM email_content a
+            WHERE EXISTS
+                (SELECT b.email_component_id
+                 FROM email_component b
+                 INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+                                                 AND c.component_type = 20)
+                 WHERE c.business_logic_id =  #{businessLogicId}
+                   AND b.email_component_id = a.email_component_id);
+                   
+            DELETE 
+            FROM email_component a
+            WHERE EXISTS
+                ( 
+                SELECT b.sequence_logic_id
+                FROM sequence_logic b
+                WHERE b.business_logic_id = #{businessLogicId}
+                    AND b.component_type = 20
+                    AND b.sequence_logic_id = a.sequence_logic_id
+                );
+            <!-- delete utility -->
+            DELETE 
+            FROM utility_component a
+            WHERE EXISTS
+                ( 
+                SELECT b.sequence_logic_id
+                FROM sequence_logic b
+                WHERE b.business_logic_id = #{businessLogicId}
+                    AND b.component_type = 22
+                    AND b.sequence_logic_id = a.sequence_logic_id
+                );
+            <!-- delete log -->
+            DELETE 
+            FROM log_component a
+            WHERE EXISTS
+                ( 
+                SELECT b.sequence_logic_id
+                FROM sequence_logic b
+                WHERE b.business_logic_id = #{businessLogicId}
+                    AND b.component_type = 21
+                    AND b.sequence_logic_id = a.sequence_logic_id
+                );
+			<!-- delete export file -->
+			DELETE
+			FROM file_format a
+			WHERE EXISTS
+				(SELECT b.export_file_component_id
+				 FROM export_file_component b
+				 INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+												 AND c.component_type = 17)
+				 WHERE c.business_logic_id =  #{businessLogicId}
+				   AND b.export_file_component_id = a.file_id
+                   AND a.file_type = 1);
+	 		DELETE 
+			FROM column_file_format a
+			WHERE EXISTS
+				(SELECT b.export_assign_value_id
+				 FROM export_assign_value b
+				 INNER JOIN export_file_component d ON b.export_file_component_id = d.export_file_component_id
+				 INNER JOIN sequence_logic c ON (c.sequence_logic_id = d.sequence_logic_id
+												 AND c.component_type = 17)
+				 WHERE c.business_logic_id =  #{businessLogicId}
+				   AND b.export_file_component_id = d.export_file_component_id
+				   AND a.export_assign_value_id = b.export_assign_value_id);
+				   
+	 		DELETE 
+			FROM export_assign_value a
+			WHERE EXISTS
+				(SELECT b.export_file_component_id
+				 FROM export_file_component b
+				 INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+												 AND c.component_type = 17)
+				 WHERE c.business_logic_id =  #{businessLogicId}
+				   AND b.export_file_component_id = a.export_file_component_id);
+				   
+	 		DELETE 
+			FROM export_file_component a
+			WHERE EXISTS
+				( 
+				SELECT b.sequence_logic_id
+				FROM sequence_logic b
+				WHERE b.business_logic_id = #{businessLogicId}
+					AND b.component_type = 17
+					AND b.sequence_logic_id = a.sequence_logic_id
+				);
+			<!-- delete import file -->
+			DELETE
+			FROM file_format a
+			WHERE EXISTS
+				(SELECT b.import_file_component_id
+				 FROM import_file_component b
+				 INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+												 AND c.component_type = 16)
+				 WHERE c.business_logic_id =  #{businessLogicId}
+				   AND b.import_file_component_id = a.file_id
+                   AND a.file_type = 0);
+	 		DELETE 
+			FROM import_assign_value a
+			WHERE EXISTS
+				(SELECT b.import_file_component_id
+				 FROM import_file_component b
+				 INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+												 AND c.component_type = 16)
+				 WHERE c.business_logic_id =  #{businessLogicId}
+				   AND b.import_file_component_id = a.import_file_component_id);
+				   
+	 		DELETE 
+			FROM import_file_component a
+			WHERE EXISTS
+				( 
+				SELECT b.sequence_logic_id
+				FROM sequence_logic b
+				WHERE b.business_logic_id = #{businessLogicId}
+					AND b.component_type = 16
+					AND b.sequence_logic_id = a.sequence_logic_id
+				);
+			<!-- delete file operation -->
+			DELETE
+			FROM merge_file_detail a
+			WHERE EXISTS
+				(SELECT b.fileoperation_component_id
+				 FROM fileoperation_component b
+				 INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+												 AND c.component_type = 15)
+				 WHERE c.business_logic_id =  #{businessLogicId}
+				   AND b.fileoperation_component_id = a.fileoperation_component_id);
+				   
+	 		DELETE 
+			FROM fileoperation_component a
+			WHERE EXISTS
+				( 
+				SELECT b.sequence_logic_id
+				FROM sequence_logic b
+				WHERE b.business_logic_id = #{businessLogicId}
+					AND b.component_type = 15
+					AND b.sequence_logic_id = a.sequence_logic_id
+				);
+			<!-- delete advance -->
+			DELETE
+			FROM advance_input_value a
+			WHERE EXISTS
+				(SELECT b.advance_component_id
+				 FROM advance_component b
+				 INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+												 AND c.component_type = 6)
+				 WHERE c.business_logic_id =  #{businessLogicId}
+				   AND b.advance_component_id = a.advance_component_id);
+			
+			DELETE
+			FROM advance_output_value a
+			WHERE EXISTS
+				(SELECT b.advance_component_id
+				 FROM advance_component b
+				 INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+												 AND c.component_type = 6)
+				 WHERE c.business_logic_id =  #{businessLogicId}
+				   AND b.advance_component_id = a.advance_component_id);
+				   
+			DELETE 
+			FROM advance_component a
+			WHERE EXISTS
+				( 
+				SELECT b.sequence_logic_id
+				FROM sequence_logic b
+				WHERE b.business_logic_id = #{businessLogicId}
+					AND b.component_type = 6
+					AND b.sequence_logic_id = a.sequence_logic_id
+				);
+			<!-- delete nestedlogic -->
+			DELETE 
+			FROM nestedlogic_component a
+			WHERE EXISTS
+				( 
+				SELECT b.sequence_logic_id
+				FROM sequence_logic b
+				WHERE b.business_logic_id = #{businessLogicId}
+					AND b.component_type = 14
+					AND b.sequence_logic_id = a.sequence_logic_id
+				);
+	
+			<!-- delete execution -->
+			DELETE
+			FROM execution_input_value a
+			WHERE EXISTS
+				(SELECT b.execution_component_id
+				 FROM execution_component b
+				 INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+												 AND c.component_type = 2)
+				 WHERE c.business_logic_id =  #{businessLogicId}
+				   AND b.execution_component_id = a.execution_component_id);
+			
+			DELETE
+			FROM execution_output_value a
+			WHERE EXISTS
+				(SELECT b.execution_component_id
+				 FROM execution_component b
+				 INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+												 AND c.component_type = 2)
+				 WHERE c.business_logic_id =  #{businessLogicId}
+				   AND b.execution_component_id = a.execution_component_id);
+				   
+			DELETE 
+			FROM execution_component a
+			WHERE EXISTS
+				( 
+				SELECT b.sequence_logic_id
+				FROM sequence_logic b
+				WHERE b.business_logic_id = #{businessLogicId}
+					AND b.component_type = 2
+					AND b.sequence_logic_id = a.sequence_logic_id
+				);
+			<!-- delete business check -->
+			DELETE
+	  		FROM business_detail_content a
+			WHERE EXISTS
+				(SELECT b.business_check_detail_id
+				 FROM business_check_detail b
+				 INNER JOIN business_check_component c
+				 on (c.business_check_component_id = b.business_check_component_id )
+				 INNER JOIN sequence_logic d
+				 on (d.sequence_logic_id = c.sequence_logic_id)
+				 WHERE d.business_logic_id = #{businessLogicId}
+				   AND d.component_type = 4
+				   AND b.business_check_detail_id = a.business_check_detail_id);
+			
+			DELETE
+	  		FROM business_check_detail a
+			WHERE EXISTS
+				(SELECT b.business_check_component_id
+				 FROM  business_check_component b
+				 INNER JOIN sequence_logic c
+				 on (c.sequence_logic_id = b.sequence_logic_id)
+				 WHERE c.business_logic_id = #{businessLogicId}
+				   AND c.component_type = 4
+				   AND b.business_check_component_id = a.business_check_component_id);
+			
+			DELETE
+	  		FROM business_check_component a
+			WHERE EXISTS
+				( 
+				SELECT b.sequence_logic_id
+		 		FROM sequence_logic b
+		 		WHERE b.business_logic_id = #{businessLogicId}
+		   			AND component_type = 4
+		   			AND b.sequence_logic_id = a.sequence_logic_id
+		   		);
+			<!-- delete validation check -->
+			
+   			DELETE
+			FROM validation_check_detail a
+			WHERE EXISTS
+						(
+							SELECT b.input_bean_id
+							FROM input_bean b
+							WHERE 
+								b.business_logic_id = #{businessLogicId}
+						 		and b.input_bean_id = a.input_bean_id 
+						 );
+			<!-- delete assign -->
+			DELETE
+			FROM assign_detail a
+			WHERE EXISTS
+				(SELECT b.assign_component_id
+				 FROM assign_component b
+				 INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+												 AND c.component_type = 8)
+				 WHERE c.business_logic_id = #{businessLogicId}
+				   AND b.assign_component_id = a.assign_component_id);
+				   
+			DELETE 
+			FROM assign_component a
+			WHERE EXISTS
+				( 
+				SELECT b.sequence_logic_id
+		 		FROM sequence_logic b
+		 		WHERE b.business_logic_id = #{businessLogicId}
+		   			AND b.component_type = 8
+		   			AND b.sequence_logic_id = a.sequence_logic_id
+		   		);
+			<!-- delete detail of decision component-->
+			DELETE
+			FROM decision_input_value a
+			WHERE EXISTS
+				(SELECT b.decision_component_id
+				 FROM decision_component b
+				 INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+												 AND c.component_type = 5)
+				 WHERE c.business_logic_id =  #{businessLogicId}
+				   AND b.decision_component_id = a.decision_component_id);
+			
+			DELETE
+			FROM decision_output_value a
+			WHERE EXISTS
+				(SELECT b.decision_component_id
+				 FROM decision_component b
+				 INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+												 AND c.component_type = 5)
+				 WHERE c.business_logic_id =  #{businessLogicId}
+				   AND b.decision_component_id = a.decision_component_id);
+			
+			<!-- delete decision component -->
+			DELETE 
+			FROM decision_component a
+			WHERE EXISTS
+				( 
+				SELECT b.sequence_logic_id
+		 		FROM sequence_logic b
+		 		WHERE b.business_logic_id = #{businessLogicId}
+		   			AND b.component_type = 5
+		   			AND b.sequence_logic_id = a.sequence_logic_id
+		   		);
+			<!-- delete detail of loop component-->
+			DELETE 
+			FROM loop_component a
+			WHERE EXISTS
+				( 
+				SELECT b.sequence_logic_id
+		 		FROM sequence_logic b
+		 		WHERE b.business_logic_id = #{businessLogicId}
+		   			AND b.component_type = 10
+		   			AND b.sequence_logic_id = a.sequence_logic_id
+		   		);
+			
+			<!-- delete detail of common component-->
+			DELETE
+			FROM common_input_value a
+			WHERE EXISTS
+				(SELECT b.common_component_id
+				 FROM common_component b
+				 INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+												 AND c.component_type = 7)
+				 WHERE c.business_logic_id =  #{businessLogicId}
+				   AND b.common_component_id = a.common_component_id);
+			
+			DELETE
+			FROM common_output_value a
+			WHERE EXISTS
+				(SELECT b.common_component_id
+				 FROM common_component b
+				 INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+												 AND c.component_type = 7)
+				 WHERE c.business_logic_id =  #{businessLogicId}
+				   AND b.common_component_id = a.common_component_id);
+			
+			<!-- delete common component -->
+			DELETE 
+			FROM common_component a
+			WHERE EXISTS
+				( 
+				SELECT b.sequence_logic_id
+		 		FROM sequence_logic b
+		 		WHERE b.business_logic_id = #{businessLogicId}
+		   			AND b.component_type = 7
+		   			AND b.sequence_logic_id = a.sequence_logic_id
+		   		);
+			<!-- delete navigator detail condition -->
+			DELETE
+			FROM navigator_detail a
+			WHERE EXISTS
+				(SELECT b.navigator_component_id
+				 FROM navigator_component b
+				 INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+												 AND c.component_type = 12)
+				 WHERE c.business_logic_id =  #{businessLogicId}
+				   AND b.navigator_component_id = a.navigator_component_id);
+			<!-- delete navigator condition -->
+			DELETE 
+			FROM navigator_component a
+			WHERE EXISTS
+				( 
+				SELECT b.sequence_logic_id
+		 		FROM sequence_logic b
+		 		WHERE b.business_logic_id = #{businessLogicId}
+		   			AND b.component_type = 12
+		   			AND b.sequence_logic_id = a.sequence_logic_id
+		   		);
+            <!-- delete exception detail condition -->
+            DELETE
+            FROM exception_detail a
+            WHERE EXISTS
+                (SELECT b.exception_component_id
+                 FROM exception_component b
+                 INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+                                                 AND c.component_type = 24)
+                 WHERE c.business_logic_id =  #{businessLogicId}
+                   AND b.exception_component_id = a.exception_component_id);
+            <!-- delete exception condition -->
+            DELETE 
+            FROM exception_component a
+            WHERE EXISTS
+                ( 
+                SELECT b.sequence_logic_id
+                FROM sequence_logic b
+                WHERE b.business_logic_id = #{businessLogicId}
+                    AND b.component_type = 24
+                    AND b.sequence_logic_id = a.sequence_logic_id
+                );
+			<!-- delete if condition -->
+			DELETE
+			FROM if_condition_detail a
+			WHERE EXISTS
+				(SELECT b.if_component_id
+				 FROM if_component b
+				 INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+												 AND c.component_type = 9)
+				 WHERE c.business_logic_id = #{businessLogicId}
+				   AND b.if_component_id = a.if_component_id);
+			<!-- delete if component -->
+			DELETE 
+			FROM if_component a
+			WHERE EXISTS
+				( 
+				SELECT b.sequence_logic_id
+		 		FROM sequence_logic b
+		 		WHERE b.business_logic_id = #{businessLogicId}
+		   			AND b.component_type = 9
+		   			AND b.sequence_logic_id = a.sequence_logic_id
+		   		);
+	
+			<!-- delete parameter feedback -->
+			DELETE
+			FROM message_parameter a
+			WHERE a.business_logic_id = #{businessLogicId};
+			<!-- delete feedback component -->
+			delete 
+			FROM feedback_component fc
+			WHERE EXISTS
+				( 
+				SELECT sl.sequence_logic_id
+		 		FROM sequence_logic sl
+		 		WHERE sl.business_logic_id = #{businessLogicId}
+		   			AND component_type = 11
+		   			AND sl.sequence_logic_id = fc.sequence_logic_id
+		   		);
+			
+			delete
+  			FROM sequence_connector
+			where EXISTS  
+				(
+					select sequence_logic.sequence_logic_id
+					from sequence_logic
+					where 
+						sequence_logic.business_logic_id = #{businessLogicId} and 
+						sequence_logic.sequence_logic_id = sequence_connector.connector_source
+				);
+			delete
+			FROM sequence_logic
+			where business_logic_id = #{businessLogicId}; 
+	</delete>
+	
+	<delete id="deleteObjectDefinitionAndSequenceLogic">
+			DELETE 
+			FROM object_definition 
+			WHERE 
+				business_logic_id = #{businessLogicId};
+				
+			DELETE
+  			FROM sequence_connector
+			WHERE EXISTS  
+				(
+					select sequence_logic.sequence_logic_id
+					from sequence_logic
+					where 
+						sequence_logic.business_logic_id = #{businessLogicId} and 
+						sequence_logic.sequence_logic_id = sequence_connector.connector_source
+				);
+			delete
+			FROM sequence_logic
+			where business_logic_id = #{businessLogicId}; 
+  				
+			
+	</delete>
+	
+	  <delete id="deleteBusinessDesign">
+			DELETE 
+			FROM input_bean 
+			WHERE 
+				business_logic_id = #{businessLogicId};
+				
+			DELETE
+	   		FROM outputbean_screenitem_mapping a
+	   		WHERE EXISTS 
+			(
+				SELECT b.output_bean_id
+				FROM output_bean b
+	  				WHERE 
+	  					b.business_logic_id = #{businessLogicId}
+						and a.output_bean_id = b.output_bean_id
+					)
+			;
+			
+			DELETE 
+			FROM output_bean 
+			WHERE 
+				business_logic_id = #{businessLogicId};
+			
+			DELETE 
+			FROM object_definition 
+			WHERE 
+				business_logic_id = #{businessLogicId};
+				
+			DELETE
+  			FROM sequence_connector
+			WHERE EXISTS  
+				(
+					select sequence_logic.sequence_logic_id
+					from sequence_logic
+					where 
+						sequence_logic.business_logic_id = #{businessLogicId} and 
+						sequence_logic.sequence_logic_id = sequence_connector.connector_source
+				);
+				
+			DELETE
+			FROM sequence_logic
+			where business_logic_id = #{businessLogicId};
+			
+			DELETE 
+			FROM upload_file uf
+			WHERE 
+				EXISTS  
+				(
+					select bl.upload_file_id 
+					from business_logic bl
+					where bl.customize_flg = true
+						and bl.business_logic_id = #{businessLogicId} 
+						and uf.upload_file_id = bl.upload_file_id
+				);
+				
+			DELETE 
+			FROM business_logic 
+			WHERE 
+				business_logic_id = #{businessLogicId};
+			
+	</delete>
+	  <select id="findBusinessLoginByScreenId" parameterType="_long" resultMap="businessDesignResultMap">
+		<![CDATA[
+			SELECT
+				a.business_logic_id,
+				a.business_logic_code,
+				a.business_logic_name,
+				a.return_type,
+				a.screen_id,
+				a.module_id,
+				a.project_id,
+				a.customize_flg,
+				a.upload_file_Id,
+				a.created_by,
+				a.created_date,
+				a.updated_by,
+				a.updated_date,
+				b.module_name as module_name,
+				f.file_name as file_name,
+				f.content as content,
+				a.remark,
+                acc.username,
+                a.http_status
+			FROM 
+				business_logic a
+			LEFT JOIN
+				module b ON a.module_id = b.module_id
+			LEFT JOIN 
+				upload_file f ON a.upload_file_id = f.upload_file_id
+            LEFT JOIN account acc ON (acc.account_id = a.created_by)
+			WHERE
+				a.screen_id = #{screenId} 
+			AND a.return_type = 0 and a.blogic_type = 0
+		]]>
+	</select>
+	<!-- // Daipv -->
+	<select id="findAllBlogicProcessByScreenId" parameterType="_long" resultMap="businessDesignResultMap">
+		<![CDATA[
+			SELECT b.business_logic_id
+			FROM business_logic b
+			WHERE b.screen_id = #{screenId}
+				  AND design_mode = 0 and blogic_type = 0 and return_type = 1 and request_method = 4
+		]]>
+	</select>
+	<select id="findAllBLogicProcessToNavigatorByScreenId" parameterType="_long" resultMap="businessDesignResultMap">
+		<![CDATA[
+			SELECT 
+			     bl.business_logic_id AS business_logic_id, 
+			     bl.module_id AS module_id,
+			     bl.business_logic_code AS business_logic_code, 
+			     bl.business_logic_name AS business_logic_name
+			FROM business_logic bl
+			INNER JOIN sequence_logic sl ON bl.business_logic_id = sl.business_logic_id
+			INNER JOIN navigator_component nc  ON sl.sequence_logic_id = nc.sequence_logic_id
+			WHERE 
+			EXISTS
+			(
+			 SELECT a.business_logic_id
+			 FROM business_logic a
+			 WHERE a.screen_id = #{screenId}
+			 AND nc.navigator_to_id = a.business_logic_id
+			)  
+		]]>
+	</select>	
+	<select id="findAllBlogicInitByScreenId" parameterType="_long" resultMap="businessDesignResultMap">
+		<![CDATA[
+			SELECT b.business_logic_id
+			FROM business_logic b
+			WHERE b.screen_id = #{screenId}
+				AND design_mode = 0 and blogic_type = 0 and return_type = 0
+		]]>
+	</select>
+	  <select id="findBusinessLogicsByScreenId" parameterType="_long" resultMap="businessDesignResultMap">
+		<![CDATA[
+			SELECT
+				a.business_logic_id,
+				a.business_logic_code,
+				a.business_logic_name,
+				a.return_type,
+				a.screen_id,
+				a.module_id,
+				a.project_id,
+				a.customize_flg,
+				a.upload_file_Id,
+				a.created_by,
+				a.created_date,
+				a.updated_by,
+				a.updated_date,
+				b.module_name as module_name,
+				f.file_name as file_name,
+				f.content as content,
+				a.remark,
+				a.screen_form_id,
+				a.pattern_type,
+                acc.username,
+                a.http_status
+			FROM 
+				business_logic a
+			LEFT JOIN
+				module b ON a.module_id = b.module_id
+			LEFT JOIN 
+				upload_file f ON a.upload_file_id = f.upload_file_id
+            LEFT JOIN account acc ON (acc.account_id = a.created_by)
+			WHERE
+				a.screen_id = #{screenId} 
+		]]>
+	</select>
+	<select id="findScreenAreaByScreenId" resultMap="screenAreaResultMap">
+		<![CDATA[
+			SELECT 
+				sa.screen_area_id,
+				md.message_string,
+				sa.message_code
+			FROM screen_area sa
+			LEFT JOIN message_design md 
+				ON (sa.message_code = md.message_code AND md.language_id = #{languageId})
+			WHERE sa.screen_id = #{screenId}
+				AND area_type >= 0
+		]]>
+	</select>
+	<select id="findScreenValidationByScreenId" resultMap="itemValidationResultMap">
+		<![CDATA[
+			SELECT 
+				si.screen_area_id,
+				si.screen_item_id,
+				si.item_code,
+				siv.maxlength,
+				siv.mandatory_flg,
+				siv.min_val,
+				siv.max_val,
+				siv.fmt_code,
+				md.message_string,
+				si.message_code,
+				c.screen_form_id,
+				c.form_code,
+				b.message_string AS area_name,
+				b.area_type
+			FROM screen_item si
+			LEFT JOIN message_design md 
+				ON (si.message_code = md.message_code AND md.language_id = #{languageId} and  md.project_id = #{projectId})
+			LEFT JOIN screen_item_validation siv 
+				ON (siv.screen_item_id = si.screen_item_id)
+			LEFT JOIN 
+			(
+				select 
+					b2.message_string,
+					b1.area_type,
+					b1.screen_area_id,
+					b1.screen_form_id 
+				from screen_area b1
+				left join message_design b2 on (b1.message_code = b2.message_code and  b2.language_id = #{languageId})
+			) b 
+				ON si.screen_area_id = b.screen_area_id
+			LEFT JOIN screen_form c 
+				ON b.screen_form_id = c.screen_form_id
+			WHERE si.item_type != 2 and EXISTS
+			(
+				select screen_item_id 
+				from input_bean inb
+				where inb.business_logic_id = #{businessLogicId}
+				and inb.screen_item_id = si.screen_item_id
+			)
+			ORDER BY c.screen_form_id, si.screen_area_id,si.item_seq_no
+		]]>
+	</select>
+	
+	
+	
+	<!-- find message for input name,outputname-->
+	<select id="getAutocompleteForBeanName" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+			message_code AS optionValue,
+			message_string AS optionLabel
+		FROM
+			message_design
+		WHERE
+			(	message_level = 5  
+			<if test="arg03 != null and arg03 != ''">
+				AND project_id = cast(#{arg03} as numeric) and module_id is null
+			</if>
+			)
+			<if test="arg01 != null and arg01 != ''">
+				OR (module_id = cast(#{arg01} as numeric)  and message_level = 5 )
+			</if> 
+			<if test="searchKey != null and searchKey != ''">
+				<![CDATA[
+					AND message_string iLIKE '%' || #{searchKey} || '%'
+				]]>
+			</if>
+			<if test="languageCode != null and languageCode != ''">
+				<![CDATA[ AND language_id = #{languageId} ]]>
+			</if>
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+		<if test="arg02 == null || arg02 == ''">
+			LIMIT 20
+		</if>
+	</select>
+	
+	<select id="getAutocompleteGetTableForBD" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+			td.tbl_design_id AS optionValue,
+			td.tbl_design_name AS optionLabel,
+			td.tbl_design_code AS output01
+		FROM 
+			table_design td
+		<where>
+			<if test="searchKey != null and searchKey != ''">
+				AND td.tbl_design_name iLIKE '%' || #{searchKey} || '%'
+			</if>
+			<if test="arg01 != null and arg01 != ''">
+				AND td.project_id = CAST(#{arg01} AS NUMERIC)
+			</if>
+		</where>
+		ORDER BY tbl_design_id ASC
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+		<if test="arg02 == null or arg02 == ''">
+			LIMIT 20
+		</if>
+	</select>
+	
+	<select id="getAutocompleteGetCommonObjectForBD" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+			a.common_object_definition_id AS optionValue,
+			a.common_object_definition_name AS optionLabel,
+			a.common_object_definition_code AS output01,
+			a.module_id AS output02
+		FROM 
+			common_object_definition a
+		<where>
+			<if test="searchKey != null and searchKey != ''">
+				AND a.common_object_definition_name iLIKE '%' || #{searchKey} || '%'
+			</if>
+			<if test="arg01 != null and arg01 != ''">
+				<![CDATA[
+					AND a.project_id = CAST(#{arg01} AS numeric(16,0))
+				]]>
+			</if>
+			<if test="arg01 == null or arg01 == ''">
+				FALSE
+			</if>
+			<if test="arg03 != null and arg03 != ''">
+				AND (a.module_id is NULL OR a.module_id = CAST(#{arg03} AS numeric(16,0)))
+			</if>
+			<if test="arg03 == null or arg03 == ''">
+				AND a.module_id is NULL
+			</if>
+		</where>
+		ORDER BY common_object_definition_id ASC
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+		<if test="arg02 == null or arg02 == ''">
+			LIMIT 20
+		</if>
+	</select>
+	
+	<select id="getAutocompleteSession" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+			session_management_id AS optionValue,
+			session_management_name AS optionLabel,
+			session_management_code AS output01,
+            data_type AS output04,
+            array_flg AS output05
+		FROM 
+			session_management
+		<where>
+			<if test="searchKey != null and searchKey != ''">
+				AND session_management_name iLIKE '%' || #{searchKey} || '%'
+			</if>
+			<if test="arg01 != null and arg01 != ''">
+				<![CDATA[
+					AND project_id = CAST(#{arg01} AS numeric(16,0))
+				]]>
+			</if>
+			<if test="arg01 == null or arg01 == ''">
+				FALSE
+			</if>
+		</where>
+		ORDER BY session_management_id ASC
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+		<if test="arg02 == null or arg02 == ''">
+			LIMIT 20
+		</if>
+	</select>
+	
+	<select id="getAutocompleteGetExternalObjectForBD" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+			a.external_object_definition_id AS optionValue,
+			a.external_object_definition_name AS optionLabel,
+			a.external_object_definition_code AS output01,
+			a.module_id AS output02
+		FROM 
+			external_object_definition a
+		<where>
+			<if test="searchKey != null and searchKey != ''">
+				AND a.external_object_definition_name iLIKE '%' || #{searchKey} || '%'
+			</if>
+			<if test="arg01 != null and arg01 != ''">
+				<![CDATA[
+					AND a.project_id = CAST(#{arg01} AS numeric(16,0))
+				]]>
+			</if>
+			<if test="arg01 == null or arg01 == ''">
+				FALSE
+			</if>
+			<if test="arg03 != null and arg03 != ''">
+				AND (a.module_id is NULL OR a.module_id = CAST(#{arg03} AS numeric(16,0)))
+			</if>
+			<if test="arg03 == null or arg03 == ''">
+				AND a.module_id is NULL
+			</if>
+		</where>
+		ORDER BY external_object_definition_id ASC
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+		<if test="arg02 == null or arg02 == ''">
+			LIMIT 20
+		</if>
+	</select>
+	
+	<select id="getAutocompleteGetComlumnForBD" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+			td.column_id AS optionValue,
+			td.column_name AS optionLabel,
+			td.column_code AS output01,
+			td.java_type AS output02
+		FROM 
+			table_design_details td
+		<where>
+			<if test="searchKey != null and searchKey != ''">
+				AND td.column_name iLIKE '%' || #{searchKey} || '%'
+			</if>
+			<if test="arg02 != null and arg02 != ''">
+				AND td.tbl_design_id = CAST(#{arg02} AS NUMERIC)
+			</if>
+			<if test="arg02 == null or arg02 == ''">
+				AND FALSE
+			</if>
+		</where>
+		ORDER BY td.column_id ASC
+		<if test="arg01 != null and arg01 != ''">
+			LIMIT CAST(#{arg01} AS NUMERIC)
+		</if>
+		<if test="arg01 == null or arg01 == ''">
+			LIMIT 20
+		</if>
+	</select>
+	<select id="getAutocompleteGetScreenNameForBD" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT 
+			a.screen_id AS optionValue,
+			b.message_string AS optionLabel
+		FROM screen_design a
+		LEFT JOIN message_design b on a.message_code = b.message_code and b.language_id = #{languageId}
+		INNER JOIN module c on c.module_id = a.module_id
+		<where>
+			a.design_mode = 2
+			<if test="searchKey != null and searchKey != ''">
+				AND b.message_string iLIKE '%' || #{searchKey} || '%'
+			</if>
+			<if test="arg01 != null and arg01 != ''">
+				AND c.project_id = CAST(#{arg01} AS NUMERIC)
+			</if>
+		</where>
+		ORDER BY screen_id ASC
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+		<if test="arg02 == null or arg02 == ''">
+			LIMIT 20
+		</if>
+	</select>
+	
+	<select id="getColumnsByTableIdForBD" resultMap="tableDesignDetailsResultMap" >
+		SELECT
+			a.column_id, 
+			a.tbl_design_id, 
+			a.column_name, 
+			a.column_code, 
+			b.base_type,
+			a.item_seq_no
+		FROM
+			table_design_details a LEFT JOIN domain_design b ON  a.data_type = b.domain_id
+		WHERE 
+			a.tbl_design_id = #{tableId} AND a.data_type_flg = 1
+		UNION ALL
+		SELECT
+			a.column_id, 
+			a.tbl_design_id, 
+			a.column_name, 
+			a.column_code, 
+			a.data_type AS base_type,
+			a.item_seq_no
+		FROM
+			table_design_details a
+		LEFT JOIN
+			resources b
+		ON
+			b.category_cd = 'clBasetype'
+		AND
+			a.data_type = CAST (b.value2 AS NUMERIC)
+		WHERE 
+			a.tbl_design_id = #{tableId}
+		AND
+			a.data_type_flg = 0
+		ORDER BY item_seq_no
+		
+	</select>
+	
+	<select id="getScreenItemOutputByScreenIdForBD" resultMap="screenItemOutputResultMap" >
+		SELECT 
+			a.screen_item_id,
+			c.screen_form_id,
+			c.form_code,
+			a.screen_area_id,
+			b.message_string AS area_name,
+			b.area_type,
+			a.item_code AS item_name,
+			a.physical_data_type,
+			a.logical_data_type,
+			a.column_id,
+			a.data_source_type,
+			a.from_to
+		FROM screen_item a
+		LEFT JOIN 
+		(
+			select 
+				b2.message_string,
+				b1.area_type,
+				b1.screen_area_id,
+				b1.screen_form_id
+			from screen_area b1
+			left join message_design b2 
+				on (b1.message_code = b2.message_code and  b2.language_id = #{languageId} and b2.project_id = #{projectId})
+		) b ON a.screen_area_id = b.screen_area_id
+		LEFT JOIN screen_form c ON b.screen_form_id = c.screen_form_id
+		WHERE 
+			a.screen_id = #{screenId}
+				AND
+				(
+					(
+						a.logical_data_type != 20 AND a.logical_data_type != 13 AND a.logical_data_type != 11 
+						<if test="type == 0">
+						AND a.logical_data_type != 21  AND a.logical_data_type != 22
+						</if>
+					)
+					OR 
+					(a.item_type =2)
+				)
+			AND b.area_type != -1
+
+			ORDER BY c.screen_form_id, a.screen_area_id,a.item_seq_no
+	</select>
+	
+	<update id="modifyDesignStatus" parameterType="BusinessDesign">
+		<![CDATA[
+			UPDATE business_logic
+	   		SET 
+		   		design_status = #{designStatus}, 
+		   		updated_by = #{updatedBy}, 
+		   		updated_date = #{sysDatetime}
+	 		WHERE
+	 			business_logic_id = #{businessLogicId}
+	 		AND
+				updated_date = #{updatedDate}
+		]]>
+	</update>
+	
+	<update id="switchDesignStatusToUnderDesign">
+		UPDATE business_logic
+		SET design_status = 1
+		WHERE
+			business_logic_id IN 
+				<foreach item="item" index="index" collection="businessLogics" open="(" separator="," close=")">
+					#{item.businessLogicId}
+				</foreach>
+	</update>
+	
+	<update id="changeNameAndCodeOutputBean">
+		<foreach collection="tableDesigns" item="tableDesign" separator=";">
+			UPDATE
+				output_bean
+			SET
+				output_bean_code = #{tableDesign.tableCode},
+				output_bean_name = #{tableDesign.tableName}
+			WHERE 
+				tbl_design_id = #{tableDesign.tableDesignId}
+				AND column_id IS NULL;
+			<foreach collection="tableDesign.listTableDesignDetails" item="detail" separator=";">
+				UPDATE
+					output_bean
+				SET
+					output_bean_name = #{detail.name}
+				WHERE 
+					column_id = #{detail.columnId};
+			</foreach>
+		</foreach>
+	</update>
+	
+	<update id="changeNameAndCodeObjectDefinition">
+		<foreach collection="tableDesigns" item="tableDesign" separator=";">
+			UPDATE
+				object_definition
+			SET
+				object_definition_code = #{tableDesign.tableCode},
+				object_definition_name = #{tableDesign.tableName}
+			WHERE 
+				tbl_design_id = #{tableDesign.tableDesignId}
+				AND column_id IS NULL;
+			<foreach collection="tableDesign.listTableDesignDetails" item="detail" separator=";">
+				UPDATE
+					object_definition
+				SET
+					object_definition_name = #{detail.name}
+				WHERE 
+					column_id = #{detail.columnId};
+			</foreach>
+		</foreach>
+	</update>
+	
+		
+	  <!-- Finds business logic by module id -->
+	<select id="findBlogicByModuleId" resultMap="businessDesignResultMap">
+		<![CDATA[
+			SELECT
+				a.business_logic_id,
+				a.business_logic_code,
+				a.business_logic_name,
+				a.return_type,
+				a.screen_id,
+				a.module_id,
+				a.project_id,
+				a.customize_flg,
+				a.upload_file_Id,
+				a.design_status,
+				d.message_string,
+				a.remark,
+				fd.function_id,
+				fd.function_type,
+				m.module_type AS module_type,
+				d.message_string,
+                acc.username,
+                a.http_status
+			FROM 
+				business_logic a 
+			LEFT JOIN 
+				screen_design b ON a.screen_id = b.screen_id
+			LEFT JOIN 
+				function_design fd ON a.function_id = fd.function_id
+			LEFT JOIN
+				module m ON m.module_id = a.module_id
+			LEFT JOIN 
+				message_design d ON ( b.message_code = d.message_code and d.language_id = #{languageId} and d.project_id = #{projectId})
+            LEFT JOIN account acc ON (acc.account_id = a.created_by)
+			WHERE 
+				a.module_id = #{moduleId}
+			GROUP BY 
+				a.business_logic_id,a.screen_id,d.message_string,d.message_code,fd.function_id,m.module_id,acc.username
+			ORDER BY
+				a.screen_id
+		]]>
+	</select>
+	
+	<!-- Finds business logic by common business logic id -->
+	<select id="findBlogicByCommonBusinessBlogicId" resultMap="businessDesignResultMap">
+		<![CDATA[
+			SELECT
+				a.business_logic_id,
+				a.business_logic_code,
+				a.business_logic_name,
+				a.return_type,
+				a.screen_id,
+				a.module_id,
+				a.project_id,
+				a.design_status,
+				a.remark,
+				b.module_name,
+                acc.username,
+                a.http_status
+			FROM 
+				business_logic a
+			LEFT JOIN
+				module b
+			on b.module_id = a.module_id
+            LEFT JOIN account acc ON (acc.account_id = a.created_by)
+			WHERE EXISTS
+				(
+					SELECT 
+						a2.business_logic_id
+					FROM common_component a1
+					INNER JOIN sequence_logic a2
+						on (a1.sequence_logic_id = a2.sequence_logic_id)
+					WHERE a1.business_logic_id = #{businessLogicId}
+						AND  a2.business_logic_id = a.business_logic_id
+				)
+			ORDER BY
+				a.business_logic_id
+		]]>
+	</select>
+	
+	<!-- Finds navigator by business logic-->
+	<select id="findBlogicByNavigatorBusinessBlogicId" resultMap="businessDesignResultMap">
+		<![CDATA[
+			SELECT
+				a.business_logic_id,
+				a.business_logic_code,
+				a.business_logic_name,
+				a.return_type,
+				a.screen_id,
+				a.module_id,
+				a.project_id,
+				a.design_status,
+				a.remark,
+				b.module_name
+			FROM 
+				business_logic a
+			LEFT JOIN
+				module b
+			on b.module_id = a.module_id
+			WHERE EXISTS
+				(
+					SELECT 
+						a2.business_logic_id
+					FROM navigator_component a1
+					INNER JOIN sequence_logic a2
+						on (a1.sequence_logic_id = a2.sequence_logic_id)
+					WHERE a1.navigator_to_id = #{businessLogicId}
+						AND  a2.business_logic_id = a.business_logic_id
+						AND a1.navigator_to_type = 1
+				) OR EXISTS
+				(
+					SELECT 
+						a2.business_logic_id
+					FROM exception_component a1
+					INNER JOIN sequence_logic a2
+						on (a1.sequence_logic_id = a2.sequence_logic_id)
+					WHERE a1.exception_to_id = #{businessLogicId}
+						AND a2.business_logic_id = a.business_logic_id
+						AND a1.exception_to_type = 1
+				)
+			ORDER BY
+				a.business_logic_id
+		]]>
+	</select>
+	
+	<select id="findBusinessDesignByProjectIdAutocomplete" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		<![CDATA[
+			SELECT
+				a.business_logic_id as optionValue,
+				a.business_logic_name as optionLabel
+			FROM 
+				business_logic a
+			WHERE
+				a.project_id = cast(#{arg01} as numeric)
+			AND 
+				a.return_type = cast(#{arg02} as numeric)
+		]]>
+		<if test="searchKey != null and searchKey != ''">
+			<![CDATA[
+				AND business_logic_name iLIKE '%' || #{searchKey} || '%'
+			]]>
+			</if>
+		<if test="arg03 != null and arg03 != ''">
+			LIMIT CAST(#{arg03} AS NUMERIC)
+		</if>
+		<if test="arg03 == null || arg03 == ''">
+			LIMIT 20
+		</if>
+	</select>
+	
+	<select id="findColumnInformationOfInputBeans" resultMap="inputbeanResultMap">
+		SELECT 
+			a.input_bean_id,
+			a.screen_item_id,
+			a.input_bean_code,
+			a.input_bean_name,
+			a.data_type,
+			a.array_flg,
+			d.column_name,
+			c.tbl_design_id,
+			c.tbl_design_name,
+			d.display_type,
+			d.autoincrement_flg,
+			a.column_id
+		FROM 
+			input_bean a
+		LEFT JOIN 
+			table_design c ON a.tbl_design_id = c.tbl_design_id
+		LEFT JOIN
+			table_design_details d ON a.column_id = d.column_id
+		<if test="lstInputBeanId != null and  lstInputBeanId.size() > 0 ">
+			WHERE 
+				a.input_bean_id IN
+			<foreach item="status" index="index" collection="lstInputBeanId" open="(" separator="," close=")">
+	   			CAST(#{status.inputBeanId} AS NUMERIC)
+	   		</foreach>
+		</if>
+		ORDER BY
+			a.item_sequence_no
+	</select>
+	
+	<select id="findColumnInformationOfObjectDefition" resultMap="objectdefinitionResultMap">
+		SELECT 
+			a.object_definition_id,
+			a.object_definition_code,
+			a.object_definition_name,
+			a.data_type,
+			a.array_flg,
+			a.column_id,
+			a.item_sequence_no,
+			d.column_name,
+			d.column_code,
+			c.tbl_design_id,
+			c.tbl_design_name,
+			c.tbl_design_code,
+			x.base_type,
+			d.display_type,
+			d.autoincrement_flg
+			FROM 
+				object_definition a
+			LEFT JOIN
+				table_design_details d ON a.column_id = d.column_id
+			LEFT JOIN 
+				table_design c ON d.tbl_design_id = c.tbl_design_id
+			
+			LEFT JOIN domain_design x ON d.data_type = x.domain_id
+			WHERE
+				d.data_type_flg = 1
+			<if test="lstObjectDefitionId != null and  lstObjectDefitionId.size() > 0 ">
+				AND 
+					a.object_definition_id IN
+				<foreach item="status" index="index" collection="lstObjectDefitionId" open="(" separator="," close=")">
+		   			CAST(#{status.objectDefinitionId} AS NUMERIC)
+		   		</foreach>
+			</if>
+		UNION ALL
+		SELECT 
+			a.object_definition_id,
+			a.object_definition_code,
+			a.object_definition_name,
+			a.data_type,
+			a.array_flg,
+			a.column_id,
+			a.item_sequence_no,
+			d.column_name,
+			d.column_code,
+			c.tbl_design_id,
+			c.tbl_design_name,
+			c.tbl_design_code,
+			d.data_type AS base_type,
+			d.display_type,
+			d.autoincrement_flg
+		FROM 
+			object_definition a
+		LEFT JOIN
+			table_design_details d ON a.column_id = d.column_id
+		LEFT JOIN 
+			table_design c ON d.tbl_design_id = c.tbl_design_id
+		LEFT JOIN 
+			resources y ON y.category_cd = 'clBasetype' AND d.data_type = CAST (y.value2 AS NUMERIC)
+		WHERE 
+			d.data_type_flg = 0
+			<if test="lstObjectDefitionId != null and  lstObjectDefitionId.size() > 0 ">
+				AND 
+					a.object_definition_id IN
+				<foreach item="status" index="index" collection="lstObjectDefitionId" open="(" separator="," close=")">
+		   			CAST(#{status.objectDefinitionId} AS NUMERIC)
+		   		</foreach>
+			</if>
+		ORDER BY 
+			tbl_design_id ,item_sequence_no
+	</select>
+	
+	<select id="findColumnInformationOfOutputbean" resultMap="outputbeanResultMap">
+		SELECT 
+			a.output_bean_id,
+			a.output_bean_code,
+			a.output_bean_name,
+			a.data_type,
+			a.array_flg,
+			a.column_id,
+			a.item_sequence_no,
+			d.column_name,
+			d.column_code,
+			c.tbl_design_id,
+			c.tbl_design_name,
+			c.tbl_design_code,
+			x.base_type,
+			d.display_type,
+			d.autoincrement_flg
+			FROM 
+				output_bean a
+			LEFT JOIN
+				table_design_details d ON a.column_id = d.column_id
+			LEFT JOIN 
+				table_design c ON d.tbl_design_id = c.tbl_design_id
+			
+			LEFT JOIN domain_design x ON d.data_type = x.domain_id
+			WHERE
+				d.data_type_flg = 1
+			<if test="lstOuputbeanId != null and  lstOuputbeanId.size() > 0 ">
+				AND 
+					a.output_bean_id IN
+				<foreach item="status" index="index" collection="lstOuputbeanId" open="(" separator="," close=")">
+		   			CAST(#{status.outputBeanId} AS NUMERIC)
+		   		</foreach>
+			</if>
+		UNION ALL
+		SELECT 
+			a.output_bean_id,
+			a.output_bean_code,
+			a.output_bean_name,
+			a.data_type,
+			a.array_flg,
+			a.column_id,
+			a.item_sequence_no,
+			d.column_name,
+			d.column_code,
+			c.tbl_design_id,
+			c.tbl_design_name,
+			c.tbl_design_code,
+			d.data_type AS base_type,
+			d.display_type,
+			d.autoincrement_flg
+		FROM 
+			output_bean a
+		LEFT JOIN
+			table_design_details d ON a.column_id = d.column_id
+		LEFT JOIN 
+			table_design c ON d.tbl_design_id = c.tbl_design_id
+		LEFT JOIN 
+			resources y ON y.category_cd = 'clBasetype' AND d.data_type = CAST (y.value2 AS NUMERIC)
+		WHERE 
+			d.data_type_flg = 0
+			<if test="lstOuputbeanId != null and  lstOuputbeanId.size() > 0 ">
+				AND 
+					a.output_bean_id IN
+				<foreach item="status" index="index" collection="lstOuputbeanId" open="(" separator="," close=")">
+		   			CAST(#{status.outputBeanId} AS NUMERIC)
+		   		</foreach>
+			</if>
+		ORDER BY 
+			tbl_design_id ,item_sequence_no
+	</select>
+	
+	<select id="getSequencesBusinesLogic" resultType="Long">
+		select SETVAL('business_logic_seq'::regclass, NEXTVAL('business_logic_seq'::regclass) + #{size})
+	</select>
+	
+	<insert id="registerLstBusinessLogic" >
+		<if test="lstBusinessDesign != null and  lstBusinessDesign.size() > 0 ">
+			INSERT INTO business_logic
+			(
+				business_logic_id,
+				business_logic_name,
+				business_logic_code,
+				return_type,
+				screen_id,
+				module_id,
+				project_id,
+				upload_file_id,
+				customize_flg,
+				created_by,
+				created_date,
+				updated_by,
+				updated_date,
+				package_name,
+				pattern_type,
+				confirm_flg,
+				complete_flg,
+				remark,
+				screen_form_id,
+				function_id,
+				request_method,
+				design_mode
+			)
+			VALUES 
+			<foreach item="item" collection="lstBusinessDesign" separator=",">
+			(
+				#{item.businessLogicId},
+				#{item.businessLogicName},
+				#{item.businessLogicCode},
+				#{item.returnType},
+				#{item.screenId},
+				#{item.moduleId},
+				#{item.projectId},
+				#{item.uploadFileId},
+				#{item.customizeFlg},
+				#{item.createdBy},
+				#{item.createdDate},
+				#{item.updatedBy},
+				#{item.updatedDate},
+				#{item.packageName},
+				#{item.patternType},
+				#{item.confirmFlg},
+				#{item.completeFlg},
+				#{item.remark},
+				#{item.screenFormId},
+				#{item.functionDesignId},
+				#{item.requestMethod},
+				#{item.designMode}
+			)
+			</foreach>;
+		</if>
+	</insert>
+	<select id="findAllBusinessLogicsBySqlDesignId" resultMap="businessDesignResultMap">
+		SELECT
+			a.business_logic_id,
+			a.business_logic_code,
+			a.business_logic_name,
+			a.return_type,
+			a.screen_id,
+			a.module_id,
+			b.module_name,
+			a.project_id,
+			a.design_status
+		FROM 
+		business_logic a
+		LEFT JOIN 
+		module b
+		ON 
+		a.module_id = b.module_id
+		WHERE EXISTS
+		(
+			 SELECT 
+			  a2.business_logic_id
+			 FROM execution_component a1
+			 INNER JOIN sequence_logic a2 on (a1.sequence_logic_id = a2.sequence_logic_id)
+			 WHERE a1.sql_design_id = #{sqlDesignId}  
+					AND
+					a2.business_logic_id = a.business_logic_id
+		)
+		ORDER BY
+			a.business_logic_id
+	</select>
+	
+	<select id="findAllBusinessLogicsByModuleId" resultMap="businessDesignResultMap">
+		SELECT
+			a.business_logic_id,
+			a.business_logic_code,
+			a.business_logic_name,
+			a.return_type,
+			a.screen_id,
+			a.module_id,
+			b.module_name,
+			a.project_id,
+			a.design_status
+		FROM 
+		business_logic a
+		LEFT JOIN 
+		module b
+		ON 
+		a.module_id = b.module_id
+		WHERE a.module_id != #{moduleId}
+			AND
+		EXISTS
+		(
+			 SELECT 
+			  a2.business_logic_id
+			 FROM execution_component a1
+			 INNER JOIN sequence_logic a2 on (a1.sequence_logic_id = a2.sequence_logic_id)
+			 WHERE a1.sql_design_id IN (
+			 							SELECT sql_design_id
+			 							FROM sql_design
+			 							WHERE module_id = #{moduleId}
+			 							) 
+					AND
+					a2.business_logic_id = a.business_logic_id
+		)
+		ORDER BY
+			a.business_logic_id
+	</select>
+	
+	<!-- Start adding HungHX -->
+	<update id="updateAffectObjectDefinitionBean" >
+		<foreach item="item" collection="lstTableDetail" separator=";">
+				UPDATE object_definition
+		   		SET 
+		   			object_definition_code = #{item.code},
+		   			object_definition_name = #{item.name}
+				 WHERE tbl_design_id = #{item.tableDesignId} 
+				 AND
+				  <if test="item.columnId != null">
+				  	  column_id = #{item.columnId}
+				  </if>
+				  <if test="item.columnId == null">
+				  	  column_id IS NULL
+				  </if>
+		</foreach>
+	</update>
+
+	<update id="updateAffectOutputBean" >
+		<foreach item="item" collection="lstTableDetail" separator=";">
+				UPDATE output_bean
+		   		SET 
+		   			output_bean_code= #{item.code},
+		   			output_bean_name= #{item.name}
+				 WHERE tbl_design_id = #{item.tableDesignId}
+				  AND
+				  <if test="item.columnId != null">
+				  	  column_id = #{item.columnId}
+				  </if>
+				  <if test="item.columnId == null">
+				  	  column_id IS NULL
+				  </if>
+		</foreach>
+	</update>
+
+	<delete id="deleteAffectObjectDefinitionBeanByDeleleTableDesign">
+		DELETE 
+		FROM object_definition 
+		WHERE tbl_design_id = #{tableDesignId}
+	</delete>
+
+	<delete id="deleteAffectOutputBeanDeleleTableDesign">
+		DELETE 
+			FROM outputbean_screenitem_mapping osm
+			WHERE  EXISTS(
+				SELECT 1
+					FROM output_bean ob
+					WHERE tbl_design_id = #{tableDesignId}
+					and osm.output_bean_id = ob.output_bean_id
+				 );
+		DELETE 
+		FROM output_bean 
+		WHERE tbl_design_id = #{tableDesignId}
+	</delete>
+
+	<delete id="autoDeleteAffectObjectDefinitionBean">
+		<if test="lstTableDetail != null and  lstTableDetail.size() > 0 ">
+			<foreach item="item" collection="lstTableDetail" separator=";">
+				DELETE 
+				FROM object_definition 
+				WHERE tbl_design_id = #{item.tableDesignId} 
+				AND column_id = #{item.columnId}
+			</foreach>
+		</if>
+	</delete>
+	
+	<delete id="autoDeleteAffectOutputBean">
+		<if test="lstTableDetail != null and  lstTableDetail.size() > 0 ">
+			<foreach item="item" collection="lstTableDetail" separator=";">
+				DELETE 
+				FROM outputbean_screenitem_mapping osm
+				WHERE  EXISTS(
+					SELECT 1
+						FROM output_bean ob
+						WHERE tbl_design_id = #{item.tableDesignId}
+						AND column_id = #{item.columnId}
+						and osm.output_bean_id = ob.output_bean_id
+					 );
+				DELETE
+				FROM output_bean
+				WHERE tbl_design_id = #{item.tableDesignId}
+				AND column_id = #{item.columnId}
+			</foreach>
+		</if>
+	</delete>
+	
+	<select id="findAllInforOfParenObjDefinitionBeanById" parameterType="_long" resultMap="objectdefinitionResultMap">
+		<![CDATA[
+			SELECT
+				a.object_definition_id,
+				a.object_definition_code,
+				a.object_definition_name,
+				a.data_type,
+				a.array_flg,
+				a.business_logic_id,
+				a.parent_object_definition_id,
+				(
+					SELECT MAX(item_sequence_no) 
+					FROM object_definition
+					WHERE tbl_design_id = #{tableDesignId} 
+					AND parent_object_definition_id = a.object_definition_id
+				) AS item_sequence_no,
+				a.tbl_design_id, 
+				a.group_base_type_id, 
+				a.impact_status, 
+				a.column_id 
+			FROM 
+				object_definition a
+			WHERE
+				a.tbl_design_id = #{tableDesignId} 
+				AND parent_object_definition_id IS NULL 
+		]]>
+	</select>
+	
+	<select id="findAllInforOfParenOutBeanById" parameterType="_long" resultMap="outputbeanResultMap">
+		<![CDATA[
+			SELECT
+				ob.output_bean_id,
+				ob.output_bean_code,
+				ob.output_bean_name,
+				ob.data_type,
+				ob.array_flg,
+				ob.business_logic_id,
+				ob.parent_output_bean_id,
+				(
+					SELECT MAX(item_sequence_no) 
+					FROM output_bean
+					WHERE tbl_design_id = #{tableDesignId} 
+					AND parent_output_bean_id = ob.output_bean_id
+				) AS item_sequence_no,
+				ob.tbl_design_id, 
+				ob.column_id, 
+				ob.group_base_type_id, 
+				ob.impact_status, 
+				ob.screen_item_id, 
+				ob.object_type, 
+				ob.object_id,
+				sm.session_management_name as scope_value_autocomplete,
+                sm.data_type as dataTypeSession,
+                sm.array_flg as arrayFlagSession
+			FROM 
+				output_bean ob
+			LEFT JOIN session_management sm on CAST(ob.scope_value AS numeric(16,0)) = sm.session_management_id
+			WHERE
+				ob.tbl_design_id = #{tableDesignId} 
+				AND parent_output_bean_id IS NULL 
+		]]>
+	</select>
+
+	<insert id="registerListOutputBean" >
+		<if test="outputbeanItems != null and  outputbeanItems.size() > 0 ">
+			INSERT INTO output_bean
+			(
+				output_bean_code, 
+				output_bean_name, 
+				data_type, 
+				array_flg, 
+				business_logic_id, 
+				parent_output_bean_id,
+				item_sequence_no,
+				tbl_design_id, 
+				column_id,
+				group_base_type_id, 
+				impact_status, 
+				object_type, 
+				object_id
+			)
+			VALUES 
+				<foreach item="item" collection="outputbeanItems" separator=",">
+				(
+					#{item.outputBeanCode}, 
+					#{item.outputBeanName},
+					#{item.dataType},  
+					#{item.arrayFlg},
+					#{item.businessLogicId},
+					CAST(#{item.parentOutputBeanId} AS numeric(16,0)),
+					#{item.itemSequenceNo},
+					#{item.tblDesignId},
+					#{item.columnId},
+					#{item.groupBaseTypeId},
+					#{item.impactStatus},
+					#{item.objectType},
+					#{item.objectId}
+				)
+				</foreach>;
+		</if>
+	</insert>
+	<insert id="registerListObjectDefinition" >
+		<if test="objectdefinitionItems != null and  objectdefinitionItems.size() > 0 ">
+			INSERT INTO object_definition
+			(
+				object_definition_code, 
+				object_definition_name, 
+				data_type, 
+				array_flg,
+				business_logic_id, 
+				parent_object_definition_id,
+				item_sequence_no,
+				tbl_design_id, 
+				column_id,
+				group_base_type_id, 
+				impact_status
+			)
+			VALUES 
+				<foreach item="item" collection="objectdefinitionItems" separator=",">
+				(
+					#{item.objectDefinitionCode}, 
+					#{item.objectDefinitionName},
+					#{item.dataType}, 
+					#{item.arrayFlg},
+					#{item.businessLogicId},
+					CAST(#{item.parentObjectDefinitionId} AS numeric(16,0)),
+					#{item.itemSequenceNo},
+					#{item.tblDesignId},
+					#{item.columnId},
+					#{item.groupBaseTypeId},
+					#{item.impactStatus}
+				)
+				</foreach>;
+		</if>
+	</insert>
+	<update id="updateFormForBlogic">
+		UPDATE
+			business_logic
+		SET 
+			screen_form_id = #{screenFormId}
+		WHERE 
+			business_logic_id = #{blogicId}
+	</update>
+	<!-- End adding HungHX -->
+	
+	<update id="updateDesignStatusOfAffectedBlogic">
+		UPDATE business_logic
+   		SET 
+	   		design_status = 1, 
+	   		updated_by = #{updatedBy}, 
+	   		updated_date = #{updatedDate}
+ 		WHERE
+ 			<if test="lstAffectedBlogic != null and lstAffectedBlogic.size() > 0">
+ 				business_logic_id in
+				 <foreach item="item" index="index" collection="lstAffectedBlogic" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="lstAffectedBlogic == null or lstAffectedBlogic.size() == 0">
+				FALSE
+			</if>
+	</update>
+	
+	<!-- //TungHT -->
+	<select id="getListBLogicByScreenFormId" resultMap="businessDesignResultMap">
+		SELECT
+			*
+		FROM 
+			business_logic bl
+		INNER JOIN
+			screen_form sf ON bl.screen_form_id = sf.screen_form_id
+		WHERE
+			<if test="listOfScreenForm != null and listOfScreenForm.size() > 0">
+ 				bl.screen_form_id in
+				 <foreach item="item" index="index" collection="listOfScreenForm" open="(" separator="," close=")">
+					#{item.screenFormId}
+				</foreach>
+				AND
+					bl.return_type = 1
+			</if>
+			<if test="listOfScreenForm == null or listOfScreenForm.size() == 0">
+				FALSE
+			</if>
+	</select>
+	
+	<delete id="deleteInputBean">
+			DELETE 
+			FROM input_bean 
+			WHERE 
+			<if test="inputbeanItems != null and  inputbeanItems.size() > 0 ">
+				 input_bean_id IN 
+				<foreach item="item" index="index" collection="inputbeanItems" open="(" separator="," close=")">
+						CAST(#{item.inputBeanId} AS numeric(16,0))
+				</foreach>
+			</if>
+	</delete>
+	
+	<!-- //TungHT -->
+	<select id="findBLogicByScreenId" parameterType="_long" resultMap="businessDesignResultMap">
+		<![CDATA[
+			SELECT
+				a.business_logic_id,
+				a.business_logic_code,
+				a.business_logic_name,
+				a.return_type
+			FROM 
+				business_logic a
+			WHERE
+				a.screen_id = #{screenId} 
+			AND 
+				a.return_type = 1 and a.blogic_type = 0
+			LIMIT 1
+		]]>
+	</select>
+	
+	<!-- //TungHT -->
+	<select id="findBLogicByScreenIdForLink" parameterType="_long" resultMap="businessDesignResultMap">
+		<![CDATA[
+			SELECT
+				a.business_logic_id,
+				a.business_logic_code,
+				a.business_logic_name,
+				a.return_type
+			FROM 
+				business_logic a
+			LEFT JOIN
+				screen_design b ON a.screen_id = b.screen_id	
+			WHERE
+				b.screen_id = #{screenId} 
+			AND a.return_type = 0 and a.blogic_type = 0
+		]]>
+	</select>
+	
+	<!-- //TungHT maybe return 2 record when have confirm screen -->
+	<select id="findBLogicByBlogicIdForLink" parameterType="_long" resultMap="businessDesignResultMap">
+		<![CDATA[
+			SELECT
+				a.business_logic_id,
+				a.business_logic_code,
+				a.business_logic_name,
+				a.return_type
+			FROM 
+				business_logic a
+			WHERE
+				a.business_logic_id = #{businessLogicId} 
+			AND a.return_type = 0 and a.blogic_type = 0
+		]]>
+	</select>
+	<select id="findBLogicByProject" parameterType="_long" resultMap="businessDesignResultMap">
+			SELECT
+				business_logic_id,
+				business_logic_name,
+				business_logic_code,
+				return_type,
+				screen_id,
+				module_id,
+				project_id,
+				upload_file_id,
+				customize_flg,
+				created_by,
+				created_date,
+				updated_by,
+				updated_date,
+				package_name,
+				pattern_type,
+				confirm_flg,
+				complete_flg,
+				remark,
+				function_id,
+				screen_form_id,
+				batch_type,
+				blogic_type,
+				request_method,
+				authenticated_flg
+			FROM 
+				business_logic
+			WHERE
+				project_id = #{projectId}
+	</select>
+	<select id="findBLogicByBlogicIdForLinkToSubmit" parameterType="_long" resultMap="businessDesignResultMap">
+		<![CDATA[
+			SELECT
+				a.business_logic_id,
+				a.business_logic_code,
+				a.business_logic_name,
+				a.return_type
+			FROM 
+				business_logic a
+			WHERE
+				a.business_logic_id = #{businessLogicId} 
+			AND a.return_type = 1 and a.blogic_type = 0
+		]]>
+	</select>
+	
+	
+	
+	<!-- //TRUNGDV -->
+	<update id="modifyInputBeanWhenModifyScreenItem" >
+		<foreach item="item" collection="inputbeanItems" separator=";">
+			<![CDATA[
+				UPDATE input_bean
+		   		SET 
+		   			input_bean_code= #{item.inputBeanCode},
+		   			input_bean_name= #{item.inputBeanName},
+			   		data_type= #{item.dataType},
+			   		array_flg= #{item.arrayFlg},
+			   		screen_item_id= #{item.screenItemId}
+				WHERE input_bean_id = CAST(#{item.inputBeanId} AS numeric(16,0))
+			]]>
+		</foreach>
+	</update>
+	
+	<select id="findBDesignGetByScreenId" resultMap="businessDesignResultMap" parameterType="ScreenDesign">
+		SELECT 
+			business_logic_id,
+			business_logic_name
+		FROM 
+			business_logic AS bl
+		LEFT JOIN
+			screen_design AS sd ON bl.screen_id = sd.screen_id
+		WHERE
+			sd.screen_id = #{screenId}
+		<!-- AND
+			(sd.screen_pattern_type = 4 OR sd.screen_pattern_type = 1 OR sd.screen_pattern_type = 2) -->
+		AND
+			bl.request_method = 0
+	</select>
+	
+	<select id="findBDesignPostByScreenId" resultMap="businessDesignResultMap" parameterType="ScreenDesign">
+		SELECT 
+			business_logic_id,
+			business_logic_name
+		FROM 
+			business_logic AS bl
+		LEFT JOIN
+			screen_design AS sd ON bl.screen_id = sd.screen_id
+		WHERE
+			sd.screen_id = #{screenId}
+		<!-- AND
+			(sd.screen_pattern_type = 4 OR sd.screen_pattern_type = 1 OR sd.screen_pattern_type = 2) -->
+		AND
+			bl.request_method = 4
+	</select>
+	
+	<!-- //TungHT -->
+	<select id="findBlogicByScreenFormId" resultMap="businessDesignResultMap">
+		SELECT
+			a.business_logic_id,
+			a.business_logic_code,
+			a.business_logic_name,
+			a.return_type,
+			a.screen_form_id
+		FROM
+			business_logic a
+		WHERE
+			<if test="screenForms != null and screenForms != ''">
+				screen_form_id IN
+				<foreach collection="screenForms" item="item" open="(" separator="," close=")">
+					#{item.screenFormId}
+				</foreach>
+				AND
+					a.return_type = 1 and a.blogic_type = 0
+			</if>
+			<if test="screenForms == null or screenForms == ''">
+				FALSE
+			</if>
+	</select>
+	
+	
+	<!-- Finds business logic by session management id -->
+	<select id="findBlogicBySessionManagementId" resultMap="businessDesignResultMap">
+		<![CDATA[
+			SELECT
+				a.business_logic_id,
+				a.business_logic_code,
+				a.business_logic_name,
+				a.module_id,
+				a.project_id,
+				m.module_name
+			FROM business_logic a
+			LEFT JOIN
+				module m ON m.module_id = a.module_id
+			WHERE exists
+			(
+				select b1.business_logic_id 
+				from input_bean b1
+				where b1.scope_type = 1 and b1.scope_value = CAST(#{sessionManagementId} AS character varying)
+					and b1.business_logic_id = a.business_logic_id
+			)or exists
+			(
+				select b1.business_logic_id 
+				from output_bean b1
+				where b1.scope_type = 1 and b1.scope_value = CAST(#{sessionManagementId} AS character varying)
+					and b1.business_logic_id = a.business_logic_id
+			)
+		]]>
+	</select>
+	
+	<select id="getBlogicNavigateByScreenIdAutocomplete" resultMap="autocompleteResultMap">
+	
+			<if test="(arg01 == null or arg01 == '') and arg04 == 0">
+				SELECT 
+					b.business_logic_id AS optionValue,
+					b.business_logic_name AS optionLabel
+				FROM business_logic b
+				<where>
+					<if test="arg05 != null and arg05 != ''">
+						 b.screen_id = CAST(#{arg05} AS NUMERIC)
+					AND
+						b.request_method = 0
+					</if>
+					<if test="arg05 == null || arg05 == ''">
+					 	false
+					</if>
+				</where>
+			</if>
+			<if test="(arg01 != null and arg01 != '') and arg04 == 0">
+				SELECT 
+					a.business_logic_id as optionValue,
+					a.business_logic_name as optionLabel
+				FROM 
+					business_logic a
+				<where>
+					 	a.screen_id = CAST(#{arg01} AS NUMERIC)
+					 AND
+						a.request_method = 0
+				</where>
+			</if>	
+			<if test="(arg01 == null or arg01 == '') and arg04 == 1">
+				SELECT 
+					b.business_logic_id AS optionValue,
+					b.business_logic_name AS optionLabel
+				FROM business_logic b
+				<where>
+					<if test="arg05 != null and arg05 != ''">
+						 b.screen_id = CAST(#{arg05} AS NUMERIC)
+					AND
+						b.request_method = 4
+					</if>
+					<if test="arg05 == null || arg05 == ''">
+					 	false
+					</if>
+				</where>
+			</if>
+			<if test="(arg01 != null and arg01 != '') and arg04 == 1">
+				SELECT DISTINCT 
+				a.business_logic_id as optionValue,
+				a.business_logic_name as optionLabel
+				FROM 
+					business_logic a INNER JOIN sequence_logic sl ON a.business_logic_id = sl.business_logic_id
+				WHERE (sl.sequence_logic_id IN  
+				(
+					SELECT n.sequence_logic_id
+					FROM navigator_component n INNER JOIN business_logic b ON (n.navigator_to_id = b.business_logic_id)
+					WHERE 1=1
+					<if test="arg01 != null and arg01 != ''">
+						AND b.screen_id = CAST(#{arg01} AS numeric(16,0)) AND n.navigator_to_type = 1
+					</if>
+				)
+				OR sl.sequence_logic_id IN (
+					SELECT n.sequence_logic_id
+					FROM navigator_component n
+					WHERE 1=1
+					<if test="arg01 != null and arg01 != ''">
+						AND n.navigator_to_id = CAST(#{arg01} AS numeric(16,0)) AND n.navigator_to_type = 0
+					</if>
+					)
+				) AND a.screen_id = CAST(#{arg05} AS NUMERIC)
+					 AND
+						a.request_method = 4
+				
+			</if>	
+			
+	</select>
+	<select id="findInputBeanByParentInputBean" resultMap="inputbeanDeleteResultMap">
+		<![CDATA[
+			SELECT
+				input_bean_id,
+				input_bean_code,
+				input_bean_name,
+				parent_input_bean_id
+			FROM
+				input_bean
+			WHERE
+		]]>
+		<if test="parentInputBeanId != null and parentInputBeanId != ''">
+			<![CDATA[ parent_input_bean_id = #{parentInputBeanId} ]]>
+		</if>
+		<if test="parentInputBeanId == null or parentInputBeanId == ''">
+			<![CDATA[ false ]]>
+		</if>
+	</select>
+	
+	<select id="findOuputBeanByBlogicIds" resultMap="outputbeanResultMap">
+		
+		SELECT
+			ob.output_bean_id,
+			ob.output_bean_code,
+			ob.output_bean_name,
+			ob.data_type,
+			ob.array_flg,
+			ob.business_logic_id,
+			ob.parent_output_bean_id,
+			ob.item_sequence_no,
+			ob.tbl_design_id, 
+			ob.column_id, 
+			ob.group_base_type_id, 
+			ob.impact_status, 
+			ob.object_type, 
+			ob.object_id, 
+			ob.object_flg,
+			ob.scope_type,
+			ob.scope_value,
+			sm.session_management_name as scope_value_autocomplete,
+			md.message_string,
+            sm.data_type as dataTypeSession,
+            sm.array_flg as arrayFlagSession
+		FROM 
+			output_bean ob
+		LEFT JOIN message_design md on (ob.output_bean_name = md.message_code and md.language_id = #{languageId} and md.project_id = #{projectId})
+		LEFT JOIN session_management sm on CAST(ob.scope_value AS numeric(16,0)) = sm.session_management_id
+		<where>
+			<if test="businessDesigns != null and businessDesigns.size() > 0">
+				ob.business_logic_id IN
+				<foreach collection="businessDesigns" item="item" open="(" close=")" separator=",">
+					#{item.businessLogicId}
+				</foreach>
+			</if>
+		</where>
+		ORDER BY
+			ob.item_sequence_no
+		
+	</select>
+    
+    <select id="findAllScreenItemMappingInputBeanByBusinessLogicId" resultMap="screenItemOutputResultMap">
+            SELECT 
+                a.input_bean_id, 
+                a.screen_item_id,
+                b.item_code as item_name,
+                b.logical_data_type,
+                c.message_string,
+                b.from_to
+            FROM 
+                input_bean a
+            LEFT JOIN 
+                screen_item b on b.screen_item_id = a.screen_item_id
+            LEFT JOIN 
+                message_design c on b.message_code = c.message_code
+            WHERE
+                c.project_id = #{projectId}
+                AND c.language_id = #{languageId}
+                AND
+                EXISTS
+                (
+                    SELECT a1.input_bean_id
+                    FROM input_bean a1
+                    WHERE a1.business_logic_id = #{businessLogicId}
+                        and a1.input_bean_id = a.input_bean_id
+                )
+    </select>
+    
+    <update id="removeScreenItemMapping" >
+		UPDATE input_bean
+			SET screen_item_id = NULL
+		WHERE
+		<if test="inputBeanDelete != null and inputBeanDelete.size() > 0">
+			input_bean_id IN
+			<foreach collection="inputBeanDelete" item="item" open="(" close=")" separator=",">
+				CAST(#{item.inputBeanId} AS numeric(16,0))
+			</foreach>
+		</if>
+		<if test="inputBeanDelete == null or inputBeanDelete.size() == 0">
+			FALSE
+		</if>
+	</update>
+	
+	<update id="removeScreenItemMappingByScreenItemId" >
+		UPDATE input_bean
+			SET screen_item_id = NULL
+		WHERE
+		<if test="screenItemDelete != null and screenItemDelete.size() > 0">
+			screen_item_id IN
+			<foreach collection="screenItemDelete" item="item" open="(" close=")" separator=",">
+				CAST(#{item.screenItemId} AS numeric(16,0))
+			</foreach>
+		</if>
+		<if test="screenItemDelete == null or screenItemDelete.size() == 0">
+			FALSE
+		</if>
+	</update>
+	
+	<!--  Finds all screen autocomplete by function design identify -->
+	<select id="getAllScreenByFunctionDesignIdForAutocomplete" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+			a.screen_id AS optionValue,
+			b.message_string AS optionLabel
+		FROM 
+			screen_design a
+		LEFT JOIN message_design b on (b.message_code = a.message_code and b.language_id = #{languageId} and b.project_id = CAST(#{arg01} AS NUMERIC))
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<if test="searchKey != null and searchKey != ''" >
+				<bind name="keyword" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(searchKey)" />
+				<![CDATA[ b.message_string ILIKE #{keyword} ESCAPE '~' ]]>
+			</if>
+			<if test="arg03 != null and arg03 != ''">
+				AND a.module_id = CAST(#{arg03} AS numeric(16,0))
+			</if>
+			<if test="arg03 == null or arg03 == ''">
+				AND FALSE
+			</if>
+			AND a.design_mode = 2
+			
+		</trim>
+		ORDER BY 
+			b.message_string
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+		<if test="arg02 == null || arg02 == ''">
+			LIMIT 20
+		</if>
+		
+	</select>
+	
+	<!--  Finds all screen form autocomplete by screen identify -->
+	<select id="getAllScreenFormByScreenIdForAutocomplete" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+			a.screen_form_id AS optionValue,
+			a.form_code AS optionLabel
+		FROM 
+			screen_form a
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<if test="searchKey != null and searchKey != ''" >
+				<bind name="keyword" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(searchKey)" />
+				<![CDATA[ a.form_code ILIKE #{keyword} ESCAPE '~' ]]>
+			</if>
+			<if test="arg02 != null and arg02 != ''">
+				AND a.screen_id = CAST(#{arg02} AS numeric(16,0))
+			</if>
+			<if test="arg02 == null or arg02 == ''">
+				AND FALSE
+			</if>
+			
+			
+		</trim>
+		ORDER BY 
+			a.form_seq_no
+		<if test="arg01 != null and arg01 != ''">
+			LIMIT CAST(#{arg01} AS NUMERIC)
+		</if>
+		<if test="arg01 == null || arg01 == ''">
+			LIMIT 20
+		</if>
+		
+	</select>
+	
+	
+	<select id="findDisplayBDesignByScreenId" resultMap="businessDesignResultMap" parameterType="ScreenDesign">
+		SELECT 
+			business_logic_id,
+			business_logic_name
+		FROM 
+			business_logic AS bl
+		LEFT JOIN
+			screen_design AS sd ON bl.screen_id = sd.screen_id
+		WHERE
+			sd.screen_id = #{screenId}
+		<!-- AND
+			(sd.screen_pattern_type = 4 OR sd.screen_pattern_type = 1 OR sd.screen_pattern_type = 2) -->
+		AND
+			bl.return_type = 0 and bl.blogic_type = 0
+	</select>
+	
+	<select id="findInputBeanByListScreenItem" resultMap="inputbeanResultMap">
+		SELECT 
+			a.input_bean_id,
+			a.screen_item_id,
+			a.input_bean_code,
+			a.input_bean_name,
+			a.data_type,
+			a.array_flg,
+			b.column_id,
+			d.column_name,
+			c.tbl_design_id,
+			c.tbl_design_name,
+			d.display_type,
+			d.autoincrement_flg,
+			a.screen_item_id
+		FROM 
+			input_bean a
+		INNER JOIN 
+			screen_item b ON a.screen_item_id = b.screen_item_id
+		LEFT JOIN 
+			table_design c ON a.tbl_design_id = c.tbl_design_id
+		LEFT JOIN
+			table_design_details d ON b.column_id = d.column_id
+		<where>
+			<if test="lstScreenItem != null and  lstScreenItem.size() > 0 ">
+				a.screen_item_id IN
+				<foreach item="item" collection="lstScreenItem" open="(" separator="," close=")">
+		   			CAST(#{item.screenItemId} AS NUMERIC)
+		   		</foreach>
+			</if>
+			<if test="lstScreenItem == null and  lstScreenItem.size() == 0 ">
+				FALSE
+			</if>
+		</where>
+		ORDER BY
+			a.item_sequence_no
+	</select>
+	
+	<select id="findBlogicByUsingExternalOb" resultMap="businessDesignResultMap">
+		<![CDATA[
+			SELECT
+				a.business_logic_id,
+				a.business_logic_code,
+				a.business_logic_name,
+				a.module_id,
+				a.project_id
+			FROM 
+				business_logic a
+			WHERE Exists
+			(
+				SELECT b1.business_logic_id
+				FROM input_bean b1
+				WHERE b1.data_type = 17 and b1.object_type = 1 and b1.object_id = #{externalObjectDefinitionId}
+					and b1.business_logic_id = a.business_logic_id
+			) OR Exists
+			(
+				SELECT b1.business_logic_id
+				FROM output_bean b1
+				WHERE b1.data_type = 17 and b1.object_type = 1 and b1.object_id = #{externalObjectDefinitionId}
+					and b1.business_logic_id = a.business_logic_id
+			) OR Exists
+			(
+				SELECT b1.business_logic_id
+				FROM object_definition b1
+				WHERE b1.data_type = 17 and b1.object_type = 1 and b1.object_id = #{externalObjectDefinitionId}
+					and b1.business_logic_id = a.business_logic_id
+			)
+		]]>
+	</select>
+	
+	<select id="findBlogicByUsingCommonOb" resultMap="businessDesignResultMap">
+		<![CDATA[
+			SELECT
+				a.business_logic_id,
+				a.business_logic_code,
+				a.business_logic_name,
+				a.module_id,
+				a.project_id
+			FROM 
+				business_logic a
+			WHERE Exists
+			(
+				SELECT b1.business_logic_id
+				FROM input_bean b1
+				WHERE b1.data_type = 16 and b1.object_type = 0 and b1.object_id = #{commonObjectDefinitionId}
+					and b1.business_logic_id = a.business_logic_id
+			) OR Exists
+			(
+				SELECT b1.business_logic_id
+				FROM output_bean b1
+				WHERE b1.data_type = 16 and b1.object_type = 0 and b1.object_id = #{commonObjectDefinitionId}
+					and b1.business_logic_id = a.business_logic_id
+			) OR Exists
+			(
+				SELECT b1.business_logic_id
+				FROM object_definition b1
+				WHERE b1.data_type = 16 and b1.object_type = 0 and b1.object_id = #{commonObjectDefinitionId}
+					and b1.business_logic_id = a.business_logic_id
+			)
+		]]>
+	</select>
+	<select id="getNameBlogicById" resultType="java.lang.String">
+		<![CDATA[
+			SELECT
+				business_logic_name
+			FROM
+				business_logic
+			WHERE
+				business_logic_id = #{blogicId}
+			LIMIT 1	 
+		]]>
+	</select>
+	<select id="findBlogicByUsingFunctionMethod" resultMap="businessDesignResultMap">
+		WITH table_temp as (
+			SELECT 
+				a.sequence_logic_id,
+				b.function_method_id
+            FROM log_component a
+            INNER JOIN formula_detail b on (a.message_formula_id = b.formula_definition_id)
+	
+			UNION
+	
+	        SELECT 
+	        	a.sequence_logic_id,
+				b.function_method_id
+	        FROM email_component a
+			INNER JOIN formula_detail b on (a.subject_formula_id = b.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				c.function_method_id
+	        FROM email_component a
+	        INNER JOIN email_recipient b ON (a.email_component_id = b.email_component_id)
+			INNER JOIN formula_detail c on (b.recipient_formula_id = c.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				b.function_method_id
+	        FROM download_file_component a
+			INNER JOIN formula_detail b on (a.file_name_formula_id = b.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				b.function_method_id
+	        FROM loop_component a
+			INNER JOIN formula_detail b on (a.formula_definition_id = b.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				c.function_method_id
+	        FROM if_component a
+			INNER JOIN if_condition_detail b on (a.if_component_id = b.if_component_id)
+			INNER JOIN formula_detail c on (c.formula_definition_id = b.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				c.function_method_id
+	        FROM  business_check_component a
+			INNER JOIN business_check_detail b on (a.business_check_component_id = b.business_check_component_id)
+			INNER JOIN formula_detail c on (c.formula_definition_id = b.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				c.function_method_id
+	        FROM assign_component a
+			INNER JOIN assign_detail b on (a.assign_component_id = b.assign_component_id)
+			INNER JOIN formula_detail c on (c.formula_definition_id = b.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				b.function_method_id
+	        FROM fileoperation_component a
+			INNER JOIN formula_detail b on (b.formula_definition_id = a.source_path_formula_id or  b.formula_definition_id = a.destination_path_formula_id or b.formula_definition_id = a.new_filename_formula_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				c.function_method_id
+	        FROM fileoperation_component a
+	        INNER JOIN merge_file_detail b on (a.fileoperation_component_id = b.fileoperation_component_id)
+			INNER JOIN formula_detail c on (c.formula_definition_id = b.source_path_formula_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				b.function_method_id
+	        FROM import_file_component a
+			INNER JOIN formula_detail b on (b.formula_definition_id = a.source_path_formula_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				b.function_method_id
+	        FROM export_file_component a
+			INNER JOIN formula_detail b on (b.formula_definition_id = a.destination_path_formula_id)
+			
+			)
+
+		SELECT a.business_logic_id,
+			a.business_logic_code,
+			a.business_logic_name,
+			a.module_id,
+			a.project_id
+		FROM business_logic a
+		WHERE exists 
+		(
+			SELECT * from table_temp b
+			LEFT JOIN sequence_logic c on c.sequence_logic_id = b.sequence_logic_id
+			WHERE 
+				<if test="lstFunctionMethodIds != null and lstFunctionMethodIds.size > 0">
+					b.function_method_id IN
+					<foreach collection="lstFunctionMethodIds" item="id" open="(" close=")" separator=",">
+						#{id}
+					</foreach>
+				</if>
+				<if test="lstFunctionMethodIds == null or lstFunctionMethodIds.size == 0">
+					FALSE
+				</if>
+				AND a.business_logic_id = c.business_logic_id
+		)
+
+	</select>
+	
+	<select id="findBlogicByUsingMethodOutput" resultMap="businessDesignResultMap">
+		WITH table_temp as (
+			SELECT 
+				a.sequence_logic_id,
+				b.function_method_id,
+				b.formula_detail_id
+            FROM log_component a
+            INNER JOIN formula_detail b on (a.message_formula_id = b.formula_definition_id)
+	
+			UNION
+	
+	        SELECT 
+	        	a.sequence_logic_id,
+				b.function_method_id,
+				b.formula_detail_id
+	        FROM email_component a
+			INNER JOIN formula_detail b on (a.subject_formula_id = b.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				c.function_method_id,
+				c.formula_detail_id
+	        FROM email_component a
+	        INNER JOIN email_recipient b ON (a.email_component_id = b.email_component_id)
+			INNER JOIN formula_detail c on (b.recipient_formula_id = c.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				b.function_method_id,
+				b.formula_detail_id
+	        FROM download_file_component a
+			INNER JOIN formula_detail b on (a.file_name_formula_id = b.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				b.function_method_id,
+				b.formula_detail_id
+	        FROM loop_component a
+			INNER JOIN formula_detail b on (a.formula_definition_id = b.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				c.function_method_id,
+				c.formula_detail_id
+	        FROM if_component a
+			INNER JOIN if_condition_detail b on (a.if_component_id = b.if_component_id)
+			INNER JOIN formula_detail c on (c.formula_definition_id = b.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				c.function_method_id,
+				c.formula_detail_id
+	        FROM  business_check_component a
+			INNER JOIN business_check_detail b on (a.business_check_component_id = b.business_check_component_id)
+			INNER JOIN formula_detail c on (c.formula_definition_id = b.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				c.function_method_id,
+				c.formula_detail_id
+	        FROM assign_component a
+			INNER JOIN assign_detail b on (a.assign_component_id = b.assign_component_id)
+			INNER JOIN formula_detail c on (c.formula_definition_id = b.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				b.function_method_id,
+				b.formula_detail_id
+	        FROM fileoperation_component a
+			INNER JOIN formula_detail b on (b.formula_definition_id = a.source_path_formula_id or  b.formula_definition_id = a.destination_path_formula_id or b.formula_definition_id = a.new_filename_formula_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				c.function_method_id,
+				c.formula_detail_id
+	        FROM fileoperation_component a
+	        INNER JOIN merge_file_detail b on (a.fileoperation_component_id = b.fileoperation_component_id)
+			INNER JOIN formula_detail c on (c.formula_definition_id = b.source_path_formula_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				b.function_method_id,
+				b.formula_detail_id
+	        FROM import_file_component a
+			INNER JOIN formula_detail b on (b.formula_definition_id = a.source_path_formula_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				b.function_method_id,
+				b.formula_detail_id
+	        FROM export_file_component a
+			INNER JOIN formula_detail b on (b.formula_definition_id = a.destination_path_formula_id)
+			
+			)
+
+		SELECT a.business_logic_id,
+			a.business_logic_code,
+			a.business_logic_name,
+			a.module_id,
+			a.project_id
+		FROM business_logic a
+		WHERE exists 
+		(
+			SELECT * from table_temp b
+			LEFT JOIN sequence_logic c on c.sequence_logic_id = b.sequence_logic_id
+			LEFT JOIN formula_method_output d on d.formula_detail_id = b.formula_detail_id
+			WHERE 
+				<if test="lstMethodOutputIds != null and lstMethodOutputIds.size > 0">
+					d.method_output_id IN
+					<foreach collection="lstMethodOutputIds" item="id" open="(" close=")" separator=",">
+						#{id}
+					</foreach>
+				</if>
+				<if test="lstMethodOutputIds == null or lstMethodOutputIds.size == 0">
+					FALSE
+				</if>
+				AND a.business_logic_id = c.business_logic_id
+		)
+
+	</select>
+	
+	<select id="findAllBussinessLogicByCommonBlogicId" parameterType="_long" resultMap="businessDesignResultMap">
+		SELECT
+		    DISTINCT a.business_logic_id,
+		    a.business_logic_code,
+		    a.business_logic_name,
+		    a.return_type,
+		    a.module_id,
+		    a.blogic_type,
+		    d.module_name as module_name,
+		    a.project_id
+		FROM business_logic a
+		LEFT JOIN module d ON d.module_id = a.module_id
+		WHERE exists
+		(
+			SELECT b.business_logic_id 
+			FROM sequence_logic b
+		    LEFT JOIN common_component c ON c.sequence_logic_id = b.sequence_logic_id
+		    WHERE 
+			    c.business_logic_id = #{commonBlogicId}
+			    AND  b.business_logic_id = a.business_logic_id
+		)
+    </select>
+    
+    <select id="findAllBussinessLogicByNavigatorBlogicId" parameterType="_long" resultMap="businessDesignResultMap">
+		SELECT
+		    DISTINCT a.business_logic_id,
+		    a.business_logic_code,
+		    a.business_logic_name,
+		    a.return_type,
+		    a.module_id,
+		    a.blogic_type,
+		    d.module_name as module_name,
+		    a.project_id
+		FROM business_logic a
+		LEFT JOIN module d ON d.module_id = a.module_id
+		WHERE exists
+		(
+			SELECT b.business_logic_id 
+			FROM sequence_logic b
+		    LEFT JOIN navigator_component c ON c.sequence_logic_id = b.sequence_logic_id
+		    WHERE 
+			    c.navigator_to_id = #{navigatorBlogicId} and c.navigator_to_type = 1
+			    AND  b.business_logic_id = a.business_logic_id
+		) or  exists
+		(
+			SELECT b.business_logic_id 
+			FROM sequence_logic b
+		    LEFT JOIN exception_component c ON c.sequence_logic_id = b.sequence_logic_id
+		    WHERE 
+			    c.exception_to_id = #{navigatorBlogicId} and c.exception_to_type = 1
+			    AND  b.business_logic_id = a.business_logic_id
+		)
+    </select>
+    
+    <select id="findSequenceLogicByUsingLstFunctionMethod" resultMap="sequenceLogicResultMap">
+    	WITH table_temp as (
+			SELECT 
+				a.sequence_logic_id,
+				b.function_method_id
+            FROM log_component a
+            INNER JOIN formula_detail b on (a.message_formula_id = b.formula_definition_id)
+	
+			UNION
+	
+	        SELECT 
+	        	a.sequence_logic_id,
+				b.function_method_id
+	        FROM email_component a
+			INNER JOIN formula_detail b on (a.subject_formula_id = b.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				c.function_method_id
+	        FROM email_component a
+	        INNER JOIN email_recipient b ON (a.email_component_id = b.email_component_id)
+			INNER JOIN formula_detail c on (b.recipient_formula_id = c.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				b.function_method_id
+	        FROM download_file_component a
+			INNER JOIN formula_detail b on (a.file_name_formula_id = b.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				b.function_method_id
+	        FROM loop_component a
+			INNER JOIN formula_detail b on (a.formula_definition_id = b.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				c.function_method_id
+	        FROM if_component a
+			INNER JOIN if_condition_detail b on (a.if_component_id = b.if_component_id)
+			INNER JOIN formula_detail c on (c.formula_definition_id = b.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				c.function_method_id
+	        FROM  business_check_component a
+			INNER JOIN business_check_detail b on (a.business_check_component_id = b.business_check_component_id)
+			INNER JOIN formula_detail c on (c.formula_definition_id = b.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				c.function_method_id
+	        FROM assign_component a
+			INNER JOIN assign_detail b on (a.assign_component_id = b.assign_component_id)
+			INNER JOIN formula_detail c on (c.formula_definition_id = b.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				b.function_method_id
+	        FROM fileoperation_component a
+			INNER JOIN formula_detail b on (b.formula_definition_id = a.source_path_formula_id or  b.formula_definition_id = a.destination_path_formula_id or b.formula_definition_id = a.new_filename_formula_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				c.function_method_id
+	        FROM fileoperation_component a
+	        INNER JOIN merge_file_detail b on (a.fileoperation_component_id = b.fileoperation_component_id)
+			INNER JOIN formula_detail c on (c.formula_definition_id = b.source_path_formula_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				b.function_method_id
+	        FROM import_file_component a
+			INNER JOIN formula_detail b on (b.formula_definition_id = a.source_path_formula_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				b.function_method_id
+	        FROM export_file_component a
+			INNER JOIN formula_detail b on (b.formula_definition_id = a.destination_path_formula_id)
+			
+			)
+			
+			SELECT 
+				a.sequence_logic_id, 
+				a.sequence_logic_name, 
+				a.component_type, 
+				a.component_id, 
+       			a.business_logic_id,
+       			b.business_logic_code,
+       			b.business_logic_name,
+       			c.module_id,
+       			c.module_name
+  			FROM sequence_logic a
+  			LEFT JOIN business_logic b on (b.business_logic_id = a.business_logic_id)
+  			LEFT JOIN module c on (c.module_id = b.module_id)
+  			WHERE EXISTS 
+			(
+				SELECT * from table_temp temp
+				WHERE
+					<if test="lstFunctionMethods != null and lstFunctionMethods.size > 0">
+						temp.function_method_id IN
+						<foreach collection="lstMethodOutputIds" item="item" open="(" close=")" separator=",">
+							#{item.functionMethodId}
+						</foreach>
+					</if>
+					<if test="lstFunctionMethods == null or lstFunctionMethods.size == 0">
+						FALSE
+					</if>
+					AND a.sequence_logic_id = temp.sequence_logic_id
+			)
+    </select>
+</mapper>

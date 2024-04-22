@@ -1,0 +1,930 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.impactchange.ImpactCommonObjectRepository">
+	<resultMap id="commonObjectAttributeResultMap" type="CommonObjectAttribute">
+		<result property="commonObjectAttributeId" column="common_object_attribute_id" />
+		<result property="commonObjectAttributeCode" column="common_object_attribute_code" />
+		<result property="commonObjectAttributeName" column="common_object_attribute_name" />
+		<result property="arrayFlg" column="array_flg" />
+		<result property="commonObjectDefinitionId" column="common_object_definition_id" />
+		<result property="dataType" column="data_type" />
+		<result property="objectDefinitionId" column="object_definition_id" />
+		<result property="itemSeqNo" column="item_seq_no" />
+		<result property="parentCommonObjectAttributeId" column="parent_common_object_attribute_id" />
+		<result property="inputColumnNo" column="input_column_no" />
+		<result property="moduleCode" column="module_code" />
+		<result property="objectDefinitionCode" column="object_definition_code" />
+		<result property="externalPackageName" column="external_package_name" />
+		<result property="commonObjectDefinitionCode" column="common_object_definition_code" />
+		<result property="moduleId" column="module_id" />
+	</resultMap>
+
+	<resultMap id="sessionManagementResultMap" type="SessionManagement">
+		<id property="sessionManagementId" column="session_management_id" />
+		<result property="sessionManagementName" column="session_management_name" />
+		<result property="sessionManagementCode" column="session_management_code" />
+		<result property="dataType" column="data_type" />
+		<result property="objectId" column="object_id" />
+		<result property="createdBy" column="created_by" />
+		<result property="createdDate" column="created_date" />
+		<result property="updatedBy" column="updated_by" />
+		<result property="updatedDate" column="updated_date" />
+		<result property="projectId" column="project_id" />
+		<result property="objectIdAutocomplete" column="object_code" />
+		<result property="module_code" column="module_code" />
+		<result property="sessionManagementType" column="session_management_type" />
+		<result property="packageNameExternalObject" column="package_name" />
+		<result property="arrayFlg" column="array_flg" />
+	</resultMap>
+	
+	<resultMap id="functionMethodInputResultMap" type="FunctionMethodInput">
+		<id property="methodInputId" column="method_input_id" />
+		<result property="methodInputCode" column="method_input_code" />
+		<result property="methodInputName" column="method_input_name" />
+		<result property="dataType" column="data_type" />
+		<result property="arrayFlgDisplay" column="array_flg" />
+		<result property="itemSeqNo" column="item_seq_no" />
+		<result property="functionMethodId" column="function_method_id" />
+		<result property="functionMethodName" column="function_method_name" />
+		<result property="functionMasterName" column="function_master_name" />
+		<result property="parentFunctionMethodInputId" column="parent_function_method_input_id" />
+		<result property="objectType" column="object_type" />
+		<result property="objectId" column="object_id" />
+		<result property="objectFlg" column="object_flg" />
+        <result property="commonObjDefiCode" column="common_object_definition_code" />
+        <result property="externalObjDefiCode" column="external_object_definition_code" />
+        <result property="packageNameObjExt" column="package_name" />
+        <result property="moduleCode" column="module_code" />
+        <result property="functionMethodCode" column="function_method_code" />
+		<result property="functionMasterCode" column="function_master_code" />
+		<result property="functionMasterId" column="function_master_id" />
+	</resultMap>
+	
+	<resultMap id="functionMethodOutputResultMap" type="FunctionMethodOutput">
+		<id property="methodOutputId" column="method_output_id" />
+		<result property="methodOutputCode" column="method_output_code" />
+		<result property="methodOutputName" column="method_output_name" />
+		<result property="dataType" column="data_type" />
+		<result property="arrayFlgDisplay" column="array_flg" />
+		<result property="itemSeqNo" column="item_seq_no" />
+		<result property="functionMethodId" column="function_method_id" />
+		<result property="functionMethodName" column="function_method_name" />
+		<result property="functionMasterName" column="function_master_name" />
+		<result property="parentFunctionMethodOutputId" column="parent_function_method_output_id" />
+		<result property="objectType" column="object_type" />
+		<result property="objectId" column="object_id" />
+		<result property="objectFlg" column="object_flg" />
+        <result property="commonObjDefiCode" column="common_object_definition_code" />
+        <result property="externalObjDefiCode" column="external_object_definition_code" />
+        <result property="packageNameObjExt" column="package_name" />
+        <result property="moduleCode" column="module_code" />
+        <result property="functionMethodCode" column="function_method_code" />
+		<result property="functionMasterCode" column="function_master_code" />
+		<result property="functionMasterId" column="function_master_id" />
+	</resultMap>
+	
+	<resultMap id="sqlDesignInputResultMap" type="SqlDesignInput">
+        <result property="sqlDesignInputId" column="sql_design_input_id" />
+        <result property="sqlDesignId" column="sql_design_id" />
+        <result property="sqlDesignInputName" column="sql_design_input_name" />
+        <result property="sqlDesignInputCode" column="sql_design_input_code" />
+        <result property="dataType" column="data_type" />
+        <result property="sqlDesignInputParentId" column="sql_design_input_parent_id" />
+        <result property="arrayFlag" column="array_flg" />
+        <result property="itemSeqNo" column="item_seq_no" />
+        <result property="businessDesignId" column="business_logic_id" />
+        <result property="businessDesignModuleId" column="business_logic_module_id" />
+        <result property="groupIndex" column="group_index" />
+        <result property="tableId" column="table_id"/>
+        <result property="columnId" column="column_id"/>
+        <result property="designType" column="design_type"/>
+        <result property="objectType" column="object_type"/>
+        <result property="objectTypeCode" column="object_type_code"/>
+        <result property="tableCode" column="tbl_design_code"/>
+        <result property="pakageExternal" column="package_name" />
+        <result property="externalObjCode" column="external_object_definition_code" />
+        <result property="commonObjCode" column="common_object_definition_code" />
+        <result property="sqlDesignCode" column="sql_design_code" />
+        <result property="moduleId" column="module_id" />
+    </resultMap>
+    
+    <resultMap id="sqlDesignOutputResultMap" type="SqlDesignOutput">
+        <result property="sqlDesignOutputId" column="sql_design_output_id" />
+        <result property="sqlDesignId" column="sql_design_id" />
+        <result property="sqlDesignOutputName" column="sql_design_output_name" />
+        <result property="sqlDesignOutputCode" column="sql_design_output_code" />
+        <result property="dataType" column="data_type" />
+        <result property="sqlDesignOutputParentId" column="sql_design_output_parent_id" />
+        <result property="arrayFlag" column="array_flg" />
+        <result property="itemSeqNo" column="item_seq_no" />
+        <result property="mappingColumn" column="mapping_column"/>
+        <result property="groupIndex" column="group_index"/>
+        <result property="businessDesignId" column="business_logic_id" />
+        <result property="businessDesignModuleId" column="business_logic_module_id" />
+        <result property="screenDesignId" column="screen_id" />
+        <result property="screenDesignModuleId" column="screen_module_id" />
+        <result property="tableId" column="table_id"/>
+        <result property="columnId" column="column_id"/>
+        <result property="designType" column="design_type"/>
+        <result property="objectType" column="object_type"/>
+        <result property="objectTypeCode" column="object_type_code"/>
+        <result property="packageName" column="package_name"/>
+        <result property="sqlDesignCode" column="sql_design_code" />
+        <result property="moduleId" column="module_id" />
+    </resultMap>
+    
+    <resultMap id="decisionTableInputBeanResultMap" type="DecisionTableInputBean">
+        <id property="decisionInputBeanId" column="decision_input_bean_id" />
+        <result property="parentDecisionInputBeanId" column="parent_decision_input_bean_id" />
+        <result property="decisionInputBeanCode" column="decision_input_bean_code" />
+        <result property="decisionInputBeanName" column="decision_input_bean_name" />
+        <result property="dataType" column="data_type" />
+        <result property="itemSequenceNo" column="item_sequence_no" />
+        <result property="decisionTbId" column="decision_table_id" />
+		<result property="objectType" column="object_type" />
+		<result property="objectId" column="object_id" />
+		<result property="objectFlg" column="object_flg" />
+		<result property="commonObjDefiCode" column="common_object_definition_code" />
+        <result property="externalObjDefiCode" column="external_object_definition_code" />
+        <result property="packageNameObjExt" column="package_name" />
+        <result property="decisionTableCode" column="decision_table_code" />
+        <result property="moduleId" column="module_id" />
+    </resultMap>
+    
+    <resultMap id="decisionTableOutputBeanResultMap" type="DecisionTableOutputBean">
+        <id property="decisionOutputBeanId" column="decision_output_bean_id" />
+        <result property="parentDecisionOutputBeanId" column="parent_decision_output_bean_id" />
+        <result property="decisionOutputBeanCode" column="decision_output_bean_code" />
+         <result property="decisionOutputBeanName" column="decision_output_bean_name" />
+        <result property="dataType" column="data_type" />
+        <result property="itemSequenceNo" column="item_sequence_no" />
+        <result property="decisionTbId" column="decision_table_id" />
+		<result property="objectType" column="object_type" />
+		<result property="objectId" column="object_id" />
+		<result property="objectFlg" column="object_flg" />
+		<result property="commonObjDefiCode" column="common_object_definition_code" />
+        <result property="externalObjDefiCode" column="external_object_definition_code" />
+        <result property="packageNameObjExt" column="package_name" />
+        <result property="decisionTableCode" column="decision_table_code" />
+        <result property="moduleId" column="module_id" />
+    </resultMap>
+    
+    <resultMap id="inputbeanResultMap" type="InputBean">
+		<id property="inputBeanId" column="input_bean_id" />
+		<result property="inputBeanCode" column="input_bean_code" />
+		<result property="inputBeanName" column="input_bean_name" />
+		<result property="messageDesign.messageString" column="message_string" />
+		<result property="messageString" column="message_string" />
+		<result property="messageStringAutocomplete" column="message_string_autocomplete" />
+		<result property="inputBeanType" column="input_bean_type" />
+		<result property="dataType" column="data_type" />
+		<result property="arrayFlg" column="array_flg" />
+		<result property="screenItemId" column="screen_item_id" />
+		<result property="businessLogicId" column="business_logic_id" />
+		<result property="parentInputBeanId" column="parent_input_bean_id" />
+		<result property="itemSequenceNo" column="item_sequence_no" />
+		<result property="tblDesignId" column="tbl_design_id" />
+		<result property="tblDesignName" column="tbl_design_name" />
+		<result property="columnId" column="column_id" />
+		<result property="columnName" column="column_name" />
+		<result property="objectType" column="object_type" />
+		<result property="objectId" column="object_id" />
+		<result property="objectFlg" column="object_flg" />
+		<result property="scopeType" column="scope_type" />
+		<result property="scopeValue" column="scope_value" />
+		<result property="displayType" column="display_type" />
+		<result property="scopeValueAutocomplete" column="scope_value_autocomplete" />
+		<result property="autoincrementFlg" column="autoincrement_flg" />
+		<result property="groupBaseTypeId" column="group_base_type_id" />
+        <result property="screenItemIdAutocomplete" column="screen_item_id_autocomplete" />
+        <result property="dataTypeSession" column="dataTypeSession" />
+        <result property="arrayFlagSession" column="arrayFlagSession" />
+        <result property="businessLogicCode" column="business_logic_code" />
+        <result property="moduleId" column="module_id" />
+        <result property="projectId" column="project_id" />
+	</resultMap>
+	
+	<resultMap id="outputbeanResultMap" type="OutputBean">
+		<id property="outputBeanId" column="output_bean_id" />
+		<result property="outputBeanCode" column="output_bean_code" />
+		<result property="outputBeanName" column="output_bean_name" />
+		<result property="messageDesign.messageString" column="message_string" />
+		<result property="messageString" column="message_string" />
+		<result property="messageStringAutocomplete" column="message_string" />
+		<result property="dataType" column="data_type" />
+		<result property="arrayFlg" column="array_flg" />
+		<result property="businessLogicId" column="business_logic_id" />
+		<result property="parentOutputBeanId" column="parent_output_bean_id" />
+		<result property="itemSequenceNo" column="item_sequence_no" />
+		<result property="tblDesignId" column="tbl_design_id" />
+		<result property="tblDesignName" column="tbl_design_name" />
+		<result property="columnId" column="column_id" />
+		<result property="columnName" column="column_name" />
+		<result property="columnCode" column="column_code" />
+		<result property="groupBaseTypeId" column="group_base_type_id" />
+		<result property="impactStatus" column="impact_status" />
+		<result property="screenItemId" column="screen_item_id" />
+		<result property="screenItemIdAutocomplete" column="screen_item_id_autocomplete" />
+		<result property="objectType" column="object_type" />
+		<result property="objectId" column="object_id" />
+		<result property="objectFlg" column="object_flg" />
+		<result property="scopeType" column="scope_type" />
+		<result property="scopeValue" column="scope_value" />
+		<result property="scopeValueAutocomplete" column="scope_value_autocomplete" />
+        <result property="dataTypeSession" column="dataTypeSession" />
+        <result property="arrayFlagSession" column="arrayFlagSession" />
+        <result property="businessLogicCode" column="business_logic_code" />
+        <result property="moduleId" column="module_id" />
+        <result property="projectId" column="project_id" />
+	</resultMap>
+	
+	<resultMap id="objectdefinitionResultMap" type="ObjectDefinition">
+		<id property="objectDefinitionId" column="object_definition_id" />
+		<result property="objectDefinitionCode" column="object_definition_code" />
+		<result property="objectDefinitionName" column="object_definition_name" />
+		<result property="dataType" column="data_type" />
+		<result property="arrayFlg" column="array_flg" />
+		<result property="businessLogicId" column="business_logic_id" />
+		<result property="parentObjectDefinitionId" column="parent_object_definition_id" />
+		<result property="itemSequenceNo" column="item_sequence_no" />
+		<result property="tblDesignId" column="tbl_design_id" />
+		<result property="tblDesignName" column="tbl_design_name" />
+		<result property="tblDesignCode" column="tbl_design_code" />
+		<result property="columnId" column="column_id" />
+		<result property="columnName" column="column_name" />
+		<result property="columnCode" column="column_code" />
+		<result property="groupBaseTypeId" column="group_base_type_id" />
+		<result property="impactStatus" column="impact_status" />
+		<result property="baseType" column="base_type" />
+		<result property="objectFlg" column="object_flg" />
+		<result property="displayType" column="display_type" />
+		<result property="autoincrementFlg" column="autoincrement_flg" />
+		<result property="businessLogicCode" column="business_logic_code" />
+        <result property="moduleId" column="module_id" />
+	</resultMap>
+
+	<select id="findCommonObjAttrByUsingCommonObId" resultMap="commonObjectAttributeResultMap">
+		SELECT
+			a.common_object_attribute_id,
+			a.common_object_attribute_code,
+			a.common_object_attribute_name,
+			a.array_flg,
+			a.common_object_definition_id,
+			a.data_type,
+			a.object_definition_id,
+			a.item_seq_no,
+			a.parent_common_object_attribute_id,
+			b.module_id,
+			b.common_object_definition_code
+		FROM common_object_attribute a
+		LEFT JOIN common_object_definition b on (b.common_object_definition_id = a.common_object_definition_id)
+		WHERE
+			a.data_type = 16 and a.object_definition_id = #{commonObjectDefinitionId}
+		ORDER BY a.item_seq_no ASC
+	</select>
+
+	<select id="findSesionManagementByUsingCommonObId" parameterType="Long" resultMap="sessionManagementResultMap">
+		SELECT
+			a.session_management_id,
+			a.session_management_name,
+			a.session_management_code,
+			a.data_type,
+			a.object_id,
+			a.project_id,
+			a.session_management_type,
+			a.array_flg
+		FROM
+			session_management a
+		WHERE
+			a.object_id = #{commonObjectDefinitionId} and a.data_type = 16
+	</select>
+	
+	<select id="findFunctionMethodInputByUsingCommonObId" resultMap="functionMethodInputResultMap">
+		SELECT 
+			a.method_input_id, 
+			a.method_input_code, 
+			a.method_input_name, 
+			a.data_type, 
+       		a.array_flg, 
+       		a.item_seq_no, 
+       		a.function_method_id, 
+       		a.parent_function_method_input_id, 
+       		a.object_type, 
+       		a.object_id, 
+       		a.object_flg,
+       		b.function_method_code,
+       		c.function_master_code,
+       		c.function_master_id
+  		FROM function_method_input a
+  		LEFT JOIN function_method b on (b.function_method_id = a.function_method_id)
+  		LEFT JOIN function_master c on (c.function_master_id = b.function_master_id)
+  		WHERE a.object_type = 0 and a.object_id = #{commonObjectDefinitionId}
+  			and a.object_flg = true and a.data_type = 16
+  		ORDER BY a.item_seq_no ASC
+	</select>
+	
+	<select id="findFunctionMethodOutputByUsingCommonObId" resultMap="functionMethodOutputResultMap">
+		SELECT 
+			a.method_output_id, 
+			a.method_output_code, 
+			a.method_output_name, 
+			a.data_type, 
+       		a.array_flg, 
+       		a.item_seq_no, 
+       		a.function_method_id, 
+       		a.parent_function_method_output_id, 
+       		a.object_type, 
+       		a.object_id, 
+       		a.object_flg,
+       		b.function_method_code,
+       		c.function_master_code,
+       		c.function_master_id
+  		FROM function_method_output a
+  		LEFT JOIN function_method b on (b.function_method_id = a.function_method_id)
+  		LEFT JOIN function_master c on (c.function_master_id = b.function_master_id)
+  		WHERE a.object_type = 0 and a.object_id = #{commonObjectDefinitionId}
+  			and a.object_flg = true and a.data_type = 16
+  		ORDER BY a.item_seq_no ASC
+	</select>
+	
+	<select id="findSQLInputByUsingCommonObId" parameterType="Long" resultMap="sqlDesignInputResultMap">
+        SELECT A.sql_design_input_id,
+				A.sql_design_id,
+				A.sql_design_input_name,
+				A.sql_design_input_code,
+				A.data_type,
+				A.sql_design_input_parent_id,
+				A.array_flg,
+				A.item_seq_no,
+				A.table_id,
+				A.column_id,
+				A.design_type,
+				A.object_type,
+				B.sql_design_code,
+				B.module_id
+		FROM sql_design_input A
+		LEFT JOIN sql_design B on (B.sql_design_id = A.sql_design_id)
+		WHERE A.object_type = 0 and A.table_id = #{commonObjectDefinitionId}
+  			and A.column_id = 0 and A.data_type = 16 and A.design_type = 0
+  		ORDER BY a.item_seq_no ASC
+    </select>
+    
+    <select id="findSQLOutputByUsingCommonObId" parameterType="Long" resultMap="sqlDesignOutputResultMap">
+        SELECT A.sql_design_output_id,
+				A.sql_design_id,
+				A.sql_design_output_name,
+				A.sql_design_output_code,
+				A.data_type,
+				A.sql_design_output_parent_id,
+				A.array_flg,
+				A.item_seq_no,
+				A.table_id,
+				A.column_id,
+				A.design_type,
+				A.object_type,
+				B.sql_design_code,
+				B.module_id
+		FROM sql_design_output A
+		LEFT JOIN sql_design B on (B.sql_design_id = A.sql_design_id)
+		WHERE A.object_type = 0 and A.table_id = #{commonObjectDefinitionId}
+  			and A.column_id = 0 and A.data_type = 16 and A.design_type = 0
+  		ORDER BY a.item_seq_no ASC
+    </select>
+    
+    <select id="findDecisionTableInputBeanByUsingCommonObId"  resultMap="decisionTableInputBeanResultMap">
+		SELECT 
+			a.decision_input_bean_id, 
+			a.decision_input_bean_code, 
+			a.decision_input_bean_name, 
+       		a.data_type, 
+       		a.decision_table_id, 
+       		a.parent_decision_input_bean_id, 
+       		a.item_sequence_no, 
+       		a.object_type, 
+       		a.object_id, 
+       		a.object_flg,
+       		b.decision_table_code,
+       		b.module_id
+  		FROM decision_input_bean a
+  		LEFT JOIN decision_table b on (b.decision_table_id = a.decision_table_id)
+  		WHERE a.object_type = 0 and a.object_id = #{commonObjectDefinitionId}
+  			and a.object_flg = true and a.data_type = 16
+  		ORDER BY a.item_sequence_no ASC
+	</select>
+	
+	<select id="findDecisionTableOutputBeanByUsingCommonObId"  resultMap="decisionTableOutputBeanResultMap">
+		SELECT 
+			a.decision_output_bean_id, 
+			a.decision_output_bean_code, 
+			a.decision_output_bean_name, 
+       		a.data_type, 
+       		a.decision_table_id, 
+       		a.parent_decision_output_bean_id, 
+       		a.item_sequence_no, 
+       		a.object_type, 
+       		a.object_id, 
+       		a.object_flg,
+       		b.decision_table_code,
+       		b.module_id
+  		FROM decision_output_bean a
+  		LEFT JOIN decision_table b on (b.decision_table_id = a.decision_table_id)
+  		WHERE a.object_type = 0 and a.object_id = #{commonObjectDefinitionId}
+  			and a.object_flg = true and a.data_type = 16
+  		ORDER BY a.item_sequence_no ASC
+	</select>
+	
+	<select id="findInputBeanByUsingCommonObId" resultMap="inputbeanResultMap">
+	    SELECT 
+	    	a.input_bean_id, 
+	    	a.input_bean_code, 
+	    	a.input_bean_name, 
+	    	a.input_bean_type, 
+	       	a.data_type, 
+	       	a.array_flg, 
+	       	a.business_logic_id, 
+	       	a.parent_input_bean_id, 
+	       	a.item_sequence_no, 
+	       	a.screen_item_id, 
+	       	a.tbl_design_id, 
+	       	a.object_type, 
+	       	a.object_id, 
+	       	a.object_flg,
+	       	b.business_logic_code,
+	       	b.module_id
+		FROM input_bean a
+		LEFT JOIN business_logic b on (b.business_logic_id = a.business_logic_id )
+		WHERE a.object_type = 0 and a.object_id = #{commonObjectDefinitionId}
+  			and a.object_flg = true and a.data_type = 16
+    </select>
+    
+    <select id="findOutputBeanByUsingCommonObId" resultMap="outputbeanResultMap">
+    	SELECT 
+    		a.output_bean_id, 
+    		a.output_bean_code, 
+    		a.output_bean_name, 
+    		a.data_type, 
+       		a.array_flg, 
+       		a.business_logic_id, 
+       		a.parent_output_bean_id, 
+       		a.item_sequence_no,
+       		a.object_type, 
+       		a.object_id, 
+       		a.object_flg,
+       		b.module_id,
+       		b.business_logic_code
+  		FROM output_bean a
+  		LEFT JOIN business_logic b on (b.business_logic_id = a.business_logic_id )
+		WHERE a.object_type = 0 and a.object_id = #{commonObjectDefinitionId}
+  			and a.object_flg = true and a.data_type = 16
+    </select>
+    
+    <select id="findObjectDefinitionByUsingCommonObId" resultMap="objectdefinitionResultMap">
+    	SELECT 
+    		a.object_definition_id,
+    		a.object_definition_code, 
+    		a.object_definition_name, 
+       		a.data_type, 
+       		a.array_flg,
+       		a.business_logic_id, 
+       		a.parent_object_definition_id, 
+       		a.item_sequence_no, 
+       		a.object_type, 
+       		a.object_id, 
+       		a.object_flg,
+       		b.module_id,
+       		b.business_logic_code
+  		FROM object_definition a
+  		LEFT JOIN business_logic b on (b.business_logic_id = a.business_logic_id )
+		WHERE a.object_type = 0 and a.object_id = #{commonObjectDefinitionId}
+  			and a.object_flg = true and a.data_type = 16
+    </select>
+    
+    <select id="findInputBeanByUsingCommonObjectDefinitionId" resultMap="inputbeanResultMap">
+		SELECT 
+			a.input_bean_id,
+			a.input_bean_code,
+       		a.data_type,
+       		a.array_flg, 
+       		a.business_logic_id, 
+       		a.parent_input_bean_id,
+       		a.item_sequence_no, 
+       		a.object_type, 
+       		a.object_id, 
+       		a.object_flg,
+       		b.business_logic_code,
+       		b.module_id
+  		FROM input_bean a
+  		LEFT JOIN business_logic b on (a.business_logic_id = b.business_logic_id)
+  		WHERE a.object_type = 0
+  			AND a.object_id = #{commonObjectDefinitionId}
+	</select>
+	
+	<select id="findInputBeanByParentInputBeanUsingCommonObjectDefinitionId" resultMap="inputbeanResultMap">
+		SELECT 
+			a.input_bean_id,
+			a.input_bean_code,
+       		a.data_type,
+       		a.array_flg, 
+       		a.business_logic_id, 
+       		a.parent_input_bean_id,
+       		a.item_sequence_no, 
+       		a.object_type, 
+       		a.object_id, 
+       		a.object_flg,
+       		b.business_logic_code,
+       		b.module_id
+  		FROM input_bean a
+  		LEFT JOIN business_logic b on (a.business_logic_id = b.business_logic_id)
+  		WHERE a.parent_input_bean_id IN
+  		(
+  			SELECT 
+				a.input_bean_id
+	  		FROM input_bean a
+	  		WHERE a.object_type = 0
+	  			AND a.object_id = #{commonObjectDefinitionId}
+  		)
+	</select>
+	
+    <select id="findOutputBeanByUsingCommonObjectDefinitionId" resultMap="outputbeanResultMap">
+		SELECT 
+			a.output_bean_id,
+			a.output_bean_code,
+       		a.data_type,
+       		a.array_flg, 
+       		a.business_logic_id, 
+       		a.parent_output_bean_id,
+       		a.object_type, 
+       		a.object_id, 
+       		a.object_flg,
+       		b.business_logic_code,
+       		b.module_id
+  		FROM output_bean a
+  		LEFT JOIN business_logic b on (a.business_logic_id = b.business_logic_id)
+  		WHERE a.object_type = 0
+  			AND a.object_id = #{commonObjectDefinitionId}
+	</select>
+	
+	<select id="findOutputBeanByParentOutputBeanUsingCommonObjectDefinitionId" resultMap="outputbeanResultMap">
+		SELECT 
+			a.output_bean_id,
+			a.output_bean_code,
+       		a.data_type,
+       		a.array_flg, 
+       		a.business_logic_id, 
+       		a.parent_output_bean_id,
+       		a.object_type, 
+       		a.object_id, 
+       		a.object_flg,
+       		b.business_logic_code,
+       		b.module_id
+  		FROM output_bean a
+  		LEFT JOIN business_logic b on (a.business_logic_id = b.business_logic_id)
+  		WHERE a.parent_output_bean_id IN
+  		(
+  			SELECT 
+				a.output_bean_id
+	  		FROM output_bean a
+	  		WHERE a.object_type = 0
+	  			AND a.object_id = #{commonObjectDefinitionId}
+  		)
+	</select>
+	
+	<select id="findObjectDefinitionByUsingCommonObjectDefinitionId" resultMap="objectdefinitionResultMap">
+		SELECT 
+			a.object_definition_id,
+			a.object_definition_code,
+       		a.data_type,
+       		a.array_flg, 
+       		a.business_logic_id, 
+       		a.parent_object_definition_id,
+       		a.object_type, 
+       		a.object_id, 
+       		a.object_flg,
+       		b.business_logic_code,
+       		b.module_id
+  		FROM object_definition a
+  		LEFT JOIN business_logic b on (a.business_logic_id = b.business_logic_id)
+  		WHERE a.object_type = 0
+  			AND a.object_id = #{commonObjectDefinitionId}
+	</select>
+	
+	<select id="findObjectDefinitionByParentObjectDefinitionUsingCommonObjectDefinitionId" resultMap="objectdefinitionResultMap">
+		SELECT 
+			a.object_definition_id,
+			a.object_definition_code,
+       		a.data_type,
+       		a.array_flg, 
+       		a.business_logic_id, 
+       		a.parent_object_definition_id,
+       		a.item_sequence_no, 
+       		a.object_type, 
+       		a.object_id, 
+       		a.object_flg,
+       		b.business_logic_code,
+       		b.module_id
+  		FROM object_definition a
+  		LEFT JOIN business_logic b on (a.business_logic_id = b.business_logic_id)
+  		WHERE a.parent_object_definition_id IN
+  		(
+  			SELECT 
+				a.object_definition_id
+	  		FROM object_definition a
+	  		WHERE a.object_type = 0
+	  			AND a.object_id = #{commonObjectDefinitionId}
+  		)
+	</select>
+	
+	<select id="findDecisionTableInputBeanByUsingCommonObjectDefinitionId" resultMap="decisionTableInputBeanResultMap">
+		SELECT 
+			a.decision_input_bean_id, 
+			a.decision_input_bean_code, 
+			a.decision_input_bean_name, 
+       		a.data_type, 
+       		a.decision_table_id, 
+       		a.parent_decision_input_bean_id, 
+       		a.object_type, 
+       		a.object_id, 
+       		a.object_flg,
+       		b.module_id
+  		FROM decision_input_bean a
+  		LEFT JOIN decision_table b on (a.decision_table_id = b.decision_table_id)
+  		WHERE a.object_type = 0
+  			AND a.object_id = #{commonObjectDefinitionId}
+	</select>
+	
+	<select id="findDecisionTableInputBeanByParentInputBeanUsingCommonObjectDefinitionId" resultMap="decisionTableInputBeanResultMap">
+		SELECT 
+			a.decision_input_bean_id, 
+			a.decision_input_bean_code, 
+			a.decision_input_bean_name, 
+       		a.data_type, 
+       		a.decision_table_id, 
+       		a.parent_decision_input_bean_id, 
+       		a.object_type, 
+       		a.object_id, 
+       		a.object_flg,
+       		b.module_id
+  		FROM decision_input_bean a
+  		LEFT JOIN decision_table b on (a.decision_table_id = b.decision_table_id)
+  		WHERE a.parent_decision_input_bean_id IN
+  		(
+  			SELECT 
+				a.decision_input_bean_id
+	  		FROM decision_input_bean a
+	  		WHERE a.object_type = 0
+	  			AND a.object_id = #{commonObjectDefinitionId}
+  		)
+	</select>
+	
+	<select id="findDecisionTableOutputBeanByUsingCommonObjectDefinitionId" resultMap="decisionTableOutputBeanResultMap">
+		SELECT 
+			a.decision_output_bean_id, 
+			a.decision_output_bean_code, 
+			a.decision_output_bean_name, 
+       		a.data_type, 
+       		a.decision_table_id, 
+       		a.parent_decision_output_bean_id, 
+       		a.object_type, 
+       		a.object_id, 
+       		a.object_flg,
+       		b.module_id
+  		FROM decision_output_bean a
+  		LEFT JOIN decision_table b on (a.decision_table_id = b.decision_table_id)
+  		WHERE a.object_type = 0
+  			AND a.object_id = #{commonObjectDefinitionId}
+	</select>
+	
+	<select id="findDecisionTableOutputBeanByParentOutputBeanUsingCommonObjectDefinitionId" resultMap="decisionTableOutputBeanResultMap">
+		SELECT 
+			a.decision_output_bean_id, 
+			a.decision_output_bean_code, 
+			a.decision_output_bean_name, 
+       		a.data_type, 
+       		a.decision_table_id, 
+       		a.parent_decision_output_bean_id, 
+       		a.object_type, 
+       		a.object_id, 
+       		a.object_flg,
+       		b.module_id
+  		FROM decision_output_bean a
+  		LEFT JOIN decision_table b on (a.decision_table_id = b.decision_table_id)
+  		WHERE a.parent_decision_output_bean_id IN
+  		(
+  			SELECT 
+				a.decision_output_bean_id
+	  		FROM decision_output_bean a
+	  		WHERE a.object_type = 0
+	  			AND a.object_id = #{commonObjectDefinitionId}
+  		)
+	</select>
+	
+	<select id="findSqlDesignInputByUsingCommonObjectDefinitionId" resultMap="sqlDesignInputResultMap">
+		SELECT 
+			a.sql_design_input_id,
+			a.sql_design_id,
+			a.sql_design_input_name,
+			a.sql_design_input_code, 
+       		a.data_type,
+       		a.sql_design_input_parent_id,
+       		a.array_flg, item_seq_no, 
+       		a.table_id, 
+       		a.column_id, 
+       		a.design_type, 
+       		a.object_type,
+       		b.module_id,
+       		b.sql_design_id,
+       		b.sql_design_code
+  		FROM sql_design_input a
+  		LEFT JOIN sql_design b on (a.sql_design_id = b.sql_design_id)
+  		WHERE a.object_type = 0
+  			AND a.table_id = #{commonObjectDefinitionId}
+	</select>
+	
+	<select id="findSqlDesignInputByParentSqlDesignInputUsingCommonObjectDefinitionId" resultMap="sqlDesignInputResultMap">
+		SELECT 
+			a.sql_design_input_id,
+			a.sql_design_id,
+			a.sql_design_input_name,
+			a.sql_design_input_code, 
+       		a.data_type,
+       		a.sql_design_input_parent_id,
+       		a.array_flg, item_seq_no, 
+       		a.table_id, 
+       		a.column_id, 
+       		a.design_type, 
+       		a.object_type,
+       		b.module_id,
+       		b.sql_design_id,
+       		b.sql_design_code
+  		FROM sql_design_input a
+  		LEFT JOIN sql_design b on (a.sql_design_id = b.sql_design_id)
+  		WHERE a.sql_design_input_parent_id IN
+  		(
+  			SELECT 
+				a.sql_design_input_id
+	  		FROM sql_design_input a
+	  		WHERE a.object_type = 0
+	  			AND a.table_id = #{commonObjectDefinitionId}
+  		)
+	</select>
+	
+	<select id="findSqlDesignOutputByUsingCommonObjectDefinitionId" resultMap="sqlDesignOutputResultMap">
+		SELECT 
+			a.sql_design_output_id,
+			a.sql_design_id,
+			a.sql_design_output_name, 
+       		a.sql_design_output_code,
+       		a.data_type,
+       		a.sql_design_output_parent_id, 
+       		a.array_flg,
+       		a.mapping_column,
+       		a.item_seq_no,
+       		a.table_id,
+       		a.column_id, 
+       		a.design_type,
+       		a.object_type,
+       		b.module_id,
+       		b.sql_design_id,
+       		b.sql_design_code
+  		FROM sql_design_output a
+  		LEFT JOIN sql_design b on (a.sql_design_id = b.sql_design_id)
+  		WHERE a.object_type = 0
+  			AND a.table_id = #{commonObjectDefinitionId}
+	</select>
+	
+	<select id="findSqlDesignOutputByParentSqlDesignOutputUsingCommonObjectDefinitionId" resultMap="sqlDesignOutputResultMap">
+		SELECT 
+			a.sql_design_output_id,
+			a.sql_design_id,
+			a.sql_design_output_name, 
+       		a.sql_design_output_code,
+       		a.data_type,
+       		a.sql_design_output_parent_id, 
+       		a.array_flg,
+       		a.mapping_column,
+       		a.item_seq_no,
+       		a.table_id,
+       		a.column_id, 
+       		a.design_type,
+       		a.object_type,
+       		b.module_id,
+       		b.sql_design_id,
+       		b.sql_design_code
+  		FROM sql_design_output a
+  		LEFT JOIN sql_design b on (a.sql_design_id = b.sql_design_id)
+  		WHERE a.sql_design_output_parent_id IN
+  		(
+  			SELECT 
+				a.sql_design_output_id
+	  		FROM sql_design_output a
+	  		WHERE a.object_type = 0
+	  			AND a.table_id = #{commonObjectDefinitionId}
+  		)
+	</select>
+	
+	<select id="findFunctionMethodInputByUsingCommonObjectDefinitionId" resultMap="functionMethodInputResultMap">
+		SELECT 
+			a.method_input_id, 
+			a.method_input_code, 
+			a.method_input_name, 
+			a.data_type, 
+       		a.array_flg, 
+       		a.item_seq_no, 
+       		a.function_method_id, 
+       		a.parent_function_method_input_id, 
+       		a.object_type, 
+       		a.object_id, 
+       		a.object_flg,
+       		b.function_method_code,
+       		c.function_master_id,
+       		c.function_master_code
+  		FROM function_method_input a
+  		LEFT JOIN function_method b on (a.function_method_id = b.function_method_id)
+  		LEFT JOIN function_master c on (c.function_master_id = b.function_master_id)
+  		WHERE a.object_type = 0
+  			AND a.object_id = #{commonObjectDefinitionId}
+	</select>
+	
+	<select id="findFunctionMethodInputByParentInputUsingCommonObjectDefinitionId" resultMap="functionMethodInputResultMap">
+		SELECT 
+			a.method_input_id, 
+			a.method_input_code, 
+			a.method_input_name, 
+			a.data_type, 
+       		a.array_flg, 
+       		a.item_seq_no, 
+       		a.function_method_id, 
+       		a.parent_function_method_input_id, 
+       		a.object_type, 
+       		a.object_id, 
+       		a.object_flg,
+       		b.function_method_code,
+       		c.function_master_id,
+       		c.function_master_code
+  		FROM function_method_input a
+  		LEFT JOIN function_method b on (a.function_method_id = b.function_method_id)
+  		LEFT JOIN function_master c on (c.function_master_id = b.function_master_id)
+  		WHERE a.parent_function_method_input_id IN
+  		(
+  			SELECT 
+				a.method_input_id
+	  		FROM function_method_input a
+	  		WHERE a.object_type = 0
+	  			AND a.object_id = #{commonObjectDefinitionId}
+  		)
+	</select>
+	
+	<select id="findFunctionMethodOutputByUsingCommonObjectDefinitionId" resultMap="functionMethodOutputResultMap">
+		SELECT 
+			a.method_output_id, 
+			a.method_output_code, 
+			a.method_output_name, 
+			a.data_type, 
+       		a.array_flg, 
+       		a.item_seq_no, 
+       		a.function_method_id, 
+       		a.parent_function_method_output_id, 
+       		a.object_type, 
+       		a.object_id, 
+       		a.object_flg,
+       		b.function_method_code,
+       		c.function_master_id,
+       		c.function_master_code
+  		FROM function_method_output a
+  		LEFT JOIN function_method b on (a.function_method_id = b.function_method_id)
+  		LEFT JOIN function_master c on (c.function_master_id = b.function_master_id)
+  		WHERE a.object_type = 0
+  			AND a.object_id = #{commonObjectDefinitionId}
+	</select>
+	
+	<select id="findFunctionMethodOutputByParentOutputUsingCommonObjectDefinitionId" resultMap="functionMethodOutputResultMap">
+		SELECT 
+			a.method_output_id, 
+			a.method_output_code, 
+			a.method_output_name, 
+			a.data_type, 
+       		a.array_flg, 
+       		a.item_seq_no, 
+       		a.function_method_id, 
+       		a.parent_function_method_output_id, 
+       		a.object_type, 
+       		a.object_id, 
+       		a.object_flg,
+       		b.function_method_code,
+       		c.function_master_id,
+       		c.function_master_code
+  		FROM function_method_output a
+  		LEFT JOIN function_method b on (a.function_method_id = b.function_method_id)
+  		LEFT JOIN function_master c on (c.function_master_id = b.function_master_id)
+  		WHERE a.parent_function_method_output_id IN
+  		(
+  			SELECT 
+				a.method_output_id
+	  		FROM function_method_output a
+	  		WHERE a.object_type = 0
+	  			AND a.object_id = #{commonObjectDefinitionId}
+  		)
+	</select>
+</mapper>

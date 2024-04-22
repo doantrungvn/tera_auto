@@ -1,0 +1,2009 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>	<html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>	<html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="viewport" content="width=device-width" />
+	<title>UAT2</title>
+
+	<link rel="icon" href="../media/images/tool.ico" type="image/x-icon" />
+	<link rel="shortcut icon" href="../media/images/tool.ico" type="image/x-icon" />
+	
+	<link type="text/css" href="../media/css/bootstrap.css" rel="stylesheet" />
+	<link type="text/css" href="../media/js/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+	<link type="text/css" href="../media/css/bootstrap.theme.css" rel="stylesheet" />
+	<link type="text/css" href="../media/js/customnavbar/bootstrap-submenu.css" rel="stylesheet">
+	<link rel="stylesheet" href="../media/js/combobox/bootstrap-combobox.css">
+	<link type="text/css" href="../media/css/common.css" rel="stylesheet" ../media="screen,print" />
+	<link type="text/css" href="../media/css/elements.css" rel="stylesheet" />
+	<link type="text/css" href="../media/css/custom-theme/blue-theme/style.css" rel="stylesheet" id="themeStyle" />
+	<link type="text/css" href="../media/js/fancybox/jquery.fancybox.css" rel="stylesheet" />
+	<link type="text/css" href="../media/js/spinedit/bootstrap-spinedit.css" rel="stylesheet" />
+
+	<script type="text/javascript" src="../media/js/jquery-1.11.2.min.js"></script>	
+	<script type="text/javascript" src="../media/js/jquery-ui.min.js"></script>		
+	<script type="text/javascript" src="../media/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../media/js/fancybox/jquery.fancybox.pack.js"></script>
+	<script type="text/javascript" src="../media/js/autoNumeric.js"></script>
+	<script type="text/javascript" src="../media/js/jquery.tmpl.min.js"></script>
+	<script type="text/javascript" src="../media/js/moment.js"></script>
+	<script type="text/javascript" src="../media/js/bootstrap-datetimepicker.min.js"></script>
+	<script src="../media/js/bootstrap-combobox.js"></script>
+	<script src="../media/js/bootstrap-tooltip.js"></script>	
+	<script src="../media/js/bootstrap-confirmation.js"></script>	
+	<script type="text/javascript" src="../media/js/bootstrap.file-input.js"></script>
+	<script type="text/javascript" src="../media/js/bootstrap-spinedit.js"></script>
+	<script type="text/javascript" src="../media/js/jsMsgSource.js"></script>
+	<script type="text/javascript" src="../media/js/customnavbar/bootstrap-submenu.js" ></script>
+	<script type="text/javascript" src="../media/js/terasoluna-qp-1.0.0.0.js"></script>
+	<script type="text/javascript" src="../media/js/terasoluna-qp-init.js"></script>
+
+	
+
+	<link href="../media/screendesign/css/style.css" type="text/css" rel="stylesheet" />
+	<link href="../media/screendesign/css/icon.css" type="text/css" rel="stylesheet" />
+	<link href="../media/screendesign/css/bootstrap.vertical-tabs.min.css" type="text/css" rel="stylesheet" />
+	<script type="text/javascript" src="../media/screendesign/javascript/search.js" ></script>
+	<script type="text/javascript" src="../media/screendesign/javascript/common.js?r=21"></script>
+	
+	<!-- Start load theme for user -->
+	<style>
+/*************************************************************
+	change Theme
+*************************************************************/
+
+/* body background color */
+.qp-header-img {
+		background-color: #ffffff;
+}
+.qp-header-img {
+		background-image:url(data:image/jpeg;base64,); background-color:#ffffff; 
+		font-size: 12px
+}
+
+/* menu bg*/
+.navbar-default {
+	
+		background-image: linear-gradient(to bottom, #7895cf 0%, #7895cf 100%);   
+	
+}
+/* menu brand */
+.navbar-default .navbar-brand  {
+	
+		color: #ffffff ;
+	
+		font-size: 18px;
+	
+}
+/* menu text color*/
+.navbar-default .navbar-nav > li > a {
+		color: #ffffff ;
+}
+/* header */
+.qp-header-main-text{
+	
+		font-size: 18px;
+	
+		color: #333333 ;
+	
+}
+.qp-link-header{
+	
+		text-align: right ;
+	
+		color:  #0033cc ;
+	
+}
+
+.qp-link-header{
+	
+	color:#0033cc; 
+	font-size:14px; 
+	
+}
+
+/* panel */
+.panel-default>.panel-heading {
+	
+		color: #ffffff ;
+	
+		background-color:  #7895cf ;
+	
+		border-color: 1px #CBCFED ;
+	
+		font-size: 12px;
+	
+		height: 28px;
+	
+}
+.panel-body {
+	
+		padding: 10px;
+	
+		background:  #ffffff ;
+	
+}
+/* panel table form */
+.qp-table-form tr th{
+	
+		border: 1px solid #CBCFED ;
+	
+		background-color: #eff5f9 ;
+	
+} 
+.qp-table-form tr th {
+	
+		text-align: right ;
+	
+}
+/* panel table list */
+.qp-table-list thead tr th {
+	
+		border: 1px solid #CBCFED ;
+	
+		background-color: #eff5f9 ;
+	
+}
+.qp-table-list tbody tr td:first-child{
+	
+		text-align: center ;
+	
+		width: 40px;
+	
+}
+.qp-table-list tbody tr td:last-child {
+	
+		text-align: center ;
+	
+		width: 40px;
+	
+}
+.qp-table-list thead tr th {
+	
+		text-align: left ;
+	
+}
+
+/* badge */
+.panel-default > .panel-heading .badge {
+	
+		color: #333 ;
+	
+		background-color: #ffffff ;
+	
+}
+/* footer */
+.qp-footer {
+	
+		border-top: solid 1.5px #7895CF ;
+	
+}
+/* common */
+
+.qp-button-warning {
+	
+		background-color: #eb9316 ;
+	
+		color: #ffffff ;
+	
+}
+.qp-button-warning:active ,.qp-button-warning:hover, .qp-button-warning:focus {
+	
+		background-color: #eb9316 ;
+	
+		border-color: #eb9316 ;
+	
+}
+.qp-button {
+	
+		color: #ffffff ;
+	
+		background-color: #5cb85c ;
+	
+}
+
+.qp-button:active, .qp-button:hover, .qp-button:focus{
+	
+		color: #ffffff ;
+	
+		background-color: #419641 ;
+		border-color: #419641 ;
+	
+}
+.qp-link-button:hover, .qp-link-button:visited, .qp-link-button:active, .qp-link-button:focus {
+	
+		color: #ffffff;
+	
+}
+.pagination > .active > a {
+	
+		background-color: #5cb85c ;
+		border-color: #5cb85c ;
+	
+		color: #ffffff ;
+	
+}
+
+.qp-link-popup{
+	color: #0033cc ;
+	
+}
+.qp-link-popup-text{
+	color: #ffffff ;
+	
+}
+.qp-root {
+
+		width: 1004px ;
+}
+.qp-link-header-icon {
+
+		color : #EB9418;
+}
+
+.qp-button-type {
+	background-color:#5cb85c; 
+	color:#ffffff; 
+}
+
+.qp-button-type:ACTIVE,.qp-button-type:hover,.qp-button-type:focus {
+	background-color:#419641; 
+}
+
+.qp-button-type-warning {
+	background-color:#eb9316; 
+	color:#ffffff; 
+}
+
+.qp-button-type-warning:ACTIVE,.qp-button-type-warning:hover,.qp-button-type-warning:focus  {
+	background-color:#eb9316; 
+}
+
+.qp-button-type-client {
+	background-color:#32b0ac; 
+	color:#ffffff; 
+}
+
+.qp-button-type-client:ACTIVE,.qp-button-type-client:hover,.qp-button-type-client:focus {
+	background-color:#2d9a96; 
+}
+
+@media (max-width: 767px) {
+	.navbar-default .navbar-nav > li.open {
+		background-color:white;
+	}
+	
+}	
+@font-face {
+  font-family: 'Glyphicons Halflings';
+
+  src: url('../media/fonts/glyphicons-halflings-regular.eot');
+  src: url('../media/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../media/fonts/glyphicons-halflings-regular.woff2') format('woff2'), url('../media/fonts/glyphicons-halflings-regular.woff') format('woff'), url('../media/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../media/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+}
+
+		/* menu brand */
+			.navbar-default .navbar-brand  {
+			    color:#ffffff; font-size:18px; 
+			}
+			
+			/*selected menu*/
+			.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
+			    color:#555555; 
+			    	background-image: linear-gradient(to bottom, #e7e7e7 0%, #e7e7e7 100%);
+			}
+			
+			/* menu font color*/
+			.navbar-default .navbar-nav > li > a {
+			    font-size:12px; 
+			}
+			
+			.navbar-default .navbar-nav > li > a {
+			    color:#ffffff; font-size:18px; 
+			}
+			.navbar-default .navbar-nav > li > a {
+			    background-color:#7895cf; font-size:12px; color:#ffffff; 
+			}
+			
+			
+			.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+			    color:#262626; 
+			    background-image: linear-gradient(to bottom, #e8e8e8 0%, #e8e8e8 100%);
+			    background-repeat: repeat-x;
+			}
+			
+			.panel-default>.panel-heading{
+				color:#ffffff; font-size:12px; height:28px; background-color:#7895cf; 
+			}
+			
+			.panel-body{
+				background-color:#ffffff; padding:10px; 
+			}
+			
+			.qp-table-list{
+				border-spacing:0px; border:1px solid #cbcfed; padding:0px; 
+			}
+			
+			.qp-table-list thead tr th{
+				background-color:#eff5f9; font-size:12px; 
+			}
+			
+			.result-text{
+				text-align:left; 
+			}
+			
+			.result-numeric{
+				text-align:right; 
+			}
+			
+			.result-date{
+				text-align:center; 
+			}
+			
+			.result-date-time{
+				text-align:center; 
+			}
+			
+			.result-no-number{
+				text-align:left; 
+			}
+			
+			.result-action-column{
+				text-align:left; 
+			}
+			
+			.qp-table-form{
+				border:1px solid #cbcfed; padding:0px; border-spacing:0px; 
+			}
+			
+			.qp-table-form tr th{
+				font-size:12px; text-align:right; background-color:#eff5f9; 
+			}
+			
+			.qp-table-form tr td{
+				font-size:12px; 
+			}
+			
+			.qp-root .qp-footer {
+				font-size:12px; 
+			}
+			
+			.qp-root .qp-footer {
+				color:#555555; font-size:12px; 
+			}
+		
+			.qp-breadcrumb .breadcrumb {
+				color:#333333; 
+				font-size:18px; 
+			}
+			
+			.qp-item-custom {
+				border-style:dotted;
+				border-color: #ff9999
+			}
+			.qp-table-list > tbody > tr > td:last-child .btn,
+			.qp-table-list-none-no > tbody > tr > td:last-child .btn {
+					font-size: 12px;
+					padding: 2px;
+			}
+			
+</style><!-- End load theme -->
+	<!-- Start load screen size for user -->
+	<script type="text/javascript">
+		$.qp.initalFancybox = function(className, href) {
+			if (href == null) {
+				$("a." + className).fancybox({
+					'centerOnScroll' : true,
+					'enableEscapeButton' : false,
+					onStart : function() {
+						$("body").css("overflow", "hidden");
+					},
+					onClosed : function() {
+						$("body").css("overflow", "auto");
+					},
+					afterClose : function(){
+						fcomFancyBoxClose();
+					},
+					'width' : 1004,
+					'height' : '100%',
+					'autoSize' : false,
+					'autoScale' : true,
+					'autoDimensions' : true,
+					'hideOnOverlayClick' : false,
+					'transitionIn' : 'none',
+					'transitionOut' : 'none',
+					'type' : 'iframe',
+					'beforeLoad': function(){
+						var state = {"html":window.top.document.documentElement.innerHTML};
+						window.history.replaceState(state,"",window.top.location.href);
+					},
+					'afterLoad':function(event,arg01,arg02){
+						if($.qp.isHasPageErrors($(this.content).contents()[0].documentElement)) {
+							var iframeHtml = $($("iframe").contents()[0].documentElement).html();
+							$("iframe").parents(".fancybox-overlay:first").remove();
+							var state = {"html":iframeHtml};
+							window.history.pushState(state,"",window.location.href);
+							$.qp.updateDocument(window.top.document,{"html":state.html})
+							return false;
+						}
+					}
+				});
+			}
+			if (href != null) {
+				$("a." + className).each(function(){
+						$(this).fancybox({
+					'href' : $(this).attr('href'),
+					'centerOnScroll' : true,
+					'enableEscapeButton' : false,
+					onStart : function() {
+						$("body").css("overflow", "hidden");
+					},
+					onClosed : function() {
+						$("body").css("overflow", "auto");
+					},
+					afterClose : function(){
+						fcomFancyBoxClose();
+					},
+					'width' : 1004,
+					'height' : '100%',
+					'autoSize' : false,
+					'autoScale' : true,
+					'autoDimensions' : true,
+					'hideOnOverlayClick' : false,
+					'transitionIn' : 'none',
+					'transitionOut' : 'none',
+					'type' : 'iframe'
+				});
+				});
+				
+			}
+		};
+	$(document).ready(function(){
+		$.qp.initalFancybox("qp-link-popup", 'test');
+		$.qp.initalFancybox("qp-link-popup-text", 'test');
+		$.qp.initalFancybox("qp-button-popup", 'test');
+		$('[data-submenu]').submenupicker();
+		
+		$(".qp-link-popup-navigate").click(function(){
+			var parentWindow = window.parent.document; 
+			var href = $(this).attr('href');
+			
+			$.ajax({
+					method : "GET",
+					url : href,
+				}).done(function(data,status) {
+					var $document;
+					var state;
+					if($.qp.isHasPageErrors(data)) {
+						$document = window.document;
+						state = {"html":data};
+					} else {
+						$document = window.parent.document;
+						$("iframe").parents(".fancybox-overlay")
+						state = {"html":data};
+						window.parent.history.pushState(state,"",href);
+					}
+					$.qp.updateDocument($document,state);
+				});
+				return false;
+	    });
+	});
+	function fcomFancyBoxClose()
+	{
+		var isReload = $('#fcomReloadFancyBox').val();
+		if(isReload == 'true')
+		{
+			var parentWindow = window.parent.document;
+			parentWindow.location.reload();
+		}
+	}
+	
+	
+	function showConfirmForGenerateHTML(url,obj) {
+		var messageConfirm = fcomMsgSource["inf.sys.0015"];
+		var onselectConfirm = undefined;
+		
+		if($(obj).attr("message-string") != undefined){
+			messageConfirm =$(obj).attr("message-string");
+		} else {
+			if($(obj).attr("messageId") != undefined){
+				messageConfirm = fcomMsgSource[$(obj).attr("messageId")];
+			}
+		}
+		
+		if($(obj).attr("onClick") != undefined){
+			onselectConfirm = $(obj).attr("onClick");
+		}
+		$.qp.initConfirmModels('#fcomConfirmDialog');
+		
+		var warning = "";
+		
+		if ($(obj).attr("warning") != undefined) {
+			warning = $(obj).attr("warning");
+		}
+		
+		$("#fcomConfirmDialog .modal-body").html(warning + messageConfirm);
+		$("#fcomConfirmDialog").modal('show');
+		
+		$("#fcomConfirmDialog").on("hidden.bs.modal", function() {    // remove the event listeners when the dialog is dismissed
+			$(this).parent().find('input[type!=hidden]:first').focus();
+		});
+		$('#fcomConfirmDialog').on('shown.bs.modal', function() {
+			$("#fcomConfirmDialog #fcomConfirmBtnYes").focus();
+	    });
+		$("#fcomConfirmBtnYes").on("click", function(e) {
+			if(onselectConfirm != undefined && typeof(onselectConfirm) == "function"){
+				var result = window[onselectConfirm](event);
+				if(result == false)
+				{
+					$("#fcomConfirmDialog").modal('hide');
+					return true;
+				}
+			}
+            
+			parent.location.href =url;
+			
+	        });
+		$("#fcomConfirmBtnYes").next().on("click", function(e) {
+			$("#fcomConfirmBtnYes").unbind();
+			
+	        });
+		$(obj).parent().on('keydown', function(evt) {
+			 if (evt.keyCode == $.ui.keyCode.ESCAPE) {
+				 $("#fcomConfirmDialog").modal('hide');
+				 $('input[type!=hidden]:first').focus();
+			 }
+	    });
+	};
+	
+	function checkEnableConfirm(url, enableConfirm, messageConfirmString, object){
+		if(enableConfirm=="0"){
+			parent.location.href =url;
+		}
+		if(enableConfirm=="1"){
+			showConfirmForGenerateHTML(url,object);
+			if(showConfirmForGenerateHTML(url,object)) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	};
+	
+</script><!-- End load theme screen size -->
+</head>
+<body>
+	<div class="modal fade" id="fcomConfirmDialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header qp-model-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h3 class="modal-title qp-model-header-title">Confirm message</h3>
+				</div>
+				<div class="modal-body qp-model-body">
+				</div>
+				<div class="modal-footer qp-model-footer">
+					<button type="button" class="btn btn-primary" id="fcomConfirmBtnYes" tabindex="1">Yes</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal" tabindex="2">No</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="qp-root">
+		<!-- Start body container -->
+		<div class="qp-body-container">
+			<div class="qp-header-main">
+				<h4>
+					<span class="qp-header-main-text">
+						View role</span>
+				</h4>
+				<em style="text-align: right;"></em>
+			</div>
+			<div class="qp-link-header">
+				</div>
+			<!-- Start message -->
+			<div class="qp-message">
+				</div>
+			<!-- End message -->
+			<!-- Start content -->
+			<div class="qp-body">
+				<form id="roleForm" action="viewForm.html" method="post"><!-- begin role information -->
+				<div class="panel panel-default qp-div-information">
+					<div class="panel-heading">
+						<span class="glyphicon  qp-heading-icon" aria-hidden="true">&nbsp;</span>
+						<span class="pq-heading-text">Role information</span>
+					</div>
+					<div class="panel-body">
+						<table class="table table-bordered qp-table-form">
+							<colgroup>
+								<col width="20%" />
+								<col width="30%" />
+								<col width="20%" />
+								<col width="30%" />
+							</colgroup>
+							<tr>
+								<th>Role name</th>
+								<td class="word-wrap">
+
+
+
+Full role<input id="roleName" name="roleName" type="hidden" value="Full role"/></td>
+								<th>Role code</th>
+								<td class="word-wrap">
+
+
+
+fullrole<input id="roleCd" name="roleCd" type="hidden" value="fullrole"/></td>
+							</tr>
+							<tr>
+								<th>Status</th>
+								<td>
+
+
+
+Active<input id="status" name="status" type="hidden" value="1"/></td>
+								<th>Remark</th>
+								<td class="word-wrap">
+
+
+
+<span style="white-space:pre-line">Full role</span><input id="remark" name="remark" type="hidden" value="Full role"/></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+                <!-- begin operation button panel -->
+                <div class="qp-div-action">
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+	<input id="roleId" name="roleId" type="hidden" value="1"/><button type="button" class="btn btn-md btn-warning qp-dialog-confirm" messageId="inf.sys.0014">Delete</button>
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<a type="submit" class="btn btn-md btn-success qp-link-button qp-link-popup-navigate" onclick="parent.location.href='modifyForm.html?roleId=1&mode=1'">Modify</a>
+                    
+
+
+</div>
+                <!-- end operation button panel -->
+				<!-- end role information -->
+				<div class="qp-div-action-select">
+					Filter by module&nbsp;
+					<select id="moduleCd" name="moduleCd" class="qp-input-select" onchange="changeModule(this)"><option value="-1"></option><option value="tqp.account">Account management</option>
+						<option value="tqp.accountpermission">Account permission</option>
+						<option value="tqp.accountprofile">Account Profile</option>
+						<option value="tqp.accountrole">Account role</option>
+						<option value="tqp.accountruledefinition">Account rule definition</option>
+						<option value="tqp.autocomplete">Autocomplete design</option>
+						<option value="tqp.businesslogicdesign">Business logic design</option>
+						<option value="tqp.businesstype">Business type</option>
+						<option value="tqp.codelist">Codelist design</option>
+						<option value="tqp.commonobjectdefinition">Common object definition</option>
+						<option value="tqp.decisiontable">Decision table</option>
+						<option value="tqp.designinformation">Design information</option>
+						<option value="tqp.domaindesign">Domain design</option>
+						<option value="tqp.externalobjectdefinition">External object definition</option>
+						<option value="tqp.functiondesign">Function design management</option>
+						<option value="tqp.functionmaster">Function master</option>
+						<option value="tqp.generation">Generation</option>
+						<option value="tqp.graphicdatabasedeisgn">Graphic database design</option>
+						<option value="tqp.language">Language management</option>
+						<option value="tqp.languagedesign">Language design</option>
+						<option value="tqp.librarymanagement">Library management</option>
+						<option value="tqp.loggingmanagement">Logging Management</option>
+						<option value="tqp.menudesign">Menu design</option>
+						<option value="tqp.message">Message management</option>
+						<option value="tqp.messagedesign">Message design</option>
+						<option value="tqp.module">Module management</option>
+						<option value="tqp.problemlist">Problem list</option>
+						<option value="tqp.project">Project management</option>
+						<option value="tqp.rolemanagement">Role management</option>
+						<option value="tqp.screendesign">Screen Design</option>
+						<option value="tqp.sessionmanagement">Session Management</option>
+						<option value="tqp.sqldesign">SQL design</option>
+						<option value="tqp.subareadesign">Subject area design</option>
+						<option value="tqp.sys">Common system</option>
+						<option value="tqp.tabledesign">Table design</option>
+						<option value="tqp.viewdesign">View design</option>
+						<option value="tqp.webservicetokenmanagement">Web service token management</option>
+						</select><input id="lstDistinctModuleCode0" name="lstDistinctModuleCode[0]" value="tqp.account" type="hidden" value="tqp.account"/><input id="lstDistinctModuleCode1" name="lstDistinctModuleCode[1]" value="tqp.accountpermission" type="hidden" value="tqp.accountpermission"/><input id="lstDistinctModuleCode2" name="lstDistinctModuleCode[2]" value="tqp.accountprofile" type="hidden" value="tqp.accountprofile"/><input id="lstDistinctModuleCode3" name="lstDistinctModuleCode[3]" value="tqp.accountrole" type="hidden" value="tqp.accountrole"/><input id="lstDistinctModuleCode4" name="lstDistinctModuleCode[4]" value="tqp.accountruledefinition" type="hidden" value="tqp.accountruledefinition"/><input id="lstDistinctModuleCode5" name="lstDistinctModuleCode[5]" value="tqp.autocomplete" type="hidden" value="tqp.autocomplete"/><input id="lstDistinctModuleCode6" name="lstDistinctModuleCode[6]" value="tqp.businesslogicdesign" type="hidden" value="tqp.businesslogicdesign"/><input id="lstDistinctModuleCode7" name="lstDistinctModuleCode[7]" value="tqp.businesstype" type="hidden" value="tqp.businesstype"/><input id="lstDistinctModuleCode8" name="lstDistinctModuleCode[8]" value="tqp.codelist" type="hidden" value="tqp.codelist"/><input id="lstDistinctModuleCode9" name="lstDistinctModuleCode[9]" value="tqp.commonobjectdefinition" type="hidden" value="tqp.commonobjectdefinition"/><input id="lstDistinctModuleCode10" name="lstDistinctModuleCode[10]" value="tqp.decisiontable" type="hidden" value="tqp.decisiontable"/><input id="lstDistinctModuleCode11" name="lstDistinctModuleCode[11]" value="tqp.designinformation" type="hidden" value="tqp.designinformation"/><input id="lstDistinctModuleCode12" name="lstDistinctModuleCode[12]" value="tqp.domaindesign" type="hidden" value="tqp.domaindesign"/><input id="lstDistinctModuleCode13" name="lstDistinctModuleCode[13]" value="tqp.externalobjectdefinition" type="hidden" value="tqp.externalobjectdefinition"/><input id="lstDistinctModuleCode14" name="lstDistinctModuleCode[14]" value="tqp.functiondesign" type="hidden" value="tqp.functiondesign"/><input id="lstDistinctModuleCode15" name="lstDistinctModuleCode[15]" value="tqp.functionmaster" type="hidden" value="tqp.functionmaster"/><input id="lstDistinctModuleCode16" name="lstDistinctModuleCode[16]" value="tqp.generation" type="hidden" value="tqp.generation"/><input id="lstDistinctModuleCode17" name="lstDistinctModuleCode[17]" value="tqp.graphicdatabasedeisgn" type="hidden" value="tqp.graphicdatabasedeisgn"/><input id="lstDistinctModuleCode18" name="lstDistinctModuleCode[18]" value="tqp.language" type="hidden" value="tqp.language"/><input id="lstDistinctModuleCode19" name="lstDistinctModuleCode[19]" value="tqp.languagedesign" type="hidden" value="tqp.languagedesign"/><input id="lstDistinctModuleCode20" name="lstDistinctModuleCode[20]" value="tqp.librarymanagement" type="hidden" value="tqp.librarymanagement"/><input id="lstDistinctModuleCode21" name="lstDistinctModuleCode[21]" value="tqp.loggingmanagement" type="hidden" value="tqp.loggingmanagement"/><input id="lstDistinctModuleCode22" name="lstDistinctModuleCode[22]" value="tqp.menudesign" type="hidden" value="tqp.menudesign"/><input id="lstDistinctModuleCode23" name="lstDistinctModuleCode[23]" value="tqp.message" type="hidden" value="tqp.message"/><input id="lstDistinctModuleCode24" name="lstDistinctModuleCode[24]" value="tqp.messagedesign" type="hidden" value="tqp.messagedesign"/><input id="lstDistinctModuleCode25" name="lstDistinctModuleCode[25]" value="tqp.module" type="hidden" value="tqp.module"/><input id="lstDistinctModuleCode26" name="lstDistinctModuleCode[26]" value="tqp.problemlist" type="hidden" value="tqp.problemlist"/><input id="lstDistinctModuleCode27" name="lstDistinctModuleCode[27]" value="tqp.project" type="hidden" value="tqp.project"/><input id="lstDistinctModuleCode28" name="lstDistinctModuleCode[28]" value="tqp.rolemanagement" type="hidden" value="tqp.rolemanagement"/><input id="lstDistinctModuleCode29" name="lstDistinctModuleCode[29]" value="tqp.screendesign" type="hidden" value="tqp.screendesign"/><input id="lstDistinctModuleCode30" name="lstDistinctModuleCode[30]" value="tqp.sessionmanagement" type="hidden" value="tqp.sessionmanagement"/><input id="lstDistinctModuleCode31" name="lstDistinctModuleCode[31]" value="tqp.sqldesign" type="hidden" value="tqp.sqldesign"/><input id="lstDistinctModuleCode32" name="lstDistinctModuleCode[32]" value="tqp.subareadesign" type="hidden" value="tqp.subareadesign"/><input id="lstDistinctModuleCode33" name="lstDistinctModuleCode[33]" value="tqp.sys" type="hidden" value="tqp.sys"/><input id="lstDistinctModuleCode34" name="lstDistinctModuleCode[34]" value="tqp.tabledesign" type="hidden" value="tqp.tabledesign"/><input id="lstDistinctModuleCode35" name="lstDistinctModuleCode[35]" value="tqp.viewdesign" type="hidden" value="tqp.viewdesign"/><input id="lstDistinctModuleCode36" name="lstDistinctModuleCode[36]" value="tqp.webservicetokenmanagement" type="hidden" value="tqp.webservicetokenmanagement"/></div>
+				<!-- begin permission information -->
+				<div class="panel panel-default qp-div-search-result">
+					<div class="panel-heading">
+						<span class="glyphicon  qp-heading-icon" aria-hidden="true">&nbsp;</span>
+						<span class="qp-heading-text">Permission information</span>
+					</div>
+					<div class="panel-body">
+						<div class="table-responsive">
+							<table class="table table-bordered qp-table-list pull-right" style="width: 100%" id="tblPermission">
+								<colgroup>
+									<col width="50%" />
+									<col width="50%" />
+								</colgroup>
+								<thead>
+									<tr>
+										<th style="text-align: left;">Permission</th>
+										<th style="text-align: left;">Remark</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr class="success form-inline" tag=tqp.account>
+											<td class="com-output-text" style="text-align: left;">
+												Account management</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission0.moduleCode" name="lstPermission[0].moduleCode" value="tqp.account" type="hidden" value="tqp.account"/><tr class="form-inline" tag="tqp.account">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;View account process<input id="lstPermission0.permissionName" name="lstPermission[0].permissionName" value="sc.permission.accountView" type="hidden" value="sc.permission.accountView"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														View account<input id="lstPermission0.remark" name="lstPermission[0].remark" value="sc.permission.accountView.remark" type="hidden" value="sc.permission.accountView.remark"/></td>
+												</tr>
+											<input id="lstPermission1.moduleCode" name="lstPermission[1].moduleCode" value="tqp.account" type="hidden" value="tqp.account"/><tr class="form-inline" tag="tqp.account">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Search account process<input id="lstPermission1.permissionName" name="lstPermission[1].permissionName" value="sc.permission.accountSearch" type="hidden" value="sc.permission.accountSearch"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Search account<input id="lstPermission1.remark" name="lstPermission[1].remark" value="sc.permission.accountSearch.remark" type="hidden" value="sc.permission.accountSearch.remark"/></td>
+												</tr>
+											<input id="lstPermission2.moduleCode" name="lstPermission[2].moduleCode" value="tqp.account" type="hidden" value="tqp.account"/><tr class="form-inline" tag="tqp.account">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Delete account process<input id="lstPermission2.permissionName" name="lstPermission[2].permissionName" value="sc.permission.accountDelete" type="hidden" value="sc.permission.accountDelete"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Delete account<input id="lstPermission2.remark" name="lstPermission[2].remark" value="sc.permission.accountDelete.remark" type="hidden" value="sc.permission.accountDelete.remark"/></td>
+												</tr>
+											<input id="lstPermission3.moduleCode" name="lstPermission[3].moduleCode" value="tqp.account" type="hidden" value="tqp.account"/><tr class="form-inline" tag="tqp.account">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Modify account process<input id="lstPermission3.permissionName" name="lstPermission[3].permissionName" value="sc.permission.accountModify" type="hidden" value="sc.permission.accountModify"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Modify account<input id="lstPermission3.remark" name="lstPermission[3].remark" value="sc.permission.accountModify.remark" type="hidden" value="sc.permission.accountModify.remark"/></td>
+												</tr>
+											<input id="lstPermission4.moduleCode" name="lstPermission[4].moduleCode" value="tqp.account" type="hidden" value="tqp.account"/><tr class="form-inline" tag="tqp.account">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Register account process<input id="lstPermission4.permissionName" name="lstPermission[4].permissionName" value="sc.permission.accountRegister" type="hidden" value="sc.permission.accountRegister"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Register account<input id="lstPermission4.remark" name="lstPermission[4].remark" value="sc.permission.accountRegister.remark" type="hidden" value="sc.permission.accountRegister.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.accountpermission>
+											<td class="com-output-text" style="text-align: left;">
+												Account permission</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission5.moduleCode" name="lstPermission[5].moduleCode" value="tqp.accountpermission" type="hidden" value="tqp.accountpermission"/><tr class="form-inline" tag="tqp.accountpermission">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;View account permission process<input id="lstPermission5.permissionName" name="lstPermission[5].permissionName" value="sc.permission.accountpermissionView" type="hidden" value="sc.permission.accountpermissionView"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														View account permission<input id="lstPermission5.remark" name="lstPermission[5].remark" value="sc.permission.accountpermissionView.remark" type="hidden" value="sc.permission.accountpermissionView.remark"/></td>
+												</tr>
+											<input id="lstPermission6.moduleCode" name="lstPermission[6].moduleCode" value="tqp.accountpermission" type="hidden" value="tqp.accountpermission"/><tr class="form-inline" tag="tqp.accountpermission">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Modify account permission process<input id="lstPermission6.permissionName" name="lstPermission[6].permissionName" value="sc.permission.accountpermissionModify" type="hidden" value="sc.permission.accountpermissionModify"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Register account permission<input id="lstPermission6.remark" name="lstPermission[6].remark" value="sc.permission.accountpermissionModify.remark" type="hidden" value="sc.permission.accountpermissionModify.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.accountprofile>
+											<td class="com-output-text" style="text-align: left;">
+												Account Profile</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission7.moduleCode" name="lstPermission[7].moduleCode" value="tqp.accountprofile" type="hidden" value="tqp.accountprofile"/><tr class="form-inline" tag="tqp.accountprofile">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;View account profile process<input id="lstPermission7.permissionName" name="lstPermission[7].permissionName" value="sc.permission.accountprofileView" type="hidden" value="sc.permission.accountprofileView"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														View account profile<input id="lstPermission7.remark" name="lstPermission[7].remark" value="sc.permission.accountprofileView.remark" type="hidden" value="sc.permission.accountprofileView.remark"/></td>
+												</tr>
+											<input id="lstPermission8.moduleCode" name="lstPermission[8].moduleCode" value="tqp.accountprofile" type="hidden" value="tqp.accountprofile"/><tr class="form-inline" tag="tqp.accountprofile">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Modify system setting process<input id="lstPermission8.permissionName" name="lstPermission[8].permissionName" value="sc.permission.accountprofileModifysystemsetting" type="hidden" value="sc.permission.accountprofileModifysystemsetting"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Modify system setting <input id="lstPermission8.remark" name="lstPermission[8].remark" value="sc.permission.accountprofileModifysystemsetting.remark" type="hidden" value="sc.permission.accountprofileModifysystemsetting.remark"/></td>
+												</tr>
+											<input id="lstPermission9.moduleCode" name="lstPermission[9].moduleCode" value="tqp.accountprofile" type="hidden" value="tqp.accountprofile"/><tr class="form-inline" tag="tqp.accountprofile">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Set default theme process<input id="lstPermission9.permissionName" name="lstPermission[9].permissionName" value="sc.permission.accountprofileSetdefaulttheme" type="hidden" value="sc.permission.accountprofileSetdefaulttheme"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Set default theme<input id="lstPermission9.remark" name="lstPermission[9].remark" value="sc.permission.accountprofileSetdefaulttheme.remark" type="hidden" value="sc.permission.accountprofileSetdefaulttheme.remark"/></td>
+												</tr>
+											<input id="lstPermission10.moduleCode" name="lstPermission[10].moduleCode" value="tqp.accountprofile" type="hidden" value="tqp.accountprofile"/><tr class="form-inline" tag="tqp.accountprofile">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;View theme process<input id="lstPermission10.permissionName" name="lstPermission[10].permissionName" value="sc.permission.accountprofileModifytheme" type="hidden" value="sc.permission.accountprofileModifytheme"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Modify theme<input id="lstPermission10.remark" name="lstPermission[10].remark" value="sc.permission.accountprofileModifytheme.remark" type="hidden" value="sc.permission.accountprofileModifytheme.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.accountrole>
+											<td class="com-output-text" style="text-align: left;">
+												Account role</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission11.moduleCode" name="lstPermission[11].moduleCode" value="tqp.accountrole" type="hidden" value="tqp.accountrole"/><tr class="form-inline" tag="tqp.accountrole">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Modify account roles process<input id="lstPermission11.permissionName" name="lstPermission[11].permissionName" value="sc.permission.accountroleModify" type="hidden" value="sc.permission.accountroleModify"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Modify account role<input id="lstPermission11.remark" name="lstPermission[11].remark" value="sc.permission.accountroleModify.remark" type="hidden" value="sc.permission.accountroleModify.remark"/></td>
+												</tr>
+											<input id="lstPermission12.moduleCode" name="lstPermission[12].moduleCode" value="tqp.accountrole" type="hidden" value="tqp.accountrole"/><tr class="form-inline" tag="tqp.accountrole">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;View user role process<input id="lstPermission12.permissionName" name="lstPermission[12].permissionName" value="sc.permission.accountroleView" type="hidden" value="sc.permission.accountroleView"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														View account role<input id="lstPermission12.remark" name="lstPermission[12].remark" value="sc.permission.accountroleView.remark" type="hidden" value="sc.permission.accountroleView.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.accountruledefinition>
+											<td class="com-output-text" style="text-align: left;">
+												Account rule definition</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission13.moduleCode" name="lstPermission[13].moduleCode" value="tqp.accountruledefinition" type="hidden" value="tqp.accountruledefinition"/><tr class="form-inline" tag="tqp.accountruledefinition">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Modify account rule definition process<input id="lstPermission13.permissionName" name="lstPermission[13].permissionName" value="sc.permission.accountruledefinitionModify" type="hidden" value="sc.permission.accountruledefinitionModify"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Modify account rule definition<input id="lstPermission13.remark" name="lstPermission[13].remark" value="sc.permission.accountruledefinitionModify.remark" type="hidden" value="sc.permission.accountruledefinitionModify.remark"/></td>
+												</tr>
+											<input id="lstPermission14.moduleCode" name="lstPermission[14].moduleCode" value="tqp.accountruledefinition" type="hidden" value="tqp.accountruledefinition"/><tr class="form-inline" tag="tqp.accountruledefinition">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;View account rule definition process<input id="lstPermission14.permissionName" name="lstPermission[14].permissionName" value="sc.permission.accountruledefinitionView" type="hidden" value="sc.permission.accountruledefinitionView"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														View account rule definition<input id="lstPermission14.remark" name="lstPermission[14].remark" value="sc.permission.accountruledefinitionView.remark" type="hidden" value="sc.permission.accountruledefinitionView.remark"/></td>
+												</tr>
+											<input id="lstPermission15.moduleCode" name="lstPermission[15].moduleCode" value="tqp.accountruledefinition" type="hidden" value="tqp.accountruledefinition"/><tr class="form-inline" tag="tqp.accountruledefinition">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Register account rule definition process<input id="lstPermission15.permissionName" name="lstPermission[15].permissionName" value="sc.permission.accountruledefinitionRegister" type="hidden" value="sc.permission.accountruledefinitionRegister"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Register account rule definition<input id="lstPermission15.remark" name="lstPermission[15].remark" value="sc.permission.accountruledefinitionRegister.remark" type="hidden" value="sc.permission.accountruledefinitionRegister.remark"/></td>
+												</tr>
+											<input id="lstPermission16.moduleCode" name="lstPermission[16].moduleCode" value="tqp.accountruledefinition" type="hidden" value="tqp.accountruledefinition"/><tr class="form-inline" tag="tqp.accountruledefinition">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Search account rule definition process<input id="lstPermission16.permissionName" name="lstPermission[16].permissionName" value="sc.permission.accountruledefinitionSearch" type="hidden" value="sc.permission.accountruledefinitionSearch"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Search account rule definition<input id="lstPermission16.remark" name="lstPermission[16].remark" value="sc.permission.accountruledefinitionSearch.remark" type="hidden" value="sc.permission.accountruledefinitionSearch.remark"/></td>
+												</tr>
+											<input id="lstPermission17.moduleCode" name="lstPermission[17].moduleCode" value="tqp.accountruledefinition" type="hidden" value="tqp.accountruledefinition"/><tr class="form-inline" tag="tqp.accountruledefinition">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Delete account rule definition process<input id="lstPermission17.permissionName" name="lstPermission[17].permissionName" value="sc.permission.accountruledefinitionDelete" type="hidden" value="sc.permission.accountruledefinitionDelete"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Delete account rule definition<input id="lstPermission17.remark" name="lstPermission[17].remark" value="sc.permission.accountruledefinitionDelete.remark" type="hidden" value="sc.permission.accountruledefinitionDelete.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.autocomplete>
+											<td class="com-output-text" style="text-align: left;">
+												Autocomplete design</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission18.moduleCode" name="lstPermission[18].moduleCode" value="tqp.autocomplete" type="hidden" value="tqp.autocomplete"/><tr class="form-inline" tag="tqp.autocomplete">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Delete autocomplete process<input id="lstPermission18.permissionName" name="lstPermission[18].permissionName" value="sc.permission.autocompleteDelete" type="hidden" value="sc.permission.autocompleteDelete"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Delete autocomplete<input id="lstPermission18.remark" name="lstPermission[18].remark" value="sc.permission.autocompleteDelete.remark" type="hidden" value="sc.permission.autocompleteDelete.remark"/></td>
+												</tr>
+											<input id="lstPermission19.moduleCode" name="lstPermission[19].moduleCode" value="tqp.autocomplete" type="hidden" value="tqp.autocomplete"/><tr class="form-inline" tag="tqp.autocomplete">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Search autocomplete process<input id="lstPermission19.permissionName" name="lstPermission[19].permissionName" value="sc.permission.autocompleteSearch" type="hidden" value="sc.permission.autocompleteSearch"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Search autocomplete<input id="lstPermission19.remark" name="lstPermission[19].remark" value="sc.permission.autocompleteSearch.remark" type="hidden" value="sc.permission.autocompleteSearch.remark"/></td>
+												</tr>
+											<input id="lstPermission20.moduleCode" name="lstPermission[20].moduleCode" value="tqp.autocomplete" type="hidden" value="tqp.autocomplete"/><tr class="form-inline" tag="tqp.autocomplete">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Register autocomplete process<input id="lstPermission20.permissionName" name="lstPermission[20].permissionName" value="sc.permission.autocompleteRegister" type="hidden" value="sc.permission.autocompleteRegister"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Register autocomplete<input id="lstPermission20.remark" name="lstPermission[20].remark" value="sc.permission.autocompleteRegister.remark" type="hidden" value="sc.permission.autocompleteRegister.remark"/></td>
+												</tr>
+											<input id="lstPermission21.moduleCode" name="lstPermission[21].moduleCode" value="tqp.autocomplete" type="hidden" value="tqp.autocomplete"/><tr class="form-inline" tag="tqp.autocomplete">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;View autocomplete process<input id="lstPermission21.permissionName" name="lstPermission[21].permissionName" value="sc.permission.autocompleteView" type="hidden" value="sc.permission.autocompleteView"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														View autocomplete<input id="lstPermission21.remark" name="lstPermission[21].remark" value="sc.permission.autocompleteView.remark" type="hidden" value="sc.permission.autocompleteView.remark"/></td>
+												</tr>
+											<input id="lstPermission22.moduleCode" name="lstPermission[22].moduleCode" value="tqp.autocomplete" type="hidden" value="tqp.autocomplete"/><tr class="form-inline" tag="tqp.autocomplete">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Modify autocomplete process<input id="lstPermission22.permissionName" name="lstPermission[22].permissionName" value="sc.permission.autocompleteModify" type="hidden" value="sc.permission.autocompleteModify"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Modify autocomplete<input id="lstPermission22.remark" name="lstPermission[22].remark" value="sc.permission.autocompleteModify.remark" type="hidden" value="sc.permission.autocompleteModify.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.businesslogicdesign>
+											<td class="com-output-text" style="text-align: left;">
+												Business logic design</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission23.moduleCode" name="lstPermission[23].moduleCode" value="tqp.businesslogicdesign" type="hidden" value="tqp.businesslogicdesign"/><tr class="form-inline" tag="tqp.businesslogicdesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Modify business logic process<input id="lstPermission23.permissionName" name="lstPermission[23].permissionName" value="sc.permission.businesslogicModify" type="hidden" value="sc.permission.businesslogicModify"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Modify business logic<input id="lstPermission23.remark" name="lstPermission[23].remark" value="sc.permission.businesslogicModify.remark" type="hidden" value="sc.permission.businesslogicModify.remark"/></td>
+												</tr>
+											<input id="lstPermission24.moduleCode" name="lstPermission[24].moduleCode" value="tqp.businesslogicdesign" type="hidden" value="tqp.businesslogicdesign"/><tr class="form-inline" tag="tqp.businesslogicdesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;View business logic process<input id="lstPermission24.permissionName" name="lstPermission[24].permissionName" value="sc.permission.businesslogicView" type="hidden" value="sc.permission.businesslogicView"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														View business logic<input id="lstPermission24.remark" name="lstPermission[24].remark" value="sc.permission.businesslogicView.remark" type="hidden" value="sc.permission.businesslogicView.remark"/></td>
+												</tr>
+											<input id="lstPermission25.moduleCode" name="lstPermission[25].moduleCode" value="tqp.businesslogicdesign" type="hidden" value="tqp.businesslogicdesign"/><tr class="form-inline" tag="tqp.businesslogicdesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Delete business logic process<input id="lstPermission25.permissionName" name="lstPermission[25].permissionName" value="sc.permission.businesslogicDelete" type="hidden" value="sc.permission.businesslogicDelete"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Delete business logic<input id="lstPermission25.remark" name="lstPermission[25].remark" value="sc.permission.businesslogicDelete.remark" type="hidden" value="sc.permission.businesslogicDelete.remark"/></td>
+												</tr>
+											<input id="lstPermission26.moduleCode" name="lstPermission[26].moduleCode" value="tqp.businesslogicdesign" type="hidden" value="tqp.businesslogicdesign"/><tr class="form-inline" tag="tqp.businesslogicdesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Register business logic process<input id="lstPermission26.permissionName" name="lstPermission[26].permissionName" value="sc.permission.businesslogicRegister" type="hidden" value="sc.permission.businesslogicRegister"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Register business logic<input id="lstPermission26.remark" name="lstPermission[26].remark" value="sc.permission.businesslogicRegister.remark" type="hidden" value="sc.permission.businesslogicRegister.remark"/></td>
+												</tr>
+											<input id="lstPermission27.moduleCode" name="lstPermission[27].moduleCode" value="tqp.businesslogicdesign" type="hidden" value="tqp.businesslogicdesign"/><tr class="form-inline" tag="tqp.businesslogicdesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Search business logic process<input id="lstPermission27.permissionName" name="lstPermission[27].permissionName" value="sc.permission.businesslogicSearch" type="hidden" value="sc.permission.businesslogicSearch"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Search business logic<input id="lstPermission27.remark" name="lstPermission[27].remark" value="sc.permission.businesslogicSearch.remark" type="hidden" value="sc.permission.businesslogicSearch.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.businesstype>
+											<td class="com-output-text" style="text-align: left;">
+												Business type</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission28.moduleCode" name="lstPermission[28].moduleCode" value="tqp.businesstype" type="hidden" value="tqp.businesstype"/><tr class="form-inline" tag="tqp.businesstype">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Search business type process<input id="lstPermission28.permissionName" name="lstPermission[28].permissionName" value="sc.permission.businesstypeSearch" type="hidden" value="sc.permission.businesstypeSearch"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Search business type<input id="lstPermission28.remark" name="lstPermission[28].remark" value="sc.permission.businesstypeSearch.remark" type="hidden" value="sc.permission.businesstypeSearch.remark"/></td>
+												</tr>
+											<input id="lstPermission29.moduleCode" name="lstPermission[29].moduleCode" value="tqp.businesstype" type="hidden" value="tqp.businesstype"/><tr class="form-inline" tag="tqp.businesstype">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Register business type process<input id="lstPermission29.permissionName" name="lstPermission[29].permissionName" value="sc.permission.businesstypeRegister" type="hidden" value="sc.permission.businesstypeRegister"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Register business type<input id="lstPermission29.remark" name="lstPermission[29].remark" value="sc.permission.businesstypeRegister.remark" type="hidden" value="sc.permission.businesstypeRegister.remark"/></td>
+												</tr>
+											<input id="lstPermission30.moduleCode" name="lstPermission[30].moduleCode" value="tqp.businesstype" type="hidden" value="tqp.businesstype"/><tr class="form-inline" tag="tqp.businesstype">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;View business type process<input id="lstPermission30.permissionName" name="lstPermission[30].permissionName" value="sc.permission.businesstypeView" type="hidden" value="sc.permission.businesstypeView"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														View business type<input id="lstPermission30.remark" name="lstPermission[30].remark" value="sc.permission.businesstypeView.remark" type="hidden" value="sc.permission.businesstypeView.remark"/></td>
+												</tr>
+											<input id="lstPermission31.moduleCode" name="lstPermission[31].moduleCode" value="tqp.businesstype" type="hidden" value="tqp.businesstype"/><tr class="form-inline" tag="tqp.businesstype">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Modify business type process<input id="lstPermission31.permissionName" name="lstPermission[31].permissionName" value="sc.permission.businesstypeModify" type="hidden" value="sc.permission.businesstypeModify"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Modify business type<input id="lstPermission31.remark" name="lstPermission[31].remark" value="sc.permission.businesstypeModify.remark" type="hidden" value="sc.permission.businesstypeModify.remark"/></td>
+												</tr>
+											<input id="lstPermission32.moduleCode" name="lstPermission[32].moduleCode" value="tqp.businesstype" type="hidden" value="tqp.businesstype"/><tr class="form-inline" tag="tqp.businesstype">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Delete business type process<input id="lstPermission32.permissionName" name="lstPermission[32].permissionName" value="sc.permission.businesstypeDelete" type="hidden" value="sc.permission.businesstypeDelete"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Delete business type<input id="lstPermission32.remark" name="lstPermission[32].remark" value="sc.permission.businesstypeDelete.remark" type="hidden" value="sc.permission.businesstypeDelete.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.codelist>
+											<td class="com-output-text" style="text-align: left;">
+												Codelist design</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission33.moduleCode" name="lstPermission[33].moduleCode" value="tqp.codelist" type="hidden" value="tqp.codelist"/><tr class="form-inline" tag="tqp.codelist">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Delete codelist process<input id="lstPermission33.permissionName" name="lstPermission[33].permissionName" value="sc.permission.codelistDelete" type="hidden" value="sc.permission.codelistDelete"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Delete codelist<input id="lstPermission33.remark" name="lstPermission[33].remark" value="sc.permission.codelistDelete.remark" type="hidden" value="sc.permission.codelistDelete.remark"/></td>
+												</tr>
+											<input id="lstPermission34.moduleCode" name="lstPermission[34].moduleCode" value="tqp.codelist" type="hidden" value="tqp.codelist"/><tr class="form-inline" tag="tqp.codelist">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Search codelist process<input id="lstPermission34.permissionName" name="lstPermission[34].permissionName" value="sc.permission.codelistSearch" type="hidden" value="sc.permission.codelistSearch"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Search codelist<input id="lstPermission34.remark" name="lstPermission[34].remark" value="sc.permission.codelistSearch.remark" type="hidden" value="sc.permission.codelistSearch.remark"/></td>
+												</tr>
+											<input id="lstPermission35.moduleCode" name="lstPermission[35].moduleCode" value="tqp.codelist" type="hidden" value="tqp.codelist"/><tr class="form-inline" tag="tqp.codelist">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Register codelist process<input id="lstPermission35.permissionName" name="lstPermission[35].permissionName" value="sc.permission.codelistRegister" type="hidden" value="sc.permission.codelistRegister"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Register codelist<input id="lstPermission35.remark" name="lstPermission[35].remark" value="sc.permission.codelistRegister.remark" type="hidden" value="sc.permission.codelistRegister.remark"/></td>
+												</tr>
+											<input id="lstPermission36.moduleCode" name="lstPermission[36].moduleCode" value="tqp.codelist" type="hidden" value="tqp.codelist"/><tr class="form-inline" tag="tqp.codelist">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;View codelist process<input id="lstPermission36.permissionName" name="lstPermission[36].permissionName" value="sc.permission.codelistView" type="hidden" value="sc.permission.codelistView"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														View codelist<input id="lstPermission36.remark" name="lstPermission[36].remark" value="sc.permission.codelistView.remark" type="hidden" value="sc.permission.codelistView.remark"/></td>
+												</tr>
+											<input id="lstPermission37.moduleCode" name="lstPermission[37].moduleCode" value="tqp.codelist" type="hidden" value="tqp.codelist"/><tr class="form-inline" tag="tqp.codelist">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Modify codelist process<input id="lstPermission37.permissionName" name="lstPermission[37].permissionName" value="sc.permission.codelistModify" type="hidden" value="sc.permission.codelistModify"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Modify codelist<input id="lstPermission37.remark" name="lstPermission[37].remark" value="sc.permission.codelistModify.remark" type="hidden" value="sc.permission.codelistModify.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.commonobjectdefinition>
+											<td class="com-output-text" style="text-align: left;">
+												Common object definition</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission38.moduleCode" name="lstPermission[38].moduleCode" value="tqp.commonobjectdefinition" type="hidden" value="tqp.commonobjectdefinition"/><tr class="form-inline" tag="tqp.commonobjectdefinition">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Search common object definition process<input id="lstPermission38.permissionName" name="lstPermission[38].permissionName" value="sc.permission.commonobjectdefinitionSearch" type="hidden" value="sc.permission.commonobjectdefinitionSearch"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Search common object definition<input id="lstPermission38.remark" name="lstPermission[38].remark" value="sc.permission.commonobjectdefinitionSearch.remark" type="hidden" value="sc.permission.commonobjectdefinitionSearch.remark"/></td>
+												</tr>
+											<input id="lstPermission39.moduleCode" name="lstPermission[39].moduleCode" value="tqp.commonobjectdefinition" type="hidden" value="tqp.commonobjectdefinition"/><tr class="form-inline" tag="tqp.commonobjectdefinition">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Register common object definition process<input id="lstPermission39.permissionName" name="lstPermission[39].permissionName" value="sc.permission.commonobjectdefinitionRegister" type="hidden" value="sc.permission.commonobjectdefinitionRegister"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Register common object definition<input id="lstPermission39.remark" name="lstPermission[39].remark" value="sc.permission.commonobjectdefinitionRegister.remark" type="hidden" value="sc.permission.commonobjectdefinitionRegister.remark"/></td>
+												</tr>
+											<input id="lstPermission40.moduleCode" name="lstPermission[40].moduleCode" value="tqp.commonobjectdefinition" type="hidden" value="tqp.commonobjectdefinition"/><tr class="form-inline" tag="tqp.commonobjectdefinition">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;View common object definition process<input id="lstPermission40.permissionName" name="lstPermission[40].permissionName" value="sc.permission.commonobjectdefinitionView" type="hidden" value="sc.permission.commonobjectdefinitionView"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														View common object definition<input id="lstPermission40.remark" name="lstPermission[40].remark" value="sc.permission.commonobjectdefinitionView.remark" type="hidden" value="sc.permission.commonobjectdefinitionView.remark"/></td>
+												</tr>
+											<input id="lstPermission41.moduleCode" name="lstPermission[41].moduleCode" value="tqp.commonobjectdefinition" type="hidden" value="tqp.commonobjectdefinition"/><tr class="form-inline" tag="tqp.commonobjectdefinition">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Modify common object definition process<input id="lstPermission41.permissionName" name="lstPermission[41].permissionName" value="sc.permission.commonobjectdefinitionModify" type="hidden" value="sc.permission.commonobjectdefinitionModify"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Modify common object definition<input id="lstPermission41.remark" name="lstPermission[41].remark" value="sc.permission.commonobjectdefinitionModify.remark" type="hidden" value="sc.permission.commonobjectdefinitionModify.remark"/></td>
+												</tr>
+											<input id="lstPermission42.moduleCode" name="lstPermission[42].moduleCode" value="tqp.commonobjectdefinition" type="hidden" value="tqp.commonobjectdefinition"/><tr class="form-inline" tag="tqp.commonobjectdefinition">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Delete common object definition process<input id="lstPermission42.permissionName" name="lstPermission[42].permissionName" value="sc.permission.commonobjectdefinitionDelete" type="hidden" value="sc.permission.commonobjectdefinitionDelete"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Delete common object definition<input id="lstPermission42.remark" name="lstPermission[42].remark" value="sc.permission.commonobjectdefinitionDelete.remark" type="hidden" value="sc.permission.commonobjectdefinitionDelete.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.decisiontable>
+											<td class="com-output-text" style="text-align: left;">
+												Decision table</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission43.moduleCode" name="lstPermission[43].moduleCode" value="tqp.decisiontable" type="hidden" value="tqp.decisiontable"/><tr class="form-inline" tag="tqp.decisiontable">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Delete decision table process<input id="lstPermission43.permissionName" name="lstPermission[43].permissionName" value="sc.permission.decisiontableDelete" type="hidden" value="sc.permission.decisiontableDelete"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Delete decision table<input id="lstPermission43.remark" name="lstPermission[43].remark" value="sc.permission.decisiontableDelete.remark" type="hidden" value="sc.permission.decisiontableDelete.remark"/></td>
+												</tr>
+											<input id="lstPermission44.moduleCode" name="lstPermission[44].moduleCode" value="tqp.decisiontable" type="hidden" value="tqp.decisiontable"/><tr class="form-inline" tag="tqp.decisiontable">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Search decision table process<input id="lstPermission44.permissionName" name="lstPermission[44].permissionName" value="sc.permission.decisiontableSearch" type="hidden" value="sc.permission.decisiontableSearch"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Search decision table<input id="lstPermission44.remark" name="lstPermission[44].remark" value="sc.permission.decisiontableSearch.remark" type="hidden" value="sc.permission.decisiontableSearch.remark"/></td>
+												</tr>
+											<input id="lstPermission45.moduleCode" name="lstPermission[45].moduleCode" value="tqp.decisiontable" type="hidden" value="tqp.decisiontable"/><tr class="form-inline" tag="tqp.decisiontable">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Register decision table process<input id="lstPermission45.permissionName" name="lstPermission[45].permissionName" value="sc.permission.decisiontableRegister" type="hidden" value="sc.permission.decisiontableRegister"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Register decision table<input id="lstPermission45.remark" name="lstPermission[45].remark" value="sc.permission.decisiontableRegister.remark" type="hidden" value="sc.permission.decisiontableRegister.remark"/></td>
+												</tr>
+											<input id="lstPermission46.moduleCode" name="lstPermission[46].moduleCode" value="tqp.decisiontable" type="hidden" value="tqp.decisiontable"/><tr class="form-inline" tag="tqp.decisiontable">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Modify decision table process<input id="lstPermission46.permissionName" name="lstPermission[46].permissionName" value="sc.permission.decisiontableModify" type="hidden" value="sc.permission.decisiontableModify"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Modify decision table<input id="lstPermission46.remark" name="lstPermission[46].remark" value="sc.permission.decisiontableModify.remark" type="hidden" value="sc.permission.decisiontableModify.remark"/></td>
+												</tr>
+											<input id="lstPermission47.moduleCode" name="lstPermission[47].moduleCode" value="tqp.decisiontable" type="hidden" value="tqp.decisiontable"/><tr class="form-inline" tag="tqp.decisiontable">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;View decision table process<input id="lstPermission47.permissionName" name="lstPermission[47].permissionName" value="sc.permission.decisiontableView" type="hidden" value="sc.permission.decisiontableView"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														View decision table<input id="lstPermission47.remark" name="lstPermission[47].remark" value="sc.permission.decisiontableView.remark" type="hidden" value="sc.permission.decisiontableView.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.designinformation>
+											<td class="com-output-text" style="text-align: left;">
+												Design information</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission48.moduleCode" name="lstPermission[48].moduleCode" value="tqp.designinformation" type="hidden" value="tqp.designinformation"/><tr class="form-inline" tag="tqp.designinformation">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Modify design information process<input id="lstPermission48.permissionName" name="lstPermission[48].permissionName" value="sc.permission.designinformationModify" type="hidden" value="sc.permission.designinformationModify"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Register design information<input id="lstPermission48.remark" name="lstPermission[48].remark" value="sc.permission.designinformationModify.remark" type="hidden" value="sc.permission.designinformationModify.remark"/></td>
+												</tr>
+											<input id="lstPermission49.moduleCode" name="lstPermission[49].moduleCode" value="tqp.designinformation" type="hidden" value="tqp.designinformation"/><tr class="form-inline" tag="tqp.designinformation">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Search design information process<input id="lstPermission49.permissionName" name="lstPermission[49].permissionName" value="sc.permission.designinformationSearch" type="hidden" value="sc.permission.designinformationSearch"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Search design information<input id="lstPermission49.remark" name="lstPermission[49].remark" value="sc.permission.designinformationSearch.remark" type="hidden" value="sc.permission.designinformationSearch.remark"/></td>
+												</tr>
+											<input id="lstPermission50.moduleCode" name="lstPermission[50].moduleCode" value="tqp.designinformation" type="hidden" value="tqp.designinformation"/><tr class="form-inline" tag="tqp.designinformation">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Register design information process<input id="lstPermission50.permissionName" name="lstPermission[50].permissionName" value="sc.permission.designinformationRegister" type="hidden" value="sc.permission.designinformationRegister"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														View design information<input id="lstPermission50.remark" name="lstPermission[50].remark" value="sc.permission.designinformationRegister.remark" type="hidden" value="sc.permission.designinformationRegister.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.domaindesign>
+											<td class="com-output-text" style="text-align: left;">
+												Domain design</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission51.moduleCode" name="lstPermission[51].moduleCode" value="tqp.domaindesign" type="hidden" value="tqp.domaindesign"/><tr class="form-inline" tag="tqp.domaindesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;View domain design process<input id="lstPermission51.permissionName" name="lstPermission[51].permissionName" value="sc.permission.domaindesignView" type="hidden" value="sc.permission.domaindesignView"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														View domain design<input id="lstPermission51.remark" name="lstPermission[51].remark" value="sc.permission.domaindesignView.remark" type="hidden" value="sc.permission.domaindesignView.remark"/></td>
+												</tr>
+											<input id="lstPermission52.moduleCode" name="lstPermission[52].moduleCode" value="tqp.domaindesign" type="hidden" value="tqp.domaindesign"/><tr class="form-inline" tag="tqp.domaindesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Modify domain design process<input id="lstPermission52.permissionName" name="lstPermission[52].permissionName" value="sc.permission.domaindesignModify" type="hidden" value="sc.permission.domaindesignModify"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Modify domain design<input id="lstPermission52.remark" name="lstPermission[52].remark" value="sc.permission.domaindesignModify.remark" type="hidden" value="sc.permission.domaindesignModify.remark"/></td>
+												</tr>
+											<input id="lstPermission53.moduleCode" name="lstPermission[53].moduleCode" value="tqp.domaindesign" type="hidden" value="tqp.domaindesign"/><tr class="form-inline" tag="tqp.domaindesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Delete domain design process<input id="lstPermission53.permissionName" name="lstPermission[53].permissionName" value="sc.permission.domaindesignDelete" type="hidden" value="sc.permission.domaindesignDelete"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Delete domain design<input id="lstPermission53.remark" name="lstPermission[53].remark" value="sc.permission.domaindesignDelete.remark" type="hidden" value="sc.permission.domaindesignDelete.remark"/></td>
+												</tr>
+											<input id="lstPermission54.moduleCode" name="lstPermission[54].moduleCode" value="tqp.domaindesign" type="hidden" value="tqp.domaindesign"/><tr class="form-inline" tag="tqp.domaindesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Search domain design process<input id="lstPermission54.permissionName" name="lstPermission[54].permissionName" value="sc.permission.domaindesignSearch" type="hidden" value="sc.permission.domaindesignSearch"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Search domain design<input id="lstPermission54.remark" name="lstPermission[54].remark" value="sc.permission.domaindesignSearch.remark" type="hidden" value="sc.permission.domaindesignSearch.remark"/></td>
+												</tr>
+											<input id="lstPermission55.moduleCode" name="lstPermission[55].moduleCode" value="tqp.domaindesign" type="hidden" value="tqp.domaindesign"/><tr class="form-inline" tag="tqp.domaindesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Register domain design process<input id="lstPermission55.permissionName" name="lstPermission[55].permissionName" value="sc.permission.domaindesignRegister" type="hidden" value="sc.permission.domaindesignRegister"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Register domain design<input id="lstPermission55.remark" name="lstPermission[55].remark" value="sc.permission.domaindesignRegister.remark" type="hidden" value="sc.permission.domaindesignRegister.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.externalobjectdefinition>
+											<td class="com-output-text" style="text-align: left;">
+												External object definition</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission56.moduleCode" name="lstPermission[56].moduleCode" value="tqp.externalobjectdefinition" type="hidden" value="tqp.externalobjectdefinition"/><tr class="form-inline" tag="tqp.externalobjectdefinition">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Search external object definition process<input id="lstPermission56.permissionName" name="lstPermission[56].permissionName" value="sc.permission.externalobjectdefinitionSearch" type="hidden" value="sc.permission.externalobjectdefinitionSearch"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Search external object definition<input id="lstPermission56.remark" name="lstPermission[56].remark" value="sc.permission.externalobjectdefinitionSearch.remark" type="hidden" value="sc.permission.externalobjectdefinitionSearch.remark"/></td>
+												</tr>
+											<input id="lstPermission57.moduleCode" name="lstPermission[57].moduleCode" value="tqp.externalobjectdefinition" type="hidden" value="tqp.externalobjectdefinition"/><tr class="form-inline" tag="tqp.externalobjectdefinition">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;View external object definition process<input id="lstPermission57.permissionName" name="lstPermission[57].permissionName" value="sc.permission.externalobjectdefinitionView" type="hidden" value="sc.permission.externalobjectdefinitionView"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														View external object definition<input id="lstPermission57.remark" name="lstPermission[57].remark" value="sc.permission.externalobjectdefinitionView.remark" type="hidden" value="sc.permission.externalobjectdefinitionView.remark"/></td>
+												</tr>
+											<input id="lstPermission58.moduleCode" name="lstPermission[58].moduleCode" value="tqp.externalobjectdefinition" type="hidden" value="tqp.externalobjectdefinition"/><tr class="form-inline" tag="tqp.externalobjectdefinition">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Delete external object definition process<input id="lstPermission58.permissionName" name="lstPermission[58].permissionName" value="sc.permission.externalobjectdefinitionDelete" type="hidden" value="sc.permission.externalobjectdefinitionDelete"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Delete external object definition<input id="lstPermission58.remark" name="lstPermission[58].remark" value="sc.permission.externalobjectdefinitionDelete.remark" type="hidden" value="sc.permission.externalobjectdefinitionDelete.remark"/></td>
+												</tr>
+											<input id="lstPermission59.moduleCode" name="lstPermission[59].moduleCode" value="tqp.externalobjectdefinition" type="hidden" value="tqp.externalobjectdefinition"/><tr class="form-inline" tag="tqp.externalobjectdefinition">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Register external object definition process<input id="lstPermission59.permissionName" name="lstPermission[59].permissionName" value="sc.permission.externalobjectdefinitionRegister" type="hidden" value="sc.permission.externalobjectdefinitionRegister"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Register external object definition<input id="lstPermission59.remark" name="lstPermission[59].remark" value="sc.permission.externalobjectdefinitionRegister.remark" type="hidden" value="sc.permission.externalobjectdefinitionRegister.remark"/></td>
+												</tr>
+											<input id="lstPermission60.moduleCode" name="lstPermission[60].moduleCode" value="tqp.externalobjectdefinition" type="hidden" value="tqp.externalobjectdefinition"/><tr class="form-inline" tag="tqp.externalobjectdefinition">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Modify external object definition process<input id="lstPermission60.permissionName" name="lstPermission[60].permissionName" value="sc.permission.externalobjectdefinitionModify" type="hidden" value="sc.permission.externalobjectdefinitionModify"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Modify external object definition<input id="lstPermission60.remark" name="lstPermission[60].remark" value="sc.permission.externalobjectdefinitionModify.remark" type="hidden" value="sc.permission.externalobjectdefinitionModify.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.functiondesign>
+											<td class="com-output-text" style="text-align: left;">
+												Function design management</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission61.moduleCode" name="lstPermission[61].moduleCode" value="tqp.functiondesign" type="hidden" value="tqp.functiondesign"/><tr class="form-inline" tag="tqp.functiondesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;View function design process<input id="lstPermission61.permissionName" name="lstPermission[61].permissionName" value="sc.permission.functiondesignView" type="hidden" value="sc.permission.functiondesignView"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														View function design<input id="lstPermission61.remark" name="lstPermission[61].remark" value="sc.permission.functiondesignView.remark" type="hidden" value="sc.permission.functiondesignView.remark"/></td>
+												</tr>
+											<input id="lstPermission62.moduleCode" name="lstPermission[62].moduleCode" value="tqp.functiondesign" type="hidden" value="tqp.functiondesign"/><tr class="form-inline" tag="tqp.functiondesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Search function design process<input id="lstPermission62.permissionName" name="lstPermission[62].permissionName" value="sc.permission.functiondesignSearch" type="hidden" value="sc.permission.functiondesignSearch"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Search function design<input id="lstPermission62.remark" name="lstPermission[62].remark" value="sc.permission.functiondesignSearch.remark" type="hidden" value="sc.permission.functiondesignSearch.remark"/></td>
+												</tr>
+											<input id="lstPermission63.moduleCode" name="lstPermission[63].moduleCode" value="tqp.functiondesign" type="hidden" value="tqp.functiondesign"/><tr class="form-inline" tag="tqp.functiondesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Delete function design process<input id="lstPermission63.permissionName" name="lstPermission[63].permissionName" value="sc.permission.functiondesignDelete" type="hidden" value="sc.permission.functiondesignDelete"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Delete function design<input id="lstPermission63.remark" name="lstPermission[63].remark" value="sc.permission.functiondesignDelete.remark" type="hidden" value="sc.permission.functiondesignDelete.remark"/></td>
+												</tr>
+											<input id="lstPermission64.moduleCode" name="lstPermission[64].moduleCode" value="tqp.functiondesign" type="hidden" value="tqp.functiondesign"/><tr class="form-inline" tag="tqp.functiondesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Register function design process<input id="lstPermission64.permissionName" name="lstPermission[64].permissionName" value="sc.permission.functiondesignRegister" type="hidden" value="sc.permission.functiondesignRegister"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Register function design<input id="lstPermission64.remark" name="lstPermission[64].remark" value="sc.permission.functiondesignRegister.remark" type="hidden" value="sc.permission.functiondesignRegister.remark"/></td>
+												</tr>
+											<input id="lstPermission65.moduleCode" name="lstPermission[65].moduleCode" value="tqp.functiondesign" type="hidden" value="tqp.functiondesign"/><tr class="form-inline" tag="tqp.functiondesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Modify function design process<input id="lstPermission65.permissionName" name="lstPermission[65].permissionName" value="sc.permission.functiondesignModify" type="hidden" value="sc.permission.functiondesignModify"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Modify function design<input id="lstPermission65.remark" name="lstPermission[65].remark" value="sc.permission.functiondesignModify.remark" type="hidden" value="sc.permission.functiondesignModify.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.functionmaster>
+											<td class="com-output-text" style="text-align: left;">
+												Function master</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission66.moduleCode" name="lstPermission[66].moduleCode" value="tqp.functionmaster" type="hidden" value="tqp.functionmaster"/><tr class="form-inline" tag="tqp.functionmaster">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Modify function master process<input id="lstPermission66.permissionName" name="lstPermission[66].permissionName" value="sc.permission.functionmasterModify" type="hidden" value="sc.permission.functionmasterModify"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Modify function master<input id="lstPermission66.remark" name="lstPermission[66].remark" value="sc.permission.functionmasterModify.remark" type="hidden" value="sc.permission.functionmasterModify.remark"/></td>
+												</tr>
+											<input id="lstPermission67.moduleCode" name="lstPermission[67].moduleCode" value="tqp.functionmaster" type="hidden" value="tqp.functionmaster"/><tr class="form-inline" tag="tqp.functionmaster">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Search function master process<input id="lstPermission67.permissionName" name="lstPermission[67].permissionName" value="sc.permission.functionmasterSearch" type="hidden" value="sc.permission.functionmasterSearch"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Search function master <input id="lstPermission67.remark" name="lstPermission[67].remark" value="sc.permission.functionmasterSearch.remark" type="hidden" value="sc.permission.functionmasterSearch.remark"/></td>
+												</tr>
+											<input id="lstPermission68.moduleCode" name="lstPermission[68].moduleCode" value="tqp.functionmaster" type="hidden" value="tqp.functionmaster"/><tr class="form-inline" tag="tqp.functionmaster">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Delete function master process<input id="lstPermission68.permissionName" name="lstPermission[68].permissionName" value="sc.permission.functionmasterDelete" type="hidden" value="sc.permission.functionmasterDelete"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Delete function master<input id="lstPermission68.remark" name="lstPermission[68].remark" value="sc.permission.functionmasterDelete.remark" type="hidden" value="sc.permission.functionmasterDelete.remark"/></td>
+												</tr>
+											<input id="lstPermission69.moduleCode" name="lstPermission[69].moduleCode" value="tqp.functionmaster" type="hidden" value="tqp.functionmaster"/><tr class="form-inline" tag="tqp.functionmaster">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Register function master process<input id="lstPermission69.permissionName" name="lstPermission[69].permissionName" value="sc.permission.functionmasterRegister" type="hidden" value="sc.permission.functionmasterRegister"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Register function master<input id="lstPermission69.remark" name="lstPermission[69].remark" value="sc.permission.functionmasterRegister.remark" type="hidden" value="sc.permission.functionmasterRegister.remark"/></td>
+												</tr>
+											<input id="lstPermission70.moduleCode" name="lstPermission[70].moduleCode" value="tqp.functionmaster" type="hidden" value="tqp.functionmaster"/><tr class="form-inline" tag="tqp.functionmaster">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;View function master process<input id="lstPermission70.permissionName" name="lstPermission[70].permissionName" value="sc.permission.functionmasterView" type="hidden" value="sc.permission.functionmasterView"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														View function master<input id="lstPermission70.remark" name="lstPermission[70].remark" value="sc.permission.functionmasterView.remark" type="hidden" value="sc.permission.functionmasterView.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.generation>
+											<td class="com-output-text" style="text-align: left;">
+												Generation</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission71.moduleCode" name="lstPermission[71].moduleCode" value="tqp.generation" type="hidden" value="tqp.generation"/><tr class="form-inline" tag="tqp.generation">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Generate database & blogic process<input id="lstPermission71.permissionName" name="lstPermission[71].permissionName" value="sc.permission.generationGeneratedbblogic" type="hidden" value="sc.permission.generationGeneratedbblogic"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Generate database & blogic from screen of module<input id="lstPermission71.remark" name="lstPermission[71].remark" value="sc.permission.generationGeneratedbblogic.remark" type="hidden" value="sc.permission.generationGeneratedbblogic.remark"/></td>
+												</tr>
+											<input id="lstPermission72.moduleCode" name="lstPermission[72].moduleCode" value="tqp.generation" type="hidden" value="tqp.generation"/><tr class="form-inline" tag="tqp.generation">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Generate source code process<input id="lstPermission72.permissionName" name="lstPermission[72].permissionName" value="sc.permission.generationGeneratesourcecode" type="hidden" value="sc.permission.generationGeneratesourcecode"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Generate source code<input id="lstPermission72.remark" name="lstPermission[72].remark" value="sc.permission.generationGeneratesourcecode.remark" type="hidden" value="sc.permission.generationGeneratesourcecode.remark"/></td>
+												</tr>
+											<input id="lstPermission73.moduleCode" name="lstPermission[73].moduleCode" value="tqp.generation" type="hidden" value="tqp.generation"/><tr class="form-inline" tag="tqp.generation">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Generate management process<input id="lstPermission73.permissionName" name="lstPermission[73].permissionName" value="sc.permission.generationGeneratemanagement" type="hidden" value="sc.permission.generationGeneratemanagement"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Generate management<input id="lstPermission73.remark" name="lstPermission[73].remark" value="sc.permission.generationGeneratemanagement.remark" type="hidden" value="sc.permission.generationGeneratemanagement.remark"/></td>
+												</tr>
+											<input id="lstPermission74.moduleCode" name="lstPermission[74].moduleCode" value="tqp.generation" type="hidden" value="tqp.generation"/><tr class="form-inline" tag="tqp.generation">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Generate document process<input id="lstPermission74.permissionName" name="lstPermission[74].permissionName" value="sc.permission.generationGeneratedocument" type="hidden" value="sc.permission.generationGeneratedocument"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Generate document<input id="lstPermission74.remark" name="lstPermission[74].remark" value="sc.permission.generationGeneratedocument.remark" type="hidden" value="sc.permission.generationGeneratedocument.remark"/></td>
+												</tr>
+											<input id="lstPermission75.moduleCode" name="lstPermission[75].moduleCode" value="tqp.generation" type="hidden" value="tqp.generation"/><tr class="form-inline" tag="tqp.generation">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Generate HTML process<input id="lstPermission75.permissionName" name="lstPermission[75].permissionName" value="sc.permission.generationGeneratehtml" type="hidden" value="sc.permission.generationGeneratehtml"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Generate HTML<input id="lstPermission75.remark" name="lstPermission[75].remark" value="sc.permission.generationGeneratehtml.remark" type="hidden" value="sc.permission.generationGeneratehtml.remark"/></td>
+												</tr>
+											<input id="lstPermission76.moduleCode" name="lstPermission[76].moduleCode" value="tqp.generation" type="hidden" value="tqp.generation"/><tr class="form-inline" tag="tqp.generation">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Generate screen process<input id="lstPermission76.permissionName" name="lstPermission[76].permissionName" value="sc.permission.generationGeneratescreen" type="hidden" value="sc.permission.generationGeneratescreen"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Generate screen of module<input id="lstPermission76.remark" name="lstPermission[76].remark" value="sc.permission.generationGeneratescreen.remark" type="hidden" value="sc.permission.generationGeneratescreen.remark"/></td>
+												</tr>
+											<input id="lstPermission77.moduleCode" name="lstPermission[77].moduleCode" value="tqp.generation" type="hidden" value="tqp.generation"/><tr class="form-inline" tag="tqp.generation">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Generate DDL process<input id="lstPermission77.permissionName" name="lstPermission[77].permissionName" value="sc.permission.generationGenerateddl" type="hidden" value="sc.permission.generationGenerateddl"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Generate DDL<input id="lstPermission77.remark" name="lstPermission[77].remark" value="sc.permission.generationGenerateddl.remark" type="hidden" value="sc.permission.generationGenerateddl.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.graphicdatabasedeisgn>
+											<td class="com-output-text" style="text-align: left;">
+												Graphic database design</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission78.moduleCode" name="lstPermission[78].moduleCode" value="tqp.graphicdatabasedeisgn" type="hidden" value="tqp.graphicdatabasedeisgn"/><tr class="form-inline" tag="tqp.graphicdatabasedeisgn">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Graphic database design search<input id="lstPermission78.permissionName" name="lstPermission[78].permissionName" value="sc.permission.graphicdatabasedesignSearch" type="hidden" value="sc.permission.graphicdatabasedesignSearch"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Search graphic database design<input id="lstPermission78.remark" name="lstPermission[78].remark" value="sc.permission.graphicdatabasedesignSearch.remark" type="hidden" value="sc.permission.graphicdatabasedesignSearch.remark"/></td>
+												</tr>
+											<input id="lstPermission79.moduleCode" name="lstPermission[79].moduleCode" value="tqp.graphicdatabasedeisgn" type="hidden" value="tqp.graphicdatabasedeisgn"/><tr class="form-inline" tag="tqp.graphicdatabasedeisgn">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Graphic database design modify<input id="lstPermission79.permissionName" name="lstPermission[79].permissionName" value="sc.permission.graphicdatabasedesignModify" type="hidden" value="sc.permission.graphicdatabasedesignModify"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Modify graphic database design<input id="lstPermission79.remark" name="lstPermission[79].remark" value="sc.permission.graphicdatabasedesignModify.remark" type="hidden" value="sc.permission.graphicdatabasedesignModify.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.language>
+											<td class="com-output-text" style="text-align: left;">
+												Language management</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission80.moduleCode" name="lstPermission[80].moduleCode" value="tqp.language" type="hidden" value="tqp.language"/><tr class="form-inline" tag="tqp.language">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Register language system process<input id="lstPermission80.permissionName" name="lstPermission[80].permissionName" value="sc.permission.languageRegister" type="hidden" value="sc.permission.languageRegister"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Register language system<input id="lstPermission80.remark" name="lstPermission[80].remark" value="sc.permission.languageRegister.remark" type="hidden" value="sc.permission.languageRegister.remark"/></td>
+												</tr>
+											<input id="lstPermission81.moduleCode" name="lstPermission[81].moduleCode" value="tqp.language" type="hidden" value="tqp.language"/><tr class="form-inline" tag="tqp.language">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Modify language system process<input id="lstPermission81.permissionName" name="lstPermission[81].permissionName" value="sc.permission.languageModify" type="hidden" value="sc.permission.languageModify"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Modify language system<input id="lstPermission81.remark" name="lstPermission[81].remark" value="sc.permission.languageModify.remark" type="hidden" value="sc.permission.languageModify.remark"/></td>
+												</tr>
+											<input id="lstPermission82.moduleCode" name="lstPermission[82].moduleCode" value="tqp.language" type="hidden" value="tqp.language"/><tr class="form-inline" tag="tqp.language">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Delete language system process<input id="lstPermission82.permissionName" name="lstPermission[82].permissionName" value="sc.permission.languageDelete" type="hidden" value="sc.permission.languageDelete"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Delete language system<input id="lstPermission82.remark" name="lstPermission[82].remark" value="sc.permission.languageDelete.remark" type="hidden" value="sc.permission.languageDelete.remark"/></td>
+												</tr>
+											<input id="lstPermission83.moduleCode" name="lstPermission[83].moduleCode" value="tqp.language" type="hidden" value="tqp.language"/><tr class="form-inline" tag="tqp.language">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;sc.permission.languageSearch<input id="lstPermission83.permissionName" name="lstPermission[83].permissionName" value="sc.permission.languageSearch" type="hidden" value="sc.permission.languageSearch"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Search language system<input id="lstPermission83.remark" name="lstPermission[83].remark" value="sc.permission.languageSearch.remark" type="hidden" value="sc.permission.languageSearch.remark"/></td>
+												</tr>
+											<input id="lstPermission84.moduleCode" name="lstPermission[84].moduleCode" value="tqp.language" type="hidden" value="tqp.language"/><tr class="form-inline" tag="tqp.language">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Translate language process<input id="lstPermission84.permissionName" name="lstPermission[84].permissionName" value="sc.permission.languageTranslate" type="hidden" value="sc.permission.languageTranslate"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Translate language system<input id="lstPermission84.remark" name="lstPermission[84].remark" value="sc.permission.languageTranslate.remark" type="hidden" value="sc.permission.languageTranslate.remark"/></td>
+												</tr>
+											<input id="lstPermission85.moduleCode" name="lstPermission[85].moduleCode" value="tqp.language" type="hidden" value="tqp.language"/><tr class="form-inline" tag="tqp.language">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;View language system process<input id="lstPermission85.permissionName" name="lstPermission[85].permissionName" value="sc.permission.languageView" type="hidden" value="sc.permission.languageView"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														View language system<input id="lstPermission85.remark" name="lstPermission[85].remark" value="sc.permission.languageView.remark" type="hidden" value="sc.permission.languageView.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.languagedesign>
+											<td class="com-output-text" style="text-align: left;">
+												Language design</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission86.moduleCode" name="lstPermission[86].moduleCode" value="tqp.languagedesign" type="hidden" value="tqp.languagedesign"/><tr class="form-inline" tag="tqp.languagedesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Search language process<input id="lstPermission86.permissionName" name="lstPermission[86].permissionName" value="sc.permission.languagedesignSearch" type="hidden" value="sc.permission.languagedesignSearch"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Search language<input id="lstPermission86.remark" name="lstPermission[86].remark" value="sc.permission.languagedesignSearch.remark" type="hidden" value="sc.permission.languagedesignSearch.remark"/></td>
+												</tr>
+											<input id="lstPermission87.moduleCode" name="lstPermission[87].moduleCode" value="tqp.languagedesign" type="hidden" value="tqp.languagedesign"/><tr class="form-inline" tag="tqp.languagedesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Register language process<input id="lstPermission87.permissionName" name="lstPermission[87].permissionName" value="sc.permission.languagedesignRegister" type="hidden" value="sc.permission.languagedesignRegister"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Register language<input id="lstPermission87.remark" name="lstPermission[87].remark" value="sc.permission.languagedesignRegister.remark" type="hidden" value="sc.permission.languagedesignRegister.remark"/></td>
+												</tr>
+											<input id="lstPermission88.moduleCode" name="lstPermission[88].moduleCode" value="tqp.languagedesign" type="hidden" value="tqp.languagedesign"/><tr class="form-inline" tag="tqp.languagedesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;View language process<input id="lstPermission88.permissionName" name="lstPermission[88].permissionName" value="sc.permission.languagedesignView" type="hidden" value="sc.permission.languagedesignView"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														View language<input id="lstPermission88.remark" name="lstPermission[88].remark" value="sc.permission.languagedesignView.remark" type="hidden" value="sc.permission.languagedesignView.remark"/></td>
+												</tr>
+											<input id="lstPermission89.moduleCode" name="lstPermission[89].moduleCode" value="tqp.languagedesign" type="hidden" value="tqp.languagedesign"/><tr class="form-inline" tag="tqp.languagedesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Modify language process<input id="lstPermission89.permissionName" name="lstPermission[89].permissionName" value="sc.permission.languagedesignModify" type="hidden" value="sc.permission.languagedesignModify"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Modify language<input id="lstPermission89.remark" name="lstPermission[89].remark" value="sc.permission.languagedesignModify.remark" type="hidden" value="sc.permission.languagedesignModify.remark"/></td>
+												</tr>
+											<input id="lstPermission90.moduleCode" name="lstPermission[90].moduleCode" value="tqp.languagedesign" type="hidden" value="tqp.languagedesign"/><tr class="form-inline" tag="tqp.languagedesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Delete language process<input id="lstPermission90.permissionName" name="lstPermission[90].permissionName" value="sc.permission.languagedesignDelete" type="hidden" value="sc.permission.languagedesignDelete"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Delete language<input id="lstPermission90.remark" name="lstPermission[90].remark" value="sc.permission.languagedesignDelete.remark" type="hidden" value="sc.permission.languagedesignDelete.remark"/></td>
+												</tr>
+											<input id="lstPermission91.moduleCode" name="lstPermission[91].moduleCode" value="tqp.languagedesign" type="hidden" value="tqp.languagedesign"/><tr class="form-inline" tag="tqp.languagedesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Translate language process<input id="lstPermission91.permissionName" name="lstPermission[91].permissionName" value="sc.permission.languagedesignTranslate" type="hidden" value="sc.permission.languagedesignTranslate"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Translate language<input id="lstPermission91.remark" name="lstPermission[91].remark" value="sc.permission.languagedesignTranslate.remark" type="hidden" value="sc.permission.languagedesignTranslate.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.librarymanagement>
+											<td class="com-output-text" style="text-align: left;">
+												Library management</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission92.moduleCode" name="lstPermission[92].moduleCode" value="tqp.librarymanagement" type="hidden" value="tqp.librarymanagement"/><tr class="form-inline" tag="tqp.librarymanagement">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Delete library process<input id="lstPermission92.permissionName" name="lstPermission[92].permissionName" value="sc.permission.librarymanagementDelete" type="hidden" value="sc.permission.librarymanagementDelete"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Delete library<input id="lstPermission92.remark" name="lstPermission[92].remark" value="sc.permission.librarymanagementDelete.remark" type="hidden" value="sc.permission.librarymanagementDelete.remark"/></td>
+												</tr>
+											<input id="lstPermission93.moduleCode" name="lstPermission[93].moduleCode" value="tqp.librarymanagement" type="hidden" value="tqp.librarymanagement"/><tr class="form-inline" tag="tqp.librarymanagement">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;View library process<input id="lstPermission93.permissionName" name="lstPermission[93].permissionName" value="sc.permission.librarymanagementView" type="hidden" value="sc.permission.librarymanagementView"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														View library<input id="lstPermission93.remark" name="lstPermission[93].remark" value="sc.permission.librarymanagementView.remark" type="hidden" value="sc.permission.librarymanagementView.remark"/></td>
+												</tr>
+											<input id="lstPermission94.moduleCode" name="lstPermission[94].moduleCode" value="tqp.librarymanagement" type="hidden" value="tqp.librarymanagement"/><tr class="form-inline" tag="tqp.librarymanagement">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Register library process<input id="lstPermission94.permissionName" name="lstPermission[94].permissionName" value="sc.permission.librarymanagementRegister" type="hidden" value="sc.permission.librarymanagementRegister"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Register library<input id="lstPermission94.remark" name="lstPermission[94].remark" value="sc.permission.librarymanagementRegister.remark" type="hidden" value="sc.permission.librarymanagementRegister.remark"/></td>
+												</tr>
+											<input id="lstPermission95.moduleCode" name="lstPermission[95].moduleCode" value="tqp.librarymanagement" type="hidden" value="tqp.librarymanagement"/><tr class="form-inline" tag="tqp.librarymanagement">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Search library process<input id="lstPermission95.permissionName" name="lstPermission[95].permissionName" value="sc.permission.librarymanagementSearch" type="hidden" value="sc.permission.librarymanagementSearch"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Search library<input id="lstPermission95.remark" name="lstPermission[95].remark" value="sc.permission.librarymanagementSearch.remark" type="hidden" value="sc.permission.librarymanagementSearch.remark"/></td>
+												</tr>
+											<input id="lstPermission96.moduleCode" name="lstPermission[96].moduleCode" value="tqp.librarymanagement" type="hidden" value="tqp.librarymanagement"/><tr class="form-inline" tag="tqp.librarymanagement">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Modify library process<input id="lstPermission96.permissionName" name="lstPermission[96].permissionName" value="sc.permission.librarymanagementModify" type="hidden" value="sc.permission.librarymanagementModify"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Modify library<input id="lstPermission96.remark" name="lstPermission[96].remark" value="sc.permission.librarymanagementModify.remark" type="hidden" value="sc.permission.librarymanagementModify.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.loggingmanagement>
+											<td class="com-output-text" style="text-align: left;">
+												Logging Management</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission97.moduleCode" name="lstPermission[97].moduleCode" value="tqp.loggingmanagement" type="hidden" value="tqp.loggingmanagement"/><tr class="form-inline" tag="tqp.loggingmanagement">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Modify logging management<input id="lstPermission97.permissionName" name="lstPermission[97].permissionName" value="sc.permission.loggingmanagementModify" type="hidden" value="sc.permission.loggingmanagementModify"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Modify logging management process<input id="lstPermission97.remark" name="lstPermission[97].remark" value="sc.permission.loggingmanagementModify.remark" type="hidden" value="sc.permission.loggingmanagementModify.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.menudesign>
+											<td class="com-output-text" style="text-align: left;">
+												Menu design</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission98.moduleCode" name="lstPermission[98].moduleCode" value="tqp.menudesign" type="hidden" value="tqp.menudesign"/><tr class="form-inline" tag="tqp.menudesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;View menu design<input id="lstPermission98.permissionName" name="lstPermission[98].permissionName" value="sc.permission.menudesignPreview" type="hidden" value="sc.permission.menudesignPreview"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Preview menu design<input id="lstPermission98.remark" name="lstPermission[98].remark" value="sc.permission.menudesignPreview.remark" type="hidden" value="sc.permission.menudesignPreview.remark"/></td>
+												</tr>
+											<input id="lstPermission99.moduleCode" name="lstPermission[99].moduleCode" value="tqp.menudesign" type="hidden" value="tqp.menudesign"/><tr class="form-inline" tag="tqp.menudesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Modify menu design<input id="lstPermission99.permissionName" name="lstPermission[99].permissionName" value="sc.permission.menudesignModify" type="hidden" value="sc.permission.menudesignModify"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Modify menu design process<input id="lstPermission99.remark" name="lstPermission[99].remark" value="sc.permission.menudesignModify.remark" type="hidden" value="sc.permission.menudesignModify.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.message>
+											<td class="com-output-text" style="text-align: left;">
+												Message management</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission100.moduleCode" name="lstPermission[100].moduleCode" value="tqp.message" type="hidden" value="tqp.message"/><tr class="form-inline" tag="tqp.message">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Reload message process<input id="lstPermission100.permissionName" name="lstPermission[100].permissionName" value="sc.permission.messageReload" type="hidden" value="sc.permission.messageReload"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Reload message (for system)<input id="lstPermission100.remark" name="lstPermission[100].remark" value="sc.permission.messageReload.remark" type="hidden" value="sc.permission.messageReload.remark"/></td>
+												</tr>
+											<input id="lstPermission101.moduleCode" name="lstPermission[101].moduleCode" value="tqp.message" type="hidden" value="tqp.message"/><tr class="form-inline" tag="tqp.message">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Search message process<input id="lstPermission101.permissionName" name="lstPermission[101].permissionName" value="sc.permission.messageSearch" type="hidden" value="sc.permission.messageSearch"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Search message (for system)<input id="lstPermission101.remark" name="lstPermission[101].remark" value="sc.permission.messageSearch.remark" type="hidden" value="sc.permission.messageSearch.remark"/></td>
+												</tr>
+											<input id="lstPermission102.moduleCode" name="lstPermission[102].moduleCode" value="tqp.message" type="hidden" value="tqp.message"/><tr class="form-inline" tag="tqp.message">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Modify message process<input id="lstPermission102.permissionName" name="lstPermission[102].permissionName" value="sc.permission.messageModify" type="hidden" value="sc.permission.messageModify"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Modify message (for system)<input id="lstPermission102.remark" name="lstPermission[102].remark" value="sc.permission.messageModify.remark" type="hidden" value="sc.permission.messageModify.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.messagedesign>
+											<td class="com-output-text" style="text-align: left;">
+												Message design</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission103.moduleCode" name="lstPermission[103].moduleCode" value="tqp.messagedesign" type="hidden" value="tqp.messagedesign"/><tr class="form-inline" tag="tqp.messagedesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Register message design process<input id="lstPermission103.permissionName" name="lstPermission[103].permissionName" value="sc.permission.messagedesignRegister" type="hidden" value="sc.permission.messagedesignRegister"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Register message design<input id="lstPermission103.remark" name="lstPermission[103].remark" value="sc.permission.messagedesignRegister.remark" type="hidden" value="sc.permission.messagedesignRegister.remark"/></td>
+												</tr>
+											<input id="lstPermission104.moduleCode" name="lstPermission[104].moduleCode" value="tqp.messagedesign" type="hidden" value="tqp.messagedesign"/><tr class="form-inline" tag="tqp.messagedesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Modify message design process<input id="lstPermission104.permissionName" name="lstPermission[104].permissionName" value="sc.permission.messagedesignModify" type="hidden" value="sc.permission.messagedesignModify"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Modify message design<input id="lstPermission104.remark" name="lstPermission[104].remark" value="sc.permission.messagedesignModify.remark" type="hidden" value="sc.permission.messagedesignModify.remark"/></td>
+												</tr>
+											<input id="lstPermission105.moduleCode" name="lstPermission[105].moduleCode" value="tqp.messagedesign" type="hidden" value="tqp.messagedesign"/><tr class="form-inline" tag="tqp.messagedesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;View message design process<input id="lstPermission105.permissionName" name="lstPermission[105].permissionName" value="sc.permission.messagedesignView" type="hidden" value="sc.permission.messagedesignView"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														View message design<input id="lstPermission105.remark" name="lstPermission[105].remark" value="sc.permission.messagedesignView.remark" type="hidden" value="sc.permission.messagedesignView.remark"/></td>
+												</tr>
+											<input id="lstPermission106.moduleCode" name="lstPermission[106].moduleCode" value="tqp.messagedesign" type="hidden" value="tqp.messagedesign"/><tr class="form-inline" tag="tqp.messagedesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Search message design process<input id="lstPermission106.permissionName" name="lstPermission[106].permissionName" value="sc.permission.messagedesignSearch" type="hidden" value="sc.permission.messagedesignSearch"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Search message design<input id="lstPermission106.remark" name="lstPermission[106].remark" value="sc.permission.messagedesignSearch.remark" type="hidden" value="sc.permission.messagedesignSearch.remark"/></td>
+												</tr>
+											<input id="lstPermission107.moduleCode" name="lstPermission[107].moduleCode" value="tqp.messagedesign" type="hidden" value="tqp.messagedesign"/><tr class="form-inline" tag="tqp.messagedesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Delete message design process<input id="lstPermission107.permissionName" name="lstPermission[107].permissionName" value="sc.permission.messagedesignDelete" type="hidden" value="sc.permission.messagedesignDelete"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Delete message design<input id="lstPermission107.remark" name="lstPermission[107].remark" value="sc.permission.messagedesignDelete.remark" type="hidden" value="sc.permission.messagedesignDelete.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.module>
+											<td class="com-output-text" style="text-align: left;">
+												Module management</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission108.moduleCode" name="lstPermission[108].moduleCode" value="tqp.module" type="hidden" value="tqp.module"/><tr class="form-inline" tag="tqp.module">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Delete module process<input id="lstPermission108.permissionName" name="lstPermission[108].permissionName" value="sc.permission.moduleDelete" type="hidden" value="sc.permission.moduleDelete"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Delete module<input id="lstPermission108.remark" name="lstPermission[108].remark" value="sc.permission.moduleDelete.remark" type="hidden" value="sc.permission.moduleDelete.remark"/></td>
+												</tr>
+											<input id="lstPermission109.moduleCode" name="lstPermission[109].moduleCode" value="tqp.module" type="hidden" value="tqp.module"/><tr class="form-inline" tag="tqp.module">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Search module process<input id="lstPermission109.permissionName" name="lstPermission[109].permissionName" value="sc.permission.moduleSearch" type="hidden" value="sc.permission.moduleSearch"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Search module<input id="lstPermission109.remark" name="lstPermission[109].remark" value="sc.permission.moduleSearch.remark" type="hidden" value="sc.permission.moduleSearch.remark"/></td>
+												</tr>
+											<input id="lstPermission110.moduleCode" name="lstPermission[110].moduleCode" value="tqp.module" type="hidden" value="tqp.module"/><tr class="form-inline" tag="tqp.module">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Register module process<input id="lstPermission110.permissionName" name="lstPermission[110].permissionName" value="sc.permission.moduleRegister" type="hidden" value="sc.permission.moduleRegister"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Register module<input id="lstPermission110.remark" name="lstPermission[110].remark" value="sc.permission.moduleRegister.remark" type="hidden" value="sc.permission.moduleRegister.remark"/></td>
+												</tr>
+											<input id="lstPermission111.moduleCode" name="lstPermission[111].moduleCode" value="tqp.module" type="hidden" value="tqp.module"/><tr class="form-inline" tag="tqp.module">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;View module process<input id="lstPermission111.permissionName" name="lstPermission[111].permissionName" value="sc.permission.moduleView" type="hidden" value="sc.permission.moduleView"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														View module<input id="lstPermission111.remark" name="lstPermission[111].remark" value="sc.permission.moduleView.remark" type="hidden" value="sc.permission.moduleView.remark"/></td>
+												</tr>
+											<input id="lstPermission112.moduleCode" name="lstPermission[112].moduleCode" value="tqp.module" type="hidden" value="tqp.module"/><tr class="form-inline" tag="tqp.module">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Modify module process<input id="lstPermission112.permissionName" name="lstPermission[112].permissionName" value="sc.permission.moduleModify" type="hidden" value="sc.permission.moduleModify"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Modify module<input id="lstPermission112.remark" name="lstPermission[112].remark" value="sc.permission.moduleModify.remark" type="hidden" value="sc.permission.moduleModify.remark"/></td>
+												</tr>
+											<input id="lstPermission113.moduleCode" name="lstPermission[113].moduleCode" value="tqp.module" type="hidden" value="tqp.module"/><tr class="form-inline" tag="tqp.module">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Delete module interdependent<input id="lstPermission113.permissionName" name="lstPermission[113].permissionName" value="sc.permission.moduleSpecialdelete" type="hidden" value="sc.permission.moduleSpecialdelete"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Delete module and everything dependence<input id="lstPermission113.remark" name="lstPermission[113].remark" value="sc.permission.moduleSpecialdelete.remark" type="hidden" value="sc.permission.moduleSpecialdelete.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.problemlist>
+											<td class="com-output-text" style="text-align: left;">
+												Problem list</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission114.moduleCode" name="lstPermission[114].moduleCode" value="tqp.problemlist" type="hidden" value="tqp.problemlist"/><tr class="form-inline" tag="tqp.problemlist">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;View problem list process<input id="lstPermission114.permissionName" name="lstPermission[114].permissionName" value="sc.permission.problemlistView" type="hidden" value="sc.permission.problemlistView"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														View problem list<input id="lstPermission114.remark" name="lstPermission[114].remark" value="sc.permission.problemlistView.remark" type="hidden" value="sc.permission.problemlistView.remark"/></td>
+												</tr>
+											<input id="lstPermission115.moduleCode" name="lstPermission[115].moduleCode" value="tqp.problemlist" type="hidden" value="tqp.problemlist"/><tr class="form-inline" tag="tqp.problemlist">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Search problem list process<input id="lstPermission115.permissionName" name="lstPermission[115].permissionName" value="sc.permission.problemlistSearch" type="hidden" value="sc.permission.problemlistSearch"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Search problem list<input id="lstPermission115.remark" name="lstPermission[115].remark" value="sc.permission.problemlistSearch.remark" type="hidden" value="sc.permission.problemlistSearch.remark"/></td>
+												</tr>
+											<input id="lstPermission116.moduleCode" name="lstPermission[116].moduleCode" value="tqp.problemlist" type="hidden" value="tqp.problemlist"/><tr class="form-inline" tag="tqp.problemlist">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Autofix problem list process<input id="lstPermission116.permissionName" name="lstPermission[116].permissionName" value="sc.permission.problemlistAutofix" type="hidden" value="sc.permission.problemlistAutofix"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Autofix problem list<input id="lstPermission116.remark" name="lstPermission[116].remark" value="sc.permission.problemlistAutofix.remark" type="hidden" value="sc.permission.problemlistAutofix.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.project>
+											<td class="com-output-text" style="text-align: left;">
+												Project management</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission117.moduleCode" name="lstPermission[117].moduleCode" value="tqp.project" type="hidden" value="tqp.project"/><tr class="form-inline" tag="tqp.project">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;View project process<input id="lstPermission117.permissionName" name="lstPermission[117].permissionName" value="sc.permission.projectView" type="hidden" value="sc.permission.projectView"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														View project<input id="lstPermission117.remark" name="lstPermission[117].remark" value="sc.permission.projectView.remark" type="hidden" value="sc.permission.projectView.remark"/></td>
+												</tr>
+											<input id="lstPermission118.moduleCode" name="lstPermission[118].moduleCode" value="tqp.project" type="hidden" value="tqp.project"/><tr class="form-inline" tag="tqp.project">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Modify project process<input id="lstPermission118.permissionName" name="lstPermission[118].permissionName" value="sc.permission.projectModify" type="hidden" value="sc.permission.projectModify"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Modify project<input id="lstPermission118.remark" name="lstPermission[118].remark" value="sc.permission.projectModify.remark" type="hidden" value="sc.permission.projectModify.remark"/></td>
+												</tr>
+											<input id="lstPermission119.moduleCode" name="lstPermission[119].moduleCode" value="tqp.project" type="hidden" value="tqp.project"/><tr class="form-inline" tag="tqp.project">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Delete project process<input id="lstPermission119.permissionName" name="lstPermission[119].permissionName" value="sc.permission.projectDelete" type="hidden" value="sc.permission.projectDelete"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Delete project<input id="lstPermission119.remark" name="lstPermission[119].remark" value="sc.permission.projectDelete.remark" type="hidden" value="sc.permission.projectDelete.remark"/></td>
+												</tr>
+											<input id="lstPermission120.moduleCode" name="lstPermission[120].moduleCode" value="tqp.project" type="hidden" value="tqp.project"/><tr class="form-inline" tag="tqp.project">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Delete project interdependent<input id="lstPermission120.permissionName" name="lstPermission[120].permissionName" value="sc.permission.projectSpecialdelete" type="hidden" value="sc.permission.projectSpecialdelete"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Delete project and everything dependence<input id="lstPermission120.remark" name="lstPermission[120].remark" value="sc.permission.projectSpecialdelete.remark" type="hidden" value="sc.permission.projectSpecialdelete.remark"/></td>
+												</tr>
+											<input id="lstPermission121.moduleCode" name="lstPermission[121].moduleCode" value="tqp.project" type="hidden" value="tqp.project"/><tr class="form-inline" tag="tqp.project">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Setting project process<input id="lstPermission121.permissionName" name="lstPermission[121].permissionName" value="sc.permission.projectSetting" type="hidden" value="sc.permission.projectSetting"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Setting project<input id="lstPermission121.remark" name="lstPermission[121].remark" value="sc.permission.projectSetting.remark" type="hidden" value="sc.permission.projectSetting.remark"/></td>
+												</tr>
+											<input id="lstPermission122.moduleCode" name="lstPermission[122].moduleCode" value="tqp.project" type="hidden" value="tqp.project"/><tr class="form-inline" tag="tqp.project">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Search project process<input id="lstPermission122.permissionName" name="lstPermission[122].permissionName" value="sc.permission.projectSearch" type="hidden" value="sc.permission.projectSearch"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Search project<input id="lstPermission122.remark" name="lstPermission[122].remark" value="sc.permission.projectSearch.remark" type="hidden" value="sc.permission.projectSearch.remark"/></td>
+												</tr>
+											<input id="lstPermission123.moduleCode" name="lstPermission[123].moduleCode" value="tqp.project" type="hidden" value="tqp.project"/><tr class="form-inline" tag="tqp.project">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Register project process<input id="lstPermission123.permissionName" name="lstPermission[123].permissionName" value="sc.permission.projectRegister" type="hidden" value="sc.permission.projectRegister"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Register project<input id="lstPermission123.remark" name="lstPermission[123].remark" value="sc.permission.projectRegister.remark" type="hidden" value="sc.permission.projectRegister.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.rolemanagement>
+											<td class="com-output-text" style="text-align: left;">
+												Role management</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission124.moduleCode" name="lstPermission[124].moduleCode" value="tqp.rolemanagement" type="hidden" value="tqp.rolemanagement"/><tr class="form-inline" tag="tqp.rolemanagement">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Modify role process<input id="lstPermission124.permissionName" name="lstPermission[124].permissionName" value="sc.permission.roleModify" type="hidden" value="sc.permission.roleModify"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Modify role<input id="lstPermission124.remark" name="lstPermission[124].remark" value="sc.permission.roleModify.remark" type="hidden" value="sc.permission.roleModify.remark"/></td>
+												</tr>
+											<input id="lstPermission125.moduleCode" name="lstPermission[125].moduleCode" value="tqp.rolemanagement" type="hidden" value="tqp.rolemanagement"/><tr class="form-inline" tag="tqp.rolemanagement">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Search role process<input id="lstPermission125.permissionName" name="lstPermission[125].permissionName" value="sc.permission.roleSearch" type="hidden" value="sc.permission.roleSearch"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Search role<input id="lstPermission125.remark" name="lstPermission[125].remark" value="sc.permission.roleSearch.remark" type="hidden" value="sc.permission.roleSearch.remark"/></td>
+												</tr>
+											<input id="lstPermission126.moduleCode" name="lstPermission[126].moduleCode" value="tqp.rolemanagement" type="hidden" value="tqp.rolemanagement"/><tr class="form-inline" tag="tqp.rolemanagement">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Register role process<input id="lstPermission126.permissionName" name="lstPermission[126].permissionName" value="sc.permission.roleRegister" type="hidden" value="sc.permission.roleRegister"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Register role<input id="lstPermission126.remark" name="lstPermission[126].remark" value="sc.permission.roleRegister.remark" type="hidden" value="sc.permission.roleRegister.remark"/></td>
+												</tr>
+											<input id="lstPermission127.moduleCode" name="lstPermission[127].moduleCode" value="tqp.rolemanagement" type="hidden" value="tqp.rolemanagement"/><tr class="form-inline" tag="tqp.rolemanagement">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;View role process<input id="lstPermission127.permissionName" name="lstPermission[127].permissionName" value="sc.permission.roleView" type="hidden" value="sc.permission.roleView"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														View role<input id="lstPermission127.remark" name="lstPermission[127].remark" value="sc.permission.roleView.remark" type="hidden" value="sc.permission.roleView.remark"/></td>
+												</tr>
+											<input id="lstPermission128.moduleCode" name="lstPermission[128].moduleCode" value="tqp.rolemanagement" type="hidden" value="tqp.rolemanagement"/><tr class="form-inline" tag="tqp.rolemanagement">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Delete role process<input id="lstPermission128.permissionName" name="lstPermission[128].permissionName" value="sc.permission.roleDelete" type="hidden" value="sc.permission.roleDelete"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Delete role<input id="lstPermission128.remark" name="lstPermission[128].remark" value="sc.permission.roleDelete.remark" type="hidden" value="sc.permission.roleDelete.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.screendesign>
+											<td class="com-output-text" style="text-align: left;">
+												Screen Design</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission129.moduleCode" name="lstPermission[129].moduleCode" value="tqp.screendesign" type="hidden" value="tqp.screendesign"/><tr class="form-inline" tag="tqp.screendesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Delete screen design process<input id="lstPermission129.permissionName" name="lstPermission[129].permissionName" value="sc.permission.screendesignDelete" type="hidden" value="sc.permission.screendesignDelete"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Delete screen design<input id="lstPermission129.remark" name="lstPermission[129].remark" value="sc.permission.screendesignDelete.remark" type="hidden" value="sc.permission.screendesignDelete.remark"/></td>
+												</tr>
+											<input id="lstPermission130.moduleCode" name="lstPermission[130].moduleCode" value="tqp.screendesign" type="hidden" value="tqp.screendesign"/><tr class="form-inline" tag="tqp.screendesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Modify screen design process<input id="lstPermission130.permissionName" name="lstPermission[130].permissionName" value="sc.permission.screendesignModify" type="hidden" value="sc.permission.screendesignModify"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Modify screen design<input id="lstPermission130.remark" name="lstPermission[130].remark" value="sc.permission.screendesignModify.remark" type="hidden" value="sc.permission.screendesignModify.remark"/></td>
+												</tr>
+											<input id="lstPermission131.moduleCode" name="lstPermission[131].moduleCode" value="tqp.screendesign" type="hidden" value="tqp.screendesign"/><tr class="form-inline" tag="tqp.screendesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;View screen design process<input id="lstPermission131.permissionName" name="lstPermission[131].permissionName" value="sc.permission.screendesignView" type="hidden" value="sc.permission.screendesignView"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														View screen design<input id="lstPermission131.remark" name="lstPermission[131].remark" value="sc.permission.screendesignView.remark" type="hidden" value="sc.permission.screendesignView.remark"/></td>
+												</tr>
+											<input id="lstPermission132.moduleCode" name="lstPermission[132].moduleCode" value="tqp.screendesign" type="hidden" value="tqp.screendesign"/><tr class="form-inline" tag="tqp.screendesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Design screen process<input id="lstPermission132.permissionName" name="lstPermission[132].permissionName" value="sc.permission.screendesignDesign" type="hidden" value="sc.permission.screendesignDesign"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Design screen<input id="lstPermission132.remark" name="lstPermission[132].remark" value="sc.permission.screendesignDesign.remark" type="hidden" value="sc.permission.screendesignDesign.remark"/></td>
+												</tr>
+											<input id="lstPermission133.moduleCode" name="lstPermission[133].moduleCode" value="tqp.screendesign" type="hidden" value="tqp.screendesign"/><tr class="form-inline" tag="tqp.screendesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Register screen design process<input id="lstPermission133.permissionName" name="lstPermission[133].permissionName" value="sc.permission.screendesignRegister" type="hidden" value="sc.permission.screendesignRegister"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Register screen design<input id="lstPermission133.remark" name="lstPermission[133].remark" value="sc.permission.screendesignRegister.remark" type="hidden" value="sc.permission.screendesignRegister.remark"/></td>
+												</tr>
+											<input id="lstPermission134.moduleCode" name="lstPermission[134].moduleCode" value="tqp.screendesign" type="hidden" value="tqp.screendesign"/><tr class="form-inline" tag="tqp.screendesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Search screen transition design process<input id="lstPermission134.permissionName" name="lstPermission[134].permissionName" value="sc.permission.screendesignTransition" type="hidden" value="sc.permission.screendesignTransition"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Search screen transition design<input id="lstPermission134.remark" name="lstPermission[134].remark" value="sc.permission.screendesignTransition.remark" type="hidden" value="sc.permission.screendesignTransition.remark"/></td>
+												</tr>
+											<input id="lstPermission135.moduleCode" name="lstPermission[135].moduleCode" value="tqp.screendesign" type="hidden" value="tqp.screendesign"/><tr class="form-inline" tag="tqp.screendesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Search screen design process<input id="lstPermission135.permissionName" name="lstPermission[135].permissionName" value="sc.permission.screendesignSearch" type="hidden" value="sc.permission.screendesignSearch"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Search screen design<input id="lstPermission135.remark" name="lstPermission[135].remark" value="sc.permission.screendesignSearch.remark" type="hidden" value="sc.permission.screendesignSearch.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.sessionmanagement>
+											<td class="com-output-text" style="text-align: left;">
+												Session Management</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission136.moduleCode" name="lstPermission[136].moduleCode" value="tqp.sessionmanagement" type="hidden" value="tqp.sessionmanagement"/><tr class="form-inline" tag="tqp.sessionmanagement">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Modify session management process<input id="lstPermission136.permissionName" name="lstPermission[136].permissionName" value="sc.permission.sessionmanagementModify" type="hidden" value="sc.permission.sessionmanagementModify"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Modify session management<input id="lstPermission136.remark" name="lstPermission[136].remark" value="sc.permission.sessionmanagementModify.remark" type="hidden" value="sc.permission.sessionmanagementModify.remark"/></td>
+												</tr>
+											<input id="lstPermission137.moduleCode" name="lstPermission[137].moduleCode" value="tqp.sessionmanagement" type="hidden" value="tqp.sessionmanagement"/><tr class="form-inline" tag="tqp.sessionmanagement">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;View session management process<input id="lstPermission137.permissionName" name="lstPermission[137].permissionName" value="sc.permission.sessionmanagementView" type="hidden" value="sc.permission.sessionmanagementView"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														View session management<input id="lstPermission137.remark" name="lstPermission[137].remark" value="sc.permission.sessionmanagementView.remark" type="hidden" value="sc.permission.sessionmanagementView.remark"/></td>
+												</tr>
+											<input id="lstPermission138.moduleCode" name="lstPermission[138].moduleCode" value="tqp.sessionmanagement" type="hidden" value="tqp.sessionmanagement"/><tr class="form-inline" tag="tqp.sessionmanagement">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Register session management process<input id="lstPermission138.permissionName" name="lstPermission[138].permissionName" value="sc.permission.sessionmanagementRegister" type="hidden" value="sc.permission.sessionmanagementRegister"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Register session management<input id="lstPermission138.remark" name="lstPermission[138].remark" value="sc.permission.sessionmanagementRegister.remark" type="hidden" value="sc.permission.sessionmanagementRegister.remark"/></td>
+												</tr>
+											<input id="lstPermission139.moduleCode" name="lstPermission[139].moduleCode" value="tqp.sessionmanagement" type="hidden" value="tqp.sessionmanagement"/><tr class="form-inline" tag="tqp.sessionmanagement">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Search session management process<input id="lstPermission139.permissionName" name="lstPermission[139].permissionName" value="sc.permission.sessionmanagementSearch" type="hidden" value="sc.permission.sessionmanagementSearch"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Search session management<input id="lstPermission139.remark" name="lstPermission[139].remark" value="sc.permission.sessionmanagementSearch.remark" type="hidden" value="sc.permission.sessionmanagementSearch.remark"/></td>
+												</tr>
+											<input id="lstPermission140.moduleCode" name="lstPermission[140].moduleCode" value="tqp.sessionmanagement" type="hidden" value="tqp.sessionmanagement"/><tr class="form-inline" tag="tqp.sessionmanagement">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Delete session management process<input id="lstPermission140.permissionName" name="lstPermission[140].permissionName" value="sc.permission.sessionmanagementDelete" type="hidden" value="sc.permission.sessionmanagementDelete"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Delete session management<input id="lstPermission140.remark" name="lstPermission[140].remark" value="sc.permission.sessionmanagementDelete.remark" type="hidden" value="sc.permission.sessionmanagementDelete.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.sqldesign>
+											<td class="com-output-text" style="text-align: left;">
+												SQL design</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission141.moduleCode" name="lstPermission[141].moduleCode" value="tqp.sqldesign" type="hidden" value="tqp.sqldesign"/><tr class="form-inline" tag="tqp.sqldesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Delete sql design process<input id="lstPermission141.permissionName" name="lstPermission[141].permissionName" value="sc.permission.sqldesignDelete" type="hidden" value="sc.permission.sqldesignDelete"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Delete sql design<input id="lstPermission141.remark" name="lstPermission[141].remark" value="sc.permission.sqldesignDelete.remark" type="hidden" value="sc.permission.sqldesignDelete.remark"/></td>
+												</tr>
+											<input id="lstPermission142.moduleCode" name="lstPermission[142].moduleCode" value="tqp.sqldesign" type="hidden" value="tqp.sqldesign"/><tr class="form-inline" tag="tqp.sqldesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Search sql design  process<input id="lstPermission142.permissionName" name="lstPermission[142].permissionName" value="sc.permission.sqldesignSearch" type="hidden" value="sc.permission.sqldesignSearch"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Search sql design<input id="lstPermission142.remark" name="lstPermission[142].remark" value="sc.permission.sqldesignSearch.remark" type="hidden" value="sc.permission.sqldesignSearch.remark"/></td>
+												</tr>
+											<input id="lstPermission143.moduleCode" name="lstPermission[143].moduleCode" value="tqp.sqldesign" type="hidden" value="tqp.sqldesign"/><tr class="form-inline" tag="tqp.sqldesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Register sql design  process<input id="lstPermission143.permissionName" name="lstPermission[143].permissionName" value="sc.permission.sqldesignRegister" type="hidden" value="sc.permission.sqldesignRegister"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Register sql design<input id="lstPermission143.remark" name="lstPermission[143].remark" value="sc.permission.sqldesignRegister.remark" type="hidden" value="sc.permission.sqldesignRegister.remark"/></td>
+												</tr>
+											<input id="lstPermission144.moduleCode" name="lstPermission[144].moduleCode" value="tqp.sqldesign" type="hidden" value="tqp.sqldesign"/><tr class="form-inline" tag="tqp.sqldesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;View sql design process<input id="lstPermission144.permissionName" name="lstPermission[144].permissionName" value="sc.permission.sqldesignView" type="hidden" value="sc.permission.sqldesignView"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														View sql design<input id="lstPermission144.remark" name="lstPermission[144].remark" value="sc.permission.sqldesignView.remark" type="hidden" value="sc.permission.sqldesignView.remark"/></td>
+												</tr>
+											<input id="lstPermission145.moduleCode" name="lstPermission[145].moduleCode" value="tqp.sqldesign" type="hidden" value="tqp.sqldesign"/><tr class="form-inline" tag="tqp.sqldesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Modify sql design  process<input id="lstPermission145.permissionName" name="lstPermission[145].permissionName" value="sc.permission.sqldesignModify" type="hidden" value="sc.permission.sqldesignModify"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Modify sql design<input id="lstPermission145.remark" name="lstPermission[145].remark" value="sc.permission.sqldesignModify.remark" type="hidden" value="sc.permission.sqldesignModify.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.subareadesign>
+											<td class="com-output-text" style="text-align: left;">
+												Subject area design</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission146.moduleCode" name="lstPermission[146].moduleCode" value="tqp.subareadesign" type="hidden" value="tqp.subareadesign"/><tr class="form-inline" tag="tqp.subareadesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Search screen subject area design<input id="lstPermission146.permissionName" name="lstPermission[146].permissionName" value="sc.permission.subjectareaSearch" type="hidden" value="sc.permission.subjectareaSearch"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Search subject area<input id="lstPermission146.remark" name="lstPermission[146].remark" value="sc.permission.subjectareaSearch.remark" type="hidden" value="sc.permission.subjectareaSearch.remark"/></td>
+												</tr>
+											<input id="lstPermission147.moduleCode" name="lstPermission[147].moduleCode" value="tqp.subareadesign" type="hidden" value="tqp.subareadesign"/><tr class="form-inline" tag="tqp.subareadesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;View subject area design process<input id="lstPermission147.permissionName" name="lstPermission[147].permissionName" value="sc.permission.subjectareaView" type="hidden" value="sc.permission.subjectareaView"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														View subject area<input id="lstPermission147.remark" name="lstPermission[147].remark" value="sc.permission.subjectareaView.remark" type="hidden" value="sc.permission.subjectareaView.remark"/></td>
+												</tr>
+											<input id="lstPermission148.moduleCode" name="lstPermission[148].moduleCode" value="tqp.subareadesign" type="hidden" value="tqp.subareadesign"/><tr class="form-inline" tag="tqp.subareadesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Modify subject area design process<input id="lstPermission148.permissionName" name="lstPermission[148].permissionName" value="sc.permission.subjectareaModify" type="hidden" value="sc.permission.subjectareaModify"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Modify subject area<input id="lstPermission148.remark" name="lstPermission[148].remark" value="sc.permission.subjectareaModify.remark" type="hidden" value="sc.permission.subjectareaModify.remark"/></td>
+												</tr>
+											<input id="lstPermission149.moduleCode" name="lstPermission[149].moduleCode" value="tqp.subareadesign" type="hidden" value="tqp.subareadesign"/><tr class="form-inline" tag="tqp.subareadesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Register subject area design <input id="lstPermission149.permissionName" name="lstPermission[149].permissionName" value="sc.permission.subjectareaRegister" type="hidden" value="sc.permission.subjectareaRegister"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Register subject area<input id="lstPermission149.remark" name="lstPermission[149].remark" value="sc.permission.subjectareaRegister.remark" type="hidden" value="sc.permission.subjectareaRegister.remark"/></td>
+												</tr>
+											<input id="lstPermission150.moduleCode" name="lstPermission[150].moduleCode" value="tqp.subareadesign" type="hidden" value="tqp.subareadesign"/><tr class="form-inline" tag="tqp.subareadesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Delete subject area design process<input id="lstPermission150.permissionName" name="lstPermission[150].permissionName" value="sc.permission.subjectareaDelete" type="hidden" value="sc.permission.subjectareaDelete"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Delete subject area<input id="lstPermission150.remark" name="lstPermission[150].remark" value="sc.permission.subjectareaDelete.remark" type="hidden" value="sc.permission.subjectareaDelete.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.sys>
+											<td class="com-output-text" style="text-align: left;">
+												Common system</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission151.moduleCode" name="lstPermission[151].moduleCode" value="tqp.sys" type="hidden" value="tqp.sys"/><tr class="form-inline" tag="tqp.sys">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Change design status process<input id="lstPermission151.permissionName" name="lstPermission[151].permissionName" value="sc.permission.changeDesignStatus" type="hidden" value="sc.permission.changeDesignStatus"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Change design status from Fixed Design to Under design<input id="lstPermission151.remark" name="lstPermission[151].remark" value="sc.permission.changeDesignStatus.remark" type="hidden" value="sc.permission.changeDesignStatus.remark"/></td>
+												</tr>
+											<input id="lstPermission152.moduleCode" name="lstPermission[152].moduleCode" value="tqp.sys" type="hidden" value="tqp.sys"/><tr class="form-inline" tag="tqp.sys">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Permission only for testing<input id="lstPermission152.permissionName" name="lstPermission[152].permissionName" value="sc.permission.function2Q" type="hidden" value="sc.permission.function2Q"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Permission only for testing<input id="lstPermission152.remark" name="lstPermission[152].remark" value="sc.permission.function2Q.remark" type="hidden" value="sc.permission.function2Q.remark"/></td>
+												</tr>
+											<input id="lstPermission153.moduleCode" name="lstPermission[153].moduleCode" value="tqp.sys" type="hidden" value="tqp.sys"/><tr class="form-inline" tag="tqp.sys">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Delete object has foreign key<input id="lstPermission153.permissionName" name="lstPermission[153].permissionName" value="sc.permission.deleteObjectHasFk" type="hidden" value="sc.permission.deleteObjectHasFk"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Delete object has foreign key and insert problem<input id="lstPermission153.remark" name="lstPermission[153].remark" value="sc.permission.deleteObjectHasFk.remark" type="hidden" value="sc.permission.deleteObjectHasFk.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.tabledesign>
+											<td class="com-output-text" style="text-align: left;">
+												Table design</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission154.moduleCode" name="lstPermission[154].moduleCode" value="tqp.tabledesign" type="hidden" value="tqp.tabledesign"/><tr class="form-inline" tag="tqp.tabledesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;View table design process<input id="lstPermission154.permissionName" name="lstPermission[154].permissionName" value="sc.permission.tabledesignView" type="hidden" value="sc.permission.tabledesignView"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														View table design<input id="lstPermission154.remark" name="lstPermission[154].remark" value="sc.permission.tabledesignView.remark" type="hidden" value="sc.permission.tabledesignView.remark"/></td>
+												</tr>
+											<input id="lstPermission155.moduleCode" name="lstPermission[155].moduleCode" value="tqp.tabledesign" type="hidden" value="tqp.tabledesign"/><tr class="form-inline" tag="tqp.tabledesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Delete table design process<input id="lstPermission155.permissionName" name="lstPermission[155].permissionName" value="sc.permission.tabledesignDelete" type="hidden" value="sc.permission.tabledesignDelete"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Delete table design<input id="lstPermission155.remark" name="lstPermission[155].remark" value="sc.permission.tabledesignDelete.remark" type="hidden" value="sc.permission.tabledesignDelete.remark"/></td>
+												</tr>
+											<input id="lstPermission156.moduleCode" name="lstPermission[156].moduleCode" value="tqp.tabledesign" type="hidden" value="tqp.tabledesign"/><tr class="form-inline" tag="tqp.tabledesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Modify table design process<input id="lstPermission156.permissionName" name="lstPermission[156].permissionName" value="sc.permission.tabledesignModify" type="hidden" value="sc.permission.tabledesignModify"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Modify table design<input id="lstPermission156.remark" name="lstPermission[156].remark" value="sc.permission.tabledesignModify.remark" type="hidden" value="sc.permission.tabledesignModify.remark"/></td>
+												</tr>
+											<input id="lstPermission157.moduleCode" name="lstPermission[157].moduleCode" value="tqp.tabledesign" type="hidden" value="tqp.tabledesign"/><tr class="form-inline" tag="tqp.tabledesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Search table design process<input id="lstPermission157.permissionName" name="lstPermission[157].permissionName" value="sc.permission.tabledesignSearch" type="hidden" value="sc.permission.tabledesignSearch"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Search table design<input id="lstPermission157.remark" name="lstPermission[157].remark" value="sc.permission.tabledesignSearch.remark" type="hidden" value="sc.permission.tabledesignSearch.remark"/></td>
+												</tr>
+											<input id="lstPermission158.moduleCode" name="lstPermission[158].moduleCode" value="tqp.tabledesign" type="hidden" value="tqp.tabledesign"/><tr class="form-inline" tag="tqp.tabledesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Register table design process<input id="lstPermission158.permissionName" name="lstPermission[158].permissionName" value="sc.permission.tabledesignRegister" type="hidden" value="sc.permission.tabledesignRegister"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Register table design<input id="lstPermission158.remark" name="lstPermission[158].remark" value="sc.permission.tabledesignRegister.remark" type="hidden" value="sc.permission.tabledesignRegister.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.viewdesign>
+											<td class="com-output-text" style="text-align: left;">
+												View design</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission159.moduleCode" name="lstPermission[159].moduleCode" value="tqp.viewdesign" type="hidden" value="tqp.viewdesign"/><tr class="form-inline" tag="tqp.viewdesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;View view design<input id="lstPermission159.permissionName" name="lstPermission[159].permissionName" value="sc.permission.viewdesignView" type="hidden" value="sc.permission.viewdesignView"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														View view design<input id="lstPermission159.remark" name="lstPermission[159].remark" value="sc.permission.viewdesignView.remark" type="hidden" value="sc.permission.viewdesignView.remark"/></td>
+												</tr>
+											<input id="lstPermission160.moduleCode" name="lstPermission[160].moduleCode" value="tqp.viewdesign" type="hidden" value="tqp.viewdesign"/><tr class="form-inline" tag="tqp.viewdesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Delete view design<input id="lstPermission160.permissionName" name="lstPermission[160].permissionName" value="sc.permission.viewdesignDelete" type="hidden" value="sc.permission.viewdesignDelete"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Delete view design<input id="lstPermission160.remark" name="lstPermission[160].remark" value="sc.permission.viewdesignDelete.remark" type="hidden" value="sc.permission.viewdesignDelete.remark"/></td>
+												</tr>
+											<input id="lstPermission161.moduleCode" name="lstPermission[161].moduleCode" value="tqp.viewdesign" type="hidden" value="tqp.viewdesign"/><tr class="form-inline" tag="tqp.viewdesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Search view design<input id="lstPermission161.permissionName" name="lstPermission[161].permissionName" value="sc.permission.viewdesignSearch" type="hidden" value="sc.permission.viewdesignSearch"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Search view design<input id="lstPermission161.remark" name="lstPermission[161].remark" value="sc.permission.viewdesignSearch.remark" type="hidden" value="sc.permission.viewdesignSearch.remark"/></td>
+												</tr>
+											<input id="lstPermission162.moduleCode" name="lstPermission[162].moduleCode" value="tqp.viewdesign" type="hidden" value="tqp.viewdesign"/><tr class="form-inline" tag="tqp.viewdesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Register view design<input id="lstPermission162.permissionName" name="lstPermission[162].permissionName" value="sc.permission.viewdesignRegister" type="hidden" value="sc.permission.viewdesignRegister"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Register view design<input id="lstPermission162.remark" name="lstPermission[162].remark" value="sc.permission.viewdesignRegister.remark" type="hidden" value="sc.permission.viewdesignRegister.remark"/></td>
+												</tr>
+											<input id="lstPermission163.moduleCode" name="lstPermission[163].moduleCode" value="tqp.viewdesign" type="hidden" value="tqp.viewdesign"/><tr class="form-inline" tag="tqp.viewdesign">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Modify view design<input id="lstPermission163.permissionName" name="lstPermission[163].permissionName" value="sc.permission.viewdesignModify" type="hidden" value="sc.permission.viewdesignModify"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Modify view design<input id="lstPermission163.remark" name="lstPermission[163].remark" value="sc.permission.viewdesignModify.remark" type="hidden" value="sc.permission.viewdesignModify.remark"/></td>
+												</tr>
+											<tr class="success form-inline" tag=tqp.webservicetokenmanagement>
+											<td class="com-output-text" style="text-align: left;">
+												Web service token management</td>
+											<td />
+											<td />
+										</tr>
+										<input id="lstPermission164.moduleCode" name="lstPermission[164].moduleCode" value="tqp.webservicetokenmanagement" type="hidden" value="tqp.webservicetokenmanagement"/><tr class="form-inline" tag="tqp.webservicetokenmanagement">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Modify web service token management process<input id="lstPermission164.permissionName" name="lstPermission[164].permissionName" value="sc.permission.webservicetokenmanagementModify" type="hidden" value="sc.permission.webservicetokenmanagementModify"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Modify web service token management<input id="lstPermission164.remark" name="lstPermission[164].remark" value="sc.permission.webservicetokenmanagementModify.remark" type="hidden" value="sc.permission.webservicetokenmanagementModify.remark"/></td>
+												</tr>
+											<input id="lstPermission165.moduleCode" name="lstPermission[165].moduleCode" value="tqp.webservicetokenmanagement" type="hidden" value="tqp.webservicetokenmanagement"/><tr class="form-inline" tag="tqp.webservicetokenmanagement">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Delete web service token management process<input id="lstPermission165.permissionName" name="lstPermission[165].permissionName" value="sc.permission.webservicetokenmanagementDelete" type="hidden" value="sc.permission.webservicetokenmanagementDelete"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Delete web service token management<input id="lstPermission165.remark" name="lstPermission[165].remark" value="sc.permission.webservicetokenmanagementDelete.remark" type="hidden" value="sc.permission.webservicetokenmanagementDelete.remark"/></td>
+												</tr>
+											<input id="lstPermission166.moduleCode" name="lstPermission[166].moduleCode" value="tqp.webservicetokenmanagement" type="hidden" value="tqp.webservicetokenmanagement"/><tr class="form-inline" tag="tqp.webservicetokenmanagement">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Search web service token management process<input id="lstPermission166.permissionName" name="lstPermission[166].permissionName" value="sc.permission.webservicetokenmanagementSearch" type="hidden" value="sc.permission.webservicetokenmanagementSearch"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Search web service token management<input id="lstPermission166.remark" name="lstPermission[166].remark" value="sc.permission.webservicetokenmanagementSearch.remark" type="hidden" value="sc.permission.webservicetokenmanagementSearch.remark"/></td>
+												</tr>
+											<input id="lstPermission167.moduleCode" name="lstPermission[167].moduleCode" value="tqp.webservicetokenmanagement" type="hidden" value="tqp.webservicetokenmanagement"/><tr class="form-inline" tag="tqp.webservicetokenmanagement">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;Register web service token management process<input id="lstPermission167.permissionName" name="lstPermission[167].permissionName" value="sc.permission.webservicetokenmanagementRegister" type="hidden" value="sc.permission.webservicetokenmanagementRegister"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														Register web service token management<input id="lstPermission167.remark" name="lstPermission[167].remark" value="sc.permission.webservicetokenmanagementRegister.remark" type="hidden" value="sc.permission.webservicetokenmanagementRegister.remark"/></td>
+												</tr>
+											<input id="lstPermission168.moduleCode" name="lstPermission[168].moduleCode" value="tqp.webservicetokenmanagement" type="hidden" value="tqp.webservicetokenmanagement"/><tr class="form-inline" tag="tqp.webservicetokenmanagement">
+													<td class="com-output-text" style="text-align: left;">
+														&nbsp;&nbsp;&nbsp;&nbsp;View web service token management process<input id="lstPermission168.permissionName" name="lstPermission[168].permissionName" value="sc.permission.webservicetokenmanagementView" type="hidden" value="sc.permission.webservicetokenmanagementView"/></td>
+													<td class="com-output-text" style="text-align: left;">
+														View web service token management<input id="lstPermission168.remark" name="lstPermission[168].remark" value="sc.permission.webservicetokenmanagementView.remark" type="hidden" value="sc.permission.webservicetokenmanagementView.remark"/></td>
+												</tr>
+											</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				
+				<!-- end permission information -->
+				<div>
+<input type="hidden" name="_csrf" value="90677e1d-c352-48ab-8b15-61cca915cc05" />
+</div></form></div>
+		</div>
+	</div>
+</body>
+</html>

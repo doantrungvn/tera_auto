@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="org.terasoluna.qp.domain.repository.screenitemcodelist.ScreenItemCodelistRepository">
+
+	<resultMap id="screenItemCodelistResultMap" type="ScreenItemCodelist">
+		<result property="screenItemId" column="screen_item_id" />
+		<result property="codelistSeqNo" column="codelist_seq_no" />
+		<result property="codelistName" column="codelist_name" />
+		<result property="codelistVal" column="codelist_val" />
+		<result property="supportOptionValFlg" column="support_option_val_flg" />
+	</resultMap>
+	
+	<resultMap id="screenItemCodelistDetailsResultMap" type="ScreenItemCodelistDetail">
+		<result property="screenItemId" column="screen_item_id" />
+		<result property="codelistSeqNo" column="codelist_seq_no" />
+		<result property="codelistName" column="codelist_name" />
+		<result property="codelistVal" column="codelist_val" />
+		<result property="supportOptionValFlg" column="support_option_val_flg" />
+		<result property="otherName" column="screen_code" />
+	</resultMap>
+	<insert id="insertScreenItemCodelist" parameterType="ScreenItemCodelist">
+		INSERT INTO
+		screen_item_codelist
+		(
+			screen_item_id,
+			codelist_seq_no,
+			codelist_name,
+			codelist_val,
+			support_option_val_flg
+		)
+		VALUES
+		(
+			#{screenItemId},
+			#{codelistSeqNo},
+			#{codelistName},
+			#{codelistVal},
+			#{supportOptionValFlg}
+		)
+	</insert>
+	
+	<insert id="insertListScreenItemCodelist">
+		INSERT INTO
+				screen_item_codelist
+			(
+				screen_item_id, 
+	            codelist_seq_no, 
+	            codelist_name,
+	            codelist_val,
+	            support_option_val_flg
+			)
+			VALUES
+		<foreach item="item" collection="lstScreenItemCodeList" separator=",">
+		(
+				#{item.screenItemId},
+				#{item.codelistSeqNo},
+				#{item.codelistName},
+				#{item.codelistVal},
+				#{item.supportOptionValFlg}
+		)
+		</foreach>
+	</insert>
+	
+	<select id="getScreenItemCodelistByScreenItemId" parameterType="Long"
+		resultMap="screenItemCodelistResultMap">
+		SELECT
+			c.screen_item_id AS screenItemId,
+			c.codelist_seq_no AS codelistSeqNo,
+			c.codelist_name AS codelistName,
+			c.codelist_val AS codelistVal,
+			c.support_option_val_flg AS supportOptionValFlg
+		FROM
+			screen_item_codelist c
+		WHERE
+			c.screen_item_id = #{screenItemId}
+		ORDER BY
+			c.codelist_seq_no ASC
+	</select>
+	
+	<select id="getScreenItemCodelistByProject" parameterType="Long" resultMap="screenItemCodelistDetailsResultMap">
+		SELECT 
+			COALESCE(a.codelist_name, a.codelist_val) AS codelist_name,
+			a.codelist_val,
+			a.screen_item_id,
+			c.screen_code
+		FROM 
+			screen_item_codelist a
+		INNER JOIN screen_item b ON a.screen_item_id = b.screen_item_id
+		INNER JOIN screen_design c ON b.screen_id = c.screen_id 
+		INNER JOIN module d ON d.module_id = c.module_id
+		WHERE d.project_id = #{projectId}
+		AND b.logical_data_type IN(5,6,7)
+		ORDER BY a.screen_item_id, a.codelist_seq_no
+	</select>
+</mapper>

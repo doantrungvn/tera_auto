@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.decisiontable.DecisionTableConditionGroupRepository">
+
+    <resultMap id="ResultMap" type="DecisionTableConditionGroup">
+        <id property="conditionGroupId" column="condition_group_id" />
+        <result property="rowNumber" column="row_number" />
+        <result property="groupType" column="group_type" />
+        <result property="rowSpan" column="row_span" />
+        <result property="decisionItemDesignId" column="decision_item_design_id" />
+    </resultMap>
+
+	<!-- Process for display view and modify -->
+    <select id="findConditionGroupById" parameterType="org.terasoluna.qp.domain.model.DecisionTableItemDesignBean" resultMap="ResultMap">
+        SELECT 
+           a.condition_group_id, 
+           a.row_number,
+           a.group_type, 
+           a.row_span, 
+           b.decision_item_design_id
+        FROM 
+           decision_condition_group a LEFT JOIN  decision_item_design b
+              ON a.decision_item_design_id = b.decision_item_design_id
+         WHERE 
+            b.decision_item_design_id IN 
+            <foreach item="item" collection="decisionItemDesignIds" open="(" separator="," close=")">
+                 <![CDATA[
+                  CAST(#{item.decisionItemDesignId} AS numeric(16,0))
+                  ]]>
+             </foreach>
+        ORDER BY a.row_number
+    </select>
+    
+    <select id="getSequencesCondGroup" resultType="Long">
+        select SETVAL('decision_condition_group_seq'::regclass, NEXTVAL('decision_condition_group_seq'::regclass) + #{size})
+    </select>
+    
+    <insert id="registerCondGroup" >
+        <if test="conditiongroups != null and  conditiongroups.size() > 0 ">
+            INSERT INTO decision_condition_group
+                (
+                condition_group_id, 
+                row_number, 
+                group_type, 
+                row_span, 
+                decision_item_design_id
+                )
+                VALUES 
+                <foreach item="item" collection="conditiongroups" separator=",">
+                (
+                    CAST(#{item.conditionGroupId} AS numeric(16,0)), 
+                    #{item.rowNumber}, 
+                    #{item.groupType}, 
+                    #{item.rowSpan}, 
+                    CAST(#{item.decisionItemDesignId} AS numeric(16,0)) 
+                )
+                </foreach>;
+        </if>
+    </insert>
+
+    <delete id="deleteBeforModifyCondGroup">
+        DELETE 
+        FROM decision_condition_group 
+        WHERE 
+            decision_item_design_id IN 
+            (
+               SELECT decision_item_design_id 
+               FROM decision_item_design
+               WHERE decision_table_id = #{id} 
+               <if test="itemdesigns == null">
+                    AND decision_item_design_id NOT IN  (0)
+               </if>
+               <if test="itemdesigns != null and itemdesigns.size() > 0 ">
+                    AND decision_item_design_id NOT IN  
+                    <foreach item="item" index="index" collection="itemdesigns" open="(" separator="," close=")">
+                        CAST(#{item.decisionItemDesignId} AS numeric(16,0))
+                    </foreach> 
+               </if>
+            )  
+            <if test="conditiongroups != null and conditiongroups.size() > 0 ">
+                AND condition_group_id NOT IN  (0)
+            </if>
+            <if test="conditiongroups != null and conditiongroups.size() > 0 ">
+                AND condition_group_id NOT IN   
+                <foreach item="item" index="index" collection="conditiongroups" open="(" separator="," close=")">
+                CAST(#{item.conditionGroupId} AS numeric(16,0))
+                </foreach>
+             </if>
+    </delete>
+
+    <update id="modifyCondGroup" >
+        <foreach item="item" collection="conditiongroups" separator=";">
+            <![CDATA[
+                UPDATE decision_condition_group
+                SET 
+                    row_number = #{item.rowNumber}, 
+                    group_type = #{item.groupType}, 
+                    row_span= #{item.rowSpan}
+                 WHERE 
+                   condition_group_id = CAST(#{item.conditionGroupId} AS numeric(16,0))
+            ]]>
+        </foreach>
+    </update>
+    
+    <delete id="deleteCondGroup">
+        DELETE 
+        FROM decision_condition_group 
+        WHERE 
+            decision_item_design_id IN 
+            <foreach item="item" index="index" collection="itemdesigns" open="(" separator="," close=")">
+                CAST(#{item.decisionItemDesignId} AS numeric(16,0))
+            </foreach> 
+    </delete>
+
+</mapper>

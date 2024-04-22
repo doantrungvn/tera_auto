@@ -1,0 +1,364 @@
+<!-- appendHeaderHere -->
+
+
+			<div class="qp-body-container">
+			<div class="qp-link-header pull-right">
+				<span class="qp-link-header-icon glyphicon glyphicon-plus"></span>
+			
+						<a onmouseover="this.setAttribute('style', 'null')" onmouseout="this.setAttribute('style', 'null')" href="../language/registerForm.html">Register language for system</a>&nbsp;
+						<span class="qp-link-header-icon glyphicon glyphicon-refresh"></span>
+						<a onmouseover="this.setAttribute('style', 'null')" onmouseout="this.setAttribute('style', 'null')" href="searchForm.html">Reload message for system</a>&nbsp;
+		</div>
+			
+			<div class="qp-breadcrumb">
+				<ul class="breadcrumb" style="float:left;color:#337ab7;font-size:14px;">
+					<li><a href="#{homePage}"><i class="qp-link-header-icon glyphicon glyphicon-home"></i></a></li>
+					<li><span>Message management</span></li>
+					<li><span>Search message</span></li>
+				</ul>
+			</div>
+			
+			<!-- End toolbar-->
+			
+			<!-- Start message -->
+			<div class="qp-message">
+				</div>
+			<!-- End message -->
+			<!-- Start content -->
+			<div class="qp-body">
+<form id="messageForm" action="http://localhost:8080/terasoluna-qp-web/message/search" method="post">
+<input type="hidden" name="sort" id="fcomHeaderSortSubmit">
+<div class="panel panel-default qp-div-search-condition">
+				<div class="panel-heading">
+					<span class="glyphicon  qp-heading-icon" aria-hidden="true">&nbsp;</span><span class="qp-heading-text">Search condition</span>
+				</div>
+				<div class="panel-body"> 
+					<table class="table table-bordered qp-table-form">
+						<colgroup>
+							<col width="20%">
+							<col width="30%">
+							<col width="20%">
+							<col width="30%">
+						</colgroup>
+						<tbody><tr>
+							<th>Message string</th>
+							<td><input id="messageString" name="messageString" class="form-control qp-input-text" type="text" value=""></td>
+							<th>Message code</th>
+							<td><input id="messageCode" name="messageCode" class="form-control qp-input-text" type="text" value=""></td>
+						</tr>
+						<tr>
+							<th>Module name</th>
+							<td>
+                                <select id="moduleResource" name="moduleResource" class="form-control qp-input-select"><option value="" selected="selected">-- Select --</option><option value="tqp.account">Account management</option><option value="tqp.accountpermission">Account permission</option><option value="tqp.accountprofile">Account Profile</option><option value="tqp.accountproject">Account Project</option><option value="tqp.accountrole">Account role</option><option value="tqp.accountrolepermission">Account Role Permission</option><option value="tqp.accountruledefinition">Account rule definition</option><option value="tqp.accounttheme">Account Theme</option><option value="tqp.autocomplete">Autocomplete design</option><option value="tqp.blogiccomponent">Business logic component</option><option value="tqp.businesslogicdesign">Business logic design</option><option value="tqp.businesstype">Business type</option><option value="tqp.codelist">Codelist design</option><option value="tqp.commonobjectdefinition">Common object definition</option><option value="tqp.sys">Common system</option><option value="tqp.sys.js">Common system for javascript</option><option value="tqp.databasedesign">Database Design</option><option value="tqp.generatedbblogic">Generate databae &amp; blogic</option><option value="tqp.decisiontable">Decision table</option><option value="tqp.designinformation">Design information</option><option value="tqp.domaindesign">Domain design</option><option value="tqp.externalobjectdefinition">External object definition</option><option value="tqp.functiondesign">Function design management</option><option value="tqp.functionmaster">Function master</option><option value="tqp.generatedbblogic">Generate databae &amp; blogic</option><option value="tqp.generatehtml">Generate HTML</option><option value="tqp.generatemanagement">Generate management</option><option value="tqp.generatescreen">Generate Screen &amp; Blogic</option><option value="tqp.generateddl">Generate Script</option><option value="tqp.generation">Generation</option><option value="tqp.generatedocument">Genetate document</option><option value="tqp.generatesourcecode">Genetate source code</option><option value="tqp.graphicdatabasedeisgn">Graphic database design</option><option value="tqp.homepage">homepage</option><option value="tqp.generatehtml">Generate HTML</option><option value="tqp.sys.js">Common system for javascript</option><option value="tqp.languagedesign">Language design</option><option value="tqp.language">Language management</option><option value="tqp.librarymanagement">Library management</option><option value="tqp.menudesign">Menu design</option><option value="tqp.messagedesign">Message design</option><option value="tqp.message">Message management</option><option value="tqp.module">Module management</option><option value="tqp.permission">Permission</option><option value="tqp.problemlist">Problem list</option><option value="tqp.project">Project management</option><option value="tqp.rolemanagement">Role management</option><option value="tqp.rolepermission">Role permission</option><option value="tqp.screendesign">Screen Design</option><option value="tqp.screenlist">Screen list</option><option value="tqp.screentransition">Screen transition diagram</option><option value="tqp.sqldesign">SQL design</option><option value="tqp.sqldesign">SQL design</option><option value="tqp.subareadesign">Subject area design</option><option value="tqp.tabledesign">Table design</option><option value="tqp.tqp">TERASOLUNA QP</option><option value="tqp.validationrule">Validation Rule</option><option value="tqp.viewdesign">View design</option><option value="tqp.accountrole">Account role</option><option value="tqp.accountrolepermission">Account Role Permission</option><option value="tqp.accountpermission">Account permission</option><option value="tqp.account">Account management</option><option value="tqp.autocomplete">Autocomplete design</option><option value="tqp.graphicdatabasedeisgn">Graphic database design</option><option value="tqp.codelist">Codelist design</option><option value="tqp.subareadesign">Subject area design</option><option value="tqp.sys">Common system</option><option value="tqp.generateddl">Generate Script</option><option value="tqp.databasedesign">Database Design</option><option value="tqp.tabledesign">Table design</option><option value="tqp.decisiontable">Decision table</option><option value="tqp.homepage">homepage</option><option value="tqp.domaindesign">Domain design</option><option value="tqp.blogiccomponent">Business logic component</option><option value="tqp.businesslogicdesign">Business logic design</option><option value="tqp.viewdesign">View design</option><option value="tqp.accountproject">Account Project</option><option value="tqp.project">Project management</option><option value="tqp.message">Message management</option><option value="tqp.messagedesign">Message design</option><option value="tqp.menudesign">Menu design</option><option value="tqp.module">Module management</option><option value="tqp.accounttheme">Account Theme</option><option value="tqp.accountprofile">Account Profile</option><option value="tqp.rolepermission">Role permission</option><option value="tqp.rolemanagement">Role management</option><option value="tqp.validationrule">Validation Rule</option><option value="tqp.problemlist">Problem list</option><option value="tqp.businesstype">Business type</option><option value="tqp.permission">Permission</option><option value="tqp.functiondesign">Function design management</option><option value="tqp.generation">Generation</option><option value="tqp.generatescreen">Generate Screen &amp; Blogic</option><option value="tqp.screenlist">Screen list</option><option value="tqp.screendesign">Screen Design</option><option value="tqp.screentransition">Screen transition diagram</option><option value="tqp.language">Language management</option><option value="tqp.languagedesign">Language design</option><option value="tqp.designinformation">Design information</option><option value="tqp.functionmaster">Function master</option></select></td>
+                            <th>Language name</th>
+                            <td>
+                                <select id="languageCode" name="languageCode" class="form-control qp-input-select"><option value="" selected="selected">-- Select --</option><option value="en_US">English</option><option value="ja_JP">Japanese</option></select></td>
+						</tr>
+						<tr>
+                            <th>Message type</th>
+                            <td colspan="3">
+	                            <label><input id="messageTypes1" name="messageTypes" class="qp-input-checkbox-margin qp-input-checkbox" type="checkbox" value="sc"><input type="hidden" name="_messageTypes" value="on">Lable</label>
+								<label><input id="messageTypes2" name="messageTypes" class="qp-input-checkbox-margin qp-input-checkbox" type="checkbox" value="inf"><input type="hidden" name="_messageTypes" value="on">Information</label>
+								<label><input id="messageTypes3" name="messageTypes" class="qp-input-checkbox-margin qp-input-checkbox" type="checkbox" value="wrn"><input type="hidden" name="_messageTypes" value="on">Warning</label>
+								<label><input id="messageTypes4" name="messageTypes" class="qp-input-checkbox-margin qp-input-checkbox" type="checkbox" value="err"><input type="hidden" name="_messageTypes" value="on">Error</label>
+								<label><input id="messageTypes5" name="messageTypes" class="qp-input-checkbox-margin qp-input-checkbox" type="checkbox" value="cl"><input type="hidden" name="_messageTypes" value="on">Codelist</label>
+								</td>
+						</tr>
+					</tbody></table>
+				</div>
+			</div>
+			<div class="qp-div-action">
+				<div class="fr">
+					
+
+
+
+
+
+
+
+
+
+
+
+
+	<input type="button" onclick="window.location.href='searchForm.html'" class="btn qp-button " value="Search" style="null">
+
+
+</div>
+			</div>
+		<div>
+<input type="hidden" name="_csrf" value="6e22c002-28d3-4e24-95c7-75e956cd53c5">
+</div></form><div class="panel panel-default qp-div-search-result">
+				<div class="panel-heading">
+				    
+
+
+
+
+
+
+
+<script type="text/javascript">
+	var actionPath = '/message/search';
+	var form = "#"+'messageForm';
+	var href = CONTEXT_PATH + "/PageSize/setPageSize?r="+Math.random();
+	function calSavePageSize() {
+		if($(form).length >0){
+			var size = $( "#fcomPageSizeSelect" ).val();
+			var param =  {
+					action : actionPath,
+					size : size
+				};
+			$.ajax({
+				method : "GET",
+				url : href,
+				data : {data:JSON.stringify(param)}
+			}).done(function(msg) {
+				if(msg.status == '1'){
+					$(form).submit();
+				}
+				else{
+					// Error when save information of pagesize
+					alert("");
+				}
+			});
+		}else{
+			// This form is not exist.
+			alert("");
+		}
+		
+	}
+</script>
+
+ 
+
+	
+		
+		<span class="glyphicon qp-heading-icon" style="width: 24px;" aria-hidden="true">&nbsp;</span>
+		<span class="qp-heading-text">
+			Search results
+			&nbsp;
+			<span class="badge">&nbsp;1&nbsp;</span>
+		</span>
+		<div class="form-inline qp-item-per-page">
+			<label>
+				<select id="fcomPageSizeSelect" style="margin-top: -3px;" name="size" aria-controls="dataTables-example" class="form-control qp-input-select" onchange="calSavePageSize()">
+					
+						
+		    				<option value="10" selected="selected">10</option>
+		    			
+		    			
+		  			
+						
+		    			
+		    				<option value="20">20</option>
+		    			
+		  			
+						
+		    			
+		    				<option value="30">30</option>
+		    			
+		  			
+						
+		    			
+		    				<option value="50">50</option>
+		    			
+		  			
+						
+		    			
+		    				<option value="100">100</option>
+		    			
+		  			
+				</select>
+			</label>
+		</div>
+	
+	
+
+</div>
+				<form id="messageForm" action="http://localhost:8080/terasoluna-qp-web/message/modify" method="post"><div class="panel-body">
+						<div class="table-responsive">
+						    <table class="table table-bordered qp-table-list">
+								<colgroup>
+									<col width="5%">
+									<col width="45%">
+									<col width="20%">
+									<col width="20%">
+									<col width="10%">
+								</colgroup>
+								<thead>
+									<tr>
+										<th>No.</th>
+										<th>
+
+
+
+
+
+
+
+
+<div class="form-inline" onclick="$.qp.sortDataByColumn(&#39;messageForm&#39;,&#39;message_string&#39;)" style="cursor: pointer;">
+	<label style="margin-bottom: 0px;cursor: pointer;">Message string</label>
+	
+	
+		<input type="hidden" value="message_string,DESC" id="fcomHeaderSortmessage_string">
+	
+</div></th>
+										<th>
+
+
+
+
+
+
+
+
+<div class="form-inline" onclick="$.qp.sortDataByColumn(&#39;messageForm&#39;,&#39;message_code&#39;)" style="cursor: pointer;">
+	<label style="margin-bottom: 0px;cursor: pointer;">Message code</label>
+	
+	
+		<input type="hidden" value="message_code,DESC" id="fcomHeaderSortmessage_code">
+	
+</div></th>
+										<th>
+
+
+
+
+
+
+
+
+<div class="form-inline" onclick="$.qp.sortDataByColumn(&#39;messageForm&#39;,&#39;module_resource&#39;)" style="cursor: pointer;">
+	<label style="margin-bottom: 0px;cursor: pointer;">Module name</label>
+	
+	
+		<input type="hidden" value="module_resource,DESC" id="fcomHeaderSortmodule_resource">
+	
+</div></th>
+										<th>
+
+
+
+
+
+
+
+
+<div class="form-inline" onclick="$.qp.sortDataByColumn(&#39;messageForm&#39;,&#39;language_name&#39;)" style="cursor: pointer;">
+	<label style="margin-bottom: 0px;cursor: pointer;">Language name</label>
+	
+	
+		<input type="hidden" value="language_name,DESC" id="fcomHeaderSortlanguage_name">
+	
+</div></th>
+									</tr>
+								</thead>
+								<tbody><tr>
+										<td>
+
+
+
+<!--  attribute -->
+
+
+
+
+
+	
+	
+	
+		
+			1
+		
+		
+	
+	
+<input type="hidden" name="modifyMessageForm[0].messageId" value="27766">
+										</td>
+										<td>
+										   <input type="text" class="form-control" name="modifyMessageForm[0].messageString" value="Left">
+										</td>
+										<td>
+
+
+
+<span style="white-space:pre">cl.accountprofile.0041</span>
+</td>
+										<td class="word-wrap">Account Profile</td>
+										<td>
+										
+
+
+
+
+
+
+
+
+
+
+
+
+	<a class="qp-link-popup" href="../language/viewForm.html"> 
+
+
+
+<span style="white-space:pre">Japanese</span>
+</a>  
+											
+
+
+</td>
+									</tr>
+								</tbody></table>
+							<br>
+							<div class="qp-div-action">
+								<div class="fr">
+									
+
+
+
+
+
+
+
+
+
+
+
+
+	<input type="button" onclick="window.location.href='searchForm.html'" class="btn qp-button " value="Save" style="null">
+
+
+</div>
+							</div>
+							
+
+
+
+
+
+
+
+
+
+
+
+
+	<div class="qp-div-action">
+	                                <ul class="pagination pagination-md"><li class="disabled"><a href="javascript:void(0)">&lt;&lt;</a></li><li class="disabled"><a href="javascript:void(0)">&lt;</a></li><li class="active"><a href="javascript:void(0)">1</a></li><li><a href="searchForm.html?page=1&amp;size=10">&gt;</a></li><li><a href="searchForm.html?page=558&amp;size=10">&gt;&gt;</a></li></ul></div>
+							
+
+
+<input type="hidden" name="pageNumber" value="0">
+							<input type="hidden" name="pageSize" value="10">
+						</div>
+					</div>
+				<div>
+<input type="hidden" name="_csrf" value="6e22c002-28d3-4e24-95c7-75e956cd53c5">
+</div></form></div></div>
+
+			<!-- appendFooterHere -->

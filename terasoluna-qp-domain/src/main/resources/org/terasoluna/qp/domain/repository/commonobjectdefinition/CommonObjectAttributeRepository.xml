@@ -1,0 +1,561 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="org.terasoluna.qp.domain.repository.commonobjectdefinition.CommonObjectAttributeRepository">
+	<resultMap id="resultMap" type="CommonObjectAttribute">
+		<result property="commonObjectAttributeId" column="common_object_attribute_id" />
+		<result property="commonObjectAttributeCode" column="common_object_attribute_code" />
+		<result property="commonObjectAttributeName" column="common_object_attribute_name" />
+		<result property="arrayFlg" column="array_flg" />
+		<result property="commonObjectDefinitionId" column="common_object_definition_id" />
+		<result property="dataType" column="data_type" />
+		<result property="objectDefinitionId" column="object_definition_id" />
+		<result property="itemSeqNo" column="item_seq_no" />
+		<result property="parentCommonObjectAttributeId" column="parent_common_object_attribute_id" />
+		<result property="inputColumnNo" column="input_column_no" />
+		<result property="moduleCode" column="module_code" />
+        <result property="objectDefinitionCode" column="object_definition_code" />
+        <result property="externalPackageName" column="external_package_name" />
+<!-- 		<result property="externalObjectDefinitionIdAutocomplete" column="common_object_attribute_name" /> -->
+<!-- 		<result property="commonObjectDefinitionACIdAutocomplete" column="common_object_definition_name_ac" /> -->
+<!-- 		<result property="externalObjectDefinitionId" column="external_object_definition_id" /> -->
+<!-- 		<result property="commonObjectDefinitionACId" column="common_object_definition_code_ac" /> -->
+		<result property="commonObjectDefinitionCode" column="common_object_definition_code" />
+        <result property="moduleId" column="module_id" />	
+	</resultMap>
+	
+	<resultMap id="autocompleteResultMap" type="Autocomplete">
+		<result property="optionValue" column="optionValue" />
+		<result property="optionLabel" column="optionLabel" />
+		<result property="output01" column="output01" />
+	</resultMap>
+
+	<!-- Find common object attributes detail by commonObjectDefinitionId -->
+	<select id="findCommonObjectAttributeByCommonObject" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+			common_object_definition_id AS optionValue,
+			common_object_definition_name AS optionLabel,
+			common_object_definition_code AS output01
+		FROM 
+			common_object_definition
+		<where>
+			<if test="searchKey != null and searchKey != ''">
+				AND common_object_definition_name iLIKE '%' || #{searchKey} || '%'
+			</if>
+			<if test="arg01 != null and arg01 != ''">
+				AND project_id = CAST(#{arg01} AS NUMERIC)
+			</if>
+		</where>
+		ORDER BY common_object_definition_id ASC
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+		<if test="arg02 == null or arg02 == ''">
+			LIMIT 20
+		</if>
+	</select>
+	
+	<!-- Find common object attributes detail by commonObjectDefinitionId -->
+	<select id="findCommonObjectAttributeByCommonObjectDefinitionId" resultMap="resultMap">
+	<![CDATA[
+      	SELECT 
+	      	a.common_object_attribute_id, 
+	      	a.common_object_attribute_code, 
+	      	a.common_object_attribute_name, 
+	       	a.array_flg, 
+	       	a.common_object_definition_id, 
+	       	a.data_type,
+	       	a.object_definition_id,
+	       	(
+	       		SELECT 
+	       			b.common_object_definition_name
+	       		FROM 
+	       			common_object_definition b
+	       		WHERE
+	       			b.common_object_definition_name = a.common_object_attribute_name
+	       	) AS common_object_definition_name_ac,
+	       	(
+	       		SELECT 
+	       			c.common_object_definition_id
+	       		FROM 
+	       			common_object_definition c
+	       		WHERE
+	       			c.common_object_definition_name = a.common_object_attribute_name
+	       	) AS common_object_definition_code_ac,
+	       	(
+	       		SELECT 
+	       			e.external_object_definition_name
+	       		FROM 
+	       			external_object_definition e
+	       		WHERE
+	       			e.external_object_definition_name = a.common_object_attribute_name
+	       	) AS common_object_definition_name,
+	       	(
+	       		SELECT 
+	       			e.external_object_definition_id
+	       		FROM 
+	       			external_object_definition e
+	       		WHERE
+	       			e.external_object_definition_name = a.common_object_attribute_name
+	       	) AS external_object_definition_id
+  		FROM 
+  			common_object_attribute a
+		WHERE
+			common_object_definition_id = #{commonObjectDefinitionId}
+			ORDER BY item_seq_no
+    ]]>
+	</select>
+	
+	<select id="findCommonObjectAttribute" resultMap="resultMap">
+	<![CDATA[
+      	SELECT 
+	      	a.common_object_attribute_id, 
+	      	a.common_object_attribute_code, 
+	      	a.common_object_attribute_name,
+	      	a.data_type
+  		FROM 
+  			common_object_attribute a
+		WHERE
+			common_object_definition_id = #{commonObjectDefinitionId}
+			AND object_definition_id IS NULL
+			ORDER BY common_object_attribute_id
+    ]]>
+	</select>
+	
+	<select id="findCommonObjectAttributeFillterDataType" resultMap="resultMap">
+	<![CDATA[
+      	SELECT 
+      		a.common_object_attribute_id, 
+      		a.common_object_attribute_code, 
+      		a.common_object_attribute_name, 
+       		a.array_flg, 
+       		a.common_object_definition_id, 
+       		a.data_type, 
+       		a.object_definition_id, 
+       		a.item_seq_no, 
+       		a.parent_common_object_attribute_id
+  		FROM 
+  			common_object_attribute a
+		WHERE
+			common_object_definition_id = #{commonObjectDefinitionId}
+			ORDER BY common_object_attribute_id
+    ]]>
+	</select>
+	
+	<!-- register -->
+	<insert id="registerArray" parameterType="CommonObjectAttribute">
+		INSERT INTO common_object_attribute
+		(
+           	common_object_attribute_id, 
+           	common_object_attribute_code, 
+           	common_object_attribute_name, 
+           	array_flg, 
+           	common_object_definition_id, 
+           	data_type, 
+           	object_definition_id, 
+           	item_seq_no, 
+           	parent_common_object_attribute_id
+		)
+        VALUES
+        <foreach item="item" collection="commonObjectAttribute" separator=",">
+        (
+        	CAST(#{item.commonObjectAttributeId} AS numeric(16,0)),
+        	#{item.commonObjectAttributeCode},
+	    	#{item.commonObjectAttributeName},
+	    	#{item.arrayFlg},
+	    	#{item.commonObjectDefinitionId},
+	    	#{item.dataType},
+	    	#{item.objectDefinitionId},
+	    	#{item.itemSeqNo},
+	    	CAST(#{item.parentCommonObjectAttributeId} AS numeric(16,0))
+        )
+		</foreach>
+    </insert>
+    
+    <!-- register -->
+	<insert id="registerArrayWhenModify" parameterType="CommonObjectAttribute">
+		 INSERT INTO
+		 	common_object_attribute(
+            	common_object_attribute_code, 
+            	common_object_attribute_name, 
+            	array_flg, 
+            	common_object_definition_id, 
+            	data_type,
+            	object_definition_id,
+            	item_seq_no)
+	        VALUES
+	        <foreach item="item" collection="commonObjectAttributesInsert" separator=",">
+	        (
+	        <![CDATA[
+	        	#{item.commonObjectAttributeCode},
+		    	#{item.commonObjectAttributeName},
+		    	#{item.arrayFlg},
+		    	#{item.commonObjectDefinitionId},
+		    	#{item.dataType},
+		    	CAST(#{item.parentCommonObjectAttributeId} AS numeric(16,0)),
+		    	CAST(#{item.itemSeqNo} AS numeric(16,0))
+		    	]]>
+	        )
+			</foreach>
+    </insert>
+    
+    <update id="multiUpdateCommonObjectAttribut">
+		<foreach item="commonObjectAttribut" collection="commonObjectAttributesUpdate" >
+			UPDATE 
+				common_object_attribute
+			SET
+				common_object_attribute_code= #{commonObjectAttribut.commonObjectAttributeCode}, 
+				common_object_attribute_name= #{commonObjectAttribut.commonObjectAttributeName}, 
+				data_type= #{commonObjectAttribut.dataType}, 
+				array_flg= CAST( #{commonObjectAttribut.arrayFlg} AS BOOLEAN ),
+				item_seq_no = CAST(#{commonObjectAttribut.itemSeqNo} AS numeric(16,0)),
+				object_definition_id = #{commonObjectAttribut.objectDefinitionId}
+ 			WHERE common_object_attribute_id = CAST(#{commonObjectAttribut.commonObjectAttributeId} AS numeric(16,0));
+		</foreach>
+	</update>
+    
+    <delete id="multiDeleteCommonObjectAttribut">
+		<foreach item="commonObjectAttribut" collection="commonObjectAttributesDelete" >
+			DELETE FROM
+					common_object_attribute
+				WHERE
+					common_object_attribute_id = CAST(#{commonObjectAttribut.commonObjectAttributeId} AS numeric(16,0));
+		</foreach>
+	</delete>
+    
+    <delete id="deleteCommonObjectAttribute" parameterType="long">
+	<![CDATA[
+		DELETE FROM
+			common_object_attribute 
+		WHERE common_object_definition_id = #{commonObjectDefinitionId}
+	 ]]>
+	</delete>
+	
+	
+	<!-- DungNN Finds all common object definition in project and module -->
+	<select id="findAllOfProject" resultMap="resultMap">
+		<![CDATA[
+		SELECT
+			coa.common_object_attribute_id,
+			coa.common_object_attribute_code,
+			COALESCE (md.message_string, coa.common_object_attribute_name) AS common_object_attribute_name,
+			coa.common_object_definition_id,
+			coa.object_definition_id,
+			coa.array_flg,
+			coa.data_type,
+			coa.item_seq_no,
+			coa.parent_common_object_attribute_id
+		FROM
+			common_object_attribute coa INNER JOIN common_object_definition cod USING (common_object_definition_id) 
+			LEFT JOIN message_design md ON (cod.common_object_definition_name = md.message_code AND md.language_id = #{criteria.languageId} and md.project_id = #{criteria.projectId})
+		WHERE
+			cod.project_id = #{criteria.projectId}
+		]]>
+		
+		<if test="criteria.moduleId != null and criteria.moduleId != ''">
+			AND (cod.module_id IS NULL OR cod.module_id = #{criteria.moduleId})
+		</if>
+		ORDER BY
+			coa.item_seq_no
+	</select>
+	
+	
+	<!-- VinHV Finds all common object definition in project by module type -->
+	<select id="findAllByModuleType" resultMap="resultMap">
+		
+		Select 
+		      cmo1.common_object_attribute_id,
+            cmo1.common_object_attribute_code,
+            cmo1.common_object_attribute_name,
+            cmo1.common_object_definition_id,
+            cmo1.object_definition_id,
+            cmo1.array_flg,
+            cmo1.data_type,
+            cmo1.item_seq_no,
+            cmo1.parent_common_object_attribute_id,
+            module.module_code,
+            common_object_definition.common_object_definition_code as object_definition_code,
+            '' as external_package_name
+       from
+		(<![CDATA[SELECT
+			coa.common_object_attribute_id,
+			coa.common_object_attribute_code,
+			COALESCE (md.message_string, coa.common_object_attribute_name) AS common_object_attribute_name,
+			coa.common_object_definition_id,
+			coa.object_definition_id,
+			coa.array_flg,
+			coa.data_type,
+			coa.item_seq_no,
+			coa.parent_common_object_attribute_id,
+            '' as external_package_name
+		FROM
+			common_object_attribute coa 
+		INNER JOIN common_object_definition cod USING (common_object_definition_id) 
+		LEFT JOIN message_design md ON (cod.common_object_definition_name = md.message_code AND md.language_id = #{languageId} and md.project_id = #{projectId})
+		WHERE
+			cod.project_id = #{projectId} and coa.data_type = '16']]>
+			<if test="moduleType != null">
+            AND EXISTS (
+                SELECT 1
+                FROM module m
+                WHERE 
+                    (m.module_type = #{moduleType} AND m.module_id = cod.module_id)
+                    OR m.module_type IS NULL
+            )
+            </if>
+            ORDER BY
+            coa.item_seq_no
+		) as cmo1 
+		join common_object_definition
+		  on cmo1.object_definition_id = common_object_definition.common_object_definition_id
+		left join module
+		  on common_object_definition.module_id = module.module_id
+		
+		union
+		
+		Select 
+              cmo2.common_object_attribute_id,
+            cmo2.common_object_attribute_code,
+            cmo2.common_object_attribute_name,
+            cmo2.common_object_definition_id,
+            cmo2.object_definition_id,
+            cmo2.array_flg,
+            cmo2.data_type,
+            cmo2.item_seq_no,
+            cmo2.parent_common_object_attribute_id,
+            module.module_code,
+            external_object_definition.external_object_definition_code as object_definition_code,
+            cmo2.external_package_name
+        from
+        (<![CDATA[SELECT
+            coa.common_object_attribute_id,
+            coa.common_object_attribute_code,
+            COALESCE (md.message_string, coa.common_object_attribute_name) AS common_object_attribute_name,
+            coa.common_object_definition_id,
+            coa.object_definition_id,
+            coa.array_flg,
+            coa.data_type,
+            coa.item_seq_no,
+            coa.parent_common_object_attribute_id,
+            eod.package_name as external_package_name
+        FROM
+            common_object_attribute coa 
+        INNER JOIN common_object_definition cod USING (common_object_definition_id) 
+        LEFT JOIN message_design md ON (cod.common_object_definition_name = md.message_code AND md.language_id = #{languageId} and md.project_id = #{projectId})
+        LEFT JOIN external_object_definition eod ON coa.object_definition_id = eod.external_object_definition_id
+        WHERE
+            cod.project_id = #{projectId} and coa.data_type = '17']]>
+            <if test="moduleType != null">
+            AND EXISTS (
+                SELECT 1
+                FROM module m
+                WHERE 
+                    (m.module_type = #{moduleType} AND m.module_id = cod.module_id)
+                    OR m.module_type IS NULL
+            )
+            </if>
+            ORDER BY
+            coa.item_seq_no
+        ) as cmo2
+        join external_object_definition
+          on cmo2.object_definition_id = external_object_definition.external_object_definition_id
+        left join module
+          on external_object_definition.module_id = module.module_id
+			
+	   union
+	   
+	   Select 
+            cmo3.common_object_attribute_id,
+            cmo3.common_object_attribute_code,
+            cmo3.common_object_attribute_name,
+            cmo3.common_object_definition_id,
+            cmo3.object_definition_id,
+            cmo3.array_flg,
+            cmo3.data_type,
+            cmo3.item_seq_no,
+            cmo3.parent_common_object_attribute_id,
+            '' as module_code,
+            cmo3.common_object_attribute_code as object_definition_code,
+            '' as external_package_name
+       from
+        (<![CDATA[SELECT
+            coa.common_object_attribute_id,
+            coa.common_object_attribute_code,
+            COALESCE (md.message_string, coa.common_object_attribute_name) AS common_object_attribute_name,
+            coa.common_object_definition_id,
+            coa.object_definition_id,
+            coa.array_flg,
+            coa.data_type,
+            coa.item_seq_no,
+            coa.parent_common_object_attribute_id,
+            '' as external_package_name
+        FROM
+            common_object_attribute coa 
+        INNER JOIN common_object_definition cod USING (common_object_definition_id) 
+        LEFT JOIN message_design md ON (cod.common_object_definition_name = md.message_code AND md.language_id = #{languageId} and md.project_id = #{projectId})
+        WHERE
+            cod.project_id = #{projectId} and coa.data_type != '17' and coa.data_type != '16']]>
+            <if test="moduleType != null">
+            AND EXISTS (
+                SELECT 1
+                FROM module m
+                WHERE 
+                    (m.module_type = #{moduleType} AND m.module_id = cod.module_id)
+                    OR m.module_type IS NULL
+            )
+            </if>
+            ORDER BY
+            coa.item_seq_no
+            
+        ) as cmo3
+
+		
+	</select>
+
+	<!-- Modify by HungHX 24-05-2016 -->
+	<select id="findAllCommonObjAttrByModuleType" resultMap="resultMap">
+		Select 
+		    cmo1.common_object_attribute_id,
+            cmo1.common_object_attribute_code,
+            cmo1.common_object_attribute_name,
+            cmo1.common_object_definition_id,
+            cmo1.object_definition_id,
+            cmo1.array_flg,
+            cmo1.data_type,
+            cmo1.item_seq_no,
+            cmo1.parent_common_object_attribute_id,
+            module.module_code,
+            common_object_definition.common_object_definition_code as object_definition_code,
+            '' as external_package_name
+       from
+		(<![CDATA[SELECT
+			coa.common_object_attribute_id,
+			coa.common_object_attribute_code,
+			COALESCE (md.message_string, coa.common_object_attribute_name) AS common_object_attribute_name,
+			coa.common_object_definition_id,
+			coa.object_definition_id,
+			coa.array_flg,
+			coa.data_type,
+			coa.item_seq_no,
+			coa.parent_common_object_attribute_id,
+            '' as external_package_name
+		FROM
+			common_object_attribute coa 
+		INNER JOIN common_object_definition cod USING (common_object_definition_id)
+		LEFT JOIN message_design md ON (cod.common_object_definition_name = md.message_code AND md.language_id = #{languageId} and md.project_id = #{projectId})
+		WHERE
+			cod.project_id = #{projectId} and coa.data_type = '16']]>
+			<if test="moduleType != null">
+            AND EXISTS (
+                SELECT 1
+                FROM module m
+                WHERE 
+                    m.module_type = #{moduleType} OR m.module_type IS NULL
+            )
+            </if>
+            ORDER BY
+            coa.item_seq_no
+		) as cmo1 
+		join common_object_definition
+		  on cmo1.object_definition_id = common_object_definition.common_object_definition_id
+		left join module
+		  on common_object_definition.module_id = module.module_id
+		
+		union
+		
+		Select 
+              cmo2.common_object_attribute_id,
+            cmo2.common_object_attribute_code,
+            cmo2.common_object_attribute_name,
+            cmo2.common_object_definition_id,
+            cmo2.object_definition_id,
+            cmo2.array_flg,
+            cmo2.data_type,
+            cmo2.item_seq_no,
+            cmo2.parent_common_object_attribute_id,
+            module.module_code,
+            external_object_definition.external_object_definition_code as object_definition_code,
+            cmo2.external_package_name
+        from
+        (<![CDATA[SELECT
+            coa.common_object_attribute_id,
+            coa.common_object_attribute_code,
+            COALESCE (md.message_string, coa.common_object_attribute_name) AS common_object_attribute_name,
+            coa.common_object_definition_id,
+            coa.object_definition_id,
+            coa.array_flg,
+            coa.data_type,
+            coa.item_seq_no,
+            coa.parent_common_object_attribute_id,
+            eod.package_name as external_package_name
+        FROM
+            common_object_attribute coa 
+        INNER JOIN common_object_definition cod USING (common_object_definition_id) 
+		LEFT JOIN message_design md ON (cod.common_object_definition_name = md.message_code AND md.language_id = #{languageId} and md.project_id = #{projectId})
+        LEFT JOIN external_object_definition eod ON coa.object_definition_id = eod.external_object_definition_id
+        WHERE
+            cod.project_id = #{projectId} and coa.data_type = '17']]>
+            <if test="moduleType != null">
+            AND EXISTS (
+                SELECT 1
+                FROM module m
+                WHERE 
+                    m.module_type = #{moduleType} OR m.module_type IS NULL
+            )
+            </if>
+            ORDER BY
+            coa.item_seq_no
+        ) as cmo2
+        join external_object_definition
+          on cmo2.object_definition_id = external_object_definition.external_object_definition_id
+        left join module
+          on external_object_definition.module_id = module.module_id
+			
+	   union
+	   
+	   Select 
+            cmo3.common_object_attribute_id,
+            cmo3.common_object_attribute_code,
+            cmo3.common_object_attribute_name,
+            cmo3.common_object_definition_id,
+            cmo3.object_definition_id,
+            cmo3.array_flg,
+            cmo3.data_type,
+            cmo3.item_seq_no,
+            cmo3.parent_common_object_attribute_id,
+            '' as module_code,
+            cmo3.common_object_attribute_code as object_definition_code,
+            '' as external_package_name
+       from
+        (<![CDATA[SELECT
+            coa.common_object_attribute_id,
+            coa.common_object_attribute_code,
+            COALESCE (md.message_string, coa.common_object_attribute_name) AS common_object_attribute_name,
+            coa.common_object_definition_id,
+            coa.object_definition_id,
+            coa.array_flg,
+            coa.data_type,
+            coa.item_seq_no,
+            coa.parent_common_object_attribute_id,
+            '' as external_package_name
+        FROM
+            common_object_attribute coa 
+        INNER JOIN common_object_definition cod USING (common_object_definition_id) 
+		LEFT JOIN message_design md ON (cod.common_object_definition_name = md.message_code AND md.language_id = #{languageId} and md.project_id = #{projectId})
+        WHERE
+            cod.project_id = #{projectId} and coa.data_type != '17' and coa.data_type != '16']]>
+            <if test="moduleType != null">
+            AND EXISTS (
+                SELECT 1
+                FROM module m
+                WHERE 
+                    m.module_type = #{moduleType} OR m.module_type IS NULL
+            )
+            </if>
+            ORDER BY
+            coa.item_seq_no
+        ) as cmo3
+	</select>
+</mapper>

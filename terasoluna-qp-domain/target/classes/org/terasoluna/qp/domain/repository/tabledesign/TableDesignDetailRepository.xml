@@ -1,0 +1,1920 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.tabledesign.TableDesignDetailRepository">
+
+	<resultMap id="resultMap" type="TableDesignDetails">
+		<result property="columnId" column="column_id" />
+		<result property="tableDesignId" column="tbl_design_id" />
+		<result property="tableDesignName" column="tbl_design_name"/>
+		<result property="tableDesignCode" column="tbl_design_code"/>
+		<result property="tableDesignType" column="table_type"/>
+		<result property="name" column="column_name" />
+		<result property="code" column="column_code" />
+		<result property="maxlength" column="maxlength" />
+		<result property="isMandatory" column="mandatory_flg" />
+		<result property="keyType" column="key_type" />
+		<result property="groupBaseTypeId" column="group_base_type_id" />
+		<result property="remark" column="remark" />
+		<result property="defaultValue" column="default_value" />
+		<result property="defaultType" column="default_type" />
+		<result property="itemSeqNo" column="item_seq_no" />
+		<result property="autoIncrementFlag" column="autoincrement_flg" />
+		<result property="decimalPart" column="decimal_part" />
+		<result property="dataType" column="data_type" />
+		<result property="constrainsType" column="constrains_type" />
+		<result property="datasourceType" column="datasource_type" />
+		<result property="datasourceId" column="datasource_id" />
+		<result property="fmtCode" column="fmt_code" />
+		<result property="dataTypeFlg" column="data_type_flg" />
+		<result property="itemType" column="item_type" />
+		<result property="displayType" column="display_type" />
+		<result property="minVal" column="min_val" />
+		<result property="maxVal" column="max_val" />
+		<result property="operatorCode" column="operator_code" />
+		<result property="dataTypeName" column="domain_name" />
+		<result property="baseType" column="base_type" />
+		<result property="seqCode" column="seq_code" />
+		<result property="commonColumn" column="common_flg" />
+		<result property="optionLabel" column="option_label" />
+		<result property="optionValue" column="option_value" />
+		<result property="patternFormat" column="pattern_format" />
+		<result property="optionLabelAutocomplete" column="option_label_autocomplete" />
+		<result property="optionValueAutocomplete" column="option_value_autocomplete" />
+	</resultMap>
+
+	<resultMap id="autocomplete" type="Autocomplete">
+		<result property="optionValue" column="optionValue" />
+		<result property="optionLabel" column="optionLabel" />
+	</resultMap>
+
+	<select id="findOne" parameterType="Long" resultMap="resultMap">
+		<![CDATA[
+			SELECT
+				a.column_id, 
+				a.tbl_design_id, 
+				a.column_name, 
+				a.column_code, 
+				b.maxlength, 
+				a.mandatory_flg,
+				a.key_type, 
+				b.group_base_type_id, 
+				b.remark, 
+				b.default_value, 
+				b.default_type, 
+				a.item_seq_no, 
+				a.autoincrement_flg, 
+				b.decimal_part, 
+				a.data_type, 
+				b.constrains_type, 
+				b.datasource_type, 
+				b.datasource_id, 
+				b.fmt_code, 
+				b.domain_name,
+				a.data_type_flg, 
+				a.item_type, 
+				a.display_type, 
+				b.min_val, 
+				b.max_val, 
+				b.operator_code,
+				b.base_type,
+				a.seq_code,
+				a.common_flg,
+				a.pattern_format
+			FROM
+				table_design_details a LEFT JOIN domain_design b ON  a.data_type = b.domain_id
+			WHERE 
+				a.data_type_flg = 1
+			AND
+				a.column_id = #{columnId}
+			UNION ALL
+			SELECT
+				a.column_id, 
+				a.tbl_design_id, 
+				a.column_name, 
+				a.column_code, 
+				a.maxlength, 
+				a.mandatory_flg, 
+				a.key_type, 
+				a.group_base_type_id, 
+				a.remark, 
+				a.default_value, 
+				a.default_type, 
+				a.item_seq_no, 
+				a.autoincrement_flg, 
+				a.decimal_part, 
+				a.data_type, 
+				a.constrains_type, 
+				a.datasource_type, 
+				a.datasource_id, 
+				a.fmt_code,
+				b.value1 as domain_name,
+				a.data_type_flg,
+				a.item_type, 
+				a.display_type, 
+				a.min_val, 
+				a.max_val, 
+				a.operator_code,
+				a.data_type AS base_type,
+				a.seq_code,
+				a.common_flg,
+				a.pattern_format
+			FROM
+				table_design_details a
+			LEFT JOIN
+				resources b
+			ON
+				b.category_cd = 'clBasetype'
+			AND
+				a.data_type = CAST (b.value2 AS NUMERIC)
+			WHERE 
+				a.column_id = #{columnId}
+			AND
+				a.data_type_flg = 0
+		]]>
+	</select>
+	<select id="findByListId" resultMap="resultMap">
+		<if test="tddIds != null and tddIds.size() > 0">
+			
+			SELECT
+				a.column_id, 
+				a.tbl_design_id, 
+				a.column_name, 
+				a.column_code, 
+				b.maxlength, 
+				a.mandatory_flg,
+				a.key_type, 
+				b.group_base_type_id, 
+				b.remark, 
+				b.default_value, 
+				b.default_type, 
+				a.item_seq_no, 
+				a.autoincrement_flg, 
+				b.decimal_part, 
+				a.data_type, 
+				b.constrains_type, 
+				b.datasource_type, 
+				b.datasource_id, 
+				b.fmt_code, 
+				b.domain_name,
+				a.data_type_flg, 
+				a.item_type, 
+				a.display_type, 
+				b.min_val, 
+				b.max_val, 
+				b.operator_code,
+				b.base_type,
+				a.seq_code,
+				a.common_flg,
+				a.pattern_format
+			FROM
+				table_design_details a LEFT JOIN domain_design b ON  a.data_type = b.domain_id
+			WHERE 
+				a.data_type_flg = 1
+			AND
+				a.column_id = ANY (VALUES 
+				<foreach item="item" index="index" collection="tddIds" open="" separator="," close=")">
+					(<![CDATA[#{item} ]]>)
+				</foreach>
+
+			UNION ALL
+			SELECT
+				a.column_id, 
+				a.tbl_design_id, 
+				a.column_name, 
+				a.column_code, 
+				a.maxlength, 
+				a.mandatory_flg, 
+				a.key_type, 
+				a.group_base_type_id, 
+				a.remark, 
+				a.default_value, 
+				a.default_type, 
+				a.item_seq_no, 
+				a.autoincrement_flg, 
+				a.decimal_part, 
+				a.data_type, 
+				a.constrains_type, 
+				a.datasource_type, 
+				a.datasource_id, 
+				a.fmt_code,
+				b.value1 as domain_name,
+				a.data_type_flg,
+				a.item_type, 
+				a.display_type, 
+				a.min_val, 
+				a.max_val, 
+				a.operator_code,
+				a.data_type AS base_type,
+				a.seq_code,
+				a.common_flg,
+				a.pattern_format
+			FROM
+				table_design_details a
+			LEFT JOIN
+				resources b
+			ON
+				b.category_cd = 'clBasetype'
+			AND
+				a.data_type = CAST (b.value2 AS NUMERIC)
+			WHERE 
+				a.column_id = ANY (VALUES 
+				<foreach item="item" index="index" collection="tddIds" open="" separator="," close=")">
+					(<![CDATA[#{item} ]]>)
+				</foreach>
+			AND
+				a.data_type_flg = 0
+		</if>
+	</select>
+	
+	<select id="findByListIdWithBaseType" resultMap="resultMap">
+		<if test="ids != null and ids.size() > 0">
+				(
+				SELECT
+					d.column_id, 
+					d.column_name, 
+					d.column_code, 
+					e.base_type,
+					d.tbl_design_id,
+					F.tbl_design_name,
+					F.tbl_design_code,
+					F.type as table_type
+					
+				FROM
+					table_design_details d LEFT JOIN domain_design e 
+					ON  d.data_type = e.domain_id
+					LEFT JOIN
+					table_design F
+					ON 
+						D.tbl_design_id = F.tbl_design_id
+				WHERE 
+					d.data_type_flg = 1
+					AND d.tbl_design_id IN
+						<foreach item="item" collection="ids" open="(" close=")" separator=",">
+							#{item}
+						</foreach>
+				)
+				UNION ALL
+				(
+				SELECT
+					d.column_id, 
+					d.column_name, 
+					d.column_code, 
+					d.data_type AS base_type,
+					d.tbl_design_id,
+					F.tbl_design_name,
+					F.tbl_design_code,
+					F.type as table_type
+				FROM
+					table_design_details d 
+					LEFT JOIN	resources e ON e.category_cd = 'clBasetype' 
+					AND d.data_type = CAST (e.value2 AS NUMERIC)
+					LEFT JOIN
+					table_design F
+					ON 
+						D.tbl_design_id = F.tbl_design_id
+				WHERE 
+					d.data_type_flg = 0
+					AND d.tbl_design_id IN
+					<foreach item="item" collection="ids" open="(" close=")" separator=",">
+						#{item}
+					</foreach>
+				)
+			
+			
+		</if>
+	</select>
+	
+	<select id="findAllByTableDesign" parameterType="Long" resultMap="resultMap">
+		<![CDATA[
+			SELECT
+				a.column_id, 
+				a.tbl_design_id, 
+				a.column_name, 
+				a.column_code, 
+				a.maxlength, 
+				a.mandatory_flg, 
+				a.key_type, 
+				a.group_base_type_id, 
+				a.remark, 
+				a.default_value, 
+				a.default_type, 
+				a.item_seq_no, 
+				a.autoincrement_flg, 
+				a.decimal_part, 
+				a.data_type, 
+				a.constrains_type, 
+				a.datasource_type, 
+				a.datasource_id, 
+				a.fmt_code, 
+				a.data_type_flg, 
+				a.item_type, 
+				a.display_type, 
+				a.min_val, 
+				a.max_val, 
+				a.operator_code,
+				b.tbl_design_name,
+				b.tbl_design_code,
+				a.seq_code,
+				a.pattern_format
+			FROM
+				table_design_details a
+			LEFT JOIN
+				table_design b ON a.tbl_design_id = b.tbl_design_id
+			WHERE
+				a.tbl_design_id = #{tblDesignId}
+			ORDER BY
+				a.item_seq_no
+			]]>
+	</select>
+	
+	<select id="findAllByTableDesignAndColumn" parameterType="Long" resultMap="resultMap">
+		<if test="listColumnId.size() > 0 and listTableId.size() > 0">
+			SELECT
+				column_id, 
+				tbl_design_id, 
+				column_name, 
+				column_code, 
+				maxlength, 
+				mandatory_flg, 
+				key_type, 
+				group_base_type_id, 
+				remark, 
+				default_value, 
+				default_type, 
+				item_seq_no, 
+				autoincrement_flg, 
+				decimal_part, 
+				data_type, 
+				constrains_type, 
+				datasource_type, 
+				datasource_id, 
+				fmt_code, 
+				data_type_flg, 
+				item_type, 
+				display_type, 
+				min_val, 
+				max_val, 
+				operator_code,
+				seq_code
+			FROM
+				table_design_details
+			WHERE 
+				tbl_design_id IN 
+					<foreach item="status" index="index" collection="listTableId" open="(" separator="," close=")">
+						#{status}
+					</foreach>	
+ 			AND column_id IN
+	 				<foreach item="status" index="index" collection="listColumnId" open="(" separator="," close=")">
+						#{status}
+					</foreach>	
+		</if>
+	</select>
+	
+	<select id="getAllInformationByTableDesign" parameterType="Long" resultMap="resultMap">
+		<![CDATA[
+			 SELECT
+				a.column_id, 
+				a.tbl_design_id, 
+				a.column_name, 
+				a.column_code, 
+				b.maxlength, 
+				a.mandatory_flg,
+				a.key_type, 
+				b.group_base_type_id, 
+				a.remark, 
+				b.default_value, 
+				b.default_type, 
+				a.item_seq_no, 
+				a.autoincrement_flg, 
+				b.decimal_part, 
+				a.data_type, 
+				b.constrains_type, 
+				b.datasource_type, 
+				b.datasource_id, 
+				b.fmt_code, 
+				b.domain_name,
+				a.data_type_flg, 
+				a.item_type, 
+				a.display_type, 
+				b.min_val, 
+				b.max_val, 
+				b.operator_code,
+				b.base_type,
+				a.seq_code,
+				a.common_flg,
+				a.option_label,
+				a.option_value,
+				a.pattern_format,
+				CASE 
+					WHEN A.datasource_type = 3 then 
+						(
+							SELECT sql_design_output_name
+							FROM sql_design_output
+							WHERE sql_design_output_id = a.option_label
+						)
+				END AS option_label_autocomplete,
+				CASE 
+					WHEN A.datasource_type = 3 then 
+						(
+							SELECT sql_design_output_name
+							FROM sql_design_output
+							WHERE sql_design_output_id = a.option_value
+						)
+				END AS option_value_autocomplete
+			FROM
+				table_design_details a LEFT JOIN domain_design b ON  a.data_type = b.domain_id
+			WHERE 
+				a.tbl_design_id = #{tableDesignId} AND a.data_type_flg = 1
+			UNION ALL
+			SELECT
+				a.column_id, 
+				a.tbl_design_id, 
+				a.column_name, 
+				a.column_code, 
+				a.maxlength, 
+				a.mandatory_flg, 
+				a.key_type, 
+				a.group_base_type_id, 
+				a.remark, 
+				a.default_value, 
+				a.default_type, 
+				a.item_seq_no, 
+				a.autoincrement_flg, 
+				a.decimal_part, 
+				a.data_type, 
+				a.constrains_type, 
+				a.datasource_type, 
+				a.datasource_id, 
+				a.fmt_code,
+				b.value1 as domain_name,
+				a.data_type_flg,
+				a.item_type, 
+				a.display_type, 
+				a.min_val, 
+				a.max_val, 
+				a.operator_code,
+				a.data_type AS base_type,
+				a.seq_code,
+				a.common_flg,
+				a.option_label,
+				a.option_value,
+				a.pattern_format,
+				CASE 
+					WHEN A.datasource_type = 3 then 
+						(
+							WITH RECURSIVE ordered_outputs(sql_design_output_id) as (
+								SELECT sql_design_output_name
+								FROM sql_design_output
+								WHERE sql_design_output_id = a.option_label
+								
+							)SELECT * FROM ordered_outputs ORDER BY item_seq_no
+						)
+				END AS option_label_autocomplete,
+				CASE 
+					WHEN A.datasource_type = 3 then 
+						(
+							WITH RECURSIVE ordered_outputs(sql_design_output_id) as (
+								SELECT sql_design_output_name
+								FROM sql_design_output
+								WHERE sql_design_output_id = a.option_value
+								
+							)SELECT * FROM ordered_outputs ORDER BY item_seq_no
+						)
+				END AS option_value_autocomplete
+			FROM
+				table_design_details a
+			LEFT JOIN
+				resources b
+			ON
+				b.category_cd = 'clBasetype'
+			AND
+				a.data_type = CAST (b.value2 AS NUMERIC)
+			WHERE 
+				a.tbl_design_id = #{tableDesignId}
+			AND
+				a.data_type_flg = 0 
+			]]>
+	</select>
+	
+	<select id="selectMinColumnIdValue" parameterType="Long" resultType="Long">
+		<![CDATA[
+			SELECT 
+				MIN(column_id) 
+			FROM table_design_details
+			WHERE 
+				tbl_design_id = #{tableDesignId}
+		]]>
+	</select>
+
+	<select id="findDetailsByToColumnForeignKey" resultMap="resultMap">
+		SELECT
+				a.column_id, 
+				a.tbl_design_id, 
+				a.column_name, 
+				a.column_code, 
+				b.maxlength, 
+				a.mandatory_flg,
+				a.key_type, 
+				b.group_base_type_id, 
+				b.remark, 
+				b.default_value, 
+				b.default_type, 
+				a.item_seq_no, 
+				a.autoincrement_flg, 
+				b.decimal_part, 
+				a.data_type, 
+				b.constrains_type, 
+				b.datasource_type, 
+				b.datasource_id, 
+				b.fmt_code, 
+				b.domain_name,
+				a.data_type_flg, 
+				a.item_type, 
+				a.display_type, 
+				b.min_val, 
+				b.max_val, 
+				b.operator_code,
+				b.base_type,
+				a.seq_code,
+				a.common_flg
+			FROM
+				table_design_details a LEFT JOIN domain_design b ON  a.data_type = b.domain_id
+			WHERE 
+				a.data_type_flg = 1
+			AND
+				a.column_id = ANY (VALUES 
+					<foreach item="item" index="index" collection="toColumnId" open="" separator="," close="">
+						(#{item})
+					</foreach>
+				)
+
+			UNION ALL
+			SELECT
+				a.column_id, 
+				a.tbl_design_id, 
+				a.column_name, 
+				a.column_code, 
+				a.maxlength, 
+				a.mandatory_flg, 
+				a.key_type, 
+				a.group_base_type_id, 
+				a.remark, 
+				a.default_value, 
+				a.default_type, 
+				a.item_seq_no, 
+				a.autoincrement_flg, 
+				a.decimal_part, 
+				a.data_type, 
+				a.constrains_type, 
+				a.datasource_type, 
+				a.datasource_id, 
+				a.fmt_code,
+				b.value1 as domain_name,
+				a.data_type_flg,
+				a.item_type, 
+				a.display_type, 
+				a.min_val, 
+				a.max_val, 
+				a.operator_code,
+				a.data_type AS base_type,
+				a.seq_code,
+				a.common_flg
+			FROM
+				table_design_details a
+			LEFT JOIN
+				resources b
+			ON
+				b.category_cd = 'clBasetype'
+			AND
+				a.data_type = CAST (b.value2 AS NUMERIC)
+			WHERE 
+				a.column_id = ANY (VALUES 
+					<foreach item="item" index="index" collection="toColumnId" open="" separator="," close="">
+						(#{item})
+					</foreach>
+				)
+			AND
+				a.data_type_flg = 0
+		
+	</select>
+
+	<select id="findAllKey" parameterType="Long" resultMap="resultMap">
+		<![CDATA[
+			SELECT 
+				table_design_details.column_id,
+				table_design_details.tbl_design_id,
+				table_design_details.column_name,
+				table_design_details.column_code,
+				table_design_details.maxlength,
+				table_design_details.mandatory_flg,
+				table_design_details.data_type_flg,
+				table_design_details.remark,
+				table_design_details.default_value,
+				table_design_details.default_type,
+				table_design_details.item_seq_no,
+				table_design_details.autoincrement_flg,
+				table_design_details.decimal_part,
+				table_design_details.seq_code
+			FROM 
+				table_design_details
+			INNER JOIN 
+				table_design_key_items
+			ON 
+				table_design_details.column_id = table_design_key_items.column_id
+			WHERE 
+				table_design_key_items.tbl_design_key_id = #{tableDesignKeyId}
+		]]>
+	</select>
+
+	
+	<insert id="multiCreate">
+		INSERT INTO
+				table_design_details
+			(
+				tbl_design_id, 
+				column_name, 
+				column_code, 
+				maxlength, 
+				mandatory_flg, 
+				key_type, 
+				group_base_type_id, 
+				remark, 
+				default_value, 
+				default_type, 
+				item_seq_no, 
+				autoincrement_flg, 
+				decimal_part, 
+				data_type, 
+				constrains_type, 
+				datasource_type, 
+				datasource_id,
+				data_type_flg, 
+				item_type, 
+				display_type,
+				min_val, 
+				max_val, 
+				operator_code,
+				fmt_code,
+				seq_code,
+				java_type
+			)
+			VALUES
+		<foreach item="item" collection="tableDesignDetails" separator=",">
+		(
+				#{item.tableDesignId},
+				#{item.name},
+				#{item.code},
+				#{item.maxlength},
+				#{item.isMandatory},
+				#{item.keyType},
+				cast(#{item.groupBaseTypeId} as smallint),
+				#{item.remark},
+				#{item.defaultValue},
+				#{item.defaultType},
+				#{item.itemSeqNo},
+				#{item.autoIncrementFlag},
+				#{item.decimalPart},
+				#{item.dataType},
+				cast(#{item.constrainsType} as smallint),
+				cast(#{item.datasourceType} as smallint),
+				cast(#{item.datasourceId} as numeric(16)),
+				cast(#{item.dataTypeFlg} as smallint),
+				cast(#{item.itemType} as smallint),
+				cast(#{item.displayType} as smallint),
+				#{item.minVal},
+				#{item.maxVal},
+				#{item.operatorCode},
+				#{item.fmtCode},
+				#{item.seqCode},
+				#{item.javaType}
+		)
+		</foreach>
+	</insert>
+
+	<insert id="create" parameterType="TableDesignDetails">
+		<selectKey keyProperty="columnId" resultType="long" order="BEFORE">
+			SELECT nextval('tbl_design_detail_seq') AS columnId
+		</selectKey>
+		<![CDATA[
+			INSERT INTO
+				table_design_details
+			(
+				column_id,
+				tbl_design_id, 
+				column_name, 
+				column_code, 
+				maxlength, 
+				mandatory_flg, 
+				key_type, 
+				group_base_type_id, 
+				remark, 
+				default_value, 
+				default_type, 
+				item_seq_no, 
+				autoincrement_flg, 
+				decimal_part, 
+				data_type, 
+				constrains_type, 
+				datasource_type, 
+				datasource_id,
+				data_type_flg, 
+				item_type, 
+				display_type,
+				min_val, 
+				max_val, 
+				operator_code,
+				fmt_code,
+				seq_code,
+				common_flg,
+				java_type
+			)
+			VALUES
+			(
+				#{columnId},
+				#{tableDesignId},
+				#{name},
+				#{code},
+				#{maxlength},
+				#{isMandatory},
+				#{keyType},
+				cast(#{groupBaseTypeId} as smallint),
+				#{remark},
+				#{defaultValue},
+				#{defaultType},
+				#{itemSeqNo},
+				#{autoIncrementFlag},
+				#{decimalPart},
+				#{dataType},
+				cast(#{constrainsType} as smallint),
+				cast(#{datasourceType} as smallint),
+				cast(#{datasourceId} as numeric(16)),
+				cast(#{dataTypeFlg} as smallint),
+				cast(#{itemType} as smallint),
+				cast(#{displayType} as smallint),
+				#{minVal},
+				#{maxVal},
+				#{operatorCode},
+				#{fmtCode},
+				#{seqCode},
+				#{commonColumn},
+				#{javaType}
+			)
+		]]>
+	</insert>
+	
+	<update id="update" parameterType="TableDesignDetails">
+		<![CDATA[
+			UPDATE 
+				table_design_details
+			SET
+				tbl_design_id=#{tableDesignId},
+				column_name=#{name},
+				column_code=#{code},
+				maxlength=#{maxlength},
+				mandatory_flg=#{isMandatory},
+				data_type_flg=#{dataType},
+				key_type=#{keyType},
+				remark=#{remark},
+				default_value=#{defaultValue},
+				default_type=#{defaultType},
+				item_seq_no=#{itemSeqNo},
+				autoincrement_flg=#{autoIncrementFlag},
+				decimal_part=#{decimalPart},
+				display_type=#{displayType},
+				seq_code=#{seqCode}
+			WHERE 
+				column_id = #{columnId}
+		]]>
+	</update>
+	
+	<update id="updateTableDesignDetails"> 
+		<if test="tableDesignDetails !=null and tableDesignDetails.size > 0"> 
+			<foreach item="item" collection="tableDesignDetails" separator=";"> 
+				UPDATE table_design_details 
+				SET
+				 	column_name = #{item.name},
+					column_code =  #{item.code},
+					maxlength =  #{item.maxlength},
+					mandatory_flg =  #{item.isMandatory},
+					key_type =  #{item.keyType},
+					group_base_type_id =  cast(#{item.groupBaseTypeId} as smallint),
+					remark =  #{item.remark},
+					default_value =  #{item.defaultValue},
+					default_type =  #{item.defaultType},
+					item_seq_no =  #{item.itemSeqNo},
+					autoincrement_flg =  #{item.autoIncrementFlag},
+					decimal_part =  #{item.decimalPart},
+					data_type =  #{item.dataType},
+					constrains_type =  cast(#{item.constrainsType} as smallint),
+					datasource_type =  cast(#{item.datasourceType} as smallint),
+					datasource_id=  cast(#{item.datasourceId} as numeric(16)),
+					data_type_flg =  cast(#{item.dataTypeFlg} as smallint),
+					item_type =  cast(#{item.itemType} as smallint),
+					display_type=  cast(#{item.displayType} as smallint),
+					min_val =  #{item.minVal},
+					max_val =  #{item.maxVal},
+					operator_code=  #{item.operatorCode},
+					fmt_code =  #{item.fmtCode},
+					java_type =  #{item.javaType},
+					seq_code=#{item.seqCode},
+					common_flg=#{item.commonColumn},
+					option_label=#{item.optionLabel},
+					option_value=#{item.optionValue},
+					pattern_format=#{item.patternFormat}
+				WHERE column_id = #{item.columnId}
+			</foreach>
+		</if>
+	</update>
+	
+	<update id="initDefaultForItemType"> 
+		<if test="tableDesignDetails !=null and tableDesignDetails.size > 0"> 
+			<foreach item="item" collection="tableDesignDetails" separator=";"> 
+				UPDATE 
+					table_design_details 
+				SET
+					item_type =  cast(#{item.itemType} as smallint)
+				WHERE
+					column_id = #{item.columnId}
+			</foreach>
+		</if>
+	</update>
+	
+	<update id="updateForeignTableDesignDetails"> 
+		<if test="tableDesignDetails !=null and tableDesignDetails.size > 0"> 
+			<foreach item="item" collection="tableDesignDetails" separator=";"> 
+				UPDATE table_design_details 
+				SET
+					key_type =  #{item.keyType}
+				WHERE column_id = #{item.columnId}
+			</foreach>
+		</if>
+	</update>
+	
+	<delete id="delete" parameterType="TableDesignDetails">
+		<![CDATA[
+			DELETE 
+			FROM 
+				table_design_details
+			WHERE 
+				column_id = #{columnId}
+		]]>
+	</delete>
+
+	<delete id="deleteAllByTableDesignId" parameterType="long">
+		<![CDATA[
+			DELETE 
+				FROM table_design_details
+			WHERE 
+				tbl_design_id = #{tableId}
+		]]>
+	</delete>
+
+	<select id="getAllTableDesignColumnAC"
+		parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput"
+		resultMap="autocomplete">
+		<if test="arg02 != 1">
+			SELECT
+				column_id AS optionValue,
+				column_name AS optionLabel,
+				column_code AS output02,
+				data_type_flg AS output01,
+				base_type AS output03,
+				autoincrement_flg AS output04
+			FROM 
+				(
+					SELECT
+						d.column_id, 
+						d.tbl_design_id, 
+						d.column_name, 
+						d.column_code, 
+						e.base_type, 
+						d.data_type_flg, 
+						d.autoincrement_flg
+					FROM
+						table_design_details d LEFT JOIN domain_design e 
+						ON  d.data_type = e.domain_id
+					WHERE 
+						d.data_type_flg = 1
+					UNION ALL
+					SELECT
+						d.column_id, 
+						d.tbl_design_id,
+						d.column_name, 
+						d.column_code, 
+						d.data_type AS base_type, 
+						d.data_type_flg, 
+						d.autoincrement_flg
+					FROM
+						table_design_details d 
+						LEFT JOIN	resources e ON e.category_cd = 'clBasetype' 
+						AND d.data_type = CAST (e.value2 AS NUMERIC)
+					WHERE 
+						d.data_type_flg = 0
+				) table_design_details 
+			<where>
+				<if test="searchKey != null and searchKey != ''" >
+					AND column_name iLIKE '%' || #{searchKey} || '%'
+				</if>
+				<if test="arg01 != null and arg01 != ''">
+					AND tbl_design_id = CAST(#{arg01} AS numeric(16,0))
+				</if>
+				<if test="arg01 == null or arg01 == ''">
+					AND false
+				</if>
+			</where>
+			ORDER BY 
+				column_id
+		</if>
+		<if test="arg02 == 1">
+			SELECT
+				column_id AS optionValue,
+				column_name AS optionLabel,
+				column_code AS output02,
+				0 AS output01,
+				data_type AS output03
+			FROM 
+				sql_design_results
+			<where>
+				<if test="searchKey != null and searchKey != ''" >
+					AND column_name iLIKE '%' || #{searchKey} || '%'
+				</if>
+				<if test="arg01 != null and arg01 != ''">
+					AND sql_design_id = CAST(#{arg01} AS numeric(16,0))
+				</if>
+				<if test="arg01 == null or arg01 == ''">
+					AND false
+				</if>
+			</where>
+			ORDER BY 
+				column_id
+		</if>
+		<if test="arg04 == null or arg04 == ''">
+			LIMIT 20
+		</if>
+	</select>
+	
+	<select id="getAllTableDesignColumnACFK"
+		parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput"
+		resultMap="autocomplete">
+		<if test="arg02 != 1">
+			SELECT
+				column_id AS optionValue,
+				column_name AS optionLabel,
+				column_code AS output02,
+				data_type_flg AS output01,
+				base_type AS output03,
+				group_base_type_id AS output04
+			FROM 
+				(
+					SELECT
+						d.column_id, 
+						d.tbl_design_id, 
+						d.column_name, 
+						d.column_code, 
+						e.base_type, 
+						d.data_type_flg ,
+						d.group_base_type_id
+					FROM
+						table_design_details d LEFT JOIN domain_design e 
+						ON  d.data_type = e.domain_id
+					WHERE 
+						d.data_type_flg = 1
+						AND common_flg = 0
+					UNION ALL
+					SELECT
+						d.column_id, 
+						d.tbl_design_id,
+						d.column_name, 
+						d.column_code, 
+						d.data_type AS base_type, 
+						d.data_type_flg ,
+						d.group_base_type_id
+					FROM
+						table_design_details d 
+						LEFT JOIN	resources e ON e.category_cd = 'clBasetype' 
+						AND d.data_type = CAST (e.value2 AS NUMERIC)
+					WHERE 
+						d.data_type_flg = 0
+						AND d.common_flg = 0
+				) table_design_details 
+			<where>
+				<if test="searchKey != null and searchKey != ''" >
+					AND column_name iLIKE '%' || #{searchKey} || '%'
+				</if>
+				<if test="arg01 != null and arg01 != ''">
+					AND tbl_design_id = CAST(#{arg01} AS numeric(16,0))
+				</if>
+				<if test="arg01 == null or arg01 == ''">
+					AND false
+				</if>
+			</where>
+			ORDER BY 
+				column_id
+		</if>
+		<if test="arg02 == 1">
+			SELECT
+				column_id AS optionValue,
+				column_name AS optionLabel,
+				column_code AS output02,
+				0 AS output01,
+				data_type AS output03
+			FROM 
+				sql_design_results
+			<where>
+				<if test="searchKey != null and searchKey != ''" >
+					AND column_name iLIKE '%' || #{searchKey} || '%'
+				</if>
+				<if test="arg01 != null and arg01 != ''">
+					AND sql_design_id = CAST(#{arg01} AS numeric(16,0))
+				</if>
+				<if test="arg01 == null or arg01 == ''">
+					AND false
+				</if>
+			</where>
+			ORDER BY 
+				column_id
+		</if>
+		LIMIT 20
+	</select>
+
+	<!-- DungNN get all by project and subject area -->
+	<select id="getAllByProjectAndSubArea" parameterType="map" resultMap="resultMap">
+		WITH 
+			table_design_temp AS (
+				SELECT 
+					tbl_design_id
+				FROM 
+					table_design t
+				WHERE
+					<![CDATA[ t.project_id = #{projectId} ]]>
+			
+			<if test="areaId != null and areaId > 0">
+					AND
+						EXISTS
+							(
+								SELECT
+									1
+								FROM
+									subject_area_design_table s
+								WHERE
+									t.tbl_design_id = s.tbl_design_id AND s.sub_area_design_id = #{areaId}
+							)
+			</if>
+			
+			<!-- get all table does not belong to subject area -->
+			<if test="areaId != null and areaId == -2">
+				EXCEPT 
+		
+				SELECT 
+					tbl_design_id
+				FROM 
+					subject_area_design_table st 
+				WHERE EXISTS
+				(
+					SELECT
+						1 
+					FROM 
+						subject_area_design s 
+					WHERE 
+						s.sub_area_design_id  = st.sub_area_design_id
+					AND
+						<![CDATA[s.project_id = #{projectId}]]>
+				)
+			</if>
+		)
+
+		SELECT
+			a.column_id, 
+			a.tbl_design_id, 
+			a.column_name, 
+			a.column_code, 
+			b.maxlength, 
+			a.mandatory_flg, 
+			a.key_type, 
+			b.group_base_type_id, 
+			a.remark, 
+			b.default_value, 
+			b.default_type, 
+			a.item_seq_no, 
+			a.autoincrement_flg, 
+			b.decimal_part, 
+			a.data_type, 
+			b.constrains_type, 
+			b.datasource_type, 
+			b.datasource_id, 
+			b.fmt_code, 
+			b.domain_name,
+			a.data_type_flg, 
+			a.item_type, 
+			a.display_type, 
+			b.min_val, 
+			b.max_val, 
+			b.operator_code,
+			b.base_type,
+			a.seq_code,
+			common_flg
+		FROM
+			table_design_details a LEFT JOIN domain_design b ON a.data_type = b.domain_id
+		WHERE
+			a.data_type_flg = 1
+		AND	
+			EXISTS 
+			(
+				SELECT
+					1
+				FROM 
+					table_design_temp t
+				WHERE 
+					t.tbl_design_id = a.tbl_design_id
+			)
+		UNION ALL
+		SELECT
+			a.column_id, 
+			a.tbl_design_id, 
+			a.column_name, 
+			a.column_code, 
+			a.maxlength, 
+			a.mandatory_flg, 
+			a.key_type, 
+			a.group_base_type_id, 
+			a.remark, 
+			a.default_value, 
+			a.default_type, 
+			a.item_seq_no, 
+			a.autoincrement_flg, 
+			a.decimal_part, 
+			a.data_type, 
+			a.constrains_type, 
+			a.datasource_type, 
+			a.datasource_id, 
+			a.fmt_code,
+			b.value1 as domain_name,
+			a.data_type_flg,
+			a.item_type, 
+			a.display_type, 
+			a.min_val, 
+			a.max_val, 
+			a.operator_code,
+			a.data_type AS base_type,
+			a.seq_code,
+			common_flg
+		FROM
+			table_design_details a
+		LEFT JOIN
+			resources b
+		ON
+			b.category_cd = 'clBasetype'
+		AND
+			a.data_type = CAST (b.value2 AS NUMERIC)
+		WHERE 
+			a.data_type_flg = 0
+		AND
+			EXISTS 
+			(
+				SELECT
+					1
+				FROM 
+					table_design_temp t
+				WHERE
+					t.tbl_design_id = a.tbl_design_id
+			)
+		<!-- ORDER BY
+			item_seq_no -->
+	</select>
+	
+	<select id="getAllByTableId" parameterType="map" resultMap="resultMap">
+		WITH 
+			table_design_temp AS (
+				SELECT 
+					tbl_design_id
+				FROM 
+					table_design t
+				WHERE
+					t.tbl_design_id IN
+						<foreach item="item" collection="listTableId" open="(" close=")" separator=",">
+							#{item}
+						</foreach>
+		)
+
+		SELECT
+			a.column_id, 
+			a.tbl_design_id, 
+			a.column_name, 
+			a.column_code, 
+			b.maxlength, 
+			a.mandatory_flg, 
+			a.key_type, 
+			b.group_base_type_id, 
+			a.remark, 
+			b.default_value, 
+			b.default_type, 
+			a.item_seq_no, 
+			a.autoincrement_flg, 
+			b.decimal_part, 
+			a.data_type, 
+			b.constrains_type, 
+			b.datasource_type, 
+			b.datasource_id, 
+			b.fmt_code, 
+			b.domain_name,
+			a.data_type_flg, 
+			a.item_type, 
+			a.display_type, 
+			b.min_val, 
+			b.max_val, 
+			b.operator_code,
+			b.base_type,
+			a.seq_code,
+			common_flg
+		FROM
+			table_design_details a LEFT JOIN domain_design b ON a.data_type = b.domain_id
+		WHERE
+			a.data_type_flg = 1
+		AND	
+			EXISTS 
+			(
+				SELECT
+					1
+				FROM 
+					table_design_temp t
+				WHERE 
+					t.tbl_design_id = a.tbl_design_id
+			)
+		UNION ALL
+		SELECT
+			a.column_id, 
+			a.tbl_design_id, 
+			a.column_name, 
+			a.column_code, 
+			a.maxlength, 
+			a.mandatory_flg, 
+			a.key_type, 
+			a.group_base_type_id, 
+			a.remark, 
+			a.default_value, 
+			a.default_type, 
+			a.item_seq_no, 
+			a.autoincrement_flg, 
+			a.decimal_part, 
+			a.data_type, 
+			a.constrains_type, 
+			a.datasource_type, 
+			a.datasource_id, 
+			a.fmt_code,
+			b.value1 as domain_name,
+			a.data_type_flg,
+			a.item_type, 
+			a.display_type, 
+			a.min_val, 
+			a.max_val, 
+			a.operator_code,
+			a.data_type AS base_type,
+			a.seq_code,
+			common_flg
+		FROM
+			table_design_details a
+		LEFT JOIN
+			resources b
+		ON
+			b.category_cd = 'clBasetype'
+		AND
+			a.data_type = CAST (b.value2 AS NUMERIC)
+		WHERE 
+			a.data_type_flg = 0
+		AND
+			EXISTS 
+			(
+				SELECT
+					1
+				FROM 
+					table_design_temp t
+				WHERE
+					t.tbl_design_id = a.tbl_design_id
+			)
+		<!-- ORDER BY
+			item_seq_no -->
+	</select>
+	
+	<!-- DungNN get all by project and subject area -->
+	<select id="checkConcurrenceWithSubjectArea" parameterType="map" resultType="long">
+		<![CDATA[
+			SELECT 
+					COUNT (*)  AS total
+				FROM 
+					subject_area_design 
+				WHERE
+					t.tbl_design_id = #{tableDesignId} AND sub_area_design_id = #{areaId}
+		]]>
+	</select>
+	
+	<delete id="multiDelete" >
+		<foreach item="columnId" collection="listOfId" >
+			<![CDATA[
+				DELETE FROM
+					user_define_codelist_detail udcl
+				WHERE
+					EXISTS 
+						(
+							SELECT
+								1
+							FROM
+								table_design_details tdd
+							WHERE
+								udcl.codelist_id = tdd.datasource_id
+							AND
+								tdd.constrains_type = 2
+							AND
+								tdd.datasource_type = 0
+							AND	
+								tdd.column_id = #{columnId}
+						);
+				DELETE FROM
+					user_define_codelist udc
+				WHERE
+					EXISTS 
+						(
+							SELECT
+								1
+							FROM
+								table_design_details tdd
+							WHERE
+								udc.codelist_id = tdd.datasource_id
+							AND
+								tdd.constrains_type = 2
+							AND
+								tdd.datasource_type = 0
+							AND	
+								tdd.column_id = #{columnId}
+						);
+						
+				DELETE FROM
+					table_design_key_items i
+				WHERE
+					column_id = #{columnId};
+
+				DELETE FROM
+					table_design_key k
+				WHERE 
+					NOT EXISTS ( 
+						SELECT 
+							1
+						FROM 
+							table_design_key_items ki 
+						WHERE
+							ki.tbl_design_key_id = k.tbl_design_key_id
+						);
+					
+				DELETE FROM 
+					table_design_foreign_key
+				WHERE
+					from_column_id = #{columnId}
+				OR
+					to_column_id = #{columnId};
+
+				DELETE 
+					FROM table_design_details
+				WHERE 
+					column_id = #{columnId};
+			]]>
+		</foreach>
+	</delete>
+	<select id="getAllTableColumnByProject"	resultMap="resultMap" parameterType="Long">
+		SELECT A.column_id,
+				A.tbl_design_id,
+				B.tbl_design_name,
+				B.tbl_design_code,
+				A.column_name,
+				A.column_code,
+				A.maxlength,
+				A.mandatory_flg,
+				A.key_type,
+				A.group_base_type_id,
+				A.remark,
+				A.default_value,
+				A.default_type,
+				A.item_seq_no,
+				A.autoincrement_flg,
+				A.decimal_part,
+				A.data_type,
+				A.constrains_type,
+				A.datasource_type,
+				A.datasource_id,
+				A.data_type_flg,
+				A.item_type,
+				A.display_type,
+				A.min_val,
+				A.max_val,
+				A.operator_code,
+				A.fmt_code,
+				A.seq_code
+			FROM 
+				table_design_details A INNER JOIN table_design B ON A.tbl_design_id = B.tbl_design_id
+			WHERE
+				B.project_id = #{projectId}
+	</select>
+	
+	<select id="getToEmptyFromScreen" parameterType="map" resultType="Long">
+		WITH 
+			screen_area_temp AS (
+				SELECT 
+					area_code
+				FROM 
+					screen_area sa
+				WHERE
+					area_type in (0,1,3) AND area_pattern_type = 1 
+				AND
+					EXISTS 
+					(
+						SELECT 1
+						FROM 
+							screen_design sd
+						WHERE
+							module_id = #{moduleId}
+						AND 
+							design_mode = 0 AND screen_pattern_type = 1
+						AND
+							sd.screen_id = sa.screen_id
+					)
+			)
+		SELECT
+			column_id
+		FROM 
+			table_design_details A LEFT JOIN table_design B ON A.tbl_design_id = B.tbl_design_id
+		WHERE
+			B.project_id = #{projectId}
+		AND 
+			EXISTS
+			(
+				SELECT 1
+				FROM screen_area_temp sa
+				WHERE sa.area_code = b.tbl_design_code
+			)
+	</select>
+	
+	<select id="findByListTableDesignId" resultMap="resultMap">
+		WITH 
+			table_design_temp AS (
+				SELECT 
+					tbl_design_id
+				FROM 
+					table_design t
+				WHERE
+					<![CDATA[ t.project_id = #{projectId} ]]>
+					<if test="listId != null and listId.size() > 0 ">
+						AND tbl_design_id IN
+						<foreach item="id" index="index" collection="listId" open="(" separator="," close=")">
+							#{id}
+						</foreach>
+					</if>
+			)
+
+		SELECT
+			a.column_id,
+			a.tbl_design_id,
+			a.column_name,
+			a.column_code,
+			b.maxlength,
+			a.mandatory_flg,
+			a.key_type,
+			b.group_base_type_id,
+			a.remark,
+			b.default_value,
+			b.default_type,
+			a.item_seq_no,
+			a.autoincrement_flg,
+			b.decimal_part,
+			a.data_type,
+			b.constrains_type,
+			b.datasource_type,
+			b.datasource_id,
+			b.fmt_code,
+			b.domain_name,
+			a.data_type_flg,
+			a.item_type,
+			a.display_type,
+			b.min_val,
+			b.max_val,
+			b.operator_code,
+			b.base_type,
+			x.tbl_design_name,
+			x.tbl_design_code,
+			a.display_type,
+			a.seq_code,
+			a.option_value,
+			a.option_label
+		FROM
+			table_design_details a LEFT JOIN domain_design b ON a.data_type = b.domain_id
+		INNER JOIN
+			table_design x ON a.tbl_design_id = x.tbl_design_id
+		WHERE
+			a.data_type_flg = 1
+		AND	
+			EXISTS 
+			(
+				SELECT
+					1
+				FROM 
+					table_design_temp t
+				WHERE 
+					t.tbl_design_id = a.tbl_design_id
+			)
+		UNION ALL
+		SELECT
+			a.column_id,
+			a.tbl_design_id,
+			a.column_name,
+			a.column_code,
+			a.maxlength,
+			a.mandatory_flg,
+			a.key_type,
+			a.group_base_type_id,
+			a.remark,
+			a.default_value,
+			a.default_type,
+			a.item_seq_no,
+			a.autoincrement_flg,
+			a.decimal_part,
+			a.data_type,
+			a.constrains_type,
+			a.datasource_type,
+			a.datasource_id,
+			a.fmt_code,
+			b.value1 AS domain_name,
+			a.data_type_flg,
+			a.item_type,
+			a.display_type,
+			a.min_val,
+			a.max_val,
+			a.operator_code,
+			a.data_type AS base_type,
+			x.tbl_design_name,
+			x.tbl_design_code,
+			a.display_type,
+			a.seq_code,
+			a.option_value,
+			a.option_label
+		FROM
+			table_design_details a
+		LEFT JOIN
+			resources b
+		ON
+			b.category_cd = 'clBasetype'
+		AND
+			a.data_type = CAST (b.value2 AS NUMERIC)
+		INNER JOIN
+			table_design x ON a.tbl_design_id = x.tbl_design_id
+		WHERE 
+			a.data_type_flg = 0
+		AND
+			EXISTS
+			(
+				SELECT
+					1
+				FROM 
+					table_design_temp t
+				WHERE
+					t.tbl_design_id = a.tbl_design_id
+			)
+		ORDER BY
+			tbl_design_id , item_seq_no
+	</select>
+	
+	<select id="getTableDesignDetailsByListColumnId" resultMap="resultMap">
+		WITH 
+			table_design_temp AS (
+				SELECT 
+					tbl_design_id
+				FROM 
+					table_design t
+				WHERE
+					<![CDATA[ t.project_id = #{projectId} ]]>
+			)
+
+		SELECT
+			a.column_id,
+			a.tbl_design_id,
+			a.column_name,
+			a.column_code,
+			b.maxlength,
+			a.mandatory_flg,
+			a.key_type,
+			b.group_base_type_id,
+			a.remark,
+			b.default_value,
+			b.default_type,
+			a.item_seq_no,
+			a.autoincrement_flg,
+			b.decimal_part,
+			a.data_type,
+			b.constrains_type,
+			b.datasource_type,
+			b.datasource_id,
+			b.fmt_code,
+			b.domain_name,
+			a.data_type_flg,
+			a.item_type,
+			a.display_type,
+			b.min_val,
+			b.max_val,
+			b.operator_code,
+			b.base_type,
+			c.tbl_design_name,
+			c.tbl_design_code,
+			a.seq_code,
+			a.option_value,
+			a.option_label
+		FROM
+			table_design_details a 
+		LEFT JOIN domain_design b ON a.data_type = b.domain_id
+		INNER JOIN table_design c ON a.tbl_design_id = c.tbl_design_id
+		WHERE
+			a.data_type_flg = 1
+		<if test="lstColumnId != null and  lstColumnId.size() > 0 ">
+			AND 
+				a.column_id IN
+			<foreach item="status" index="index" collection="lstColumnId" open="(" separator="," close=")">
+				#{status}
+			</foreach>
+		</if>
+		AND	
+			EXISTS 
+			(
+				SELECT
+					1
+				FROM 
+					table_design_temp t
+				WHERE 
+					t.tbl_design_id = a.tbl_design_id
+			)
+		UNION ALL
+		SELECT
+			a.column_id,
+			a.tbl_design_id,
+			a.column_name,
+			a.column_code,
+			a.maxlength,
+			a.mandatory_flg,
+			a.key_type,
+			a.group_base_type_id,
+			a.remark,
+			a.default_value,
+			a.default_type,
+			a.item_seq_no,
+			a.autoincrement_flg,
+			a.decimal_part,
+			a.data_type,
+			a.constrains_type,
+			a.datasource_type,
+			a.datasource_id,
+			a.fmt_code,
+			b.value1 AS domain_name,
+			a.data_type_flg,
+			a.item_type,
+			a.display_type,
+			a.min_val,
+			a.max_val,
+			a.operator_code,
+			a.data_type AS base_type,
+			c.tbl_design_name,
+			c.tbl_design_code,
+			a.seq_code,
+			a.option_value,
+			a.option_label
+		FROM
+			table_design_details a
+		LEFT JOIN
+			resources b
+		ON
+			b.category_cd = 'clBasetype'
+		AND
+			a.data_type = CAST (b.value2 AS NUMERIC)
+		INNER JOIN table_design c ON a.tbl_design_id = c.tbl_design_id
+		WHERE 
+			a.data_type_flg = 0
+		<if test="lstColumnId != null and  lstColumnId.size() > 0 ">
+			AND 
+				a.column_id IN
+			<foreach item="status" index="index" collection="lstColumnId" open="(" separator="," close=")">
+				#{status}
+			</foreach>
+		</if>
+			
+		AND
+			EXISTS
+			(
+				SELECT
+					1
+				FROM 
+					table_design_temp t
+				WHERE
+					t.tbl_design_id = a.tbl_design_id
+			)
+		ORDER BY
+			tbl_design_id , item_seq_no
+	</select>
+	
+	<!-- quangvd -->
+		
+	<select id="getSequencesTableDesignDetails" resultType="Long">
+		select SETVAL('tbl_design_detail_seq'::regclass, NEXTVAL('tbl_design_detail_seq'::regclass) + #{size})
+	</select>
+	
+	<insert id="registerMultiTableDesignDetailsWithSequence">
+		INSERT INTO
+				table_design_details
+			(
+				column_id,
+				tbl_design_id, 
+				column_name, 
+				column_code, 
+				maxlength, 
+				mandatory_flg, 
+				key_type, 
+				group_base_type_id, 
+				remark, 
+				default_value, 
+				default_type, 
+				item_seq_no, 
+				autoincrement_flg, 
+				decimal_part, 
+				data_type, 
+				constrains_type, 
+				datasource_type, 
+				datasource_id,
+				data_type_flg, 
+				item_type, 
+				display_type,
+				min_val, 
+				max_val, 
+				operator_code,
+				fmt_code,
+				java_type,
+				seq_code,
+				common_flg,
+				option_label,
+				option_value,
+				pattern_format
+			)
+			VALUES
+		<foreach item="item" collection="tableDesignDetails" separator=",">
+		(
+			#{item.columnId},
+			#{item.tableDesignId},
+			#{item.name},
+			#{item.code},
+			#{item.maxlength},
+			#{item.isMandatory},
+			#{item.keyType},
+			cast(#{item.groupBaseTypeId} as smallint),
+			#{item.remark},
+			#{item.defaultValue},
+			#{item.defaultType},
+			#{item.itemSeqNo},
+			#{item.autoIncrementFlag},
+			#{item.decimalPart},
+			#{item.dataType},
+			cast(#{item.constrainsType} as smallint),
+			cast(#{item.datasourceType} as smallint),
+			cast(#{item.datasourceId} as numeric(16)),
+			cast(#{item.dataTypeFlg} as smallint),
+			cast(#{item.itemType} as smallint),
+			cast(#{item.displayType} as smallint),
+			#{item.minVal},
+			#{item.maxVal},
+			#{item.operatorCode},
+			#{item.fmtCode},
+			#{item.javaType},
+			#{item.seqCode},
+			#{item.commonColumn},
+			cast(#{item.optionLabel} as numeric(16)),
+			cast(#{item.optionValue} as numeric(16)),
+			#{item.patternFormat}
+		)
+		</foreach>
+	</insert>
+	
+	<!-- VinhHV get all by project include common table -->
+	<select id="getAllTableDesignDetails" parameterType="map" resultMap="resultMap">
+		WITH 
+			table_design_temp AS (
+				SELECT 
+					tbl_design_id
+				FROM 
+					table_design t
+				WHERE
+					t.project_id = #{projectId}
+		)
+
+		SELECT
+			a.column_id, 
+			a.tbl_design_id, 
+			a.column_name, 
+			a.column_code, 
+			b.maxlength, 
+			a.mandatory_flg, 
+			a.key_type, 
+			b.group_base_type_id, 
+			a.remark, 
+			b.default_value, 
+			b.default_type, 
+			a.item_seq_no, 
+			a.autoincrement_flg, 
+			b.decimal_part, 
+			a.data_type, 
+			b.constrains_type, 
+			b.datasource_type, 
+			b.datasource_id, 
+			b.fmt_code, 
+			b.domain_name,
+			a.data_type_flg, 
+			a.item_type, 
+			a.display_type, 
+			b.min_val, 
+			b.max_val, 
+			b.operator_code,
+			b.base_type,
+			a.seq_code
+		FROM
+			table_design_details a LEFT JOIN domain_design b ON a.data_type = b.domain_id
+		WHERE
+			a.data_type_flg = 1
+		AND	
+			EXISTS 
+			(
+				SELECT
+					1
+				FROM 
+					table_design_temp t
+				WHERE 
+					t.tbl_design_id = a.tbl_design_id
+			)
+		UNION ALL
+		SELECT
+			a.column_id, 
+			a.tbl_design_id, 
+			a.column_name, 
+			a.column_code, 
+			a.maxlength, 
+			a.mandatory_flg, 
+			a.key_type, 
+			a.group_base_type_id, 
+			a.remark, 
+			a.default_value, 
+			a.default_type, 
+			a.item_seq_no, 
+			a.autoincrement_flg, 
+			a.decimal_part, 
+			a.data_type, 
+			a.constrains_type, 
+			a.datasource_type, 
+			a.datasource_id, 
+			a.fmt_code,
+			b.value1 as domain_name,
+			a.data_type_flg,
+			a.item_type, 
+			a.display_type, 
+			a.min_val, 
+			a.max_val, 
+			a.operator_code,
+			a.data_type AS base_type,
+			a.seq_code
+		FROM
+			table_design_details a
+		LEFT JOIN
+			resources b
+		ON
+			b.category_cd = 'clBasetype'
+		AND
+			a.data_type = CAST (b.value2 AS NUMERIC)
+		WHERE 
+			a.data_type_flg = 0
+		AND
+			EXISTS 
+			(
+				SELECT
+					1
+				FROM 
+					table_design_temp t
+				WHERE
+					t.tbl_design_id = a.tbl_design_id
+			)
+		<!-- ORDER BY
+			item_seq_no -->
+	</select>
+	<select id="getListTableDesignDetailByAutoCompleteId" resultMap="resultMap">
+		SELECT 
+			td.column_id,
+			td.column_code,
+			t.tbl_design_id,
+			t.tbl_design_code
+		FROM
+			table_design_details td
+		INNER JOIN
+			table_design t ON  td.tbl_design_id = t.tbl_design_id
+		WHERE
+			datasource_type = 2 AND datasource_id = #{autocompleteId}	
+		 
+	</select>
+</mapper>

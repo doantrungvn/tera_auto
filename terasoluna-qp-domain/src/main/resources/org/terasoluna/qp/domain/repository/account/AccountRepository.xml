@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.account.AccountRepository">
+
+	<resultMap id="accountResultMap" type="Account">
+		<id property="accountId" column="account_id" />
+		<result property="username" column="username" />
+		<result property="password" column="password" />
+		<result property="accountNonExpired" column="account_non_expired" />
+		<result property="accountNonLocked" column="account_non_locked" />
+		<result property="credentialsNonExpired" column="credentials_non_expired" />
+		<result property="createdBy" column="created_by" />
+		<result property="createdDate" column="created_date" />
+		<result property="updatedBy" column="updated_by" />
+		<result property="updatedDate" column="updated_date" />
+		<result property="accountRuleDefinitionId" column="account_rule_definition_id" />
+		<result property="accountRuleDefinitionIdAutocomplete" column="account_rule_definition_name" />
+		<result property="forceChangePassword" column="force_change_password" />
+	</resultMap>
+	
+	<resultMap id="autocompleteResultMap" type="Autocomplete">
+		<result property="optionValue" column="optionValue" />
+		<result property="optionLabel" column="optionLabel" />
+	</resultMap>
+	
+	<resultMap id="listRoleResultMap" type="org.terasoluna.qp.domain.model.Role">
+		<id property="roleId" column="role_id" />
+		<result property="roleName" column="role_name" />
+		<result property="roleCd" column="role_code" />
+		<result property="remark" column="remark" />
+	</resultMap>
+
+	<select id="findPageByCriteria"
+		parameterType="org.terasoluna.qp.domain.repository.account.AccountSearchCriteria"
+		resultMap="accountResultMap">
+		SELECT
+			account_id,
+			username,
+			password,
+			account_non_expired,
+			account_non_locked,
+			credentials_non_expired,
+			created_by,
+			created_date,
+			updated_by,
+			updated_date
+			
+		FROM
+			account
+		<include refid="findPageByCriteriaWhere" />
+		<if test="pageable.sort != null">
+			ORDER BY
+		 	<foreach collection="pageable.sort" item="account" separator=",">
+		 		${account.property} ${account.direction} 
+		 	</foreach>
+			
+		</if>
+		<if test="pageable.sort == null">
+			ORDER BY
+		 	updated_date DESC
+		</if>
+		<![CDATA[		   	
+			   LIMIT
+				   #{pageable.pageSize}
+			   OFFSET
+				   #{pageable.offset}
+		 ]]>
+	</select>
+	<select id="countByCriteria"
+		resultType="_long">
+		<![CDATA[
+		 	SELECT 
+		 		COUNT(*) 
+		 	FROM 
+		 		account		 	
+		 	]]>
+		<include refid="findPageByCriteriaWhere" />
+	</select>
+	<sql id="findPageByCriteriaWhere">
+		<where>
+			<if test="criteria.username != null and criteria.username != ''">
+				<bind name="username" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.username)" />
+					<![CDATA[
+						AND username ILIKE #{username} ESCAPE '~'
+					]]>
+			</if>
+			<if test="criteria.accountNonLocked != null and criteria.accountNonLocked.length > 0">
+				AND account_non_locked IN			  
+				<foreach item="accNonLocked" index="index" collection="criteria.accountNonLocked" open="(" separator="," close=")">
+					#{accNonLocked}
+				</foreach>
+			</if>
+			<if test="criteria.accountNonExpired != null and criteria.accountNonExpired.length > 0">
+				AND account_non_expired IN			  
+				<foreach item="accNonExpired" index="index" collection="criteria.accountNonExpired" open="(" separator="," close=")">
+					#{accNonExpired}
+				</foreach>
+			</if>
+			<if test="criteria.credentialsNonExpired != null and criteria.credentialsNonExpired.length > 0">
+				AND credentials_non_expired IN			  
+				<foreach item="creNonExpired" index="index" collection="criteria.credentialsNonExpired" open="(" separator="," close=")">
+					#{creNonExpired}
+				</foreach>
+			</if>
+		</where>
+	</sql>
+	<select id="findOneByUsername" parameterType="string" resultMap="accountResultMap">
+		SELECT
+			account_id,
+			username,
+			password,
+			account_non_expired,
+			account_non_locked,
+			credentials_non_expired,
+			created_by,
+			created_date,
+			updated_by,
+			updated_date,
+			account_rule_definition_id,
+			force_change_password
+		FROM
+			account
+		WHERE
+			username = #{username}
+	</select>
+	
+	 <select id="findOneByAccountId" parameterType="Long" resultMap="accountResultMap">
+		SELECT
+			t1.account_id,
+			t1.username,
+			t1.password,
+			t1.account_non_expired,
+			t1.account_non_locked,
+			t1.credentials_non_expired,
+			t1.created_by,
+			t1.created_date,
+			t1.updated_by,
+			t1.updated_date,
+			t1.account_rule_definition_id,
+			t1.force_change_password,
+			t2.account_rule_definition_name
+		FROM
+			account t1 LEFT JOIN account_rule_definition t2 ON t1.account_rule_definition_id = t2.account_rule_definition_id
+		WHERE
+			t1.account_id = #{accountId}
+	</select>
+	<insert id="register" parameterType="Account">
+		<selectKey keyProperty="accountId" resultType="long" order="BEFORE">
+			SELECT nextval('account_seq') AS accountId
+		</selectKey>
+		INSERT INTO
+			account
+		(
+			account_id,
+			username,
+			password,
+			account_non_expired,
+			account_non_locked,
+			credentials_non_expired,
+			created_by,
+			created_date,
+			updated_by,
+			updated_date,
+			account_rule_definition_id,
+			force_change_password
+		)
+		VALUES
+		(
+			#{accountId},
+			#{username},
+			#{password},
+			#{accountNonExpired},
+			#{accountNonLocked},
+			#{credentialsNonExpired},
+			#{createdBy},
+			#{createdDate},
+			#{updatedBy},
+			#{updatedDate},
+			#{accountRuleDefinitionId},
+			#{forceChangePassword}
+		)
+	</insert>
+	<update id="modify" parameterType="Account">
+		UPDATE 
+			account
+		SET 
+			account_non_expired = #{accountNonExpired},
+			account_non_locked = #{accountNonLocked},
+			credentials_non_expired = #{credentialsNonExpired},
+			updated_date = #{systemTime},
+			account_rule_definition_id = #{accountRuleDefinitionId}
+		WHERE  
+			account_id = #{accountId} AND (updated_date IS NULL OR updated_date = #{updatedDate})
+	</update>
+	
+	<update id="modifyHaveChangePass" parameterType="Account">
+		UPDATE 
+			account
+		SET
+			password = #{password},
+			account_non_expired = #{accountNonExpired},
+			account_non_locked = #{accountNonLocked},
+			credentials_non_expired = #{credentialsNonExpired},
+			updated_date = #{systemTime},
+			account_rule_definition_id = #{accountRuleDefinitionId},
+			force_change_password = #{forceChangePassword}
+		WHERE  
+			account_id = #{accountId} and updated_date = #{updatedDate}
+	</update>
+
+	<delete id="delete" parameterType="Account" flushCache="true">
+		DELETE FROM account_login_attempt WHERE account_id = #{accountId};
+		DELETE FROM account_permission WHERE account_id = #{accountId};
+		DELETE FROM account_profile WHERE account_id = #{accountId};
+		DELETE FROM account_project WHERE account_id = #{accountId};
+		DELETE FROM account_role WHERE account_id = #{accountId};
+		DELETE FROM account_theme WHERE account_id = #{accountId};
+		
+		DELETE FROM account WHERE account_id = #{accountId};
+	</delete>
+
+	<!-- //TungHT-get username for design information search screen -->
+	<select id="getAllAccountForAutocomplete" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+			account_id AS optionValue,
+			username AS optionLabel
+		FROM
+			account
+		<where>
+			<if test="searchKey != null and searchKey != ''" >
+				<bind name="keyword" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(searchKey)" />
+				AND <![CDATA[ username ILIKE #{keyword} ESCAPE '~']]>
+			</if>
+		</where>
+		ORDER BY 
+			username
+		<if test="arg02 == null or arg02 == ''">
+			 LIMIT 20 
+		</if>
+		<if test="arg02 != null and arg02 != ''">
+			<![CDATA[ limit CAST(#{arg02} AS numeric(16,0)) ]]>
+		</if>	
+	</select>
+	
+	<!-- // KhanhTH - get account rule definition for autocomplete -->
+	<select id="getAllRuleDefinitionForAutocomplete" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+			account_rule_definition_id AS optionValue,
+			account_rule_definition_name AS optionLabel
+		FROM
+			account_rule_definition
+		<where>
+			<if test="searchKey != null and searchKey != ''" >
+				<bind name="keyword" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(searchKey)" />
+				AND <![CDATA[ account_rule_definition_name ILIKE #{keyword} ESCAPE '~']]>
+			</if>
+		</where>
+		ORDER BY 
+			account_rule_definition_name
+		<if test="arg02 == null or arg02 == ''">
+			 LIMIT 20 
+		</if>
+		<if test="arg02 != null and arg02 != ''">
+			<![CDATA[ limit CAST(#{arg02} AS numeric(16,0)) ]]>
+		</if>	
+	</select>
+	
+	<!-- // KhanhTH - get list active roles for account register and modify -->
+	<select id="getListActiveRolesForAccountRegisterAndModify" resultMap="listRoleResultMap">
+		SELECT
+			role_id,
+			role_name,
+			role_code,
+			remark
+		FROM
+			role
+		WHERE
+			status = 1
+	</select>
+	
+	<!-- // KhanhTH - get current value of account sequence -->
+	<select id="getCurrentValueAccountSequence" resultType="long">
+		SELECT currval('account_seq') AS accountId
+	</select>
+	
+	<!-- // KhanhTH - get account by user name when authentication failed -->
+	<select id="getAccountWhenAuthenticationFailed" parameterType="string" resultMap="accountResultMap">
+		SELECT
+			account_id,
+			username,
+			password,
+			account_non_expired,
+			account_non_locked,
+			credentials_non_expired,
+			created_by,
+			created_date,
+			updated_by,
+			updated_date,
+			account_rule_definition_id
+		FROM
+			account
+		WHERE
+			username = #{username}
+	</select>
+</mapper>

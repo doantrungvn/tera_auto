@@ -1,0 +1,193 @@
+<tiles:insertDefinition name="layouts">
+	<tiles:putAttribute name="header-name">	
+	    Register Form
+	</tiles:putAttribute>
+		<span class="qp-link-header-icon glyphicon glyphicon-search"></span>
+	<tiles:putAttribute name="header-link">
+		<a class="com-link-popup" href="${pageContext.request.contextPath}/sample/search?init">Search sample form</a>
+	</tiles:putAttribute>
+	<tiles:putAttribute name="body">
+		<script id="dynamic-template" type="text/template">
+			<tr>
+				<td class="qp-output-fixlength tableIndex">1</td>
+				<td><input type="text" name="sampleChild[].columnText" class="form-control qp-input-text"></td>
+				<td><select name="sampleChild[].columnAutocomplete.id" class="combobox input-large form-control qp-input-autocomplete" optionLabel="optionLabel" optionValue="optionValue" emptyLabel="" selectSqlId="getAllType" mustMatch="" arg01="" arg02="" arg03="" arg04="" arg05="" arg06="" arg07="" arg08="" arg09="" arg10="" arg11="" arg12="" arg13="" arg14="" arg15="" arg16="" arg17="" arg18=""arg19="" arg20="" /></td>
+				<td>
+					<div class='input-group date qp-input-datetimepicker-detail'>
+						<input type="text" name="sampleChild[].columnDatetime" class="form-control">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-calendar"></span>
+						</span>
+					</div>
+				</td>
+				<td><input type="text" name="sampleChild[].columnInteger" class="form-control qp-input-integer" /></td>
+				<td><a class="btn btn-default btn-xs glyphicon glyphicon-minus qp-button-action" title="" onclick="$.qp.removeRowJS('dynamic', this);" style="margin-top: 3px;" href="javascript:void(0)"></a></td>
+			</tr>
+		</script>
+		<form:form method="post" modelAttribute="sampleForm" enctype="multipart/form-data" action="${pageContext.request.contextPath}/sample/register">
+			<form:errors path="*" cssClass="qp-error" element="div" />
+			<div class="panel panel-default qp-div-information">
+				<div class="panel-heading">
+					<span aria-hidden="true" class="glyphicon  qp-heading-icon">&nbsp;</span>
+					<span class="pq-heading-text">Sample information</span>
+				</div>
+				<div class="panel-body">
+					<table class="table table-bordered qp-table-form">
+						<colgroup>
+							<col width="20%" />
+							<col width="30%" />
+							<col width="20%" />
+							<col width="30%" />
+						</colgroup>
+						<tr>
+							<th>Column integer <label class="qp-required-field">(*)</label></th>
+							<td><form:input path="columnInteger" cssClass="form-control qp-input-integer" /></td>
+							<th>Column float</th>
+							<td><form:input path="ColumnFloat" cssClass="form-control qp-input-float" /></td>
+						</tr>
+						<tr>
+							<th>Column text <label class="qp-required-field">(*)</label></th>
+							<td><form:input path="columnText" cssClass="form-control qp-input-text" /></td>
+							<th>Column currency</th>
+							<td><form:input path="columnCurrency" cssClass="form-control qp-input-currency" /></td>
+						</tr>
+						<tr>
+							<th>Column percentage decimal</th>
+							<td><form:input path="columnPercentageDecimal" cssClass="form-control qp-input-percentage-decimal" /></td>
+							<th>Column percentage</th>
+							<td><form:input path="columnPercentage" cssClass="form-control qp-input-percentage" /></td>
+						</tr>
+						<tr>
+							<th>Column datepicker</th>
+							<td>
+								<div id="test" class='input-group date qp-input-datepicker'>
+									<form:input path="columnDate" cssClass="form-control" />
+									<span class="input-group-addon">
+										<span class="glyphicon glyphicon-calendar"></span>
+									</span>
+								</div>
+							</td>
+							<th>Column datepicker-detail</th>
+							<td>
+								<div id="test" class='input-group date qp-input-datetimepicker-detail'>
+									<form:input path="columnDatetime" cssClass="form-control" />
+									<span class="input-group-addon">
+										<span class="glyphicon glyphicon-calendar"></span>
+									</span>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<th>Column select<label class="qp-required-field">(*)</label></th>
+							<td>
+								<form:select path="columnSelect" cssClass="form-control qp-input-select">
+									<form:option value="">--- Select ---</form:option>
+									<form:options items="${SampleTypes }" itemLabel="nameType" itemValue="id" />
+								</form:select>
+							</td>
+							<th>Column autocomplete<label class="qp-required-field">(*)</label></th>
+							<td>
+								<qp:autocomplete optionValue="optionValue" selectSqlId="getAllType" emptyLabel="sc.sys.0030" name="columnAutocomplete" optionLabel="optionLabel"></qp:autocomplete>
+							</td>
+						</tr>
+						<tr>
+							<th>Column timepicker</th>
+							<td><div class='input-group date qp-input-timepicker'>
+									<form:input path="columnTime" cssClass="form-control" />
+									<span class="input-group-addon">
+										<span class="glyphicon glyphicon-time"></span>
+									</span>
+								</div>
+							</td>
+							<th>Column checkbox</th>
+							<td><form:checkboxes cssClass="qp-input-checkbox-margin qp-input-checkbox" items="${CL_SAMPLE}" path="columnCheckbox.id" /></td>
+						</tr>
+						<tr>
+							<th>Column radio</th>
+							<td><form:radiobuttons class="qp-input-radio qp-input-radio-margin" path="columnRadio.id" items="${CL_SAMPLE}"/></td>
+							<th>Image</th>
+							<td><form:input path="columnImage" cssClass="qp-input-file" type="file" /></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="panel panel-default qp-div-select">
+				<div class="panel-heading">
+					<span class="glyphicon  qp-heading-icon" aria-hidden="true">&nbsp;</span>
+					<span class="pq-heading-text">List sample child</span>
+				</div>
+				<div class="panel-body">
+					<table id="dynamic" class="table table-bordered qp-table-list">
+						<colgroup>
+							<col width="5%" />
+							<col width="20%" />
+							<col width="20%" />
+							<col width="20" />
+							<col width="20%" />
+							<col width="5%" />
+						</colgroup>
+						<thead>
+							<tr>
+								<th><qp:message code="sc.sys.0004"></qp:message></th>
+								<th>Text format</th>
+								<th>Autocomplete</th>
+								<th>datetime</th>
+								<th>Integer <label class="qp-required-field">(*)</label></th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							<c:forEach var="item" items="${sampleForm.sampleChild }" varStatus="status">
+								<tr>
+									<td class="qp-output-fixlength tableIndex">
+										${status.index + 1}
+										<form:hidden path="sampleChild[${status.index }].columnId" />
+										<form:hidden path="sampleChild[${status.index }].sample.columnId" /></td>
+									<td><input type="text" name="sampleChild[${status.index }].columnText" class="form-control qp-input-text" value="${item.columnText }"></td>
+									<td>													
+										<qp:autocomplete optionValue="optionValue" selectSqlId="getAllType" name="sampleChild[${status.index }].columnAutocomplete.id" value="${item.columnAutocomplete.id }" optionLabel="optionLabel" mustMatch="false"></qp:autocomplete>													
+									</td>
+									<td>
+										<div  class='input-group date qp-input-datetimepicker-detail'>
+											<input type="text" name="sampleChild[${status.index }].columnDatetime" value="${item.columnDatetime }" class="form-control">
+											<span class="input-group-addon">
+												<span class="glyphicon glyphicon-calendar"></span>
+											</span>
+										</div>
+									</td>
+									<td><input type="text" name="sampleChil;d[${status.index }].columnInteger" value="${item.columnInteger }" class="form-control qp-input-integer" /></td>
+									<td><a class="btn btn-default btn-xs glyphicon glyphicon-minus qp-button-action" title="" onclick="$.qp.removeRowJS('dynamic', this);" style="margin-top: 3px;" href="javascript:void(0)"></a></td>
+								</tr>
+							</c:forEach>
+							<c:if test="${empty sampleForm.sampleChild}">
+								<tr>
+									<td class="qp-output-fixlength tableIndex">1</td>
+									<td><input type="text" name="sampleChild[0].columnText" class="form-control qp-input-text"></td>
+									<td>
+										<qp:autocomplete optionLabel="optionLabel" selectSqlId="getAllType" name="sampleChild[0].columnAutocomplete.id" optionValue="optionValue" mustMatch="false"></qp:autocomplete>
+									</td>
+									<td>
+										<div id="test" class='input-group date qp-input-datetimepicker-detail'>
+											<input type="text" name="sampleChild[0].columnDatetime" class="form-control">
+											<span class="input-group-addon">
+												<span class="glyphicon glyphicon-calendar"></span>
+											</span>
+										</div>
+									</td>
+									<td><input type="text" name="sampleChild[0].columnInteger" class="form-control qp-input-integer" /></td>
+									<td><a class="btn btn-default btn-xs glyphicon glyphicon-minus qp-button-action" title="" onclick="$.qp.removeRowJS('dynamic', this);" style="margin-top: 3px;" href="javascript:void(0)"></a></td>
+								</tr>
+							</c:if>
+						</tbody>
+					</table>
+					<div class="qp-add-left">
+						<a class="btn btn-default btn-xs glyphicon glyphicon-plus qp-button-action" onclick="$.qp.addRowJSByLink(this);" style="margin-top: 3px;" href="javascript:void(0)"></a>
+					</div>				
+				</div>
+			</div>
+			<div class="qp-div-action">
+				<input type="button" value="Save" class="btn qp-button qp-dialog-confirm">
+			</div>
+		</form:form>
+	</tiles:putAttribute>
+</tiles:insertDefinition>

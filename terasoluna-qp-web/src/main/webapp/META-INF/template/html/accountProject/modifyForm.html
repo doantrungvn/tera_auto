@@ -1,0 +1,609 @@
+<!-- appendHeaderHere -->
+
+
+			<div class="qp-body-container">
+			<div class="qp-link-header">
+				<span class="qp-link-header-icon glyphicon glyphicon-search"></span>
+			<a href="../account/searchForm.html">Search account</a>
+		
+
+
+<script type="text/javascript">
+        	$(document).ready(function () {
+                
+        		var $checkBoxChecked = $("input[scope='node']:checked");
+    			var $checkBoxAll = $('input[scope="node"]');
+    			if($checkBoxChecked.length == $checkBoxAll.length) {
+    				$('input[scope="root"]').prop('checked', true);
+    			} else {
+    				$('input[scope="root"]').prop('checked', false);
+    			}
+        	});
+        	
+            function changeChecked(obj) {
+                var $table = $(obj).closest('table');
+                
+        		switch ($(obj).attr('scope')) {
+        		case "root":
+        			$table.find('input[scope="node"]').prop('checked', $(obj).is(':checked'));
+        			break;
+        	
+        		default:
+        			var $checkBoxChecked = $table.find('input[scope="node"]:checked');
+        			var $checkBoxAll = $table.find('input[scope="node"]');
+        			if($checkBoxChecked.length == $checkBoxAll.length && $(obj).is(':checked')) {
+        				$table.find('input[scope="root"]').prop('checked', $(obj).is(':checked'));
+        			} else {
+        				$table.find('input[scope="root"]').prop('checked', false);
+        			}
+        			break;
+        		}
+            }
+            
+        </script></div>
+			
+			<div class="qp-breadcrumb">
+					<ul class="breadcrumb" style="float:left;color:#337ab7;font-size:14px;">
+						<li><a href="#{homePage}"><i class="qp-link-header-icon glyphicon glyphicon-home"></i></a></li>
+						<li><span>Account Project</span></li>
+						<li><span>Register account project</span></li>
+					</ul>
+			</div>
+			
+			<!-- End toolbar-->
+			
+			<!-- Start message -->
+			<div class="qp-message">
+				</div>
+			<!-- End message -->
+			<!-- Start content -->
+			<div class="qp-body">
+<input type="hidden" value="0">
+		<form id="accountForm" action="./modifyForm_files/modifyForm.html" method="post"><div class="panel panel-default qp-div-information">
+					<div class="panel-heading">
+						<span class="glyphicon qp-heading-icon" aria-hidden="true">&nbsp;</span> <span class="pq-heading-text">User information</span>
+					</div>
+					<div class="panel-body">
+						<table class="table table-bordered qp-table-form">
+							<colgroup>
+								<col width="20%">
+								<col width="30%">
+								<col width="20%">
+								<col width="30%">
+							</colgroup>
+							<tbody><tr>
+								<th>Username</th>
+								<td>quangvd2</td>
+								<th>Account non locked</th>
+								<td>true</td>
+							</tr>
+							</tbody></table>
+					</div>
+				</div>
+				<br>
+				<input id="username" name="username" value="quangvd2" type="hidden"><div>
+<input type="hidden" name="_TRANSACTION_TOKEN" value="modify~257c9d5d2ccd92e8d405905dae2e4a3a~2efeb2287d9c7947c87319059d4d05fa">
+<input type="hidden" name="_csrf" value="6e22c002-28d3-4e24-95c7-75e956cd53c5">
+</div></form><form id="accountProjectListWrapper" action="http://localhost:8080/terasoluna-qp-web/accountproject/modify" method="post"><div class="panel panel-default qp-div-select">
+					<div class="panel-heading">
+						<span class="glyphicon  qp-heading-icon" aria-hidden="true">&nbsp;</span>
+						<span class="pq-heading-text">Project information</span>
+					</div>
+					<div class="panel-body">
+						<div class="table-responsive">
+							<table class="table table-bordered qp-table-list-none-action">
+								<colgroup>
+									<col width="30px">
+									<col width="40%">
+									<col width="30%">
+									<col width="30%">
+								</colgroup>
+								<thead>
+									<tr>
+										<th><input id="accProjectList0.selected1" name="accProjectList[0].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[0].selected" value="on"></th>
+										<th>Project name</th>
+										<th>Project code</th>
+										<th>Design status</th>
+									</tr>
+								</thead>
+								<tbody>
+								<tr>
+										<td> 
+											<input id="accProjectList0.selected1" name="accProjectList[0].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[0].selected" value="on"></td>
+										<td>
+											Son PN NTT
+										</td>
+										<td>
+
+
+
+<span style="white-space:pre">sonPNNTT</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList0.accountId" name="accProjectList[0].accountId" value="220" type="hidden"><input id="accProjectList0.projectId" name="accProjectList[0].projectId" value="155" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList1.selected1" name="accProjectList[1].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[1].selected" value="on"></td>
+										<td>
+											hungnx database
+										</td>
+										<td>
+
+
+
+<span style="white-space:pre">hungnxDatabase</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList1.accountId" name="accProjectList[1].accountId" value="220" type="hidden"><input id="accProjectList1.projectId" name="accProjectList[1].projectId" value="157" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList2.selected1" name="accProjectList[2].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[2].selected" value="on"></td>
+										<td>
+											contract project
+										</td>
+										<td>
+
+
+
+<span style="white-space:pre">contractProject</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList2.accountId" name="accProjectList[2].accountId" value="220" type="hidden"><input id="accProjectList2.projectId" name="accProjectList[2].projectId" value="159" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList3.selected1" name="accProjectList[3].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[3].selected" value="on"></td>
+										<td>NTT Data System</td>
+										<td>
+
+
+
+<span style="white-space:pre">nTTDataSystem</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList3.accountId" name="accProjectList[3].accountId" value="220" type="hidden"><input id="accProjectList3.projectId" name="accProjectList[3].projectId" value="160" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList4.selected1" name="accProjectList[4].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[4].selected" value="on"></td>
+										<td>quangvd database</td>
+										<td>
+
+
+
+<span style="white-space:pre">quangvdDatabase</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList4.accountId" name="accProjectList[4].accountId" value="220" type="hidden"><input id="accProjectList4.projectId" name="accProjectList[4].projectId" value="161" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList5.selected1" name="accProjectList[5].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[5].selected" value="on"></td>
+										<td>TestBusinessLogic</td>
+										<td>
+
+
+
+<span style="white-space:pre">testBusinessLogic</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList5.accountId" name="accProjectList[5].accountId" value="220" type="hidden"><input id="accProjectList5.projectId" name="accProjectList[5].projectId" value="162" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList6.selected1" name="accProjectList[6].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[6].selected" value="on"></td>
+										<td>anlt</td>
+										<td>
+
+
+
+<span style="white-space:pre">anlt</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList6.accountId" name="accProjectList[6].accountId" value="220" type="hidden"><input id="accProjectList6.projectId" name="accProjectList[6].projectId" value="166" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList7.selected1" name="accProjectList[7].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[7].selected" value="on"></td>
+										<td>TestBussinessAfterNoon_08102015</td>
+										<td>
+
+
+
+<span style="white-space:pre">testBussinessAfterNoon_08102015</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList7.accountId" name="accProjectList[7].accountId" value="220" type="hidden"><input id="accProjectList7.projectId" name="accProjectList[7].projectId" value="167" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList8.selected1" name="accProjectList[8].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[8].selected" value="on"></td>
+										<td>TestBussinessAfterNoon_08102015_02</td>
+										<td>
+
+
+
+<span style="white-space:pre">testBussinessAfterNoon_08102015_02</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList8.accountId" name="accProjectList[8].accountId" value="220" type="hidden"><input id="accProjectList8.projectId" name="accProjectList[8].projectId" value="168" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList9.selected1" name="accProjectList[9].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[9].selected" value="on"></td>
+										<td>tunght</td>
+										<td>
+
+
+
+<span style="white-space:pre">tunght</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList9.accountId" name="accProjectList[9].accountId" value="220" type="hidden"><input id="accProjectList9.projectId" name="accProjectList[9].projectId" value="169" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList10.selected1" name="accProjectList[10].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[10].selected" value="on"></td>
+										<td>HungTest01</td>
+										<td>
+
+
+
+<span style="white-space:pre">hungTest01</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList10.accountId" name="accProjectList[10].accountId" value="220" type="hidden"><input id="accProjectList10.projectId" name="accProjectList[10].projectId" value="170" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList11.selected1" name="accProjectList[11].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[11].selected" value="on"></td>
+										<td>DeliverProject</td>
+										<td>
+
+
+
+<span style="white-space:pre">deliverProject</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList11.accountId" name="accProjectList[11].accountId" value="220" type="hidden"><input id="accProjectList11.projectId" name="accProjectList[11].projectId" value="171" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList12.selected1" name="accProjectList[12].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[12].selected" value="on"></td>
+										<td>Project for Yamaha</td>
+										<td>
+
+
+
+<span style="white-space:pre">yamaha</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList12.accountId" name="accProjectList[12].accountId" value="220" type="hidden"><input id="accProjectList12.projectId" name="accProjectList[12].projectId" value="172" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList13.selected1" name="accProjectList[13].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[13].selected" value="on"></td>
+										<td>TestDelivery20151023</td>
+										<td>
+
+
+
+<span style="white-space:pre">testDelivery20151023</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList13.accountId" name="accProjectList[13].accountId" value="220" type="hidden"><input id="accProjectList13.projectId" name="accProjectList[13].projectId" value="174" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList14.selected1" name="accProjectList[14].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[14].selected" value="on"></td>
+										<td>trungdv</td>
+										<td>
+
+
+
+<span style="white-space:pre">trungdv</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList14.accountId" name="accProjectList[14].accountId" value="220" type="hidden"><input id="accProjectList14.projectId" name="accProjectList[14].projectId" value="176" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList15.selected1" name="accProjectList[15].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[15].selected" value="on"></td>
+										<td>Project For 2q</td>
+										<td>
+
+
+
+<span style="white-space:pre">projectFor2q</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList15.accountId" name="accProjectList[15].accountId" value="220" type="hidden"><input id="accProjectList15.projectId" name="accProjectList[15].projectId" value="185" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList16.selected1" name="accProjectList[16].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[16].selected" value="on"></td>
+										<td>qqqqqqqq</td>
+										<td>
+
+
+
+<span style="white-space:pre">qqqqqqqq</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList16.accountId" name="accProjectList[16].accountId" value="220" type="hidden"><input id="accProjectList16.projectId" name="accProjectList[16].projectId" value="186" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList17.selected1" name="accProjectList[17].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[17].selected" value="on"></td>
+										<td>demo</td>
+										<td>
+
+
+
+<span style="white-space:pre">demo</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList17.accountId" name="accProjectList[17].accountId" value="220" type="hidden"><input id="accProjectList17.projectId" name="accProjectList[17].projectId" value="187" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList18.selected1" name="accProjectList[18].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[18].selected" value="on"></td>
+										<td>Test menu design</td>
+										<td>
+
+
+
+<span style="white-space:pre">testMenuDesign</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList18.accountId" name="accProjectList[18].accountId" value="220" type="hidden"><input id="accProjectList18.projectId" name="accProjectList[18].projectId" value="188" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList19.selected1" name="accProjectList[19].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[19].selected" value="on"></td>
+										<td>khangtm</td>
+										<td>
+
+
+
+<span style="white-space:pre">khangtm</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList19.accountId" name="accProjectList[19].accountId" value="220" type="hidden"><input id="accProjectList19.projectId" name="accProjectList[19].projectId" value="190" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList20.selected1" name="accProjectList[20].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[20].selected" value="on"></td>
+										<td>hungnlkProject</td>
+										<td>
+
+
+
+<span style="white-space:pre">hungnlkProject</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList20.accountId" name="accProjectList[20].accountId" value="220" type="hidden"><input id="accProjectList20.projectId" name="accProjectList[20].projectId" value="195" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList21.selected1" name="accProjectList[21].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[21].selected" value="on"></td>
+										<td>testgen</td>
+										<td>
+
+
+
+<span style="white-space:pre">testgen</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList21.accountId" name="accProjectList[21].accountId" value="220" type="hidden"><input id="accProjectList21.projectId" name="accProjectList[21].projectId" value="196" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList22.selected1" name="accProjectList[22].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[22].selected" value="on"></td>
+										<td>HungHX0001</td>
+										<td>
+
+
+
+<span style="white-space:pre">hungHX0001</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList22.accountId" name="accProjectList[22].accountId" value="220" type="hidden"><input id="accProjectList22.projectId" name="accProjectList[22].projectId" value="197" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList23.selected1" name="accProjectList[23].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[23].selected" value="on"></td>
+										<td>trungdv db</td>
+										<td>
+
+
+
+<span style="white-space:pre">trungdvDb</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList23.accountId" name="accProjectList[23].accountId" value="220" type="hidden"><input id="accProjectList23.projectId" name="accProjectList[23].projectId" value="198" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList24.selected1" name="accProjectList[24].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[24].selected" value="on"></td>
+										<td>testForGenJSP</td>
+										<td>
+
+
+
+<span style="white-space:pre">testForGenJSP</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList24.accountId" name="accProjectList[24].accountId" value="220" type="hidden"><input id="accProjectList24.projectId" name="accProjectList[24].projectId" value="199" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList25.selected1" name="accProjectList[25].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[25].selected" value="on"></td>
+										<td>DemoProjectQuy</td>
+										<td>
+
+
+
+<span style="white-space:pre">demoProjetQuy</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList25.accountId" name="accProjectList[25].accountId" value="220" type="hidden"><input id="accProjectList25.projectId" name="accProjectList[25].projectId" value="200" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList26.selected1" name="accProjectList[26].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[26].selected" value="on"></td>
+										<td>GenerateAll</td>
+										<td>
+
+
+
+<span style="white-space:pre">generateAll</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList26.accountId" name="accProjectList[26].accountId" value="220" type="hidden"><input id="accProjectList26.projectId" name="accProjectList[26].projectId" value="201" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList27.selected1" name="accProjectList[27].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[27].selected" value="on"></td>
+										<td>acv</td>
+										<td>
+
+
+
+<span style="white-space:pre">acv</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList27.accountId" name="accProjectList[27].accountId" value="220" type="hidden"><input id="accProjectList27.projectId" name="accProjectList[27].projectId" value="203" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList28.selected1" name="accProjectList[28].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[28].selected" value="on"></td>
+										<td>Content Management System</td>
+										<td>
+
+
+
+<span style="white-space:pre">contentManagementSystem</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList28.accountId" name="accProjectList[28].accountId" value="220" type="hidden"><input id="accProjectList28.projectId" name="accProjectList[28].projectId" value="206" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList29.selected1" name="accProjectList[29].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[29].selected" value="on"></td>
+										<td>Project None Module</td>
+										<td>
+
+
+
+<span style="white-space:pre">projectNoneModule</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList29.accountId" name="accProjectList[29].accountId" value="220" type="hidden"><input id="accProjectList29.projectId" name="accProjectList[29].projectId" value="207" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList30.selected1" name="accProjectList[30].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true" checked="checked"><input type="hidden" name="_accProjectList[30].selected" value="on"></td>
+										<td>
+										    
+
+
+
+
+
+
+
+
+
+
+
+
+	<a class="qp-link-popup" href="../project/viewForm.html?projectId=210">
+
+
+
+<span style="white-space:pre">FLTproject01</span>
+</a>
+		                                       
+
+
+</td>
+										<td>
+
+
+
+<span style="white-space:pre">FLTproject01</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList30.accountId" name="accProjectList[30].accountId" value="220" type="hidden"><input id="accProjectList30.projectId" name="accProjectList[30].projectId" value="210" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList31.selected1" name="accProjectList[31].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[31].selected" value="on"></td>
+										<td>test project</td>
+										<td>
+
+
+
+<span style="white-space:pre">testProject</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList31.accountId" name="accProjectList[31].accountId" value="220" type="hidden"><input id="accProjectList31.projectId" name="accProjectList[31].projectId" value="226" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList32.selected1" name="accProjectList[32].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[32].selected" value="on"></td>
+										<td>testgensource</td>
+										<td>
+
+
+
+<span style="white-space:pre">testgensource</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList32.accountId" name="accProjectList[32].accountId" value="220" type="hidden"><input id="accProjectList32.projectId" name="accProjectList[32].projectId" value="228" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList33.selected1" name="accProjectList[33].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[33].selected" value="on"></td>
+										<td>Blank project</td>
+										<td>
+
+
+
+<span style="white-space:pre">blankProject</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList33.accountId" name="accProjectList[33].accountId" value="220" type="hidden"><input id="accProjectList33.projectId" name="accProjectList[33].projectId" value="229" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList34.selected1" name="accProjectList[34].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[34].selected" value="on"></td>
+										<td>testgensource2</td>
+										<td>
+
+
+
+<span style="white-space:pre">testgensource2</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList34.accountId" name="accProjectList[34].accountId" value="220" type="hidden"><input id="accProjectList34.projectId" name="accProjectList[34].projectId" value="230" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList35.selected1" name="accProjectList[35].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[35].selected" value="on"></td>
+										<td>sumo</td>
+										<td>
+
+
+
+<span style="white-space:pre">sumo</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList35.accountId" name="accProjectList[35].accountId" value="220" type="hidden"><input id="accProjectList35.projectId" name="accProjectList[35].projectId" value="231" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList36.selected1" name="accProjectList[36].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[36].selected" value="on"></td>
+										<td>FunnyBoy</td>
+										<td>
+
+
+
+<span style="white-space:pre">funnyBoy</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList36.accountId" name="accProjectList[36].accountId" value="220" type="hidden"><input id="accProjectList36.projectId" name="accProjectList[36].projectId" value="232" type="hidden"></tr>
+								<tr>
+										<td> 
+											<input id="accProjectList37.selected1" name="accProjectList[37].selected" class="checkbox qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_accProjectList[37].selected" value="on"></td>
+										<td>datld</td>
+										<td>
+
+
+
+<span style="white-space:pre">datld</span>
+</td>
+										<td>Under design</td>
+										<input id="accProjectList37.accountId" name="accProjectList[37].accountId" value="220" type="hidden"><input id="accProjectList37.projectId" name="accProjectList[37].projectId" value="233" type="hidden"></tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+	
+				<div class="qp-div-action">
+					<input id="accountId" name="accountId" value="220" type="hidden"><input type="button" onclick="window.location.href='../account/searchForm.html'" class="btn qp-button " value="Save" style="null">
+				</div>
+			<div>
+<input type="hidden" name="_TRANSACTION_TOKEN" value="modify~257c9d5d2ccd92e8d405905dae2e4a3a~2efeb2287d9c7947c87319059d4d05fa">
+<input type="hidden" name="_csrf" value="6e22c002-28d3-4e24-95c7-75e956cd53c5">
+</div></form></div>
+
+			<!-- appendFooterHere -->

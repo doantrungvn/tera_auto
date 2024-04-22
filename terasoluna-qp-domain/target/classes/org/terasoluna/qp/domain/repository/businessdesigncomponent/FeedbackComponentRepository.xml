@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.businessdesigncomponent.FeedbackComponentRepository">
+
+    <resultMap id="feedbackComponentResultMap" type="FeedbackComponent">
+        <id property="feedbackComponentId" column="feedback_component_id" />
+        <result property="label" column="label" />
+        <result property="messageCode" column="message_code" />
+        <result property="messageCodeAutocomplete" column="message_string" />
+        <result property="remark" column="remark" />
+        <result property="type" column="type" />
+        <result property="sequenceLogicId" column="sequence_logic_id" />
+    </resultMap>
+    <resultMap id="autocompleteResultMap" type="Autocomplete">
+		<result property="optionValue" column="optionValue" />
+		<result property="optionLabel" column="optionLabel" />
+	</resultMap>
+	<resultMap id="businessDesignResultMap" type="BusinessDesign">
+        <id property="businessLogicId" column="business_logic_id" />
+        <result property="businessLogicCode" column="business_logic_code" />
+        <result property="businessLogicName" column="business_logic_name" />
+        <result property="returnType" column="return_type" />
+        <result property="screenId" column="screen_id" />
+        <result property="moduleId" column="module_id" />
+        <result property="projectId" column="project_id" />
+        <result property="customizeFlg" column="customize_flg" />
+        <result property="uploadFileId" column="upload_file_id" />
+        <result property="createdBy" column="created_by" />
+        <result property="createdDate" column="created_date" />
+        <result property="updatedBy" column="updated_by" />
+        <result property="updatedDate" column="updated_date" />
+        <result property="designStatus" column="design_status" />
+        <result property="packageName" column="package_name" />
+        <result property="patternType" column="pattern_type" />
+        <result property="confirmFlg" column="confirm_flg" />
+        <result property="completeFlg" column="complete_flg" />
+        <result property="remark" column="remark" />
+        <result property="screenFormId" column="screen_form_id" />
+        <result property="functionId" column="function_id" />
+        <result property="batchType" column="batch_type" />
+    </resultMap>
+    <resultMap id="sequenceLogicResultMap" type="SequenceLogic">
+        <id property="sequenceLogicId" column="sequence_logic_id" />
+        <result property="sequenceLogicName" column="sequence_logic_name" />
+        <result property="componentType" column="component_type" />
+        <result property="componentId" column="component_id" />
+        <result property="sequenceNo" column="sequence_no" />
+        <result property="xCoordinates" column="x_coordinates" />
+        <result property="yCoordinates" column="y_coordinates" />
+        <result property="remark" column="remark" />
+        <result property="businessLogicId" column="business_logic_id" />
+        <result property="parentSequenceLogicId" column="parent_sequence_logic_id" />
+        <result property="groupFlg" column="group_flg" />
+        <result property="relatedSequenceLogicId" column="related_sequence_logic_id" />
+    </resultMap>
+    <!-- feedback component -->
+	<!--  Auto complete functions -->
+    <select id="getAutocompleteForFeedbackMessage" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+    	SELECT 
+    		m.message_code AS optionValue,
+       		m.message_code AS output01,
+       		m.message_string AS optionLabel
+		FROM message_design m
+		WHERE 
+			m.project_id= CAST(#{arg02} AS NUMERIC)
+			AND m.language_id = #{languageId}
+  			<if test="searchKey != null and searchKey != ''">
+                <bind name="searchKey" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(searchKey)" />
+                <![CDATA[ AND m.message_string iLIKE #{searchKey} ESCAPE '~' ]]>
+           </if>
+           <if test="arg03 != null and arg03 != ''">
+           		AND m.message_type like #{arg03}
+           </if>
+           <if test="arg03 == null || arg03 == ''">
+           		AND (
+                    m.message_type like 'inf'
+                OR
+                    m.message_type like 'wrn'
+                OR
+                    m.message_type like 'err'
+                )
+           </if>
+		ORDER BY m.message_design_id DESC
+		<if test="arg01 != null and arg01 != ''">
+			LIMIT CAST(#{arg01} AS NUMERIC)
+		</if>
+		<if test="arg01 == null || arg01 == ''">
+			LIMIT 20
+		</if>
+		
+    </select>
+    
+     <select id="getAutocompleteForFeedbackLabel" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+    	SELECT 
+    		a.message_code AS optionValue,
+       		a.message_level AS output01,
+       		a.message_string AS optionLabel
+		FROM message_design a
+		WHERE
+			a.message_level in (0,1,5)
+			AND a.project_id= CAST(#{arg02} AS NUMERIC)
+			AND a.language_id = #{languageId}
+			AND a.message_type like 'sc'
+<!-- 			not filter-->
+<!-- 			AND a.message_type like 'sc' -->
+  			<if test="searchKey != null and searchKey != ''">
+                <bind name="searchKey" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(searchKey)" />
+                <![CDATA[ AND a.message_string iLIKE #{searchKey} ESCAPE '~' ]]>
+           </if>
+           <if test="arg03 != null and arg03 != ''">
+           		AND (a.module_id =  CAST(#{arg03} AS NUMERIC) or a.module_id is null )
+           </if>
+           <if test="arg03 == null || arg03 == ''">
+           		AND (
+                   a.module_id is null
+                )
+           </if>
+		ORDER BY a.message_design_id DESC
+		<if test="arg01 != null and arg01 != ''">
+			LIMIT CAST(#{arg01} AS NUMERIC)
+		</if>
+		<if test="arg01 == null || arg01 == ''">
+			LIMIT 20
+		</if>
+		
+    </select>
+    
+     <select id="getSequencesFeedbackComponent" resultType="Long">
+    	select SETVAL('feedback_component_seq'::regclass, NEXTVAL('feedback_component_seq'::regclass) + #{size})
+    </select>
+    
+    <insert id="registerFeedbackComponent" >
+    	<if test="feedbackComponentItems != null and  feedbackComponentItems.size() > 0 ">
+			INSERT INTO feedback_component
+				(
+				feedback_component_id, 
+				label, 
+				message_code, 
+				remark, 
+				type, 
+				sequence_logic_id
+	            )
+	    		VALUES 
+	    		<foreach item="item" collection="feedbackComponentItems" separator=",">
+				(
+					#{item.feedbackComponentId},
+					#{item.label}, 
+					#{item.messageCode}, 
+					#{item.remark}, 
+					#{item.type},
+	            	#{item.sequenceLogicId}
+	            )
+				</foreach>;
+		</if>
+    </insert>
+    <select id="findFeedbackComponentByBusinessLogic" resultMap="feedbackComponentResultMap">
+		SELECT 
+			fc.feedback_component_id,
+       		fc.label,
+       		fc.message_code,
+       		fc.remark,
+       		fc.type,
+       		fc.sequence_logic_id,
+       		md.message_string
+		FROM feedback_component fc
+		left join message_design md
+			on(md.message_code = fc.message_code and md.language_id = #{languageId} and md.project_id = #{projectId})
+		WHERE EXISTS
+    		( 
+    		SELECT sl.sequence_logic_id
+     		FROM sequence_logic sl
+     		WHERE sl.business_logic_id = #{businessLogicId}
+       			AND component_type = 11
+       			AND sl.sequence_logic_id = fc.sequence_logic_id
+       		)
+    </select>
+    
+    <!-- For generate source code -->
+    <!-- Adding HungHX -->
+    <select id="findFeedbackComponentByModuleId" resultMap="feedbackComponentResultMap">
+		SELECT 
+			fc.feedback_component_id,
+       		fc.label,
+       		fc.message_code,
+       		fc.remark,
+       		fc.type,
+       		fc.sequence_logic_id,
+       		md.message_string
+		FROM feedback_component fc
+		left join message_design md
+			on(md.message_code = fc.message_code and md.language_id = #{languageId} and md.module_id = #{moduleId})
+		WHERE EXISTS
+    		( 
+    		SELECT sl.sequence_logic_id
+     		FROM sequence_logic sl
+     		INNER JOIN business_logic blogic ON sl.business_logic_id = blogic.business_logic_id
+     		WHERE blogic.module_id = #{moduleId}
+       			AND component_type = 11
+       			AND sl.sequence_logic_id = fc.sequence_logic_id
+       		)
+    </select>
+    
+    <!-- Base on project -->
+    <select id="findFeedbackComponentByProjectId" resultMap="feedbackComponentResultMap">
+		SELECT 
+			fc.feedback_component_id,
+       		fc.label,
+       		fc.message_code,
+       		fc.remark,
+       		fc.type,
+       		fc.sequence_logic_id,
+       		md.message_string
+		FROM feedback_component fc
+		left join message_design md
+			on(md.message_code = fc.message_code and md.language_id = #{languageId} and md.project_id = #{projectId})
+		WHERE EXISTS
+    		( 
+    		SELECT sl.sequence_logic_id
+     		FROM sequence_logic sl
+     		INNER JOIN business_logic blogic ON sl.business_logic_id = blogic.business_logic_id
+     		WHERE blogic.project_id = #{projectId}
+       			AND component_type = 11
+       			AND sl.sequence_logic_id = fc.sequence_logic_id
+       		)
+    </select>
+    
+    <select id="getBusinessDesignCommonComponentGeneration" resultMap="businessDesignResultMap">
+    	SELECT 
+				t3.*
+		FROM
+				feedback_component t1
+			INNER JOIN sequence_logic t2 ON t1.sequence_logic_id = t2.sequence_logic_id
+			INNER JOIN business_logic t3 ON t2.business_logic_id = t3.business_logic_id
+		WHERE
+				t1.feedback_component_id = #{feedbackComponentId}
+    </select>
+    
+    <select id="getSequenceLogicCommonComponentGeneration" resultMap="sequenceLogicResultMap">
+    	SELECT 
+				t2.*
+		FROM
+				feedback_component t1
+			INNER JOIN sequence_logic t2 ON t1.sequence_logic_id = t2.sequence_logic_id
+		WHERE
+				t1.feedback_component_id = #{feedbackComponentId}
+    </select>
+    
+    <!-- generate source code of commmon blogic -->
+    <select id="findFeedbackComponentByModuleCommon" resultMap="feedbackComponentResultMap">
+		SELECT 
+			fc.feedback_component_id,
+       		fc.label,
+       		fc.message_code,
+       		fc.remark,
+       		fc.type,
+       		fc.sequence_logic_id,
+       		md.message_string
+		FROM feedback_component fc
+		left join message_design md
+			on(md.message_code = fc.message_code and md.language_id = #{languageId} and md.module_id = #{moduleId})
+		WHERE EXISTS
+    		( 
+    		SELECT sl.sequence_logic_id
+     		FROM sequence_logic sl
+     		INNER JOIN business_logic blogic ON sl.business_logic_id = blogic.business_logic_id
+     		WHERE blogic.project_id = #{projectId} AND blogic.module_id is null and blogic.blogic_type = 1
+       			AND component_type = 11
+       			AND sl.sequence_logic_id = fc.sequence_logic_id
+       		)
+    </select>
+
+</mapper>

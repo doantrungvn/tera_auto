@@ -1,0 +1,134 @@
+﻿<!-- appendHeaderHere -->
+
+			<div class="qp-body-container" style="margin: -13px 0px 20px 0px;">
+			<div class="qp-link-header">
+				<span class="qp-link-header-icon glyphicon glyphicon-search"></span>
+				<a href="searchForm.html">Search account</a>
+			</div>
+			
+			<div class="qp-breadcrumb">
+				<ul class="breadcrumb" style="float:left;color:#337ab7;font-size:14px;">
+					<li><a href="#{homePage}"><i class="qp-link-header-icon glyphicon glyphicon-home"></i></a></li>
+					<li><span>Account management</span></li>
+					<li><span>Modify account</span></li>
+				</ul>
+			</div>
+			
+			<!-- End toolbar-->
+			
+			<!-- Start message -->
+			<div class="qp-message">
+				</div>
+			<!-- End message -->
+
+			<!-- Start content -->
+			<div class="qp-body">
+<form id="accountForm" action="http://localhost:8080/terasoluna-qp-web/account/modify" method="post"><div class="panel panel-default qp-div-information">
+					<div class="panel-heading">
+						<span class="glyphicon  qp-heading-icon" aria-hidden="true">&nbsp;</span>
+						<span class="pq-heading-text">Account information</span>
+					</div>
+					<div class="panel-body">
+						<table class="table table-bordered qp-table-form">
+							<colgroup>
+								<col width="20%">
+								<col width="30%">
+								<col width="20%">
+								<col width="30%">
+							</colgroup>
+							<tbody><tr>
+								<th>
+									<label for="username">User name</label></th>
+								<td>
+
+
+
+<span style="white-space:pre">quangvd2</span>
+</td>
+								<th>Account non locked</th>
+								<td>
+									<label for="accountNonLocked"><label class="radio-inline"><input id="accountNonLocked1" name="accountNonLocked" type="radio" value="true" checked="checked">Yes</label>
+										<label class="radio-inline"><input id="accountNonLocked2" name="accountNonLocked" type="radio" value="false">No</label>
+									</label></td>
+							</tr>
+							<tr>
+								<th>Account rule definition</th>
+								<td>
+									
+
+
+
+<!--  attribute -->
+
+
+<div class="input-group " style="">
+	<input type="text" name="accountRuleDefinitionIdAutocomplete" id="accountRuleDefinitionIdAutocompleteId" class="form-control qp-input-autocomplete  ui-autocomplete-input" value="" optionvalue="optionValue" optionlabel="optionLabel" selectsqlid="getAllRuleDefinitionForAutocomplete" emptylabel="" onselectevent="checkRuleHasInitialPasswordForEdit" onchangeevent="removeInputPasswordForEdit" onremoveevent="" mustmatch="true" maxlength="" minlength="" arg01="" arg02="20" arg03="" arg04="" arg05="" arg06="" arg07="" arg08="" arg09="" arg10="" arg11="" arg12="" arg13="" arg14="" arg15="" arg16="" arg17="" arg18="" arg19="" arg20="" sourcetype="" sourcecallback="" placeholder="Search..." autocomplete="off">
+	<input type="hidden" class="" name="accountRuleDefinitionId" value="0">
+	<span class="input-group-addon dropdown-toggle" data-dropdown="dropdown" style="cursor: pointer;" onclick="$.qp.searchAutocompleteData(this)"> <span class="caret"></span></span>
+</div></td>
+								<th><label for="selectedChangePass">Enable change password</label></th>
+								<td style="text-align: left;">
+									<input id="selectedChangePass" name="selectedChangePass" class="qp-input-checkbox qp-input-checkbox-margin" onchange="showHideChangePass()" type="checkbox" value="true"><input type="hidden" name="_selectedChangePass" value="on"></td>
+							</tr>
+							<tr id="trChangePass" style="display: none;">
+								<th>
+									<label for="password">New password&nbsp;<label class="qp-required-field">(*)</label>
+									</label></th>
+								<td><input id="password" name="password" class="form-control qp-input-text" type="password" autofocus="true" value="$2a$10$8RYCIgCjPmBSbzuXTTss3.SOcsu5sYjZOrkBOD6k.hUJkSexO0RQq"></td>
+								<th>
+									<label for="confirmPassword">Re-enter new password&nbsp;<label class="qp-required-field">(*)</label>
+									</label></th>
+								<td><input id="confirmPassword" name="confirmPassword" class="form-control qp-input-text" type="password" value=""></td>
+							</tr>
+						</tbody></table>
+					</div>
+				</div>
+				<div class="qp-div-action">
+					
+
+
+
+
+
+
+
+
+
+
+
+
+	<input id="username" name="username" type="hidden" value="quangvd2"><input id="accountId" name="accountId" type="hidden" value="220"><input id="updatedDate" name="updatedDate" type="hidden" value="2015-12-23 17:06:19.881"><input type="button" onclick="window.location.href='searchForm.html'" class="btn qp-button " value="Save" style="null">
+					
+
+
+</div>
+			<div>
+<input type="hidden" name="_TRANSACTION_TOKEN" value="account/modify~e3629d076ff642f909a8b906c7acdc73~8ff5c494b5ef3e8b7e3dc3731e254358">
+<input type="hidden" name="_csrf" value="6e22c002-28d3-4e24-95c7-75e956cd53c5">
+</div></form></div>
+<script type="text/javascript" src="../media/js/account/javascript/account.js"></script>
+<script type="text/javascript">
+			
+			function showHideChangePass() {
+				var checked = $("#selectedChangePass").prop("checked");
+				if(checked === undefined) {
+					checked = false;
+				}
+				if(checked) {
+					checkRuleHasInitialPasswordForEdit();
+// 					var data = checkRuleHasInitialPasswordForEdit(accountRuleDefinitionId);
+					
+// 					if(!data.initialPassword) {
+// 						$("#trChangePass").show();
+// 					} else {
+// 						$("#trChangePass").hide();
+// 					}
+				} else {
+					$("#trChangePass").hide();
+				}
+			}
+			$( document ).ready(function() {
+				showHideChangePass();
+			});
+		</script>
+			<!-- appendFooterHere -->

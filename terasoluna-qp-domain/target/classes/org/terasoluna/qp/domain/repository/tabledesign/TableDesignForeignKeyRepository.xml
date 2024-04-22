@@ -1,0 +1,592 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.tabledesign.TableDesignForeignKeyRepository">
+
+	<resultMap id="resultMap" type="TableDesignForeignKey">
+		<result property="foreignKeyId" column="foreign_key_id" />
+		<result property="fromTableId" column="from_tbl_design_id" />
+		<result property="fromColumnId" column="from_column_id" />
+		<result property="toTableId" column="to_tbl_design_id" />
+		<result property="toColumnId" column="to_column_id" />
+		<result property="foreignKeyCode" column="foreign_key_code" />
+		<result property="toTableCode" column="to_tbl_design_code" />
+		<result property="toColumnCode" column="to_column_code" />
+		<result property="fromTableCode" column="from_tbl_design_code" />
+		<result property="fromColumnCode" column="from_column_code" />
+		<result property="fromTableName" column="from_tbl_design_name" />
+		<result property="fromColumnName" column="from_column_name" />
+		<result property="toTableName" column="to_tbl_design_name" />
+		<result property="toColumnName" column="to_column_name" />
+		<result property="foreignKeyType" column="foreign_key_type" />
+	</resultMap>
+
+	<select id="getFromForeignKeyInfo" parameterType="Long" resultMap="resultMap">
+		<![CDATA[
+			SELECT 
+			foreign_key_code,
+			(SELECT tbl_design_code FROM table_design WHERE tbl_design_id = a.from_tbl_design_id) as from_tbl_design_code,
+			(SELECT column_code FROM table_design_details WHERE tbl_design_id = a.from_tbl_design_id AND column_id = a.from_column_id) as from_column_code,
+			(SELECT tbl_design_code FROM table_design WHERE tbl_design_id = a.to_tbl_design_id) as to_tbl_design_code,
+			(SELECT column_code FROM table_design_details WHERE tbl_design_id = a.to_tbl_design_id AND column_id = a.to_column_id) as to_column_code
+			FROM table_design m INNER JOIN table_design_foreign_key a ON m.tbl_design_id = a.from_tbl_design_id
+			WHERE m.project_id = #{projectId}
+		]]>
+	</select>
+	
+	<select id="checkDuplicateKeyCode" resultType="long">
+		<![CDATA[
+			SELECT COUNT(*)
+			FROM table_design m INNER JOIN table_design_foreign_key a ON m.tbl_design_id = a.from_tbl_design_id
+			WHERE m.project_id = #{projectId}
+			AND a.foreign_key_code = #{fkCode}
+			AND a.from_tbl_design_id <> #{tableId}
+		]]>
+	</select>
+	
+	<select id="getFromForeignKeyInfoByTableId" resultMap="resultMap">
+		SELECT 
+			foreign_key_code,
+			(SELECT tbl_design_code FROM table_design WHERE tbl_design_id = a.from_tbl_design_id) as from_tbl_design_code,
+			(SELECT column_code FROM table_design_details WHERE tbl_design_id = a.from_tbl_design_id AND column_id = a.from_column_id) as from_column_code,
+			(SELECT tbl_design_code FROM table_design WHERE tbl_design_id = a.to_tbl_design_id) as to_tbl_design_code,
+			(SELECT column_code FROM table_design_details WHERE tbl_design_id = a.to_tbl_design_id AND column_id = a.to_column_id) as to_column_code
+			FROM table_design m INNER JOIN table_design_foreign_key a ON m.tbl_design_id = a.from_tbl_design_id
+			WHERE m.tbl_design_id IN 
+					<foreach item="item" collection="listTableId" open="(" close=")" separator=",">
+						#{item}
+					</foreach>
+	</select>
+	
+	<select id="findOne" parameterType="Long" resultMap="resultMap">
+		<![CDATA[
+			SELECT
+				foreign_key_id,
+				from_tbl_design_id,
+				from_column_id,
+				to_tbl_design_id,
+				to_column_id,
+				foreign_key_code
+			FROM 
+				table_design_foreign_key
+			WHERE
+				foreign_key_id = #{keyId}
+		]]>
+	</select>
+	
+	<select id="findForeignKeyByListToColumn" resultMap="resultMap">
+		SELECT
+			foreign_key_id,
+			from_tbl_design_id,
+			from_column_id,
+			to_tbl_design_id,
+			to_column_id,
+			foreign_key_code
+		FROM 
+			table_design_foreign_key
+		WHERE from_column_id IN (
+			SELECT
+				from_column_id
+			FROM 
+			table_design_foreign_key
+			WHERE to_column_id IN 
+				<foreach item="status" index="index" collection="listColumnId" open="(" separator="," close=")">
+					#{status}
+				</foreach>	
+		)
+		and to_column_id NOT IN 
+			<foreach item="status" index="index" collection="listColumnId" open="(" separator="," close=")">
+				#{status}
+			</foreach>
+	</select>
+	
+	<select id="findForeignKeyByListColumn" resultMap="resultMap">
+		SELECT
+			foreign_key_id,
+			from_tbl_design_id,
+			(
+				SELECT
+					tbl_design_name
+				FROM
+					table_design
+				WHERE
+					tbl_design_id = from_tbl_design_id
+			) as from_tbl_design_name,
+			from_column_id,
+			to_tbl_design_id,
+			to_column_id,
+			(
+				SELECT
+					column_code
+				FROM
+					table_design_details
+				WHERE
+					column_id = from_column_id
+			) as from_column_code,
+			(
+				SELECT
+					column_name
+				FROM
+					table_design_details
+				WHERE
+					column_id = from_column_id
+			) as from_column_name,
+			foreign_key_code
+		FROM 
+		table_design_foreign_key
+		WHERE 
+			to_column_id IN 
+				<foreach item="status" index="index" collection="listColumnId" open="(" separator="," close=")">
+					#{status}
+				</foreach>	
+		<if test="listColumnId == null and listColumnId.length == 0">
+			false
+		</if>
+		
+	</select>
+	
+	<select id="findDuplicateForeignKey" parameterType="TableDesignForeignKey" resultMap="resultMap">
+		<![CDATA[
+			SELECT
+				foreign_key_id,
+				from_tbl_design_id,
+				from_column_id,
+				to_tbl_design_id,
+				to_column_id,
+				foreign_key_code
+			FROM 
+				table_design_foreign_key
+			WHERE
+				from_tbl_design_id = #{toTableId}
+			AND
+				from_column_id = #{toColumnId}
+			AND
+				to_tbl_design_id = #{fromTableId}
+			AND
+				to_column_id = #{fromColumnId}
+		]]>
+	</select>
+
+	<select id="findAllByTableDesignDetail" parameterType="Long" resultMap="resultMap">
+		<![CDATA[
+			SELECT
+				foreign_key_id,
+				from_tbl_design_id,
+				from_column_id,
+				to_tbl_design_id,
+				to_column_id,
+				foreign_key_code
+			FROM
+				table_design_foreign_key
+			WHERE
+				from_column_id = #{fromColumnId}
+		]]>
+	</select>
+	
+	<select id="findAllByTableDesign" parameterType="Long" resultMap="resultMap">
+		<![CDATA[
+			SELECT
+				foreign_key_id,
+				from_tbl_design_id,
+				from_column_id,
+				to_tbl_design_id,
+				to_column_id,
+				foreign_key_code,
+				(
+					SELECT
+						group_base_type_id
+					FROM
+						table_design_details
+					WHERE
+						column_id = to_column_id
+				) AS foreign_key_type
+			FROM
+				table_design_foreign_key
+			WHERE
+				from_tbl_design_id = #{tableId}
+		]]>
+	</select>
+
+	<insert id="createArray" parameterType="TableDesignForeignKey">
+		<selectKey keyProperty="foreignKeyId" resultType="long" order="BEFORE">
+			SELECT nextval('tbl_design_fk_seq') AS tableId
+		</selectKey>
+		INSERT INTO
+			table_design_foreign_key
+		(
+			from_tbl_design_id,
+			from_column_id,
+			to_tbl_design_id,
+			to_column_id,
+			foreign_key_code
+		)
+		VALUES
+		<foreach item="item" collection="tableDesignForeignKeys" separator=",">
+         (
+             <![CDATA[
+                #{item.fromTableId},
+				#{item.fromColumnId},
+				#{item.toTableId},
+				#{item.toColumnId},
+				#{item.foreignKeyCode}
+             ]]>
+         )
+         </foreach>
+	</insert>
+
+	<insert id="create" parameterType="TableDesignForeignKey">
+		<selectKey keyProperty="foreignKeyId" resultType="long" order="BEFORE">
+			SELECT nextval('tbl_design_fk_seq') AS tableId
+		</selectKey>
+		<![CDATA[
+			INSERT INTO
+				table_design_foreign_key
+			(
+				from_tbl_design_id,
+				from_column_id,
+				to_tbl_design_id,
+				to_column_id,
+				foreign_key_code
+			)
+			VALUES
+			(
+				#{fromTableId},
+				#{fromColumnId},
+				#{toTableId},
+				#{toColumnId},
+				#{foreignKeyCode}
+			)
+		]]>
+	</insert>
+
+	<update id="update" parameterType="TableDesignForeignKey">
+		<![CDATA[
+		UPDATE
+			table_design_foreign_key
+		SET 
+			from_tbl_design_id = #{fromTableId},
+			from_column_id = #{fromColumnId},
+			to_tbl_design_id = #{toTableId},
+			to_column_id = #{toColumnId},
+			foreign_key_code = #{foreignKeyCode}
+		WHERE
+			foreign_key_id = #{foreignKeyId}
+		]]>
+	</update>
+
+	<update id="updateWithoutCode" parameterType="TableDesignForeignKey">
+		<![CDATA[
+		UPDATE
+			table_design_foreign_key
+		SET 
+			from_tbl_design_id = #{fromTableId},
+			from_column_id = #{fromColumnId},
+			to_tbl_design_id = #{toTableId},
+			to_column_id = #{toColumnId}
+		WHERE
+			foreign_key_id = #{foreignKeyId}
+		]]>
+	</update>
+
+
+	<update id="delete" parameterType="Long">
+		<![CDATA[
+		DELETE FROM 
+			table_design_foreign_key
+		WHERE
+			foreign_key_id = #{foreignKeyId}
+		]]>
+	</update>
+	
+	<update id="deleteByToTableAndColumn" parameterType="Long">
+		DELETE FROM 
+			table_design_foreign_key
+		WHERE 
+			to_tbl_design_id IN 
+			<foreach item="status" index="index" collection="listTableId" open="(" separator="," close=")">
+				#{status}
+			</foreach>	
+		AND to_column_id IN
+			<foreach item="status" index="index" collection="listColumnId" open="(" separator="," close=")">
+				#{status}
+			</foreach>	
+	</update>
+	
+	<update id="deleteByTableDesignDetail">
+		DELETE FROM
+			table_design_foreign_key
+		WHERE to_column_id IN
+							<foreach item="status" index="index" collection="listColumnIdDelete" open="(" separator="," close=")">
+	                    			#{status}
+	                		</foreach>
+		OR from_column_id IN
+							<foreach item="status" index="index" collection="listColumnIdDelete" open="(" separator="," close=")">
+	                    			#{status}
+	                		</foreach>
+	</update>
+	
+	<update id="deleteByTableDesign" parameterType="Long">
+		<![CDATA[
+			DELETE 
+			FROM 
+				table_design_foreign_key
+			WHERE 
+				from_tbl_design_id = #{tableId}
+		]]>
+	</update>
+	
+	<!-- DungNN get all by project and subject area -->
+	<select id="getAllByProjectAndSubArea" parameterType="map" resultMap="resultMap">
+		WITH 
+			table_design_temp AS (
+				SELECT 
+					tbl_design_id
+				FROM 
+					table_design t
+				WHERE
+					<![CDATA[ t.project_id = #{projectId} ]]>
+			
+			<if test="areaId != null and areaId > 0">
+					AND
+						EXISTS
+							(
+								SELECT
+									1
+								FROM
+									subject_area_design_table s
+								WHERE
+									t.tbl_design_id = s.tbl_design_id AND s.sub_area_design_id = #{areaId}
+							)
+			</if>
+			
+			<!-- get all table does not belong to subject area -->
+			<if test="areaId != null and areaId == -2">
+				EXCEPT 
+		
+				SELECT 
+					tbl_design_id
+				FROM 
+					subject_area_design_table st 
+				WHERE EXISTS
+				(
+					SELECT
+						1 
+					FROM 
+						subject_area_design s 
+					WHERE 
+						s.sub_area_design_id  = st.sub_area_design_id
+					AND
+						<![CDATA[s.project_id = #{projectId}]]>
+				)
+			</if>
+		)
+		
+		SELECT
+			foreign_key_id,
+			from_tbl_design_id,
+			from_column_id,
+			to_tbl_design_id,
+			to_column_id,
+			foreign_key_code,
+			(
+				SELECT
+					tbl_design_code
+				FROM
+					table_design
+				WHERE
+					tbl_design_id = k.to_tbl_design_id
+			) AS to_tbl_design_code,
+			(
+				select
+					column_code
+				from
+					table_design_details
+				where
+				column_id = k.to_column_id
+			) AS to_column_code
+		FROM
+			table_design_foreign_key k
+		WHERE 
+			EXISTS 
+				(
+					SELECT
+						1
+					FROM 
+						table_design_temp t
+					WHERE 
+						t.tbl_design_id = k.from_tbl_design_id 
+				)
+		AND
+			EXISTS 
+				(
+					SELECT
+						1
+					FROM 
+						table_design_temp t
+					WHERE 
+						t.tbl_design_id = k.to_tbl_design_id 
+				)
+	</select>
+
+	<!-- DungNN -->
+	<delete id="multiDelete" >
+		<foreach item="columnId" collection="listOfId" >
+			<![CDATA[
+				DELETE FROM 
+					table_design_foreign_key
+				WHERE
+					foreign_key_id = #{columnId};
+			]]>
+		</foreach>
+	</delete>
+	<select id="findForeignKeyBetweenTwoTables" resultMap="resultMap">
+		SELECT 
+			foreign_key_id,
+			foreign_key_code,
+			from_tbl_design_id,
+			B.tbl_design_name as from_tbl_design_name,
+			B.tbl_design_code as from_tbl_design_code,
+			from_column_id,
+			D.column_name as from_column_name,
+			D.column_code as from_column_code,
+			to_tbl_design_id,
+			C.tbl_design_name as to_tbl_design_name,
+			C.tbl_design_code as to_tbl_design_code,
+			to_column_id,
+			E.column_name as to_column_name,
+			E.column_code as to_column_code
+		FROM 
+		(
+			(
+				SELECT 
+					foreign_key_id,
+					foreign_key_code,
+					from_tbl_design_id,
+					from_column_id,
+					to_tbl_design_id,
+					to_column_id
+				FROM table_design_foreign_key
+				WHERE from_tbl_design_id = #{tableId} AND to_tbl_design_id = #{joinTableId}
+			)
+			UNION
+			(
+				SELECT 
+					foreign_key_id,
+					foreign_key_code,
+					from_tbl_design_id,
+					from_column_id,
+					to_tbl_design_id,
+					to_column_id
+				FROM table_design_foreign_key
+				WHERE from_tbl_design_id = #{joinTableId} AND to_tbl_design_id = #{tableId}
+			)
+		) A
+		LEFT JOIN
+		table_design B 
+		ON
+		A.from_tbl_design_id = B.tbl_design_id
+		LEFT JOIN
+		table_design C 
+		ON
+		A.to_tbl_design_id = C.tbl_design_id
+		LEFT JOIN
+		table_design_details D 
+		ON
+		A.from_column_id = D.column_id
+		LEFT JOIN
+		table_design_details E 
+		ON
+		A.to_column_id = E.column_id
+		LIMIT 1
+	</select>
+	
+	<select id="getAllForeignKey" parameterType="Long" resultMap="resultMap">
+		<![CDATA[
+		SELECT
+			a.foreign_key_id,
+			a.foreign_key_code,
+			a.from_tbl_design_id,
+			(SELECT tbl_design_code FROM table_design WHERE tbl_design_id = a.from_tbl_design_id) as from_tbl_design_code,
+			(SELECT tbl_design_name FROM table_design WHERE tbl_design_id = a.from_tbl_design_id) as from_tbl_design_name,
+			a.from_column_id,
+			(SELECT column_code FROM table_design_details WHERE tbl_design_id = a.from_tbl_design_id AND column_id = a.from_column_id) as from_column_code,
+			(SELECT column_name FROM table_design_details WHERE tbl_design_id = a.from_tbl_design_id AND column_id = a.from_column_id) as from_column_name,
+			a.to_tbl_design_id,
+			(SELECT tbl_design_code FROM table_design WHERE tbl_design_id = a.to_tbl_design_id) as to_tbl_design_code,
+			(SELECT tbl_design_name FROM table_design WHERE tbl_design_id = a.to_tbl_design_id) as to_tbl_design_name,
+			a.to_column_id,
+			(SELECT column_code FROM table_design_details WHERE tbl_design_id = a.to_tbl_design_id AND column_id = a.to_column_id) as to_column_code,
+			(SELECT column_name FROM table_design_details WHERE tbl_design_id = a.to_tbl_design_id AND column_id = a.to_column_id) as to_column_name
+		FROM table_design_foreign_key a
+			INNER JOIN table_design m ON m.tbl_design_id = a.from_tbl_design_id
+		WHERE m.project_id = #{projectId};
+		]]>
+	</select>
+	
+	<!-- VinhHV get all by project include common table -->
+	<select id="getAllByProject" parameterType="map" resultMap="resultMap">
+		WITH 
+			table_design_temp AS (
+				SELECT 
+					tbl_design_id
+				FROM 
+					table_design t
+				WHERE
+					t.project_id = #{projectId}
+		)
+		
+		SELECT
+			foreign_key_id,
+			from_tbl_design_id,
+			from_column_id,
+			to_tbl_design_id,
+			to_column_id,
+			foreign_key_code,
+			(
+				SELECT
+					tbl_design_code
+				FROM
+					table_design
+				WHERE
+					tbl_design_id = k.to_tbl_design_id
+			) AS to_tbl_design_code,
+			(
+				SELECT
+					tbl_design_name
+				FROM
+					table_design
+				WHERE
+					tbl_design_id = k.to_tbl_design_id
+			) AS to_tbl_design_name,
+			(
+				select
+					column_code
+				from
+					table_design_details
+				where
+				column_id = k.to_column_id
+			) AS to_column_code,
+			(
+				select
+					column_name
+				from
+					table_design_details
+				where
+				column_id = k.to_column_id
+			) AS to_column_name
+		FROM
+			table_design_foreign_key k
+		WHERE 
+			EXISTS 
+				(
+					SELECT
+						1
+					FROM 
+						table_design_temp t
+					WHERE 
+						t.tbl_design_id = k.from_tbl_design_id 
+				)
+
+	</select>
+</mapper>

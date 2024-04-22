@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.sqldesign.SqlDesignResultRepository">
+
+	<resultMap id="resultMap" type="SqlDesignResult">
+		<result property="resultId" column="result_id" />
+		<result property="sqlDesignId" column="sql_design_id" />
+		<result property="functionCode" column="function_code" />
+		<result property="tableId" column="tbl_design_id" />
+		<result property="tableName" column="tbl_design_name" />
+		<result property="tableCode" column="tbl_design_code" />
+		<result property="tableType" column="table_type" />
+		<result property="tableMissingFlag" column="tbl_missing_flg"/>
+		<result property="columnId" column="column_id" />
+		<result property="columnName" column="column_name" />
+		<result property="columnCode" column="column_code" />
+		<result property="columnMissingFlag" column="column_missing_flg"/>
+		<result property="itemSeqNo" column="item_seq_no" />
+		<result property="enabledFlag" column="enabled_flg"/>
+		<result property="dataType" column="base_type"/>
+		<result property="dataTypeBackup" column="data_type"/>
+	</resultMap>
+
+	<select id="findAllByIds" resultMap="resultMap">
+		SELECT  A.result_id,
+			A.sql_design_id,
+			A.function_code,
+			A.tbl_design_id,
+			A.table_type,
+			CASE 
+				WHEN A.table_type=1 THEN CASE WHEN E.sql_design_name IS NULL THEN '1' ELSE '0' END
+				ELSE CASE WHEN B.tbl_design_name IS NULL THEN '1' ELSE '0' END
+			END tbl_missing_flg,
+			CASE 
+				WHEN A.table_type=1 THEN COALESCE(E.sql_design_name,A.tbl_design_name)
+				ELSE COALESCE(B.tbl_design_name,A.tbl_design_name)
+			END tbl_design_name,
+			CASE 
+				WHEN A.table_type=1 THEN COALESCE(E.sql_design_code,A.tbl_design_code)
+				ELSE COALESCE(B.tbl_design_code,A.tbl_design_code)
+			END tbl_design_code,
+			A.column_id,
+			CASE WHEN C.column_name IS NULL THEN '1'
+				ELSE '0'
+			END column_missing_flg,
+			COALESCE(C.column_code,A.column_code) column_code,
+			COALESCE(C.column_name,A.column_name) column_name,
+			A.item_seq_no,
+			A.enabled_flg, 
+			C.base_type ,
+			A.data_type 
+		FROM sql_design_results A
+			LEFT JOIN 
+				table_design B 
+			ON 
+				A.tbl_design_id = B.tbl_design_id 
+			LEFT JOIN 
+		
+			(
+				SELECT
+					d.column_id, 
+					d.column_name, 
+					d.column_code, 
+					e.base_type
+				FROM
+					table_design_details d LEFT JOIN domain_design e 
+					ON  d.data_type = e.domain_id
+				WHERE 
+					d.data_type_flg = 1
+				UNION ALL
+				SELECT
+					d.column_id, 
+					d.column_name, 
+					d.column_code, 
+					d.data_type AS base_type
+				FROM
+					table_design_details d 
+					LEFT JOIN	resources e ON e.category_cd = 'clBasetype' 
+					AND d.data_type = CAST (e.value2 AS NUMERIC)
+				WHERE 
+					d.data_type_flg = 0
+		
+			) C
+
+			ON
+				A.column_id = C.column_id 
+			LEFT JOIN
+				sql_design E
+			ON 
+				A.tbl_design_id = E.sql_design_id
+				
+		WHERE 
+			A.result_id IN 
+				<foreach collection="sqlDesignResults" separator="," open="(" close=")" item="item">
+	        		<if test="item.resultId > 0">
+	        			#{item.resultId}
+	        		</if>
+	        	</foreach>
+		ORDER BY 
+			item_seq_no
+	</select>
+	<select id="findAllBySqlDesignId" parameterType="Long" resultMap="resultMap">
+		SELECT  A.result_id,
+			A.sql_design_id,
+			A.function_code,
+			A.tbl_design_id,
+			A.table_type,
+			CASE 
+				WHEN A.table_type=1 THEN CASE WHEN E.sql_design_name IS NULL THEN '1' ELSE '0' END
+				ELSE CASE WHEN B.tbl_design_name IS NULL THEN '1' ELSE '0' END
+			END tbl_missing_flg,
+			CASE 
+				WHEN A.table_type=1 THEN COALESCE(E.sql_design_name,A.tbl_design_name)
+				ELSE COALESCE(B.tbl_design_name,A.tbl_design_name)
+			END tbl_design_name,
+			CASE 
+				WHEN A.table_type=1 THEN COALESCE(E.sql_design_code,A.tbl_design_code)
+				ELSE COALESCE(B.tbl_design_code,A.tbl_design_code)
+			END tbl_design_code,
+			A.column_id,
+			CASE WHEN C.column_name IS NULL THEN '1'
+				ELSE '0'
+			END column_missing_flg,
+			COALESCE(C.column_code,A.column_code) column_code,
+			COALESCE(C.column_name,A.column_name) column_name,
+			A.item_seq_no,
+			A.enabled_flg, 
+			C.base_type ,
+			A.data_type 
+		FROM sql_design_results A
+			LEFT JOIN 
+				table_design B 
+			ON 
+				A.tbl_design_id = B.tbl_design_id 
+			LEFT JOIN 
+		
+			(
+				SELECT
+					d.column_id, 
+					d.column_name, 
+					d.column_code, 
+					e.base_type
+				FROM
+					table_design_details d LEFT JOIN domain_design e 
+					ON  d.data_type = e.domain_id
+				WHERE 
+					d.data_type_flg = 1
+				UNION ALL
+				SELECT
+					d.column_id, 
+					d.column_name, 
+					d.column_code, 
+					d.data_type AS base_type
+				FROM
+					table_design_details d 
+					LEFT JOIN	resources e ON e.category_cd = 'clBasetype' 
+					AND d.data_type = CAST (e.value2 AS NUMERIC)
+				WHERE 
+					d.data_type_flg = 0
+		
+			) C
+
+			ON
+				A.column_id = C.column_id 
+			LEFT JOIN
+				sql_design E
+			ON 
+				A.tbl_design_id = E.sql_design_id
+				
+		WHERE 
+			A.sql_design_id = #{sqlDesignId}
+		ORDER BY 
+			item_seq_no
+	</select>
+	
+	<select id="findById" parameterType="Long" resultMap="resultMap">
+		SELECT  result_id,
+				sql_design_id,
+				function_code,
+				tbl_design_id,
+				column_id,
+				item_seq_no,
+				enabled_flg,
+				table_type,
+		FROM sql_design_results
+		WHERE result_id = #{resultId}
+
+	</select>
+	
+	<insert id="register" parameterType="SqlDesignResult">
+		<selectKey keyProperty="resultId" resultType="long" order="BEFORE">
+			SELECT nextval('sql_design_result_seq') AS resultId
+		</selectKey>
+		INSERT INTO
+			sql_design_results
+		(
+			result_id,
+			sql_design_id,
+			function_code,
+			tbl_design_id,
+			column_id,
+			item_seq_no,
+			enabled_flg,
+			tbl_design_name,
+			column_name,
+			data_type,
+			tbl_design_code,
+			column_code,
+			table_type,
+		)
+		VALUES
+		(
+			#{resultId},
+			#{sqlDesignId},
+			#{functionCode},
+			#{tableId},
+			#{columnId},
+			#{itemSeqNo},
+			#{enabledFlag},
+			#{tableName},
+			#{columnName},
+			#{dataType},
+			(SELECT tbl_design_code FROM table_design WHERE tbl_design_id = #{tableId}),
+			(SELECT column_code FROM table_design_details WHERE column_id = #{columnId}),
+			#{tableType}
+		)
+	</insert>
+	
+	<insert id="registerAll">
+		INSERT INTO
+			sql_design_results
+		(
+			sql_design_id,
+			function_code,
+			tbl_design_id,
+			column_id,
+			item_seq_no,
+			enabled_flg,
+			tbl_design_name,
+			column_name, 
+			data_type,
+			tbl_design_code,
+			column_code,
+			table_type
+		)
+		VALUES
+		<foreach collection="sqlDesignResults" item="item" separator=",">
+		(
+			#{item.sqlDesignId},
+			#{item.functionCode},
+			#{item.tableId},
+			#{item.columnId},
+			#{item.itemSeqNo},
+			#{item.enabledFlag},
+			#{item.tableName},
+			#{item.columnName}, 
+			#{item.dataType},
+			(SELECT tbl_design_code FROM table_design WHERE tbl_design_id = #{item.tableId}),
+			(SELECT column_code FROM table_design_details WHERE column_id = #{item.columnId}),
+			#{item.tableType}
+		)
+		</foreach>
+	</insert>
+
+	<update id="modify" parameterType="SqlDesignResult">
+		UPDATE sql_design_results
+		SET sql_design_id = #{sqlDesignId},
+			function_code = #{functionCode},
+			tbl_design_id = #{tableId},
+			column_id = #{columnId},
+			item_seq_no = #{itemSeqNo},
+			enabled_flg = #{enabledFlag},
+			tbl_design_name = #{tableName},
+			column_name = #{columnName},
+			tbl_design_code = COALESCE((SELECT tbl_design_code FROM table_design WHERE tbl_design_id = #{tableId}),tbl_design_code),
+			column_code = COALESCE((SELECT column_code FROM table_design_details WHERE column_id = #{columnId}),column_code),
+			table_type = #{tableType}
+		WHERE result_id = #{resultId}
+	</update>
+	
+	<update id="updateNameAffect">
+		<foreach collection="tableDesigns" item="tableDesign" separator=";">
+			UPDATE
+				sql_design_results
+			SET
+				tbl_design_name = #{tableDesign.tableName}
+			WHERE 
+				tbl_design_id = #{tableDesign.tableDesignId};
+			
+			<foreach collection="tableDesign.listTableDesignDetails" item="details" separator=";">
+				UPDATE
+					sql_design_results
+				SET
+					column_name = #{details.name}
+				WHERE 
+					column_id = #{details.columnId}
+			</foreach>
+		</foreach>
+	</update>
+	
+	<update id="modifyAll">
+		<foreach collection="sqlDesignResults" item="item" separator=";">
+			UPDATE sql_design_results
+			SET sql_design_id = #{item.sqlDesignId},
+				function_code = #{item.functionCode},
+				tbl_design_id = #{item.tableId},
+				column_id = #{item.columnId},
+				item_seq_no = #{item.itemSeqNo},
+				enabled_flg = #{item.enabledFlag},
+				tbl_design_name = #{item.tableName},
+				column_name = #{item.columnName}, 
+				data_type = #{item.dataType} ,
+				tbl_design_code = COALESCE((SELECT tbl_design_code FROM table_design WHERE tbl_design_id = #{item.tableId}),tbl_design_code),
+				column_code = COALESCE((SELECT column_code FROM table_design_details WHERE column_id = #{item.columnId}),column_code),
+				table_type = #{item.tableType}
+			WHERE result_id = #{item.resultId}
+		</foreach>
+	</update>
+	
+	<delete id="delete" parameterType="SqlDesignResult">
+		DELETE FROM sql_design_results
+		WHERE result_id = #{resultId}
+	</delete>
+	
+	<delete id="deleteByExceptionalGroup">
+		DELETE FROM 
+			sql_design_results
+        <where>
+        	sql_design_id = #{sqlDesignId}
+         	<if test="exceptionGroup !=null and exceptionGroup.size() &gt; 0">
+        		AND result_id NOT IN
+	        	<foreach collection="exceptionGroup" separator="," open="(" close=")" item="id">
+	        		#{id}
+	        	</foreach>
+        	</if>
+        	<if test="exceptionGroup ==null or exceptionGroup.size() &lt;= 0">
+        		AND TRUE
+        	</if>
+        
+        </where>
+	</delete>
+	
+	<delete id="deleteBySqlDesignId">
+		DELETE FROM 
+			sql_design_results
+        WHERE
+        	sql_design_id = #{sqlDesignId}
+	</delete>
+</mapper>

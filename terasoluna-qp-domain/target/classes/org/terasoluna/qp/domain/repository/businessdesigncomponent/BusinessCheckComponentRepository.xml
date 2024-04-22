@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.businessdesigncomponent.BusinessCheckComponentRepository">
+
+    <resultMap id="businessCheckComponentResultMap" type="BusinessCheckComponent">
+        <id property="businessCheckComponentId" column="business_check_component_id" />
+        <result property="label" column="label" />
+        <result property="remark" column="remark" />
+        <result property="sequenceLogicId" column="sequence_logic_id" />
+    </resultMap>
+	<resultMap id="businessCheckDetailResultMap" type="BusinessCheckDetail">
+        <id property="businessCheckDetailId" column="business_check_detail_id" />
+        <result property="businessCheckType" column="business_check_type" />
+        <result property="formulaDefinitionId" column="formula_definition_id" />
+        <result property="formulaDefinitionContent" column="formula_definition_content" />
+        <result property="messageCode" column="message_code" />
+         <result property="messageCodeAutocomplete" column="message_string" />
+        <result property="abortFlg" column="abort_flg" />
+        <result property="businessCheckComponentId" column="business_check_component_id" />
+        <result property="itemSequenceNo" column="item_sequence_no" />
+    </resultMap>
+    <resultMap id="businessDetailContentResultMap" type="BusinessDetailContent">
+        <id property="businessDetailContentId" column="business_detail_content_id" />
+        <result property="tblDesignId" column="tbl_design_id" />
+        <result property="tblDesignIdAutocomplete" column="tbl_design_name" />
+        <result property="columnId" column="column_id" />
+        <result property="columnIdAutocomplete" column="column_name" />
+        <result property="parameterScope" column="parameter_scope" />
+        <result property="parameterId" column="parameter_id" />
+        <result property="businessCheckDetailId" column="business_check_detail_id" />
+        <result property="dataType" column="data_type" />
+        <result property="operatorCode" column="operator_code" />
+        <result property="tableCode" column="tbl_design_code" />
+    </resultMap>
+    <resultMap id="businessCheckDetailWithContentResultMap" type="BusinessCheckDetail">
+        <id property="businessCheckDetailId" column="business_check_detail_id" />
+        <result property="businessCheckType" column="business_check_type" />
+        <result property="formulaDefinitionId" column="formula_definition_id" />
+        <result property="formulaDefinitionContent" column="formula_definition_content" />
+        <result property="messageCode" column="message_code" />
+        <result property="messageCodeAutocomplete" column="message_string" />
+        <result property="abortFlg" column="abort_flg" />
+        <result property="businessCheckComponentId" column="business_check_component_id" />
+        <result property="itemSequenceNo" column="item_sequence_no" />
+        <collection property="businessDetailContents" ofType="BusinessDetailContent" column="business_check_detail_id" >
+        	<id property="businessDetailContentId" column="business_detail_content_id" />
+        	<result property="tblDesignId" column="tbl_design_id" />
+	        <result property="tblDesignIdAutocomplete" column="tbl_design_name" />
+	        <result property="tableCode" column="tbl_design_code" />
+	        <result property="columnId" column="column_id" />
+	        <result property="columnIdAutocomplete" column="column_name" />
+	        <result property="columnCode" column="column_code" />
+	        <result property="parameterScope" column="parameter_scope" />
+	        <result property="parameterId" column="parameter_id" />
+	        <result property="businessCheckDetailId" column="business_check_detail_id" />
+	        <result property="dataType" column="data_type" />
+        <result property="operatorCode" column="operator_code" />
+        </collection>
+         <collection property="messageParameters" ofType="MessageParameter" column="message_parameter_id" >
+        	<id property="messageParameterId" column="message_parameter_id" />
+	        <result property="targetType" column="target_type" />
+	        <result property="targetId" column="target_id" />
+	        <result property="parameterCode" column="parameter_code" />
+	        <result property="parameterCodeAutocomplete" column="message_string" />
+	        <result property="parameterValue" column="parameter_value" />
+	        <result property="parameterType" column="parameter_type" />
+	        <result property="messageLevel" column="message_level" />
+	        <result property="itemSequenceNo" column="item_sequence_no" />
+	        <result property="businessLogicId" column="business_logic_id" />
+	        <result property="parameterScope" column="parameter_scope" />
+        </collection>
+    </resultMap>
+    <!-- business check component -->
+     <select id="getSequencesBusinessCheckComponent" resultType="Long">
+    	select SETVAL('business_check_component_seq'::regclass, NEXTVAL('business_check_component_seq'::regclass) + #{size})
+    </select>
+    
+    <select id="getSequencesBusinessCheckDetail" resultType="Long">
+    	select SETVAL('business_check_detail_seq'::regclass, NEXTVAL('business_check_detail_seq'::regclass) + #{size})
+    </select>
+    
+    <select id="getSequencesBusinessDetailContent" resultType="Long">
+    	select SETVAL('business_detail_content_seq'::regclass, NEXTVAL('business_detail_content_seq'::regclass) + #{size})
+    </select>
+    
+    <insert id="registerBusinessCheckComponent" >
+    	<if test="businessCheckComponentItems != null and  businessCheckComponentItems.size() > 0 ">
+			INSERT INTO business_check_component
+			(
+            	business_check_component_id, 
+            	label, 
+            	remark, 
+            	sequence_logic_id
+            )
+    		VALUES 
+    		<foreach item="item" collection="businessCheckComponentItems" separator=",">
+			(
+				#{item.businessCheckComponentId},
+				#{item.label},
+				#{item.remark},
+            	#{item.sequenceLogicId}
+            )
+			</foreach>;
+		</if>
+    </insert>
+    <select id="findBusinessCheckComponentByBusinessLogic" resultMap="businessCheckComponentResultMap">
+		SELECT 
+			a.business_check_component_id, 
+			a.label, 
+			a.remark, 
+			a.sequence_logic_id
+  		FROM business_check_component a
+		WHERE EXISTS
+    		( 
+    		SELECT b.sequence_logic_id
+     		FROM sequence_logic b
+     		WHERE b.business_logic_id = #{businessLogicId}
+       			AND component_type = 4
+       			AND b.sequence_logic_id = a.sequence_logic_id
+       		)
+    </select>
+    
+    <select id="findBusinessCheckComponentByModuleId" resultMap="businessCheckComponentResultMap">
+		SELECT 
+			a.business_check_component_id, 
+			a.label, 
+			a.remark, 
+			a.sequence_logic_id
+  		FROM business_check_component a
+		WHERE EXISTS
+    		( 
+    		SELECT b.sequence_logic_id
+     		FROM sequence_logic b
+     		INNER JOIN business_logic c ON b.business_logic_id = c.business_logic_id 
+     		WHERE c.module_id = #{moduleId}
+       			AND component_type = 4
+       			AND b.sequence_logic_id = a.sequence_logic_id
+       		)
+    </select>
+    
+     <select id="findBusinessCheckDetailByModuleId" resultMap="businessCheckDetailResultMap">
+		SELECT 
+			a.business_check_detail_id, 
+			a.business_check_type, 
+			a.formula_definition_id, 
+			a.formula_definition_content, 
+       		a.message_code, 
+       		a.abort_flg, 
+       		a.business_check_component_id, 
+       		a.item_sequence_no
+  		FROM business_check_detail a
+		lEFT JOIN 
+		business_check_component b
+		  on (b.business_check_component_id = a.business_check_component_id )
+		WHERE 
+		EXISTS
+		    (SELECT c.sequence_logic_id
+		     FROM sequence_logic c
+		     INNER JOIN business_logic d ON c.business_logic_id = d.business_logic_id 
+		     WHERE c.sequence_logic_id = b.sequence_logic_id
+		     		AND d.module_id = #{moduleId}
+		     		AND c.component_type = 4)
+		ORDER BY a.item_sequence_no
+    </select>
+    
+    <select id="findBusinessDetailContentByModuleId" resultMap="businessDetailContentResultMap">
+		SELECT 
+			a.business_detail_content_id, 
+			a.tbl_design_id, 
+			e.tbl_design_name,
+			e.tbl_design_code, 
+			a.column_id, 
+       		f.column_name, 
+       		f.column_code, 
+       		a.parameter_scope, 
+       		a.parameter_id, 
+       		a.business_check_detail_id,
+       		a.data_type,
+       		a.operator_code
+  		FROM business_detail_content a
+  		lEFT JOIN business_check_detail b
+  			 on (b.business_check_detail_id = a.business_check_detail_id )
+		lEFT JOIN business_check_component c
+		  on (c.business_check_component_id = b.business_check_component_id )
+		LEFT JOIN table_design e
+		  on (e.tbl_design_id = a.tbl_design_id)
+		LEFT JOIN table_design_details f
+		  on (f.column_id = a.column_id)
+		WHERE 
+			EXISTS
+		    (SELECT g.sequence_logic_id
+		     FROM sequence_logic g
+		     INNER JOIN business_logic h ON g.business_logic_id = h.business_logic_id 
+		     WHERE g.sequence_logic_id = c.sequence_logic_id
+		     		AND h.module_id = #{moduleId}
+		     		AND g.component_type = 4)
+		ORDER BY a.business_detail_content_id
+    </select>
+    
+    <insert id="registerBusinessCheckDetails" >
+    	<if test="businessCheckDetailItems != null and  businessCheckDetailItems.size() > 0 ">
+			INSERT INTO business_check_detail
+			(
+            	business_check_detail_id, 
+            	business_check_type, 
+            	formula_definition_id, 
+            	formula_definition_content, 
+            	message_code, 
+            	abort_flg, 
+            	business_check_component_id, 
+            	item_sequence_no
+            )
+    		VALUES 
+    		<foreach item="item" collection="businessCheckDetailItems" separator=",">
+			(
+				#{item.businessCheckDetailId},
+				#{item.businessCheckType},
+				#{item.formulaDefinitionId},
+				#{item.formulaDefinitionContent},
+				#{item.messageCode},
+            	#{item.abortFlg},
+            	#{item.businessCheckComponentId},
+            	#{item.itemSequenceNo}
+            )
+			</foreach>;
+		</if>
+    </insert>
+    
+    <select id="findBusinessCheckDetailsByBusinessLogic" resultMap="businessCheckDetailResultMap">
+		SELECT 
+			a.business_check_detail_id, 
+			a.business_check_type, 
+			a.formula_definition_id, 
+			a.formula_definition_content, 
+       		a.message_code, 
+       		a.abort_flg, 
+       		a.business_check_component_id, 
+       		a.item_sequence_no,
+       		d.message_string
+  		FROM business_check_detail a
+		lEFT JOIN business_check_component b
+		  on (b.business_check_component_id = a.business_check_component_id )
+		LEFT JOIN message_design d
+		 on (d.message_code = a. message_code and d.language_id = #{languageId} and d.project_id = #{projectId})
+		WHERE EXISTS
+		    (SELECT c.sequence_logic_id
+		     FROM sequence_logic c
+		     WHERE c.business_logic_id =  #{businessLogicId}
+		       AND component_type = 4
+		       AND c.sequence_logic_id = b.sequence_logic_id)
+		ORDER BY a.item_sequence_no
+    </select>
+    
+    <insert id="registerBusinessDetailContents" >
+    	<if test="businessDetailContentItems != null and  businessDetailContentItems.size() > 0 ">
+    		<foreach item="item" collection="businessDetailContentItems" separator=";">
+				INSERT INTO business_detail_content
+				(
+					business_detail_content_id,
+	            	tbl_design_id, 
+	            	tbl_name, 
+	            	column_id, 
+	            	column_name, 
+	            	parameter_scope, 
+	            	parameter_id, 
+	            	business_check_detail_id,
+	            	data_type,
+	            	operator_code
+	            )
+	    		VALUES
+				(
+					#{item.businessDetailContentId},
+					#{item.tblDesignId},
+					#{item.tblDesignIdAutocomplete},
+					#{item.columnId},
+					#{item.columnIdAutocomplete},
+	            	#{item.parameterScope},
+	            	CAST(#{item.parameterId} AS numeric(16,0)), 
+	            	#{item.businessCheckDetailId},
+	            	#{item.dataType},
+	            	#{item.operatorCode}
+	            );
+	            <if test="item.lstParameterIndex != null and  item.lstParameterIndex.size() > 0 ">
+	            	INSERT INTO bd_parameter_index
+	            	(
+	            		table_type, 
+	            		table_id, 
+	            		parameter_id, 
+	            		parameter_index_type, 
+	            		parameter_index_id,
+	            		business_logic_id
+	            	)
+	    			VALUES
+	    			<foreach item="itemIndex" collection="item.lstParameterIndex" separator=",">
+		    			(
+		    				#{itemIndex.tableType}, 
+		    				#{item.businessDetailContentId},
+		    				CAST(#{itemIndex.parameterId} AS numeric(16,0)),
+		    				#{itemIndex.parameterIndexType}, 
+		            		CAST(#{itemIndex.parameterIndexId} AS numeric(16,0)),
+		            		#{itemIndex.businessLogicId}
+		            	)
+	    			</foreach>;
+		    	</if>
+			</foreach>;
+		</if>
+    </insert>
+    
+    <select id="findBusinessDetailContentsByBusinessLogic" resultMap="businessDetailContentResultMap">
+		SELECT 
+			a.business_detail_content_id, 
+			a.tbl_design_id, 
+			e.tbl_design_name, 
+			a.column_id, 
+       		f.column_name, 
+       		a.parameter_scope, 
+       		a.parameter_id, 
+       		a.business_check_detail_id,
+       		a.data_type,
+       		a.operator_code,
+       		e.tbl_design_code
+  		FROM business_detail_content a
+  		lEFT JOIN business_check_detail b
+  			 on (b.business_check_detail_id = a.business_check_detail_id )
+		lEFT JOIN business_check_component c
+		  on (c.business_check_component_id = b.business_check_component_id )
+		LEFT JOIN table_design e
+		  on (e.tbl_design_id = a.tbl_design_id)
+		LEFT JOIN table_design_details f
+		  on (f.column_id = a.column_id)
+		WHERE EXISTS
+		    (SELECT d.sequence_logic_id
+		     FROM sequence_logic d
+		     WHERE d.business_logic_id = #{businessLogicId}
+		       AND d.component_type = 4
+		       AND d.sequence_logic_id = c.sequence_logic_id)
+		ORDER BY a.business_detail_content_id
+    </select>
+    
+        <!-- Start adding HungHX -->
+    <delete id="deleteAffectBusinessCheckCompById">
+		DELETE 
+        FROM business_detail_content 
+        WHERE tbl_design_id = #{tableDesignId} 
+    </delete>
+    
+    <delete id="deleteAffectBusinessCheckComp">
+		<if test="lstTableDetail != null and  lstTableDetail.size() > 0 ">
+			<foreach item="item" collection="lstTableDetail" separator=";">
+				DELETE 
+		        FROM business_detail_content 
+		        WHERE tbl_design_id = #{item.tableDesignId} 
+		        AND column_id = #{item.columnId}
+			</foreach>
+		</if>
+    </delete>
+
+    <update id="autoUpdateAffectBusinessCheckComp">
+    	<if test="lstTableDetail != null and  lstTableDetail.size() > 0 ">
+    		<foreach item="item" collection="lstTableDetail" separator=";">
+		    	UPDATE business_detail_content
+		   		SET 
+		   			tbl_name= #{item.tableDesignName}, 
+		   			column_name= #{item.name} 
+				WHERE 
+					tbl_design_id = #{item.tableDesignId}
+					AND column_id = #{item.columnId}
+			</foreach>
+    	</if>
+    </update>
+    <!-- End adding HungHX -->
+    
+    
+    <!-- generate source code of commmon blogic -->
+    <select id="findBusinessCheckComponentByModuleCommon" resultMap="businessCheckComponentResultMap">
+        SELECT 
+            a.business_check_component_id, 
+            a.label, 
+            a.remark, 
+            a.sequence_logic_id
+        FROM business_check_component a
+        WHERE EXISTS
+            ( 
+            SELECT b.sequence_logic_id
+            FROM sequence_logic b
+            INNER JOIN business_logic c ON b.business_logic_id = c.business_logic_id 
+            WHERE c.project_id = #{projectId} AND c.module_id is null and c.blogic_type = 1   
+                AND component_type = 4
+                AND b.sequence_logic_id = a.sequence_logic_id
+            )
+    </select>
+    
+     <select id="findBusinessCheckDetailByModuleCommon" resultMap="businessCheckDetailResultMap">
+        SELECT 
+            a.business_check_detail_id, 
+            a.business_check_type, 
+            a.formula_definition_id, 
+            a.formula_definition_content, 
+            a.message_code, 
+            a.abort_flg, 
+            a.business_check_component_id, 
+            a.item_sequence_no
+        FROM business_check_detail a
+        lEFT JOIN 
+        business_check_component b
+          on (b.business_check_component_id = a.business_check_component_id )
+        WHERE 
+        EXISTS
+            (SELECT c.sequence_logic_id
+             FROM sequence_logic c
+             INNER JOIN business_logic d ON c.business_logic_id = d.business_logic_id 
+             WHERE c.sequence_logic_id = b.sequence_logic_id
+                    AND d.project_id = #{projectId} AND d.module_id is null and d.blogic_type = 1   
+                    AND c.component_type = 4)
+        ORDER BY a.item_sequence_no
+    </select>
+    
+    <select id="findBusinessDetailContentByModuleCommon" resultMap="businessDetailContentResultMap">
+        SELECT 
+            a.business_detail_content_id, 
+            a.tbl_design_id, 
+            e.tbl_design_name,
+            e.tbl_design_code, 
+            a.column_id, 
+            f.column_name, 
+            f.column_code, 
+            a.parameter_scope, 
+            a.parameter_id, 
+            a.business_check_detail_id,
+            a.data_type,
+            a.operator_code
+        FROM business_detail_content a
+        lEFT JOIN business_check_detail b
+             on (b.business_check_detail_id = a.business_check_detail_id )
+        lEFT JOIN business_check_component c
+          on (c.business_check_component_id = b.business_check_component_id )
+        LEFT JOIN table_design e
+          on (e.tbl_design_id = a.tbl_design_id)
+        LEFT JOIN table_design_details f
+          on (f.column_id = a.column_id)
+        WHERE 
+            EXISTS
+            (SELECT g.sequence_logic_id
+             FROM sequence_logic g
+             INNER JOIN business_logic h ON g.business_logic_id = h.business_logic_id 
+             WHERE g.sequence_logic_id = c.sequence_logic_id
+                    AND h.project_id = #{projectId} AND h.module_id is null and h.blogic_type = 1   
+                    AND g.component_type = 4)
+        ORDER BY a.business_detail_content_id
+    </select>
+</mapper>

@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="org.terasoluna.qp.domain.repository.accountruledefinition.AccountRuleDefinitionRepository">
+	<resultMap id="accountRuleDefinitionResultMap" type="AccountRuleDefinition">
+        <id property="accountRuleDefinitionId" column="account_rule_definition_id" />
+        <result property="accountRuleDefinitionCode" column="account_rule_definition_code" />
+        <result property="accountRuleDefinitionName" column="account_rule_definition_name" />
+        <result property="rangeOfStringMinimum" column="range_of_string_minimum" />
+        <result property="rangeOfStringMaximum" column="range_of_string_maximum" />
+        <result property="charactersTypeUpper" column="characters_type_upper" />
+        <result property="charactersTypeLower" column="characters_type_lower" />
+        <result property="charactersTypeNumeric" column="characters_type_numeric" />
+        <result property="generationsCount" column="generations_count" />
+        <result property="lifeTime" column="life_time" />
+        <result property="loginContinuousFailureCount" column="login_continuous_failure_count" />
+        <result property="accountLockTime" column="account_lock_time" />
+        <result property="initialPassword" column="initial_password" />
+        <result property="initialPasswordForceChange" column="initial_password_force_change" />
+        <result property="createdBy" column="created_by" />
+        <result property="createdDate" column="created_date" />
+        <result property="updatedBy" column="updated_by" />
+        <result property="updatedDate" column="updated_date" />
+    </resultMap>
+    
+    <sql id="findPageByCriteriaWhere">
+		<where>
+			<if test="criteria.accountRuleDefinitionCode != null and criteria.accountRuleDefinitionCode != ''">
+				<bind name="criteria.accountRuleDefinitionCode" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.accountRuleDefinitionCode)" />
+				<![CDATA[
+					AND account_rule_definition_code ILIKE #{criteria.accountRuleDefinitionCode} ESCAPE '~'
+				]]>
+			</if>
+			<if test="criteria.accountRuleDefinitionName != null and criteria.accountRuleDefinitionName != ''">
+				<bind name="criteria.accountRuleDefinitionName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.accountRuleDefinitionName)" />
+				<![CDATA[
+					AND account_rule_definition_name ILIKE #{criteria.accountRuleDefinitionName} ESCAPE '~'
+				]]>
+			</if>
+		</where>
+	</sql>
+    
+	<select id="findPageByCriteria"
+		parameterType="org.terasoluna.qp.domain.repository.accountruledefinition.AccountRuleDefinitionSearchCriteria"
+		resultMap="accountRuleDefinitionResultMap">
+		SELECT
+            account_rule_definition_id,
+            account_rule_definition_code,
+            account_rule_definition_name
+        FROM
+            account_rule_definition
+		<include refid="findPageByCriteriaWhere" />
+		<if test="pageable.sort != null">
+			ORDER BY
+		 	<foreach collection="pageable.sort" item="accountruledefinition" separator=",">
+		 		${accountruledefinition.property} ${accountruledefinition.direction} 
+		 	</foreach>
+		</if>
+		<if test="pageable.sort == null">
+			ORDER BY
+				updated_date DESC
+		</if>
+		<![CDATA[		   	
+			LIMIT
+		    	#{pageable.pageSize}
+		    OFFSET
+		        #{pageable.offset}
+	     ]]>
+	</select>
+	
+	<select id="countByCriteria"
+		resultType="_long">
+		<![CDATA[
+	     	SELECT 
+	     		COUNT(*) 
+	     	FROM 
+	     		account_rule_definition
+	     	]]>
+		<include refid="findPageByCriteriaWhere" />
+	</select>
+	
+	<insert id="register" parameterType="AccountRuleDefinition">
+        <selectKey keyProperty="accountRuleDefinitionId" resultType="long" order="BEFORE">
+            SELECT nextval('account_rule_definition_seq') AS accountRuleDefinitionId
+        </selectKey>
+        INSERT INTO
+            account_rule_definition
+        (
+            account_rule_definition_id,
+            account_rule_definition_code,
+            account_rule_definition_name,
+            range_of_string_minimum,
+            range_of_string_maximum,
+            characters_type_upper,
+            characters_type_lower,
+            characters_type_numeric,
+            generations_count,
+            life_time,
+            login_continuous_failure_count,
+            account_lock_time,
+            initial_password,
+            initial_password_force_change,
+            created_by,
+            updated_by
+        )
+        VALUES
+        (
+            #{accountRuleDefinitionId},
+            #{accountRuleDefinitionCode},
+            #{accountRuleDefinitionName},
+            #{rangeOfStringMinimum},
+            #{rangeOfStringMaximum},
+            #{charactersTypeUpper},
+            #{charactersTypeLower},
+            #{charactersTypeNumeric},
+            #{generationsCount},
+            #{lifeTime},
+            #{loginContinuousFailureCount},
+            #{accountLockTime},
+            #{initialPassword},
+            #{initialPasswordForceChange},
+            #{createdBy},
+            #{updatedBy}
+        )
+    </insert>
+    
+    <select id="getAccountRuleDefinitionByAccountRuleDefinitionId"
+    	parameterType="long"
+		resultMap="accountRuleDefinitionResultMap">
+		<![CDATA[
+	     	SELECT 
+	     		*
+	     	FROM 
+	     		account_rule_definition
+	     	WHERE
+	     		account_rule_definition_id = #{accountRuleDefinitionId}
+	     	]]>
+	</select>
+	
+	<select id="getAccountRuleDefinitionByAccountRuleDefinitionName"
+    	parameterType="String"
+		resultMap="accountRuleDefinitionResultMap">
+		<![CDATA[
+	     	SELECT 
+	     		*
+	     	FROM 
+	     		account_rule_definition
+	     	WHERE
+	     		account_rule_definition_name = #{accountRuleDefinitionName}
+	     	]]>
+	</select>
+	
+	<update id="modify" parameterType="AccountRuleDefinition">
+        UPDATE 
+        	account_rule_definition
+        SET 
+            account_rule_definition_code = #{accountRuleDefinitionCode},
+            account_rule_definition_name = #{accountRuleDefinitionName},
+            range_of_string_minimum = #{rangeOfStringMinimum},
+            range_of_string_maximum = #{rangeOfStringMaximum},
+            characters_type_upper = #{charactersTypeUpper},
+            characters_type_lower = #{charactersTypeLower},
+            characters_type_numeric = #{charactersTypeNumeric},
+            generations_count = #{generationsCount},
+            life_time = #{lifeTime},
+            login_continuous_failure_count = #{loginContinuousFailureCount},
+            account_lock_time = #{accountLockTime},
+            initial_password = #{initialPassword},
+            initial_password_force_change = #{initialPasswordForceChange},
+            updated_by = #{updatedBy},
+            updated_date = current_timestamp
+        WHERE  
+        	account_rule_definition_id = #{accountRuleDefinitionId} AND updated_date = #{updatedDate}
+    </update>
+    
+    <delete id="delete" parameterType="AccountRuleDefinition">
+        DELETE FROM
+        	account_rule_definition
+        WHERE
+        	account_rule_definition_id = #{accountRuleDefinitionId} AND updated_date = #{updatedDate}
+    </delete>
+    
+    <select id="getAccountRuleDefinitionByAccountId" parameterType="Long" resultMap="accountRuleDefinitionResultMap">
+		SELECT
+            t2.*
+        FROM
+            account t1 INNER JOIN account_rule_definition t2 ON t1.account_rule_definition_id = t2.account_rule_definition_id
+		WHERE
+			t1.account_id = #{accountId}
+	</select>
+	
+	<select id="getAccountRuleDefinitionWhenAuthentication"
+    	parameterType="long"
+		resultMap="accountRuleDefinitionResultMap">
+		<![CDATA[
+	     	SELECT 
+	     		*
+	     	FROM 
+	     		account_rule_definition
+	     	WHERE
+	     		account_rule_definition_id = #{accountRuleDefinitionId}
+	     	]]>
+	</select>
+	
+	<select id="getAppliedUserAccount"
+    	parameterType="long"
+		resultType="String">
+		<![CDATA[
+	     	SELECT 
+	     		t2.username
+	     	FROM 
+	     		account_rule_definition t1 INNER JOIN account t2 ON t1.account_rule_definition_id = t2.account_rule_definition_id
+	     	WHERE
+	     		t1.account_rule_definition_id = #{accountRuleDefinitionId}
+	     	]]>
+	</select>
+	
+	<select id="countNameCodeByByAccountId" parameterType="AccountRuleDefinition" resultType="Long">
+    	<bind name="accName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toLikeCondition(accountRuleDefinitionName)" />
+		<bind name="accCode" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toLikeCondition(accountRuleDefinitionCode)" />
+		SELECT
+			SUM(rowVal) AS totalCount
+		FROM (
+			(SELECT
+				1 AS rowVal
+			FROM
+				account_rule_definition c 
+				<where>
+						account_rule_definition_name iLIKE #{accName} ESCAPE '~'
+						<if test="accountRuleDefinitionId != null">AND account_rule_definition_id != #{accountRuleDefinitionId}</if>
+				</where>
+				LIMIT 1
+			)
+			UNION
+			(SELECT
+				2 AS rowVal
+			FROM
+			account_rule_definition c
+			<where>
+					account_rule_definition_code iLIKE #{accCode} ESCAPE '~'
+					<if test="accountRuleDefinitionId != null">AND account_rule_definition_id != #{accountRuleDefinitionId}</if>
+			</where>
+			LIMIT 1
+			)
+		) AS foo
+    </select>
+</mapper>

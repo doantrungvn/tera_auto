@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.commonobjectdefinition.CommonObjectDefinitionRepository">
+	<resultMap id="resultMap" type="CommonObjectDefinition">
+		<result property="commonObjectDefinitionId" column="common_object_definition_id" />
+		<result property="commonObjectDefinitionCode" column="common_object_definition_code" />
+		<result property="commonObjectDefinitionName" column="common_object_definition_name" />
+		<result property="moduleId" column="module_id" />
+		<result property="moduleIdAutocomplete" column="module_name" />
+		<result property="module.moduleCode" column="module_code" />
+		<result property="remark" column="remark" />
+		<result property="createdBy" column="created_by" />
+		<result property="createdDate" column="created_date" />
+		<result property="updatedBy" column="updated_by" />
+		<result property="updatedDate" column="updated_date" />
+        <result property="author" column="username" />
+	</resultMap>
+
+	<resultMap id="autocompleteResultMap" type="Autocomplete">
+		<result property="optionValue" column="optionValue" />
+		<result property="optionLabel" column="optionLabel" />
+		<result property="output01" column="output01" />
+	</resultMap>
+
+	<sql id="findPageBySearchCriteriaWhere">
+		<where>
+			<if test="criteria.commonObjectDefinitionName != null and criteria.commonObjectDefinitionName != ''">
+				<bind name="commonObjectDefinitionName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.commonObjectDefinitionName)" />
+					<![CDATA[
+						common_object_definition_name iLIKE #{commonObjectDefinitionName}  ESCAPE '~'
+					]]>
+			</if>
+			<if test="criteria.commonObjectDefinitionCode != null and criteria.commonObjectDefinitionCode != ''">
+				<bind name="commonObjectDefinitionCode" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.commonObjectDefinitionCode)" />
+					<![CDATA[
+						AND common_object_definition_code iLIKE #{commonObjectDefinitionCode}  ESCAPE '~'
+					]]>
+			</if>
+			<if test="criteria.moduleId != null and criteria.moduleId != ''">
+				AND a.module_id = #{criteria.moduleId}
+			</if>
+			<if test="criteria.projectId != null and criteria.projectId != ''">
+				AND a.project_id = #{criteria.projectId}
+			</if>
+		</where>
+	</sql>
+
+	<!-- Finds all common object definition by search condition -->
+	<select id="findPageBySearchCriteria" resultMap="resultMap">
+		<![CDATA[
+		SELECT
+			a.common_object_definition_id,
+			a.common_object_definition_code,
+			a.common_object_definition_name,
+			b.module_name
+		FROM 
+			common_object_definition a
+		LEFT JOIN 
+			module b ON (a.module_id = b.module_id)
+		]]>
+		<include refid="findPageBySearchCriteriaWhere" />
+		<if test="pageable.sort != null">
+			ORDER BY
+			<foreach collection="pageable.sort" item="order" separator=",">
+				${order.property} ${order.direction}
+			</foreach>
+		</if>
+		<if test="pageable.sort == null">
+			ORDER BY a.updated_date DESC
+		</if>
+        <![CDATA[
+	         LIMIT
+	             #{pageable.pageSize}
+	         OFFSET
+	             #{pageable.offset}
+        ]]>
+	</select>
+
+	<select id="getSequencesCommonObjectAttribute" resultType="Long">
+		select
+		SETVAL('common_object_attribute_seq'::regclass,NEXTVAL('common_object_attribute_seq'::regclass)
+		+ #{size})
+	</select>
+
+	<!-- Count common object definition by search condition -->
+	<select id="countBySearchCriteria" resultType="_long">
+        <![CDATA[
+            SELECT 
+                COUNT(*) 
+            FROM 
+                common_object_definition a
+        ]]>
+		<include refid="findPageBySearchCriteriaWhere" />
+	</select>
+
+	<!-- Finds common object definition by id -->
+	<select id="findCommonObjectDefinition" resultMap="resultMap">
+		<![CDATA[
+		SELECT
+			a.common_object_definition_id,
+			a.common_object_definition_code,
+			a.common_object_definition_name,
+			a.updated_date,
+			a.module_id,
+			b.module_name,
+			a.remark
+		FROM 
+			common_object_definition a
+		LEFT JOIN module b ON (a.module_id = b.module_id)
+		WHERE
+			a.common_object_definition_id = #{commonObjectDefinitionId}
+		]]>
+	</select>
+
+	<!-- register -->
+	<insert id="registerCommonObjectDefinition" parameterType="CommonObjectDefinition" useGeneratedKeys="true" keyProperty="CommonObjectDefinition.commonObjectDefinitionId" keyColumn="common_object_definition_id">
+		<selectKey keyProperty="commonObjectDefinitionId" resultType="long" order="BEFORE">
+			SELECT
+			NEXTVAL('common_object_definition_seq'::regclass)
+		</selectKey>
+		INSERT INTO common_object_definition
+		(
+		common_object_definition_id,
+		common_object_definition_code,
+		common_object_definition_name,
+		module_id,
+		remark,
+		created_by,
+		created_date,
+		updated_by,
+		updated_date,
+		item_seq_no,
+		project_id
+		)
+		VALUES
+		(
+		#{commonObjectDefinitionId},
+		#{commonObjectDefinitionCode},
+		#{commonObjectDefinitionName},
+		#{moduleId},
+		#{remark},
+		#{createdBy},
+		#{createdDate},
+		#{updatedBy},
+		#{updatedDate},
+		#{itemSeqNo},
+		#{projectId}
+		)
+	</insert>
+
+	<delete id="deleteCommonObjectDefinition" parameterType="long">
+	<![CDATA[
+		DELETE FROM
+			common_object_definition
+		WHERE
+			common_object_definition_id = #{commonObjectDefinitionId}
+	]]>
+	</delete>
+
+	<select id="getAutocompleteCommonOjectByProject" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+		common_object_definition_id AS optionValue,
+		common_object_definition_name AS optionLabel,
+		common_object_definition_code AS output01
+		FROM
+		common_object_definition
+		<where>
+			<if test="searchKey != null and searchKey != ''">
+				AND common_object_definition_name iLIKE '%' ||
+				#{searchKey} || '%'
+			</if>
+			<if test="arg01 != null and arg01 != ''">
+				AND project_id = CAST(#{arg01} AS NUMERIC)
+			</if>
+		</where>
+		ORDER BY common_object_definition_id ASC
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+		<if test="arg02 == null or arg02 == ''">
+			LIMIT 20
+		</if>
+	</select>
+
+	<select id="getAutocompleteExternalOjectByProject" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+		ex.external_object_definition_id AS optionValue,
+		ex.external_object_definition_name AS optionLabel,
+		ex.external_object_definition_code AS output01
+		FROM
+		external_object_definition ex
+		<where>
+			<if test="searchKey != null and searchKey != ''">
+				AND ex.external_object_definition_name iLIKE '%' ||
+				#{searchKey} || '%'
+			</if>
+			<if test="arg01 != null and arg01 != ''">
+				AND ex.project_id = CAST(#{arg01} AS NUMERIC)
+			</if>
+		</where>
+		ORDER BY ex.external_object_definition_id ASC
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+		<if test="arg02 == null or arg02 == ''">
+			LIMIT 20
+		</if>
+	</select>
+
+	<select id="countNameCodeByCommonObjectDefinitionId" parameterType="CommonObjectDefinition" resultType="Long">
+		<bind name="cmnObjectDefinitionName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toLikeCondition(commonObjectDefinitionName)" />
+		<bind name="cmnObjectDefinitionCode" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toLikeCondition(commonObjectDefinitionCode)" />
+		SELECT
+		SUM(rowVal) AS totalCount
+		FROM (
+		(SELECT
+		1 AS rowVal
+		FROM
+		common_object_definition c
+		<where>
+			project_id = #{projectId}
+			<if test="commonObjectDefinitionId != null">
+				AND common_object_definition_id != #{commonObjectDefinitionId}
+			</if>
+			<if test="commonObjectDefinitionName != null and commonObjectDefinitionName != ''">
+				AND common_object_definition_name iLIKE #{cmnObjectDefinitionName} ESCAPE '~'
+			</if>
+			<if test="commonObjectDefinitionName == null and commonObjectDefinitionName == ''">
+				AND FALSE
+			</if>
+		</where>
+		LIMIT 1
+		)
+		UNION
+		(SELECT
+		2 AS rowVal
+		FROM
+		common_object_definition c
+		<where>
+			project_id = #{projectId}
+			<if test="commonObjectDefinitionId != null">AND common_object_definition_id !=
+				#{commonObjectDefinitionId}
+			</if>
+			<if test="commonObjectDefinitionCode != null and commonObjectDefinitionCode != ''">
+				AND common_object_definition_code iLIKE #{cmnObjectDefinitionCode} ESCAPE '~'
+			</if>
+			<if test="commonObjectDefinitionCode == null and commonObjectDefinitionCode == ''">
+				AND FALSE
+			</if>
+		</where>
+		LIMIT 1
+		)
+		) AS foo
+	</select>
+
+	<!-- modify codelist -->
+	<update id="modifyCommonObjectDefinition" parameterType="CommonObjectDefinition">
+	<![CDATA[	
+		UPDATE 
+			common_object_definition 
+		SET 
+			common_object_definition_name=#{commonObjectDefinitionName},
+			common_object_definition_code=#{commonObjectDefinitionCode},
+			remark=#{remark}, 
+			module_id = #{moduleId},
+			updated_by=#{updatedBy},
+			updated_date=#{systemTime},
+			item_seq_no=#{itemSeqNo}
+		WHERE 
+			common_object_definition_id= #{commonObjectDefinitionId} AND updated_date = #{updatedDate}
+	]]>
+	</update>
+
+	<!-- DungNN Finds all common object definition in project and module -->
+	<select id="findAllOfProject" resultMap="resultMap">
+		<![CDATA[
+		SELECT
+			cod.common_object_definition_id,
+			cod.common_object_definition_code,
+			COALESCE (md.message_string, cod.common_object_definition_name) AS common_object_definition_name,
+			cod.module_id,
+			b.module_name,
+			cod.remark,
+			cod.updated_date
+		FROM 
+			common_object_definition cod LEFT JOIN message_design md 
+		ON (cod.common_object_definition_name = md.message_code AND md.language_id = #{criteria.languageId} and md.project_id = #{criteria.projectId})
+		LEFT JOIN 
+			module b ON (cod.module_id = b.module_id)
+		WHERE
+			cod.project_id = #{criteria.projectId}
+		]]>
+
+		<if test="criteria.moduleId != null and criteria.moduleId != ''">
+			AND (cod.module_id IS NULL OR cod.module_id =
+			#{criteria.moduleId})
+		</if>
+	</select>
+
+	<!-- Modify by HungHX follow ticket 577, 583, 587 -->
+	<select id="getAutocompleteGetCommonObject" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+		a.common_object_definition_id AS optionValue,
+		a.common_object_definition_name AS optionLabel,
+		a.common_object_definition_code AS output01,
+		a.module_id AS output02
+		FROM
+		common_object_definition a
+		<where>
+			<if test="searchKey != null and searchKey != ''">
+				AND a.common_object_definition_name iLIKE '%' ||
+				#{searchKey} || '%'
+			</if>
+			<if test="arg01 != null and arg01 != ''">
+				<![CDATA[
+					AND a.project_id = CAST(#{arg01} AS numeric(16,0))
+				]]>
+			</if>
+			<if test="arg01 == null or arg01 == ''">
+				FALSE
+			</if>
+			<if test="arg03 != null and arg03 != ''">
+				AND a.common_object_definition_id != CAST(#{arg03} AS numeric(16,0))
+			</if>
+			
+			<if test="arg04 != null and arg04 != ''">
+				AND (a.module_id is NULL OR a.module_id = CAST(#{arg04} AS numeric(16,0)))
+			</if>
+			<if test="arg04 == null or arg04 == ''">
+				AND a.module_id is NULL
+			</if>
+		</where>
+		ORDER BY common_object_definition_id ASC
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+		<if test="arg02 == null or arg02 == ''">
+			LIMIT 20
+		</if>
+	</select>
+
+	<select id="getAutocompleteGetExternalObject" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+		a.external_object_definition_id AS optionValue,
+		a.external_object_definition_name AS optionLabel,
+		a.external_object_definition_code AS output01,
+		a.module_id AS output02
+		FROM
+		external_object_definition a
+		<where>
+			<if test="searchKey != null and searchKey != ''">
+				AND a.external_object_definition_name iLIKE '%' ||
+				#{searchKey} || '%'
+			</if>
+			<if test="arg01 != null and arg01 != ''">
+				<![CDATA[
+					AND a.project_id = CAST(#{arg01} AS numeric(16,0))
+				]]>
+			</if>
+			<if test="arg01 == null or arg01 == ''">
+				FALSE
+			</if>
+			<if test="arg04 != null and arg04 != ''">
+				AND (a.module_id is NULL OR a.module_id = CAST(#{arg04} AS numeric(16,0)))
+			</if>
+			<if test="arg04 == null or arg04 == ''">
+				AND a.module_id is NULL
+			</if>
+		</where>
+		ORDER BY external_object_definition_id ASC
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+		<if test="arg02 == null or arg02 == ''">
+			LIMIT 20
+		</if>
+	</select>
+	<!-- End modify -->
+	
+	<!-- VinhHV Finds all common object definition in project and module type -->
+	<select id="findAllByModuleType" resultMap="resultMap">
+		<![CDATA[
+		SELECT
+			cod.common_object_definition_id,
+			cod.common_object_definition_code,
+			COALESCE (md.message_string, cod.common_object_definition_name) AS common_object_definition_name,
+			cod.module_id,
+			b.module_name,
+			b.module_code,
+			cod.remark,
+			cod.updated_date,
+            acc.username
+		FROM 
+			common_object_definition cod 
+			LEFT JOIN message_design md ON (cod.common_object_definition_name = md.message_code AND md.language_id = #{languageId} and md.project_id = #{projectId})
+			LEFT JOIN module b ON (cod.module_id = b.module_id)
+            LEFT JOIN account acc ON (acc.account_id = cod.created_by)
+		WHERE
+			cod.project_id = #{projectId}
+		]]>
+
+		<if test="moduleType != null">
+			AND (b.module_type = #{moduleType} OR b.module_type IS NULL)
+		</if>
+	</select>
+	
+	<select id="checkCommonObjectDefinitionExistById" resultType="int">
+        SELECT COUNT(*)
+        FROM common_object_definition a
+        WHERE a.common_object_definition_id = #{commonObjectDefinitionId}
+	</select>
+	
+	<select id="findCommonObjectByUsingExternalObject" resultMap="resultMap">
+		<![CDATA[
+		SELECT
+			a.common_object_definition_id,
+			a.common_object_definition_code,
+			a.common_object_definition_name,
+			a.module_id,
+			a.project_id
+		FROM 
+			common_object_definition a
+		WHERE EXISTS
+			(
+				SELECT common_object_definition_id
+				FROM common_object_attribute b
+				WHERE b.data_type = 17 and b. object_definition_id = #{externalObjectDefinitionId}
+					and b.common_object_definition_id = a.common_object_definition_id
+			)
+		]]>
+	</select>
+	
+	<update id="modifyCommonObNameForAffectedFunction" parameterType="ExternalObjectDefinition">
+	<![CDATA[
+		UPDATE 
+			common_object_attribute
+		SET common_object_attribute_name = #{commonObjectDefinitionName}
+		WHERE data_type = 16 and object_definition_id = #{commonObjectDefinitionId};
+		
+		UPDATE 
+			function_method_input
+		SET method_input_name = #{commonObjectDefinitionName}
+		WHERE data_type = 16 and object_type = 0 and object_id = #{commonObjectDefinitionId};
+		
+		UPDATE 
+			function_method_output
+		SET method_output_name = #{commonObjectDefinitionName}
+		WHERE data_type = 16 and object_type = 0 and object_id = #{commonObjectDefinitionId};
+		
+		UPDATE 
+			decision_input_bean
+		SET decision_input_bean_name = #{commonObjectDefinitionName}
+		WHERE data_type = 16 and object_type = 0 and object_id = #{commonObjectDefinitionId};
+		
+		UPDATE 
+			decision_output_bean
+		SET decision_output_bean_name = #{commonObjectDefinitionName}
+		WHERE data_type = 16 and object_type = 0 and object_id = #{commonObjectDefinitionId};
+		
+		UPDATE 
+			input_bean
+		SET input_bean_name = #{commonObjectDefinitionName}
+		WHERE data_type = 16 and object_type = 0 and object_id = #{commonObjectDefinitionId};
+		
+		UPDATE 
+			output_bean
+		SET output_bean_name = #{commonObjectDefinitionName}
+		WHERE data_type = 16 and object_type = 0 and object_id = #{commonObjectDefinitionId};
+		
+		UPDATE 
+			object_definition
+		SET object_definition_name = #{commonObjectDefinitionName}
+		WHERE data_type = 16 and object_type = 0 and object_id = #{commonObjectDefinitionId};
+		
+		UPDATE 
+			sql_design_input
+		SET sql_design_input_name = #{commonObjectDefinitionName}
+		WHERE data_type = 16 and design_type = 0 and object_type = 0 and column_id = 0 and table_id = #{commonObjectDefinitionId};
+		
+		UPDATE 
+			sql_design_output
+		SET sql_design_output_name = #{commonObjectDefinitionName}
+		WHERE data_type = 16 and design_type = 0 and object_type = 0 and column_id = 0 and table_id = #{commonObjectDefinitionId};
+		
+	]]>
+	
+	</update>
+	
+	<select id="findCommonObjectByUsingCommonObject" resultMap="resultMap">
+		<![CDATA[
+		SELECT
+			a.common_object_definition_id,
+			a.common_object_definition_code,
+			a.common_object_definition_name,
+			a.module_id,
+			a.project_id
+		FROM 
+			common_object_definition a
+		WHERE EXISTS
+			(
+				SELECT common_object_definition_id
+				FROM common_object_attribute b
+				WHERE b.data_type = 16 and b. object_definition_id = #{commonObjectDefinitionId}
+					and b.common_object_definition_id = a.common_object_definition_id
+			)
+		]]>
+	</select>
+	
+</mapper>

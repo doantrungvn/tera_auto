@@ -1,0 +1,952 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.terasoluna.qp.domain.repository.messagedesign.MessageDesignRepository">
+	<resultMap id="messageDesignResultMap" type="org.terasoluna.qp.domain.model.MessageDesign">
+		<id property="messageDesignId" column="message_design_id" />
+		<result property="messageString" column="message_string" />
+		<result property="messageCode" column="message_code" />
+		<result property="messageLevel" column="message_level" />
+		<result property="messageType" column="message_type" />
+		<result property="languageName" column="language_name"/>
+		<result property="languageCode" column="language_code"/>
+		<result property="countryCode" column="country_code"/>
+		<result property="remark" column="remark" />
+		<result property="moduleId" column="module_id" />
+		<result property="moduleCode" column="module_code"/>
+		<result property="moduleName" column="module_name" />
+		<result property="screenId" column="screen_id" />
+		<result property="screenName" column="screen_name" />
+		<result property="businessLogicId" column="business_logic_id" />
+		<result property="businessLogicName" column="business_logic_name" />
+		<result property="fromLanguageId" column="from_language_id" />
+		<result property="fromLanguageCode" column="from_language_code" />
+		<result property="fromMessageDesignId" column="from_message_design_id" />
+		<result property="fromMessageString" column="from_message_string"/>
+		<result property="toLanguageId" column="to_language_id" />
+		<result property="toLanguageCode" column="to_language_code" />
+		<result property="toMessageDesignId" column="to_message_design_id" />
+		<result property="toMessageString" column="to_message_string"/>
+		<result property="projectId" column="project_id"/>
+		<result property="createdBy" column="created_by" />
+		<result property="createdDate" column="created_date" />
+		<result property="updatedBy" column="updated_by" />
+		<result property="updatedDate" column="updated_date" />
+		<result property="fromUpdatedDate" column="from_updated_date" />
+		<result property="toUpdatedDate" column="to_updated_date" />
+		<result property="generatedStatus" column="generated_status" />
+		<result property="fromGeneratedStatus" column="from_generated_status" />
+		<result property="toGeneratedStatus" column="to_generated_status" />
+		<result property="classFlg" column="class_flg" />
+		<result property="moduleStatus" column="module_status" />
+	</resultMap>
+	
+	<resultMap id="businessDesignResultMap" type="BusinessDesign">
+		<id property="businessLogicId" column="business_logic_id" />
+		<result property="businessLogicCode" column="business_logic_code" />
+		<result property="businessLogicName" column="business_logic_name" />
+		<result property="returnType" column="return_type" />
+		<result property="screenId" column="screen_id" />
+		<result property="moduleId" column="module_id" />
+		<result property="moduleStatus" column="module_status" />
+		<result property="moduleIdAutocomplete" column="module_name" />
+		<result property="projectId" column="project_id" />
+		<result property="customizeFlg" column="customize_flg" />
+		<result property="uploadFileId" column="upload_file_id" />
+		<result property="createdBy" column="created_by" />
+		<result property="createdDate" column="created_date" />
+		<result property="updatedBy" column="updated_by" />
+		<result property="updatedDate" column="updated_date" />
+		<result property="fileName" column="file_name" />
+		<result property="file" column="content" />
+		<result property="designStatus" column="design_status" />
+		<result property="packageName" column="package_name" />
+		<result property="screenIdAutocomplete" column="screen_name" />
+		<result property="screenCode" column="screen_name_code" />
+		<result property="messageString" column="message_string" />
+		<result property="patternType" column="pattern_type" />
+		<result property="confirmFlg" column="confirm_flg" />
+		<result property="completeFlg" column="complete_flg" />
+		<result property="remark" column="remark" />
+		<result property="functionDesignId" column="function_id" />
+		<result property="functionDesignIdAutocomplete" column="function_name" />
+		<result property="functionDesignType" column="function_type" />
+		<result property="screenFormId" column="screen_form_id" />
+	</resultMap>
+
+	<resultMap id="menuDesignResultMap" type="org.terasoluna.qp.domain.model.MenuDesign">
+		<id property="menuId" column="menu_id" />
+		<result property="headerMenuName" column="header_menu_name" />
+		<result property="screenId" column="screen_id" />
+		<result property="screenIdAutocomplete" column="screen_name" />
+		<result property="menuType" column="menu_type" />
+		<result property="projectId" column="project_id" />
+		<result property="createdBy" column="created_by" />
+		<result property="createdDate" column="created_date" />
+		<result property="updatedBy" column="updated_by" />
+		<result property="updatedDate" column="updated_date" />
+	</resultMap>
+	
+	<select id="findPageByCriteria" parameterType="org.terasoluna.qp.domain.repository.messagedesign.MessageDesignCriteria" resultMap="messageDesignResultMap">
+		SELECT
+			DISTINCT
+			A.message_design_id AS from_message_design_id,
+			A.message_code AS message_code,
+			A.message_string AS from_message_string,
+			A.language_id AS from_language_id,
+			(SELECT language_code FROM language_design WHERE language_id = A.language_id) AS from_language_code,
+			A.updated_date AS from_updated_date,
+			A.module_id,
+			A.generated_status AS from_generated_status,
+			A.message_level,
+			A.message_type,
+			(CASE 
+				WHEN A.module_id IS NULL THEN 1
+				ELSE m.status END
+			) AS module_status,
+			(CASE 
+				WHEN A.message_level = 1 and A.module_id is null THEN 'QP Common'
+				WHEN A.message_level != 0 THEN m.module_name ELSE '' END
+			) AS module_name
+			<if test="criteria.toLanguageId != null">
+				,B.message_design_id AS to_message_design_id,
+				B.message_string AS to_message_string,
+				B.language_id AS to_language_id,
+				(SELECT language_code FROM language_design WHERE language_id = B.language_id) AS to_language_code,
+				B.updated_date AS to_updated_date,
+				B.generated_status AS to_generated_status
+			</if>
+		FROM 
+			message_design AS A LEFT JOIN module m ON m.module_id = A.module_id
+		<if test="criteria.toLanguageId != null">
+			JOIN
+				message_design AS B
+			ON
+				A.message_code = B.message_code
+			AND
+				A.message_design_id != B.message_design_id AND B.project_id = #{criteria.projectId}
+		</if>
+		<include refid="findMessageDesignCriteria" />
+		<if test="pageable != null">
+			<if test="pageable.sort != null">
+				ORDER BY
+				<foreach collection="pageable.sort" item="order" separator=",">
+					${order.property} ${order.direction}
+				</foreach>
+			</if>
+			<if test="pageable.sort == null">
+				ORDER BY
+					A.updated_date DESC
+			</if>
+			<![CDATA[
+				 LIMIT
+					 #{pageable.pageSize}
+				 OFFSET
+					 #{pageable.offset}
+			]]>
+		</if>
+		<if test="pageable == null">
+			ORDER BY A.message_code
+		</if>
+	</select>
+	<sql id="findMessageDesignCriteria">
+		<where>
+			A.project_id = #{criteria.projectId}
+			
+			<if test="criteria.messageString != null and criteria.messageString != ''">
+				<bind name="messageString" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.messageString)" />
+				<if test="criteria.toLanguageId != null">
+					<![CDATA[
+						AND (A.message_string ILIKE #{messageString} ESCAPE '~' OR B.message_string ILIKE #{messageString} ESCAPE '~')
+					]]>
+				</if>
+				<if test="criteria.toLanguageId == null">
+					<![CDATA[
+						AND A.message_string ILIKE #{messageString} ESCAPE '~'
+					]]>
+				</if>
+			</if>
+			<if test="criteria.messageCode != null and criteria.messageCode != ''">
+				<bind name="messageCode" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.messageCode)" />
+				<![CDATA[
+					AND A.message_code ILIKE #{messageCode} ESCAPE '~'
+				]]>
+			</if>
+			<if test="criteria.messageTypes != null and criteria.messageTypes.length> 0">
+				<foreach item="messageType" index="index" collection="criteria.messageTypes" open=" AND (" separator="OR" close=")">
+					A.message_type = #{messageType}
+				</foreach>
+			</if>
+			 <if test="criteria.generatedStatus != null and criteria.generatedStatus.length> 0">
+				<foreach item="generatedStatus" index="index" collection="criteria.generatedStatus" open=" AND (" separator="OR" close=")">
+					A.generated_status = #{generatedStatus}
+				</foreach>
+			</if>
+			<if test="criteria.messageLevels != null and criteria.messageLevels.length> 0">
+				AND A.message_level IN
+				<foreach item="messageLevel" index="index" collection="criteria.messageLevels" open="(" separator="," close=")">
+					#{messageLevel}
+				</foreach>
+			</if>
+			<if test="criteria.fromLanguageId != null">
+				<![CDATA[
+					AND A.language_id = #{criteria.fromLanguageId}
+				]]>
+			</if>
+			<if test="criteria.toLanguageId != null">
+				<![CDATA[
+					AND B.language_id = #{criteria.toLanguageId}
+				]]>
+			</if>
+
+			<if test="criteria.moduleId != null">
+				<![CDATA[
+					AND A.module_id = #{criteria.moduleId} 
+				]]>
+
+				<if test="criteria.screenId != null">
+					<![CDATA[
+					AND A.message_code IN (
+						SELECT message_code FROM screen_design WHERE screen_id = #{criteria.screenId} 
+						UNION SELECT message_code FROM screen_area WHERE screen_id = #{criteria.screenId} 
+						UNION SELECT message_code FROM screen_item WHERE screen_id = #{criteria.screenId} 
+					)
+					]]>
+				</if>
+
+			</if>
+		</where>
+	</sql>
+	
+	<select id="countByCriteria" resultType="_long" parameterType="org.terasoluna.qp.domain.repository.messagedesign.MessageDesignCriteria">
+		SELECT
+			COUNT(DISTINCT(A.message_design_id))
+		FROM
+			message_design AS A
+		<if test="criteria.toLanguageId != null">
+			JOIN
+				message_design AS B
+			ON
+				A.message_code = B.message_code
+			AND
+				A.message_design_id != B.message_design_id AND B.project_id = #{criteria.projectId}
+		</if>
+		<include refid="findMessageDesignCriteria" />
+	</select>
+	
+	<select id="countReferenceByMessageDesignId" parameterType="MessageDesign" resultType="hashmap">
+		SELECT 
+			(SELECT COUNT(B.screen_id) FROM screen_design AS B WHERE B.message_code = A.message_code) AS screen_ref_count,
+			(SELECT COUNT(C.screen_area_id) FROM screen_area AS C WHERE C.message_code = A.message_code) AS screen_area_ref_count,
+			(SELECT COUNT(D.screen_item_id) FROM screen_item AS D WHERE D.message_code = A.message_code) AS screen_item_ref_count,
+			(SELECT COUNT(E.business_logic_id) FROM message_parameter AS E WHERE E.parameter_code = A.message_code) AS business_check_setting
+		FROM 
+			message_design AS A
+		<where>
+			<if test="messageDesignId != null">
+				message_design_id = #{messageDesignId}
+			</if>
+			<if test="messageCode != null and messageCode != ''">
+				AND message_code = #{messageCode}
+			</if>
+			<if test="(messageCode == null or messageCode == '') and messageDesignId == null">
+				FALSE
+			</if>
+		</where>
+	</select>
+	<select id="findAllByCode" parameterType="MessageDesign" resultMap="messageDesignResultMap">
+		SELECT
+			A.message_design_id,
+			A.message_code,
+			A.message_string,
+			A.message_type,
+			A.message_level,
+			A.module_id,
+			B.module_name,
+			A.remark,
+			A.updated_by, 
+			A.updated_date,
+			C.language_id,
+			C.language_code,
+			C.language_name,
+			C.country_code,
+			A.project_id
+		FROM
+			message_design AS A LEFT JOIN module AS B ON A.module_id = B.module_id
+		LEFT JOIN language_design AS C ON A.language_id = C.language_id
+		<where>
+			<if test="messageCode != null and messageCode != ''">
+				A.message_code = #{messageCode}
+			</if>
+				AND A.project_id = #{projectId}
+			<if test="(messageCode == null or messageCode == '')">
+				AND FALSE
+			</if>
+		</where>
+	</select>
+	
+	<select id="findById" parameterType="_long" resultMap="messageDesignResultMap">
+		SELECT
+			A.message_design_id,
+			A.message_code,
+			A.message_string,
+			A.message_type,
+			A.message_level,
+			A.project_id,
+			C.language_code,
+			C.language_id,
+			A.generated_status,
+			A.remark,
+			C.language_name,
+			C.country_code,
+			A.module_id,
+			B.module_name,
+			A.updated_by, 
+			A.updated_date,
+			A.class_flg
+		FROM
+			message_design AS A
+		LEFT JOIN
+			module AS B
+		ON
+			A.module_id = B.module_id
+		LEFT JOIN
+			language_design AS C
+		ON
+			A.language_id = C.language_id
+		<where>
+			<if test="messageDesignId != null">
+				message_design_id = #{messageDesignId}
+			</if>
+			<if test="messageDesignId == null">
+				FALSE
+			</if>
+		</where>
+	</select>
+	
+	<select id="findRelatedScreenDesignById" parameterType="MessageDesign" resultType="hashmap">
+		WITH tbl_screen_id AS (
+			SELECT screen_id FROM screen_design WHERE message_code = #{messageCode}
+			UNION ALL
+				SELECT screen_id FROM screen_area WHERE message_code = #{messageCode}
+			UNION ALL
+				SELECT screen_id FROM screen_item WHERE message_code = #{messageCode} 
+		)
+
+		SELECT
+			A.screen_id,
+			B.message_string AS screen_name,
+			A.message_code,
+			A.screen_code,
+			A.screen_pattern_type,
+			A.template_type
+			
+		FROM
+			screen_design AS A
+		INNER JOIN
+			message_design AS B ON (A.message_code = B.message_code AND B.language_id = #{languageId} AND B.project_id = #{projectId})
+		INNER JOIN 
+				module md ON A.module_id = md.module_id AND md.project_id = #{projectId}
+		WHERE
+			EXISTS (
+				SELECT 1 FROM tbl_screen_id t WHERE t.screen_id = A.screen_id
+			)
+	</select>
+
+	<!-- Counts message design information by moduleId -->
+	<select id="countByModuleId" parameterType="Module" resultType="_int">
+		SELECT
+		   COUNT(*) AS rowCount
+		FROM
+			message_design
+		<where>
+			<if test="module.moduleId != null">
+				module_id = #{module.moduleId}
+			</if>
+			<if test="module.moduleId == null">
+				FALSE
+			</if>
+		</where>
+	</select>
+	
+	<!-- Register a single message design information -->
+	<insert id="register" parameterType="MessageDesign" useGeneratedKeys="true" keyProperty="messageDesign.messageDesignId" keyColumn="messageDesignId">
+		<!-- <selectKey keyProperty="messageDesignId" resultType="_long" order="BEFORE">
+			SELECT NEXTVAL('message_design_seq'::REGCLASS)
+		</selectKey> -->
+		INSERT INTO 
+			message_design
+			(
+				<!-- message_design_id,  -->
+				message_code,
+				message_string, 
+				message_level, 
+				message_type,
+				remark,
+				module_id, 
+				project_id,
+				language_id,
+				created_by, 
+				created_date, 
+				updated_by, 
+				updated_date,
+				generated_status
+			) VALUES (
+				<!-- #{messageDesignId}, -->
+				#{messageCode},
+				#{messageString},
+				#{messageLevel},
+				#{messageType},
+				#{remark},
+				#{moduleId},
+				#{projectId},
+				#{languageId},
+				#{createdBy},
+				#{createdDate},
+				#{updatedBy},
+				#{updatedDate},
+				#{generatedStatus}
+			)
+	</insert>
+	
+	<!-- Register multiple message design information -->
+	<insert id="registerMultiple">
+		INSERT INTO 
+			message_design
+			(
+				message_code,
+				message_string, 
+				message_level, 
+				message_type,
+				remark,
+				module_id, 
+				project_id,
+				language_id,
+				created_by, 
+				created_date, 
+				updated_by, 
+				updated_date,
+				generated_status,
+				class_flg
+			) VALUES 
+			<foreach item="item" collection="messageDesigns" separator=",">
+			(
+				#{item.messageCode},
+				#{item.messageString},
+				#{item.messageLevel},
+				#{item.messageType},
+				#{item.remark},
+				#{item.moduleId},
+				#{item.projectId},
+				#{item.languageId},
+				#{item.createdBy},
+				#{item.createdDate},
+				#{item.updatedBy},
+				#{item.updatedDate},
+				#{item.generatedStatus},
+				#{item.classFlg}
+			)
+			</foreach>;
+	</insert>
+	
+	<!-- Modify message design information -->
+	<update id="modify" parameterType="MessageDesign">
+		UPDATE 
+			message_design
+		SET 
+			message_string = #{messageString}, 
+			updated_by = #{updatedBy}, 
+			updated_date = #{sysDatetime},
+			generated_status = #{generatedStatus}
+		WHERE 
+			message_design_id = #{messageDesignId}
+		AND
+			(updated_date IS NULL OR updated_date = #{updatedDate})
+	</update>
+	
+	<update id="updateByTranslate" parameterType="map">
+		UPDATE 
+			message_design m
+		SET
+			(message_string, updated_by, updated_date, generated_status) = (t.messageString, t.updatedBy, t.sysDatetime:: timestamp, t.generatedStatus)
+		FROM
+		(
+		VALUES 
+			<foreach item="item" collection="messageDesigns" separator="," >
+				(#{item.messageString}, #{item.updatedBy}, #{item.updatedDate}, #{item.sysDatetime}, #{item.generatedStatus},  #{item.languageId}, #{item.messageCode}, #{item.projectId})
+			</foreach>
+		) as t(messageString, updatedBy, updatedDate,sysDatetime, generatedStatus, languageId, messageCode, projectId)
+		WHERE
+			m.language_id = t.languageId
+		AND 
+			m.message_code = t.messageCode
+		AND 
+			m.project_id = t.projectId
+	</update>
+
+	<!-- Modify message design information by language code -->
+	<update id="modifyMultipleMessage" >
+		<foreach collection="messageDesigns" item="messageDesign" separator=";">
+			UPDATE 
+				message_design
+			SET 
+				<![CDATA[message_string=#{messageDesign.messageString}]]>,
+				<![CDATA[remark=#{messageDesign.remark}]]>,
+				updated_date = #{messageDesign.sysDatetime},
+				updated_by = #{messageDesign.updatedBy},
+				message_type = #{messageDesign.messageType},
+				message_level = #{messageDesign.messageLevel},
+				generated_status = #{messageDesign.generatedStatus},
+				module_id = #{messageDesign.moduleId}
+			WHERE 
+				language_id=#{messageDesign.languageId}
+			AND
+				(updated_date IS NULL OR updated_date = #{messageDesign.updatedDate})
+			AND
+				message_design_id = #{messageDesign.messageDesignId}
+			AND 
+				project_id = #{messageDesign.projectId}
+		</foreach>
+	</update>
+	
+	<!-- Delete message design information by identify -->
+	<delete id="delete" parameterType="MessageDesign">
+		DELETE FROM 
+			message_design
+		<where>
+			<if test="messageCode != null and messageCode != ''">
+				message_code = #{messageCode}
+			</if>
+			<if test="moduleId != null">
+				AND module_id = #{moduleId}
+			</if>
+				AND project_id = #{projectId}
+			<if test="(messageCode == null or messageCode == '')">
+				FALSE
+			</if>
+		</where>
+	</delete>
+	<select id="findAllByLanguage" parameterType="org.terasoluna.qp.domain.model.Language" resultMap="messageDesignResultMap">
+		SELECT
+			message_design_id,
+			message_code,
+			message_string,
+			message_type,
+			message_level,
+			remark,
+			updated_by, 
+			updated_date
+		FROM
+			message_design
+		<where>
+			<if test="criteria.languageId != null">
+				language_id = #{criteria.languageId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- TungHT - 7/14/2015 find language design by languagedesign -->
+	<select id="findAllByLanguageDesign" parameterType="org.terasoluna.qp.domain.model.LanguageDesign" resultMap="messageDesignResultMap">
+		SELECT
+			message_design_id,
+			message_code,
+			message_string,
+			message_type,
+			message_level,
+			remark,
+			updated_by, 
+			updated_date
+		FROM
+			message_design
+		<where>
+			<if test="criteria.languageId != null">
+				language_id = #{criteria.languageId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- Modify message design information by message code and locale -->
+	<update id="modifyByMessageCode" parameterType="Map">
+		UPDATE 
+			message_design
+		SET 
+			message_string=#{messageString},
+			updated_by=#{updatedBy}, 
+			updated_date = #{updatedDate}
+		WHERE 
+			language_id = #{languageId}
+		AND 
+			message_code = #{messageCode}
+		AND 
+			project_id = #{projectId}
+	</update>
+	
+	<!-- DungNN  -->
+	<sql id="checkExistProject">
+		AND exists (
+			SELECT 1 FROM module m WHERE s.module_id = m.module_id AND m.project_id = <![CDATA[#{criteria.projectId}]]>
+		)
+	</sql>
+	<select id="findByLanguageCodeAndMessageCode" parameterType="map" resultMap="messageDesignResultMap">
+		with tbl_temp as (
+			SELECT message_code AS parent_message_code, message_code AS message_code FROM screen_design s WHERE s.message_code = ANY (VALUES 
+				<foreach item="item" index="index" collection="messageCodes" open="" separator="," close=")">
+					(<![CDATA[#{item} ]]>)
+				</foreach>
+
+				<include refid="checkExistProject"></include>
+				
+			UNION ALL
+
+			SELECT S.message_code AS parent_message_code, SA.message_code AS message_code FROM screen_design S INNER JOIN screen_area SA ON S.screen_id = SA.screen_id 
+			WHERE SA.message_code = ANY (VALUES 
+				<foreach item="item" index="index" collection="messageCodes" open="" separator="," close=")">
+					(<![CDATA[#{item} ]]>)
+				</foreach>
+				<include refid="checkExistProject"></include>
+			UNION ALL
+
+			SELECT S.message_code AS parent_message_code, SI.message_code AS message_code FROM screen_design S INNER JOIN screen_item SI ON S.screen_id = SI.screen_id 
+			WHERE SI.message_code = ANY (VALUES 
+				<foreach item="item" index="index" collection="messageCodes" open="" separator="," close=")">
+					(<![CDATA[#{item} ]]>)
+				</foreach>
+				<include refid="checkExistProject"></include>
+		)
+
+		SELECT
+			DISTINCT temp.message_code AS message_code,
+			(
+				SELECT
+					string_agg( distinct (md.message_string), '; ')
+				FROM 
+					message_design AS md  
+				WHERE 
+					md.language_id = <![CDATA[#{criteria.fromLanguageId}]]> 
+				AND
+					md.project_id = <![CDATA[#{criteria.projectId}]]>
+				AND
+					md.message_code = temp.parent_message_code
+			) AS screen_name
+		FROM
+			tbl_temp AS temp 
+	</select>
+	
+	<select id="messageDesignGetSequences" resultType="Long">
+		select SETVAL('message_design_seq'::regclass, NEXTVAL('message_design_seq'::regclass) + #{size})
+	</select>
+	
+	<!-- DungNN - 20150720 - modify -->
+	<select id="findToTranslate" parameterType="LanguageDesign" resultMap="messageDesignResultMap">
+		SELECT
+			message_design_id,
+			message_code,
+			message_string,
+			message_type,
+			message_level,
+			language_id,
+			remark,
+			updated_by, 
+			updated_date
+		FROM
+			message_design
+		<where>
+			project_id = #{projectId} AND message_string !~ '^[[:space:]]*$'
+			<!-- if translate all -->
+			<if test="languageDesign.translateMode != null and languageDesign.translateMode == 0">
+				<if test="languageDesign.languageId != null">
+					AND language_id = #{languageDesign.languageId}
+				</if>
+			</if>
+			<!-- if translate only  -->
+			<if test="languageDesign.translateMode != null and languageDesign.translateMode == 1">
+				AND generated_status = 0
+				<if test="languageDesign.toLanguageId != null">
+					AND language_id = #{languageDesign.toLanguageId}
+				</if>
+			</if>
+			<if test="languageDesign.languageId == null or languageDesign.toLanguageId == null">
+				false
+			</if>
+		</where>
+	</select>
+	
+	<!-- DungNN -->
+	<select id="getDefaultMessageFromQPSystem" resultMap="messageDesignResultMap">
+		SELECT
+			message_string,
+			message_code,
+			module_resource AS module_code
+		FROM
+			message 
+		WHERE
+			(language_code || '_' ||  country_code) = 'en_US' 
+		AND	
+			reuse_flg = ANY (VALUES  ('1'), ('2'))
+	</select>
+
+	<!-- QuangVD  -->
+	<select id="findByMessageCodeOfProject" resultMap="messageDesignResultMap">
+		SELECT 
+			a.message_string,
+			a.message_code,
+			a.message_level,
+			a.message_type
+		FROM message_design a
+		WHERE a.language_id =  #{languageId} and a.project_id = #{projectId}
+		and message_code IN
+			<foreach item="item" index="index" collection="messageCodes" open="(" separator="," close=")">
+				<![CDATA[#{item} ]]>
+			</foreach>
+	</select>
+
+	<select id="getMenuDesignInformation" resultMap="menuDesignResultMap">
+		SELECT
+			a.menu_id,
+			c.message_string as header_menu_name,
+			a.menu_type
+		FROM
+			menu_design a
+		INNER JOIN
+			message_design c ON c.message_code = a.header_menu_name AND c.language_id = #{languageId} AND c.project_id = #{projectId}
+		WHERE
+			a.project_id = #{projectId}
+		AND
+			c.message_code = #{messageCode}
+		LIMIT 1
+	</select>
+
+	<select id="getListOfBDesignAffected" resultMap="businessDesignResultMap" parameterType="MessageDesign">
+		WITH table_temp as (
+				SELECT 
+					a.sequence_logic_id
+				FROM 
+					feedback_component a
+				WHERE	a.message_code = #{messageCode}
+				
+				UNION ALL
+				SELECT 
+					a.sequence_logic_id
+				FROM 
+					business_check_component a
+				INNER JOIN
+					business_check_detail b on (b.business_check_component_id = a.business_check_component_id)
+				WHERE	b.message_code = #{messageCode}
+			)
+			
+			SELECT 
+				a.business_logic_id,
+				a.business_logic_name, 
+				a.business_logic_code,
+				a.return_type,
+				b.module_id,
+				b.module_name,
+				b.module_type
+			FROM
+				business_logic a
+			LEFT JOIN 
+				module b ON b.module_id = a.module_id
+			WHERE 
+				(
+				EXISTS (
+					SELECT 1
+					FROM 
+						table_temp t
+					LEFT JOIN sequence_logic t1
+						on t1.sequence_logic_id = t.sequence_logic_id
+					WHERE 
+						t1.business_logic_id = a.business_logic_id 
+				UNION ALL
+					SELECT 1
+					FROM 
+						message_parameter t
+					WHERE 
+						t.parameter_type = 0
+						AND t.parameter_code = #{messageCode}
+						AND t.business_logic_id = a.business_logic_id 
+					)
+				)
+
+				AND a.project_id = #{projectId}
+			ORDER BY a.business_logic_id
+	</select>
+	
+	<select id="getAllMessageDesignByProjectId" parameterType="_long" resultMap="messageDesignResultMap">
+		SELECT
+			A.message_design_id,
+			A.message_code,
+			A.message_string,
+			A.message_type,
+			A.message_level,
+			A.project_id,
+			C.language_code,
+			A.generated_status,
+			A.remark,
+			C.language_name,
+			C.country_code,
+			A.module_id,
+			B.module_name,
+			B.module_code,
+			A.updated_by, 
+			A.updated_date
+		FROM
+			message_design AS A
+		LEFT JOIN
+			module AS B ON A.module_id = B.module_id
+		INNER JOIN language_design AS C ON A.language_id = C.language_id
+		<where>
+			<if test="projectId != null">
+				A.project_id = #{projectId}
+			AND
+				EXISTS (select 1 FROM language_design l where project_id = #{projectId} AND a.language_id = l.language_id)
+			</if>
+			<if test="projectId == null">
+				FALSE
+			</if>
+		</where>
+		ORDER BY A.message_code, A.language_id
+	</select>
+
+	<select id="getMessageDesignByModuleId" parameterType="_long" resultMap="messageDesignResultMap">
+		SELECT
+			A.message_design_id,
+			A.message_code,
+			A.message_string,
+			A.message_type,
+			A.message_level,
+			A.project_id,
+			C.language_code,
+			A.generated_status,
+			A.remark,
+			C.language_name,
+			C.country_code,
+			A.module_id,
+			B.module_name,
+			B.module_code,
+			A.updated_by, 
+			A.updated_date
+		FROM
+			message_design AS A
+		LEFT JOIN
+			module AS B ON A.module_id = B.module_id
+		INNER JOIN language_design AS C ON A.language_id = C.language_id
+		<where>
+			A.module_id = #{moduleId} AND A.language_id = #{languageId}
+		</where>
+		ORDER BY A.message_code, A.language_id
+	</select>
+	
+	<select id="getMessageDesignModuleByModuleId" parameterType="_long" resultMap="messageDesignResultMap">
+		SELECT
+			A.message_design_id,
+			A.message_code,
+			A.message_string,
+			A.message_type,
+			A.message_level,
+			A.project_id,
+			C.language_code,
+			A.generated_status,
+			A.remark,
+			C.language_name,
+			C.country_code,
+			A.module_id,
+			B.module_name,
+			B.module_code,
+			A.updated_by, 
+			A.updated_date
+		FROM
+			message_design AS A
+		LEFT JOIN
+			module AS B ON A.module_id = B.module_id
+		INNER JOIN language_design AS C ON A.language_id = C.language_id
+		<where>
+			A.module_id = #{moduleId} AND A.language_id = #{languageId} AND a.message_level=1
+		</where>
+		ORDER BY A.message_code, A.language_id
+	</select>
+
+	<select id="checkMessageCodeExist" parameterType="map" resultType="Int">
+		SELECT
+			Count(*)
+		FROM
+			message_design
+		WHERE
+			message_code = #{messageCode} AND project_id = #{projectId}
+	</select>
+
+	<select id="checkMessageStringExist" resultType="_int">
+		SELECT 
+			count(*) AS total
+		FROM 
+			message_design a
+		WHERE
+			a.language_id = #{languageId} AND a.project_id = #{projectId} AND message_string=#{messageString}
+
+			<if test="moduleId != null">
+				AND (a.module_id IS NULL OR a.module_id =  #{moduleId})
+			</if>
+
+			<if test="moduleId == null">
+				AND (a.module_id IS NULL)
+			</if>
+			
+			<if test="messageDesignId != null">
+				AND message_design_id != #{messageDesignId}
+			</if>
+	</select>
+	
+	<select id="getMessageDesignByMessageCoe" resultMap="messageDesignResultMap">
+		SELECT * 
+		FROM 
+			message_design md
+		WHERE 
+			message_code IN 
+		<foreach collection="messageDesigns" item="item" open="(" close=")" separator=",">
+			#{item.messageCode}
+		</foreach>
+		AND 
+			md.project_id = #{projectId}
+		AND 
+			md.language_id = #{languageId} 
+		
+			
+	</select>
+	
+	<select id="getMessageDesignRegisted" parameterType="_long" resultMap="messageDesignResultMap">
+			SELECT 
+				a.message_design_id,
+				a.message_string,
+				a.message_code,
+				a.module_id as module_id,
+				a.project_id,
+				a.message_level,
+				a.language_id
+			FROM message_design  a 
+			WHERE a.message_level = 0 AND a.language_id = #{languageId}
+			<if test="projectId != null">
+				AND a.project_id = #{projectId}
+			</if>
+			<if test="projectId == null">
+				AND FALSE
+			</if>
+			UNION
+			SELECT 
+				b.message_design_id,
+				b.message_string,
+				b.message_code,
+				b.module_id as module_id,
+				b.project_id,
+				b.message_level,
+				b.language_id
+			FROM message_design  b 
+			WHERE b.message_level = 1 AND b.language_id = #{languageId}
+			<if test="moduleId != null">
+				AND b.module_id = #{moduleId}
+			</if>
+			<if test="moduleId == null">
+				AND FALSE
+			</if>
+		ORDER BY module_id DESC
+	</select>
+	
+</mapper>

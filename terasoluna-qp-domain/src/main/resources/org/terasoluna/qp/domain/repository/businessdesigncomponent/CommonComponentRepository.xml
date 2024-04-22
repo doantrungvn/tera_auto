@@ -1,0 +1,621 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.businessdesigncomponent.CommonComponentRepository">
+
+    <resultMap id="commonComponentResultMap" type="CommonComponent">
+        <id property="commonComponentId" column="common_component_id" />
+        <result property="label" column="label" />
+        <result property="businessLogicId" column="business_logic_id" />
+        <result property="businessLogicIdAutocomplete" column="business_logic_name" />
+        <result property="businessLogicCode" column="business_logic_code" />
+        <result property="businessLogicIdRefer" column="business_logic_id_refer" />
+        <result property="businessLogicCodeRefer" column="business_logic_code_refer" />
+        <result property="businessLogicNameRefer" column="business_logic_name_refer" />
+        <result property="remark" column="remark" />
+        <result property="sequenceLogicId" column="sequence_logic_id" />
+    </resultMap>
+    <resultMap id="autocompleteResultMap" type="Autocomplete">
+		<result property="optionValue" column="optionValue" />
+		<result property="optionLabel" column="optionLabel" />
+	</resultMap>
+	<resultMap id="commonInputValueResultMap" type="CommonInputValue">
+        <id property="commonInputValueId" column="common_input_value_id" />
+        <result property="commonComponentId" column="common_component_id" />
+        <result property="inputBeanId" column="input_bean_id" />
+        <result property="inputBeanCode" column="input_bean_code" />
+        <result property="inputBeanName" column="input_bean_name" />
+        <result property="messageStringAutocomplete" column="messageStringAutocomplete" />
+        <result property="dataType" column="data_type" />
+        <result property="arrayFlg" column="array_flg" />
+        <result property="parameterScope" column="parameter_scope" />
+        <result property="parameterId" column="parameter_id" />
+        <result property="inputBeanIdRefer" column="input_bean_id_refer" />
+        <result property="inputBeanCodeRefer" column="input_bean_code_refer" />
+        <result property="inputBeanNameRefer" column="input_bean_name_refer" />
+        <result property="dataTypeRefer" column="data_type_refer" />
+        <result property="arrayFlgRefer" column="array_flg_refer" />
+        <result property="businessLogicIdRefer" column="business_logic_id_refer" />
+        <result property="businessLogicId" column="business_logic_id" />
+        
+    </resultMap>
+    <resultMap id="commonOutputValueResultMap" type="CommonOutputValue">
+        <id property="commonOutputValueId" column="common_output_value_id" />
+        <result property="commonComponentId" column="common_component_id" />
+        <result property="outputBeanId" column="output_bean_id" />
+        <result property="outputBeanCode" column="output_bean_code" />
+        <result property="outputBeanName" column="output_bean_name" />
+        <result property="dataType" column="data_type" />
+        <result property="arrayFlg" column="array_flg" />
+        <result property="targetScope" column="target_scope" />
+        <result property="targetId" column="target_id" />
+        <result property="outputBeanIdRefer" column="output_bean_id_refer" />
+        <result property="outputBeanCodeRefer" column="output_bean_code_refer" />
+        <result property="outputBeanNameRefer" column="output_bean_name_refer" />
+        <result property="dataTypeRefer" column="data_type_refer" />
+        <result property="arrayFlgRefer" column="array_flg_refer" />
+        <result property="businessLogicIdRefer" column="business_logic_id_refer" />
+        <result property="businessLogicId" column="business_logic_id" />
+    </resultMap>
+    <!-- common component -->
+	<!--  Auto complete functions -->
+    <select id="getAutocompleteBlogicForCommonCom" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+    	SELECT 
+    		a.business_logic_id AS optionValue,
+       		a.business_logic_code AS output01,
+       		a.business_logic_name AS optionLabel
+		FROM business_logic a
+		WHERE 
+			a.blogic_type = 1
+<!-- 			and a.design_status = 2 -->
+			and a.project_id= CAST(#{arg01} AS NUMERIC)
+			
+  			<if test="searchKey != null and searchKey != ''">
+                <bind name="searchKey" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(searchKey)" />
+                <![CDATA[ AND a.business_logic_name iLIKE #{searchKey} ESCAPE '~' ]]>
+           </if>
+		ORDER BY a.business_logic_id DESC
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+		<if test="arg02 == null || arg02 == ''">
+			LIMIT 20
+		</if>
+		
+    </select>
+    
+     <select id="getSequencesCommonComponent" resultType="Long">
+    	select SETVAL('common_component_seq'::regclass, NEXTVAL('common_component_seq'::regclass) + #{size})
+    </select>
+    <select id="getSequencesCommonInputValue" resultType="Long">
+    	select SETVAL('common_input_value_seq'::regclass, NEXTVAL('common_input_value_seq'::regclass) + #{size})
+    </select>
+    <select id="getSequencesCommonOutputValue" resultType="Long">
+    	select SETVAL('common_output_value_seq'::regclass, NEXTVAL('common_output_value_seq'::regclass) + #{size})
+    </select>
+    
+    <insert id="registerCommonComponent" >
+		<foreach item="item" collection="commonComponentItems" separator=";">
+    		INSERT INTO common_component
+			(
+            	common_component_id, 
+            	label, 
+            	business_logic_id,
+            	business_logic_code, 
+            	business_logic_name,
+            	remark, 
+            	sequence_logic_id
+            )
+    		VALUES
+    		(
+				#{item.commonComponentId},
+				#{item.label}, 
+				#{item.businessLogicId},
+				#{item.businessLogicCode},
+				#{item.businessLogicIdAutocomplete},
+				#{item.remark},
+            	#{item.sequenceLogicId}
+            );
+            <if test="item.parameterInputBeans != null and  item.parameterInputBeans.size() > 0 ">
+            	<foreach item="itemInput" collection="item.parameterInputBeans" separator=";">
+	            	INSERT INTO common_input_value
+					(
+						common_input_value_id,
+		            	common_component_id, 
+		            	input_bean_id, 
+		            	input_bean_code, 
+		            	input_bean_name, 
+		            	data_type,
+		            	array_flg,
+		            	parameter_scope, 
+		            	parameter_id
+		            )
+		    		VALUES
+		            (
+		            	#{itemInput.commonInputValueId},
+						#{item.commonComponentId},
+						#{itemInput.inputBeanId}, 
+						#{itemInput.inputBeanCode}, 
+						#{itemInput.inputBeanName},
+		            	#{itemInput.dataType},
+		            	#{itemInput.arrayFlg},
+		            	#{itemInput.parameterScope},
+		            	CAST(#{itemInput.parameterId} AS numeric(16,0))
+		            );
+		            <if test="itemInput.lstParameterIndex != null and  itemInput.lstParameterIndex.size() > 0 ">
+		            	INSERT INTO bd_parameter_index
+		            	(
+		            		table_type, 
+		            		table_id, 
+		            		parameter_id, 
+		            		parameter_index_type, 
+		            		parameter_index_id,
+		            		business_logic_id
+		            	)
+		    			VALUES
+		    			<foreach item="itemIndex" collection="itemInput.lstParameterIndex" separator=",">
+			    			(
+			    				#{itemIndex.tableType}, 
+			    				#{itemInput.commonInputValueId},
+			    				CAST(#{itemIndex.parameterId} AS numeric(16,0)),
+			    				#{itemIndex.parameterIndexType}, 
+			            		CAST(#{itemIndex.parameterIndexId} AS numeric(16,0)),
+			            		#{itemIndex.businessLogicId}
+			            	)
+		    			</foreach>;
+		    		</if>
+	            </foreach>;
+            </if>
+            <if test="item.parameterOutputBeans != null and  item.parameterOutputBeans.size() > 0 ">
+	    		<foreach item="itemOutput" collection="item.parameterOutputBeans" separator=";">
+					INSERT INTO common_output_value
+					(
+						common_output_value_id,
+		            	common_component_id, 
+		            	output_bean_id, 
+		            	output_bean_code, 
+		            	output_bean_name, 
+		            	data_type, 
+		            	array_flg,
+		            	target_scope, 
+		            	target_id
+		            )
+		    		VALUES 
+		            (
+		            	#{itemOutput.commonOutputValueId},
+						#{item.commonComponentId},
+						#{itemOutput.outputBeanId}, 
+						#{itemOutput.outputBeanCode}, 
+						#{itemOutput.outputBeanName},
+		            	#{itemOutput.dataType},
+		            	#{itemOutput.arrayFlg},
+		            	#{itemOutput.targetScope},
+		            	CAST(#{itemOutput.targetId} AS numeric(16,0))
+		            );
+		            <if test="itemOutput.lstTargetIndex != null and  itemOutput.lstTargetIndex.size() > 0 ">
+		            	INSERT INTO bd_parameter_index
+		            	(
+		            		table_type, 
+		            		table_id, 
+		            		parameter_id, 
+		            		parameter_index_type, 
+		            		parameter_index_id,
+		            		business_logic_id
+		            	)
+		    			VALUES
+		    			<foreach item="itemIndex" collection="itemOutput.lstTargetIndex" separator=",">
+			    			(
+			    				#{itemIndex.tableType}, 
+			    				#{itemOutput.commonOutputValueId},
+			    				CAST(#{itemIndex.parameterId} AS numeric(16,0)),
+			    				#{itemIndex.parameterIndexType}, 
+			            		CAST(#{itemIndex.parameterIndexId} AS numeric(16,0)),
+			            		#{itemIndex.businessLogicId}
+			            	)
+		    			</foreach>;
+		    		</if>
+				</foreach>;
+			</if>
+    	</foreach>
+    </insert>
+    <select id="findCommonComponentByBusinessLogic" resultMap="commonComponentResultMap">
+		SELECT 
+			a.common_component_id, 
+			a.label, 
+			a.business_logic_id, 
+			a.remark, 
+			a.sequence_logic_id,
+			a.business_logic_code,
+			a.business_logic_name,
+			c.business_logic_id as business_logic_id_refer,
+			c.business_logic_code as business_logic_code_refer,
+			c.business_logic_name as business_logic_name_refer
+  		FROM common_component a
+  		LEFT JOIN business_logic c
+  			on (c.business_logic_id = a.business_logic_id)
+		WHERE EXISTS
+    		( 
+    		SELECT b.sequence_logic_id
+     		FROM sequence_logic b
+     		WHERE b.business_logic_id = #{businessLogicId}
+       			AND component_type = 7
+       			AND b.sequence_logic_id = a.sequence_logic_id
+       		)
+    </select>
+    
+    <select id="findCommonInputValueByBusinessLogic" resultMap="commonInputValueResultMap">
+		SELECT	A.*,
+				A1.*
+		FROM 
+		(	
+			SELECT 
+				a.common_input_value_id, 
+				a.common_component_id, 
+				a.input_bean_id, 
+				a.input_bean_code, 
+				a.input_bean_name, 
+				a.data_type, 
+				a.array_flg, 
+				a.parameter_scope, 
+				a.parameter_id,
+				b.business_logic_id,
+				a.input_bean_name AS messageStringAutocomplete
+	  		FROM common_input_value a
+			LEFT JOIN common_component b
+				on (b.common_component_id = a.common_component_id )
+			LEFT JOIN message_design md on (a.input_bean_name = md.message_code and md.language_id = #{languageId} and md.project_id = #{projectId})
+			WHERE EXISTS
+			    (
+					SELECT c.sequence_logic_id
+					FROM sequence_logic c
+					WHERE c.business_logic_id = #{businessLogicId}
+						AND component_type = 7
+						AND c.sequence_logic_id = b.sequence_logic_id
+				)
+			ORDER BY a.common_input_value_id
+		) as A
+		FULL OUTER JOIN 
+		(
+			SELECT 
+				a.input_bean_id as input_bean_id_refer,
+				a.input_bean_code as input_bean_code_refer,
+				a.input_bean_name as input_bean_name_refer,
+				a.data_type as data_type_refer,
+				a.array_flg as array_flg_refer,
+				a.business_logic_id as business_logic_id_refer,
+				CASE a.input_bean_type
+					WHEN 0 THEN md.message_string
+					ELSE a.input_bean_name
+				END AS messageStringAutocomplete
+			FROM input_bean a
+			LEFT JOIN message_design md on (a.input_bean_name = md.message_code and md.language_id = #{languageId} and md.project_id = #{projectId})
+			WHERE EXISTS
+			    (
+			    	SELECT b.business_logic_id
+					FROM common_component b
+					LEFT JOIN sequence_logic c
+						on (b.sequence_logic_id = c.sequence_logic_id)
+					WHERE c.business_logic_id = #{businessLogicId}
+						AND c.component_type = 7
+						AND b.business_logic_id = a.business_logic_id
+				)
+			ORDER BY a.item_sequence_no
+		) A1 
+		on (A1.input_bean_id_refer = A.input_bean_id)
+    </select>
+    
+    <select id="findCommonOutputValueByBusinessLogic" resultMap="commonOutputValueResultMap">
+		SELECT	A.*,
+				A1.*
+		FROM 
+		(	
+			SELECT 
+				a.common_output_value_id, 
+				a.common_component_id, 
+				a.output_bean_id, 
+				a.output_bean_code, 
+				a.output_bean_name, 
+				a.data_type, 
+				a.array_flg, 
+				a.target_scope, 
+				a.target_id,
+				b.business_logic_id
+	  		FROM common_output_value a
+			lEFT JOIN common_component b
+				on (b.common_component_id = a.common_component_id )
+			WHERE EXISTS
+			    (
+					SELECT c.sequence_logic_id
+					FROM sequence_logic c
+					WHERE c.business_logic_id = #{businessLogicId}
+						AND component_type = 7
+						AND c.sequence_logic_id = b.sequence_logic_id
+				)
+			ORDER BY a.common_output_value_id
+		) as A
+		FULL OUTER JOIN 
+		(
+			SELECT 
+				a.output_bean_id as output_bean_id_refer,
+				a.output_bean_code as output_bean_code_refer,
+				a.output_bean_name as output_bean_name_refer,
+				a.data_type as data_type_refer,
+				a.array_flg as array_flg_refer,
+				a.business_logic_id as business_logic_id_refer
+			FROM output_bean a
+			WHERE EXISTS
+			    (
+			    	SELECT b.business_logic_id
+					FROM common_component b
+					LEFT JOIN sequence_logic c
+						on (b.sequence_logic_id = c.sequence_logic_id)
+					WHERE c.business_logic_id = #{businessLogicId}
+						AND c.component_type = 7
+						AND b.business_logic_id = a.business_logic_id
+				)
+			ORDER BY a.item_sequence_no
+		) A1 
+		on (A1.output_bean_id_refer = A.output_bean_id)
+    </select>
+    
+    <delete id="deleteCommonInputById">
+    	DELETE 
+    	FROM common_input_value a
+    	WHERE a.input_bean_id =  #{inputBeanId}
+    	and EXISTS
+    	(
+    		SELECT b.common_component_id
+    		FROM common_component b
+			LEFT JOIN sequence_logic c
+				on c.sequence_logic_id = b.sequence_logic_id
+			WHERE c.business_logic_id = #{businessLogicId}
+    		and b.common_component_id = a.common_component_id
+    	)
+    </delete>
+    <delete id="deleteCommonOutputById">
+    	DELETE 
+    	FROM common_output_value a
+    	WHERE a.output_bean_id = #{outputBeanId}
+    	and EXISTS
+    	(
+    		SELECT b.common_component_id
+    		FROM common_component b
+			LEFT JOIN sequence_logic c
+				on c.sequence_logic_id = b.sequence_logic_id
+			WHERE c.business_logic_id = #{businessLogicId}
+    		and b.common_component_id = a.common_component_id
+    	)
+    </delete>
+    
+    <!-- Adding QuangVD -->
+    <select id="findAllCommonComponentByModuleId" resultMap="commonComponentResultMap">
+		SELECT 
+			a.common_component_id, 
+			a.label, 
+			a.business_logic_id, 
+			a.business_logic_name, 
+			a.business_logic_code, 
+			a.remark, 
+			a.sequence_logic_id,
+			b.business_logic_id AS business_logic_id_refer,
+			b.business_logic_code AS business_logic_code_refer,
+			b.business_logic_name AS business_logic_name_refer
+  		FROM common_component a
+  		LEFT JOIN sequence_logic c
+			ON a.sequence_logic_id = c.sequence_logic_id
+		LEFT JOIN business_logic b
+  			ON b.business_logic_id = c.business_logic_id
+		WHERE b.module_id = #{moduleId}
+    </select>
+    
+    <select id="findAllCommonInputValueByModuleId" resultMap="commonInputValueResultMap">
+		SELECT 
+			a.common_input_value_id, 
+			a.common_component_id, 
+			a.input_bean_id, 
+			a.input_bean_code, 
+			a.input_bean_name, 
+			a.data_type, 
+			a.array_flg, 
+			a.parameter_scope, 
+			a.parameter_id,  
+			d.business_logic_id,
+			d.module_id
+		FROM common_input_value a
+		LEFT JOIN common_component b
+			ON b.common_component_id = a.common_component_id
+		LEFT JOIN sequence_logic c
+			ON c.sequence_logic_id = b.sequence_logic_id
+		LEFT JOIN business_logic d
+			ON d.business_logic_id = c.business_logic_id
+		WHERE d.module_id = #{moduleId}
+    </select>
+    
+    <select id="findAllCommonOutputValueByModuleId" resultMap="commonOutputValueResultMap">
+    	SELECT 
+			a.common_output_value_id, 
+			a.common_component_id, 
+			a.output_bean_id, 
+			a.output_bean_code, 
+			a.output_bean_name, 
+			a.data_type, 
+			a.array_flg, 
+			a.target_scope, 
+			a.target_id,
+			d.business_logic_id,
+			d.module_id
+  		FROM common_output_value a
+		LEFT JOIN common_component b
+			ON b.common_component_id = a.common_component_id
+		LEFT JOIN sequence_logic c
+			ON c.sequence_logic_id = b.sequence_logic_id
+		LEFT JOIN business_logic d
+			ON d.business_logic_id = c.business_logic_id
+		WHERE d.module_id = #{moduleId}
+    </select>
+    
+    <!-- generate source code of commmon blogic -->
+    <select id="findAllCommonComponentByModuleCommon" resultMap="commonComponentResultMap">
+        SELECT 
+            a.common_component_id, 
+            a.label, 
+            a.business_logic_id, 
+            a.business_logic_name, 
+            a.business_logic_code, 
+            a.remark, 
+            a.sequence_logic_id,
+            b.business_logic_id AS business_logic_id_refer,
+            b.business_logic_code AS business_logic_code_refer,
+            b.business_logic_name AS business_logic_name_refer
+        FROM common_component a
+        LEFT JOIN sequence_logic c
+            ON a.sequence_logic_id = c.sequence_logic_id
+        LEFT JOIN business_logic b
+            ON b.business_logic_id = c.business_logic_id
+        WHERE b.project_id = #{projectId} AND b.module_id is null and b.blogic_type = 1   
+    </select>
+    <!-- generate source code of commmon blogic -->
+    <select id="findAllCommonInputValueByModuleCommon" resultMap="commonInputValueResultMap">
+        SELECT 
+            a.common_input_value_id, 
+            a.common_component_id, 
+            a.input_bean_id, 
+            a.input_bean_code, 
+            a.input_bean_name, 
+            a.data_type, 
+            a.array_flg, 
+            a.parameter_scope, 
+            a.parameter_id,  
+            d.business_logic_id,
+            d.module_id
+        FROM common_input_value a
+        LEFT JOIN common_component b
+            ON b.common_component_id = a.common_component_id
+        LEFT JOIN sequence_logic c
+            ON c.sequence_logic_id = b.sequence_logic_id
+        LEFT JOIN business_logic d
+            ON d.business_logic_id = c.business_logic_id
+        WHERE d.project_id = #{projectId} AND d.module_id is null and d.blogic_type = 1   
+    </select>
+    <!-- generate source code of commmon blogic -->
+    <select id="findAllCommonOutputValueByModuleCommon" resultMap="commonOutputValueResultMap">
+        SELECT 
+            a.common_output_value_id, 
+            a.common_component_id, 
+            a.output_bean_id, 
+            a.output_bean_code, 
+            a.output_bean_name, 
+            a.data_type, 
+            a.array_flg, 
+            a.target_scope, 
+            a.target_id,
+            d.business_logic_id,
+            d.module_id
+        FROM common_output_value a
+        LEFT JOIN common_component b
+            ON b.common_component_id = a.common_component_id
+        LEFT JOIN sequence_logic c
+            ON c.sequence_logic_id = b.sequence_logic_id
+        LEFT JOIN business_logic d
+            ON d.business_logic_id = c.business_logic_id
+        WHERE d.project_id = #{projectId} AND d.module_id is null and d.blogic_type = 1   
+    </select>
+    
+    <select id="findCommonComponentByCommonBlogicId" resultMap="commonComponentResultMap">
+		SELECT 
+			a.common_component_id, 
+			a.label, 
+			a.business_logic_id, 
+			a.business_logic_code, 
+			a.business_logic_name, 
+			a.remark, 
+			a.sequence_logic_id,
+			b.business_logic_id as business_logic_id_refer
+  		FROM common_component a
+  		LEFT JOIN sequence_logic b on (b.sequence_logic_id = a.sequence_logic_id)
+		WHERE a.business_logic_id = #{businessLogicId}
+    </select>
+    
+    <select id="findCommonInputValueByCommonBlogicId" resultMap="commonInputValueResultMap">
+		SELECT 
+			a.common_input_value_id, 
+			a.common_component_id, 
+			a.input_bean_id, 
+			a.input_bean_code, 
+       		a.input_bean_name, 
+       		a.data_type, 
+       		a.array_flg
+ 	 	FROM common_input_value a
+ 	 	LEFT JOIN common_component b on (a.common_component_id= b.common_component_id)
+ 	 	WHERE b.business_logic_id = #{businessLogicId}
+    </select>
+    
+    <select id="findCommonOutputValueByCommonBlogicId" resultMap="commonOutputValueResultMap">
+		SELECT 
+			a.common_output_value_id, 
+			a.common_component_id, 
+			a.output_bean_id, 
+			a.output_bean_code, 
+       		a.output_bean_name, 
+       		a.data_type, 
+       		a.array_flg
+ 	 	FROM common_output_value a
+ 	 	LEFT JOIN common_component b on (a.common_component_id= b.common_component_id)
+ 	 	WHERE b.business_logic_id = #{businessLogicId}
+    </select>
+    
+    <delete id="deleteCommonInputValueByCommonComponent">
+		DELETE FROM common_input_value
+		WHERE
+		<if test="lstComponents != null and lstComponents.size > 0">
+			common_component_id IN
+			<foreach collection="lstComponents" item="item" open="(" close=")" separator=",">
+				Cast(#{item.commonComponentId} as numeric)
+			</foreach>
+		</if>
+		<if test="lstComponents == null or lstComponents.size == 0">
+			FALSE
+		</if>
+    </delete>
+    
+    <delete id="deleteCommonOutputValueByCommonComponent">
+		DELETE FROM common_output_value
+		WHERE
+		<if test="lstComponents != null and lstComponents.size > 0">
+			common_component_id IN
+			<foreach collection="lstComponents" item="item" open="(" close=")" separator=",">
+				Cast(#{item.commonComponentId} as numeric)
+			</foreach>
+		</if>
+		<if test="lstComponents == null or lstComponents.size == 0">
+			FALSE
+		</if>
+    </delete>
+    
+    <delete id="deleteCommonInputValueByCommonBlogicId">
+		DELETE FROM common_input_value
+		WHERE common_input_value_id in
+		(
+			SELECT a.common_input_value_id
+			FROM common_input_value a
+			LEFT JOIN common_component b on ( a.common_component_id = b.common_component_id)
+			LEFT JOIN input_bean c on ( c.input_bean_id = a.input_bean_id)
+			WHERE b.business_logic_id = #{businessLogicId}
+			and c.input_bean_id is null
+		)
+    </delete>
+    
+    <delete id="deleteCommonOutputValueByCommonBlogicId">
+		DELETE FROM common_output_value
+		WHERE common_output_value_id in
+		(
+			SELECT a.common_output_value_id
+			FROM common_output_value a
+			LEFT JOIN common_component b on ( a.common_component_id = b.common_component_id)
+			LEFT JOIN output_bean c on ( c.output_bean_id = a.output_bean_id)
+			WHERE b.business_logic_id = #{businessLogicId}
+			and c.output_bean_id is null
+		)
+    </delete>
+</mapper>

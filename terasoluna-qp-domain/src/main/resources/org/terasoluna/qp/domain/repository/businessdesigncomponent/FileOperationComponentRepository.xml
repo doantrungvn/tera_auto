@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.businessdesigncomponent.FileOperationComponentRepository">
+
+    <resultMap id="fileOperationComponentResultMap" type="FileOperationComponent">
+        <id property="fileOperationComponentId" column="fileoperation_component_id" />
+        <result property="label" column="label" />
+        <result property="type" column="type" />
+        <result property="overwriteFlg" column="overwrite_flg" />
+        <result property="remark" column="remark" />
+        <result property="sourcePathType" column="source_path_type" />
+        <result property="sourcePathContent" column="source_path_content" />
+        <result property="sourcePathFormulaId" column="source_path_formula_id" />
+        <result property="destinationPathType" column="destination_path_type" />
+        <result property="destinationPathContent" column="destination_path_content" />
+        <result property="destinationPathFormulaId" column="destination_path_formula_id" />
+        <result property="newFilenameType" column="new_filename_type" />
+        <result property="newFilenameContent" column="new_filename_content" />
+        <result property="newFilenameFormulaId" column="new_filename_formula_id" />
+        <result property="sequenceLogicId" column="sequence_logic_id" />
+    </resultMap>
+	<resultMap id="mergeFileDetailResultMap" type="MergeFileDetail">
+        <id property="mergeFileDetailId" column="merge_file_detail_id" />
+        <result property="fileOperationComponentId" column="fileoperation_component_id" />
+        <result property="sourcePathType" column="source_path_type" />
+        <result property="sourcePathContent" column="source_path_content" />
+        <result property="sourcePathFormulaId" column="source_path_formula_id" />
+    </resultMap>
+    <select id="getSequencesFileOperationComponent" resultType="Long">
+    	select SETVAL('fileoperation_component_seq'::regclass, NEXTVAL('fileoperation_component_seq'::regclass) + #{size})
+    </select>
+    <insert id="registerFileOperationComponent" >
+		<foreach item="item" collection="fileOperationComponentItems">
+			INSERT INTO fileoperation_component
+				(
+            		fileoperation_component_id, 
+            		label, 
+            		type, 
+            		overwrite_flg, 
+            		remark, 
+            		source_path_type, 
+            		source_path_content, 
+            		source_path_formula_id, 
+            		destination_path_type, 
+            		destination_path_content, 
+            		destination_path_formula_id, 
+            		new_filename_type, 
+            		new_filename_content, 
+            		new_filename_formula_id, 
+            		sequence_logic_id
+            	)
+	    		VALUES 
+	    		(
+					#{item.fileOperationComponentId},
+					#{item.label},
+					#{item.type},
+	            	#{item.overwriteFlg},
+	            	#{item.remark},
+					#{item.sourcePathType},
+					#{item.sourcePathContent},
+					#{item.sourcePathFormulaId},
+					#{item.destinationPathType},
+					#{item.destinationPathContent},
+					#{item.destinationPathFormulaId},
+					#{item.newFilenameType},
+					#{item.newFilenameContent},
+	            	#{item.newFilenameFormulaId},
+	            	#{item.sequenceLogicId}
+	            );
+	        <if test="item.type == 3 and  item.lstMergeFileDetails.size() > 0">
+	        	INSERT INTO merge_file_detail
+	        	(
+           			fileoperation_component_id, 
+            		source_path_type, 
+            		source_path_content, 
+            		source_path_formula_id
+           		)
+	    		VALUES 
+	    		<foreach item="detail" collection="item.lstMergeFileDetails" separator=",">
+				(
+					#{item.fileOperationComponentId},
+					#{detail.sourcePathType},
+					#{detail.sourcePathContent},
+					#{detail.sourcePathFormulaId}
+	            )
+				</foreach>;
+	        </if>
+		</foreach>
+    </insert>
+    
+    <select id="findFileOperationComponentByBusinessLogic" resultMap="fileOperationComponentResultMap">
+    	SELECT 
+    		a.fileoperation_component_id, 
+	    	a.label, 
+	    	a.type, 
+	    	a.overwrite_flg, 
+	    	a.remark, 
+       		a.source_path_type, 
+       		a.source_path_content, 
+       		a.source_path_formula_id, 
+       		a.destination_path_type, 
+       		a.destination_path_content, 
+       		a.destination_path_formula_id, 
+       		a.new_filename_type, 
+       		a.new_filename_content, 
+       		a.new_filename_formula_id, 
+	        a.sequence_logic_id
+  		FROM fileoperation_component a
+  		WHERE EXISTS
+		    (
+			    SELECT sl.sequence_logic_id
+			    FROM sequence_logic sl
+			    WHERE sl.business_logic_id = #{businessLogicId}
+			       	AND component_type = 15
+			       	AND sl.sequence_logic_id = a.sequence_logic_id 
+		     )
+		ORDER BY a.fileoperation_component_id
+    </select>
+    
+    <select id="findMergeFileDetailByBusinessLogic" resultMap="mergeFileDetailResultMap">
+    	SELECT 
+    		a.merge_file_detail_id, 
+    		a.fileoperation_component_id, 
+       		a.source_path_type, 
+       		a.source_path_content, 
+       		a.source_path_formula_id
+  		FROM merge_file_detail a
+  		LEFT JOIN fileoperation_component b on (b.fileoperation_component_id = a.fileoperation_component_id)
+  		WHERE EXISTS
+		    (
+			    SELECT sl.sequence_logic_id
+			    FROM sequence_logic sl
+			    WHERE sl.business_logic_id = #{businessLogicId}
+			       	AND component_type = 15
+			       	AND sl.sequence_logic_id = b.sequence_logic_id 
+		     )
+		ORDER BY a.merge_file_detail_id
+    </select>
+    
+    <select id="findAllFileOperationComponentByModule" resultMap="fileOperationComponentResultMap">
+    	SELECT 
+    		a.fileoperation_component_id, 
+	    	a.label, 
+	    	a.type, 
+	    	a.overwrite_flg, 
+	    	a.remark, 
+       		a.source_path_type, 
+       		a.source_path_content, 
+       		a.source_path_formula_id, 
+       		a.destination_path_type, 
+       		a.destination_path_content, 
+       		a.destination_path_formula_id, 
+       		a.new_filename_type, 
+       		a.new_filename_content, 
+       		a.new_filename_formula_id, 
+	        a.sequence_logic_id
+  		FROM fileoperation_component a
+  		WHERE EXISTS
+		    (
+			    SELECT sl.sequence_logic_id
+			    FROM sequence_logic sl
+			    INNER JOIN business_logic bl on bl.business_logic_id = sl.business_logic_id
+			    WHERE bl.module_id = #{moduleId}
+			       	AND component_type = 15
+			       	AND sl.sequence_logic_id = a.sequence_logic_id 
+		     )
+		ORDER BY a.fileoperation_component_id
+    </select>
+    
+     <select id="findAllMergeFileDetailByModule" resultMap="mergeFileDetailResultMap">
+    	SELECT 
+    		a.merge_file_detail_id, 
+    		a.fileoperation_component_id, 
+       		a.source_path_type, 
+       		a.source_path_content, 
+       		a.source_path_formula_id
+  		FROM merge_file_detail a
+  		LEFT JOIN fileoperation_component b on (b.fileoperation_component_id = a.fileoperation_component_id)
+  		WHERE EXISTS
+		    (
+			    SELECT sl.sequence_logic_id
+			    FROM sequence_logic sl
+			    INNER JOIN business_logic bl on bl.business_logic_id = sl.business_logic_id
+			    WHERE bl.module_id = #{moduleId}
+			       	AND component_type = 15
+			       	AND sl.sequence_logic_id = b.sequence_logic_id
+		     )
+		ORDER BY a.merge_file_detail_id
+    </select>
+    
+    <!-- generate source code of commmon blogic -->
+    <select id="findAllFileOperationComponentByModuleCommon" resultMap="fileOperationComponentResultMap">
+        SELECT 
+            a.fileoperation_component_id, 
+            a.label, 
+            a.type, 
+            a.overwrite_flg, 
+            a.remark, 
+            a.source_path_type, 
+            a.source_path_content, 
+            a.source_path_formula_id, 
+            a.destination_path_type, 
+            a.destination_path_content, 
+            a.destination_path_formula_id, 
+            a.new_filename_type, 
+            a.new_filename_content, 
+            a.new_filename_formula_id, 
+            a.sequence_logic_id
+        FROM fileoperation_component a
+        WHERE EXISTS
+            (
+                SELECT sl.sequence_logic_id
+                FROM sequence_logic sl
+                INNER JOIN business_logic bl on bl.business_logic_id = sl.business_logic_id
+                WHERE bl.project_id = #{projectId} AND bl.module_id is null and bl.blogic_type = 1   
+                    AND component_type = 15
+                    AND sl.sequence_logic_id = a.sequence_logic_id 
+             )
+        ORDER BY a.fileoperation_component_id
+    </select>
+    
+     <select id="findAllMergeFileDetailByModuleCommon" resultMap="mergeFileDetailResultMap">
+        SELECT 
+            a.merge_file_detail_id, 
+            a.fileoperation_component_id, 
+            a.source_path_type, 
+            a.source_path_content, 
+            a.source_path_formula_id
+        FROM merge_file_detail a
+        LEFT JOIN fileoperation_component b on (b.fileoperation_component_id = a.fileoperation_component_id)
+        WHERE EXISTS
+            (
+                SELECT sl.sequence_logic_id
+                FROM sequence_logic sl
+                INNER JOIN business_logic bl on bl.business_logic_id = sl.business_logic_id
+                WHERE bl.project_id = #{projectId} AND bl.module_id is null and bl.blogic_type = 1   
+                    AND component_type = 15
+                    AND sl.sequence_logic_id = b.sequence_logic_id
+             )
+        ORDER BY a.merge_file_detail_id
+    </select>
+</mapper>

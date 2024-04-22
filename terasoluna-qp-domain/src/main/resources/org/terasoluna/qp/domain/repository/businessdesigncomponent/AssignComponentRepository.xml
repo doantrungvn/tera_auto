@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.businessdesigncomponent.AssignComponentRepository">
+
+    <resultMap id="assignComponentResultMap" type="AssignComponent">
+        <id property="assignComponentId" column="assign_component_id" />
+        <result property="label" column="label" />
+        <result property="remark" column="remark" />
+        <result property="sequenceLogicId" column="sequence_logic_id" />
+    </resultMap>
+	<resultMap id="assignDetailResultMap" type="AssignDetail">
+        <id property="assignDetailId" column="assign_detail_id" />
+        <result property="assignType" column="assign_type" />
+        <result property="dataGroup" column="data_group" />
+        <result property="parameterScope" column="parameter_scope" />
+        <result property="parameterId" column="parameter_id" />
+        <result property="targetScope" column="target_scope" />
+        <result property="targetId" column="target_id" />
+        <result property="formulaDefinitionId" column="formula_definition_id" />
+        <result property="formulaDefinitionContent" column="formula_definition_content" />
+        <result property="assignComponentId" column="assign_component_id" />
+    </resultMap>
+    <resultMap id="businessDesignResultMap" type="BusinessDesign">
+        <id property="businessLogicId" column="business_logic_id" />
+        <result property="businessLogicCode" column="business_logic_code" />
+        <result property="businessLogicName" column="business_logic_name" />
+        <result property="returnType" column="return_type" />
+        <result property="screenId" column="screen_id" />
+        <result property="moduleId" column="module_id" />
+        <result property="projectId" column="project_id" />
+        <result property="customizeFlg" column="customize_flg" />
+        <result property="uploadFileId" column="upload_file_id" />
+        <result property="createdBy" column="created_by" />
+        <result property="createdDate" column="created_date" />
+        <result property="updatedBy" column="updated_by" />
+        <result property="updatedDate" column="updated_date" />
+        <result property="designStatus" column="design_status" />
+        <result property="packageName" column="package_name" />
+        <result property="patternType" column="pattern_type" />
+        <result property="confirmFlg" column="confirm_flg" />
+        <result property="completeFlg" column="complete_flg" />
+        <result property="remark" column="remark" />
+        <result property="screenFormId" column="screen_form_id" />
+        <result property="functionId" column="function_id" />
+        <result property="batchType" column="batch_type" />
+    </resultMap>
+    <resultMap id="sequenceLogicResultMap" type="SequenceLogic">
+        <id property="sequenceLogicId" column="sequence_logic_id" />
+        <result property="sequenceLogicName" column="sequence_logic_name" />
+        <result property="componentType" column="component_type" />
+        <result property="componentId" column="component_id" />
+        <result property="sequenceNo" column="sequence_no" />
+        <result property="xCoordinates" column="x_coordinates" />
+        <result property="yCoordinates" column="y_coordinates" />
+        <result property="remark" column="remark" />
+        <result property="businessLogicId" column="business_logic_id" />
+        <result property="parentSequenceLogicId" column="parent_sequence_logic_id" />
+        <result property="groupFlg" column="group_flg" />
+        <result property="relatedSequenceLogicId" column="related_sequence_logic_id" />
+    </resultMap>
+    <!-- assign component -->
+     <select id="getSequencesAssignComponent" resultType="Long">
+    	select SETVAL('assign_component_seq'::regclass, NEXTVAL('assign_component_seq'::regclass) + #{size})
+    </select>
+    <!-- assign detail -->
+     <select id="getSequencesAssignDetail" resultType="Long">
+    	select SETVAL('assign_detail_seq'::regclass, NEXTVAL('assign_detail_seq'::regclass) + #{size})
+    </select>
+    
+    <insert id="registerAssignComponent" >
+    	<if test="assignComponentItems != null and  assignComponentItems.size() > 0 ">
+			INSERT INTO assign_component
+			(
+            	assign_component_id, 
+            	label, 
+            	remark, 
+            	sequence_logic_id
+            )
+    		VALUES 
+    		<foreach item="item" collection="assignComponentItems" separator=",">
+			(
+				#{item.assignComponentId},
+				#{item.label},
+				#{item.remark},
+            	#{item.sequenceLogicId}
+            )
+			</foreach>;
+		</if>
+    </insert>
+    <select id="findAssignComponentByBusinessLogic" resultMap="assignComponentResultMap">
+		SELECT 
+			a.assign_component_id, 
+			a.label, 
+			a.remark, 
+			a.sequence_logic_id
+  		FROM assign_component a
+		WHERE EXISTS
+    		( 
+    		SELECT b.sequence_logic_id
+     		FROM sequence_logic b
+     		WHERE b.business_logic_id = #{businessLogicId}
+       			AND component_type = 8
+       			AND b.sequence_logic_id = a.sequence_logic_id
+       		)
+       	ORDER BY a.sequence_logic_id
+    </select>
+    
+    <select id="findAssignComponentByModule" resultMap="assignComponentResultMap">
+		SELECT 
+			a.assign_component_id, 
+			a.label, 
+			a.remark, 
+			a.sequence_logic_id
+  		FROM assign_component a
+		WHERE EXISTS
+    		( 
+    		SELECT b.sequence_logic_id
+     		FROM sequence_logic b
+     		INNER JOIN business_logic d ON b.business_logic_id = d.business_logic_id
+     		WHERE b.component_type = 8
+			AND b.sequence_logic_id = a.sequence_logic_id
+ 			AND d.module_id = #{moduleId}
+ 			)
+    </select>
+    
+    <insert id="registerAssignDetails" >
+    	<if test="assignDetailItems != null and  assignDetailItems.size() > 0 ">
+    		<foreach item="item" collection="assignDetailItems" separator="">
+			INSERT INTO assign_detail
+			(
+				assign_detail_id,
+            	assign_type,
+            	data_group,
+            	parameter_scope, 
+            	parameter_id, 
+            	target_scope, 
+            	target_id, 
+            	formula_definition_id, 
+            	formula_definition_content, 
+            	assign_component_id
+            )
+    		VALUES
+			(
+				#{item.assignDetailId},
+				#{item.assignType},
+				#{item.dataGroup},
+				#{item.parameterScope},
+				CAST(#{item.parameterId} AS numeric(16,0)), 
+				#{item.targetScope},
+            	CAST(#{item.targetId} AS numeric(16,0)),
+            	#{item.formulaDefinitionId},
+            	#{item.formulaDefinitionContent},
+            	#{item.assignComponentId}
+            );
+            <if test="item.lstTargetIndex != null and  item.lstTargetIndex.size() > 0 ">
+            	INSERT INTO bd_parameter_index
+            	(
+            		table_type, 
+            		table_id, 
+            		parameter_id, 
+            		parameter_index_type, 
+            		parameter_index_id,
+            		business_logic_id
+            	)
+    			VALUES
+    			<foreach item="itemIndex" collection="item.lstTargetIndex" separator=",">
+	    			(
+	    				#{itemIndex.tableType}, 
+	    				#{item.assignDetailId},
+	    				CAST(#{itemIndex.parameterId} AS numeric(16,0)),
+	    				#{itemIndex.parameterIndexType}, 
+	            		CAST(#{itemIndex.parameterIndexId} AS numeric(16,0)),
+	            		#{itemIndex.businessLogicId}
+	            	)
+    			</foreach>;
+    		</if>
+    		<if test="item.lstParameterIndex != null and  item.lstParameterIndex.size() > 0 ">
+            	INSERT INTO bd_parameter_index
+            	(
+            		table_type, 
+            		table_id, 
+            		parameter_id, 
+            		parameter_index_type, 
+            		parameter_index_id,
+            		business_logic_id
+            	)
+    			VALUES
+    			<foreach item="itemIndex" collection="item.lstParameterIndex" separator=",">
+	    			(
+	    				#{itemIndex.tableType}, 
+	    				#{item.assignDetailId},
+	    				CAST(#{itemIndex.parameterId} AS numeric(16,0)),
+	    				#{itemIndex.parameterIndexType}, 
+	            		CAST(#{itemIndex.parameterIndexId} AS numeric(16,0)),
+	            		#{itemIndex.businessLogicId}
+	            	)
+    			</foreach>;
+    		</if>
+			</foreach>
+		</if>
+    </insert>
+    
+    <select id="findAssignDetailsByModule" resultMap="assignDetailResultMap">
+		SELECT 
+			a.assign_detail_id, 
+			a.assign_type,
+			a.data_group,
+			a.parameter_scope, 
+			a.parameter_id, 
+       		a.target_scope, 
+       		a.target_id, 
+       		a.formula_definition_id, 
+       		a.formula_definition_content, 
+       		a.assign_component_id
+  		FROM assign_detail a
+		lEFT JOIN assign_component b
+		  on (b.assign_component_id = a.assign_component_id )
+		WHERE EXISTS
+		    (SELECT c.sequence_logic_id
+		     FROM sequence_logic c
+		     INNER JOIN business_logic d ON c.business_logic_id = d.business_logic_id
+		     WHERE d.module_id = #{moduleId}
+		       AND component_type = 8
+		       AND c.sequence_logic_id = b.sequence_logic_id)
+		ORDER BY a.assign_detail_id
+    </select>
+    
+    <select id="findAssignDetailsByProjectId" resultMap="assignDetailResultMap">
+		SELECT 
+			a.assign_detail_id, 
+			a.assign_type,
+			a.data_group,
+			a.parameter_scope, 
+			a.parameter_id, 
+			a.target_scope, 
+			a.target_id, 
+			a.formula_definition_id, 
+			a.formula_definition_content, 
+			a.assign_component_id
+  		FROM assign_detail a
+		lEFT JOIN assign_component b
+			on (b.assign_component_id = a.assign_component_id )
+		WHERE EXISTS
+			(
+				SELECT c.sequence_logic_id
+				FROM sequence_logic c
+				INNER JOIN business_logic d ON c.business_logic_id = d.business_logic_id
+				WHERE d.project_id = #{projectId}
+					AND component_type = 8
+					AND c.sequence_logic_id = b.sequence_logic_id
+			)
+		ORDER BY a.assign_detail_id
+    </select>
+    
+    <select id="findAssignDetailsByBusinessLogic" resultMap="assignDetailResultMap">
+		SELECT 
+			a.assign_detail_id, 
+			a.assign_type,
+			a.data_group,
+			a.parameter_scope, 
+			a.parameter_id, 
+       		a.target_scope, 
+       		a.target_id, 
+       		a.formula_definition_id, 
+       		a.formula_definition_content, 
+       		a.assign_component_id
+  		FROM assign_detail a
+		lEFT JOIN assign_component b
+		  on (b.assign_component_id = a.assign_component_id )
+		WHERE EXISTS
+		    (SELECT c.sequence_logic_id
+		     FROM sequence_logic c
+		     WHERE c.business_logic_id = #{businessLogicId}
+		       AND component_type = 8
+		       AND c.sequence_logic_id = b.sequence_logic_id)
+		ORDER BY a.assign_detail_id
+    </select>
+    
+    <!-- generate source code of commmon blogic -->
+    <select id="findAssignComponentByModuleCommon" resultMap="assignComponentResultMap">
+        SELECT 
+            a.assign_component_id, 
+            a.label, 
+            a.remark, 
+            a.sequence_logic_id
+        FROM assign_component a
+        WHERE EXISTS
+            ( 
+                SELECT b.sequence_logic_id
+                FROM sequence_logic b
+                INNER JOIN business_logic d ON b.business_logic_id = d.business_logic_id
+                WHERE b.component_type = 8
+                AND b.sequence_logic_id = a.sequence_logic_id
+                AND d.project_id = #{projectId} AND d.module_id is null and d.blogic_type = 1   
+            )
+    </select>
+    
+    <select id="findAssignDetailsByModuleCommon" resultMap="assignDetailResultMap">
+        SELECT 
+            a.assign_detail_id, 
+            a.assign_type,
+            a.data_group,
+            a.parameter_scope, 
+            a.parameter_id, 
+            a.target_scope, 
+            a.target_id, 
+            a.formula_definition_id, 
+            a.formula_definition_content, 
+            a.assign_component_id
+        FROM assign_detail a
+        lEFT JOIN assign_component b
+            on (b.assign_component_id = a.assign_component_id )
+        WHERE EXISTS
+            (
+                SELECT c.sequence_logic_id
+                FROM sequence_logic c
+                INNER JOIN business_logic d ON c.business_logic_id = d.business_logic_id
+                WHERE d.project_id = #{projectId} AND d.module_id is null and d.blogic_type = 1   
+                    AND component_type = 8
+                    AND c.sequence_logic_id = b.sequence_logic_id
+            )
+        ORDER BY a.assign_detail_id
+    </select>
+</mapper>

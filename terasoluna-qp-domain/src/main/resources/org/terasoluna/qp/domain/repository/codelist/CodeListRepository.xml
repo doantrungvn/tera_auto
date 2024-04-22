@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="org.terasoluna.qp.domain.repository.codelist.CodeListRepository">
+	<resultMap id="codeListResultMap" type="CodeList">
+		<id property="codeListId" column="codelist_id" />
+		<result property="codeListName" column="codelist_name" />
+		<result property="codeListCode" column="codelist_code" />
+		<result property="remark" column="remark" />
+		<result property="isOptionValude" column="option_value_flg" />
+		<result property="multivalueFlg" column="multivalue_flg" />
+		<result property="createdBy" column="created_by" />
+		<result property="createdDate" column="created_date" />
+		<result property="updatedBy" column="updated_by" />
+		<result property="updatedDate" column="updated_date" />
+		<result property="moduleId" column="module_id" />
+		<result property="moduleIdAutocomplete" column="module_name" />
+		<result property="projectId" column="project_id" />
+		<result property="projectIdAutocomplete" column="project_name" />
+		<result property="moduleStatus" column="module_status" />
+	</resultMap>
+
+	<resultMap id="autocompleteResultMap" type="Autocomplete">
+		<result property="optionValue" column="optionValue" />
+		<result property="optionLabel" column="optionLabel" />
+		<result property="output01" column="output01" />
+		<result property="output02" column="output02" />
+		<result property="output03" column="output03" />
+		<result property="output04" column="output04" />
+		<result property="output05" column="output05" />
+	</resultMap>
+
+    <select id="countNameCodeByCodeListId" parameterType="CodeList" resultType="Long">
+    	<bind name="clName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toLikeCondition(codeListName)" />
+		<bind name="clCode" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toLikeCondition(codeListCode)" />
+		SELECT
+			SUM(rowVal) AS totalCount
+		FROM (
+			(SELECT
+				1 AS rowVal
+			FROM
+				codelist c
+				<where>
+					<if test="codeListName != null and codeListName != ''">
+						codelist_name iLIKE #{clName} ESCAPE '~'
+					</if>
+					<if test="codeListId != null">AND codelist_id != #{codeListId}</if>
+					AND project_id = #{projectId}
+					<if test="codeListName == null and codeListName == ''">AND FALSE</if>
+				</where>
+				LIMIT 1
+			)
+			UNION
+			(SELECT
+				2 AS rowVal
+			FROM
+			codelist c
+			<where>
+				<if test="codeListCode != null and codeListCode != ''">
+					codelist_code iLIKE #{clCode} ESCAPE '~'
+				</if>
+				<if test="codeListId != null">AND codelist_id != #{codeListId}</if>
+				AND project_id = #{projectId}
+				<if test="codeListCode == null and codeListCode == ''">AND FALSE</if>
+			</where>
+			LIMIT 1
+			)
+		) AS foo
+    </select>
+	
+	<select id="getBySearchCriteria" parameterType="org.terasoluna.qp.domain.model.CodeList"
+		resultMap="codeListResultMap">
+		SELECT
+			C.codelist_id,
+			C.codelist_name,
+			C.codelist_code,
+			C.remark,
+			C.option_value_flg,
+			C.created_by,
+			C.created_date,
+			C.updated_by,
+			C.updated_date,
+			C.module_id,
+			C.project_id,
+			M.module_name,
+			(CASE 
+				WHEN C.module_id IS NULL THEN 1
+				ELSE m.status END
+			) AS module_status
+		FROM
+			codelist as C LEFT JOIN module as M on C.module_id = M.module_Id
+		<include refid="findPageByCriteriaWhere" />
+
+		ORDER BY
+		<if test="pageable.sort != null">
+			<foreach collection="pageable.sort" item="order" separator=",">
+				${order.property} ${order.direction}
+			</foreach>
+		</if>
+		<if test="pageable.sort == null">
+			C.updated_date DESC
+		</if>
+		<![CDATA[
+			LIMIT
+				#{pageable.pageSize}
+			OFFSET
+				#{pageable.offset}
+		]]>
+	</select>
+
+	<sql id="findPageByCriteriaWhere">
+		<where>
+			<if test="codeList.codeListName !=null and codeList.codeListName !=''">
+				<bind name="codeListName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(codeList.codeListName)" />
+				<![CDATA[ 
+					C.codelist_name ILIKE #{codeListName} ESCAPE '~'
+				]]> 
+			</if>
+			<if test="codeList.codeListCode !=null and codeList.codeListCode != ''">
+				<bind name="codeListCode" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(codeList.codeListCode)" />
+				<![CDATA[ 
+					AND C.codelist_code ILIKE #{codeListCode} ESCAPE '~'
+				]]>
+			</if>
+			<if test="codeList.moduleId !=null and codeList.moduleId != ''">
+				<![CDATA[ 
+					AND C.module_id = #{codeList.moduleId}
+				]]>
+			</if>
+			<if test="codeList.projectId != null and codeList.projectId != ''">
+				<![CDATA[
+					AND C.project_id = #{codeList.projectId}
+				]]>
+			</if>
+			<if test="codeList.OptionValude != null and codeList.OptionValude.length > 0">
+				AND C.option_value_flg IN
+				<foreach item="isOptionValude" index="index" collection="codeList.OptionValude"
+					open="(" separator="," close=")">
+					#{isOptionValude}
+				</foreach>
+			</if>
+		</where>
+	</sql>
+
+	<select id="countBySearchCriteria" resultType="Long"
+		parameterType="org.terasoluna.qp.domain.model.CodeList">
+		SELECT
+			COUNT (*)
+		FROM
+			codelist as C
+		LEFT JOIN
+			module as M on C.module_id = M.module_Id
+		<include refid="findPageByCriteriaWhere" />
+	</select>
+
+	<select id="getCodeList" parameterType="long" resultMap="codeListResultMap">
+		<![CDATA[
+			SELECT
+				C.codelist_id,
+				C.codelist_name,
+				C.codelist_code,
+				C.remark,
+				C.option_value_flg,
+				C.created_by,
+				C.created_date,
+				C.updated_by,
+				C.updated_date,
+				C.module_id,
+				M.module_name,
+				C.project_id,
+				C.updated_date,
+				C.multivalue_flg
+			FROM
+				codelist as C
+			LEFT JOIN
+				module as M ON C.module_id =M.module_Id
+			WHERE codelist_id = #{codeListId}
+		]]>
+	</select>
+	<select id="getCodeListByProject" parameterType="long" resultMap="codeListResultMap">
+		<![CDATA[
+			SELECT
+				C.codelist_id,
+				C.codelist_name,
+				C.codelist_code,
+				C.remark,
+				C.option_value_flg,
+				C.created_by,
+				C.created_date,
+				C.updated_by,
+				C.updated_date,
+				C.module_id,
+				C.project_id,
+				C.updated_date,
+				C.multivalue_flg
+			FROM
+				codelist as C
+			WHERE project_id = #{projectId}
+		]]>
+	</select>
+
+	<insert id="registerCodelist" parameterType="org.terasoluna.qp.domain.model.CodeList"
+		useGeneratedKeys="true" keyProperty="CodeList.codeListId" keyColumn="codelist_id">
+		<selectKey keyProperty="codeListId" resultType="long" order="BEFORE">
+			SELECT NEXTVAL('codelist_seq'::regclass)
+		</selectKey>
+		<![CDATA[
+		INSERT INTO 
+			codelist
+			(
+			codelist_id,
+			codelist_name,
+			codelist_code,
+			remark,
+			option_value_flg,
+			module_id,
+			project_id,
+			multivalue_flg,
+			updated_by,
+			updated_date,
+			created_by,
+			created_date
+			)
+		VALUES 
+			(
+			#{codeListId},
+			#{codeListName},
+			#{codeListCode},
+			#{remark},
+			#{isOptionValude},
+			#{moduleId},
+			#{projectId},
+			#{multivalueFlg},
+			#{createdBy},
+			#{updatedDate},
+			#{createdBy},
+			#{createdDate}
+			)
+		]]>
+	</insert>
+	<!-- modify codelist -->
+	<update id="modifyCodelist" parameterType="CodeList">
+	<![CDATA[	
+		UPDATE 
+			codelist 
+		SET 
+			codelist_name=#{codeListName},
+			codelist_code=#{codeListCode},
+			remark=#{remark}, 
+			option_value_flg=#{isOptionValude},
+			updated_by=#{updatedBy},
+			updated_date=#{systemTime},
+			multivalue_flg = #{multivalueFlg}
+		WHERE 
+			codelist_id= #{codeListId} AND updated_date = #{updatedDate}
+	]]>
+	</update>
+
+	<delete id="deleteCodelist" parameterType="long">
+	<![CDATA[
+		DELETE FROM
+			codelist
+		WHERE
+			codelist_id = #{codeListId}
+	]]>
+	</delete>
+	
+	<!-- DungNN check FK -->
+	<select id="checkCodelistUsedByOther" parameterType="Long" resultType="long">
+		<![CDATA[
+			SELECT 
+				sum (total)
+			FROM
+			(
+				SELECT 
+					COUNT (*)  AS total
+				FROM 
+					domain_design 
+				WHERE
+					datasource_id = #{codeListId}
+					AND
+					datasource_type = '1'
+				UNION ALL
+				SELECT
+					COUNT(*) AS total 
+				FROM
+					table_design_details 
+				WHERE
+					datasource_id = #{codeListId}
+					AND
+					datasource_type = '1'
+				UNION ALL
+				SELECT
+					COUNT(*) AS total 
+				FROM
+					screen_item 
+				WHERE
+					codelist_id = #{codeListId}
+				
+			) temp
+		]]>
+	</select>
+	<select id="getDomainDesignUsedCodelist" parameterType="Long" resultMap="autocompleteResultMap">
+		<![CDATA[
+			SELECT 
+				domain_name AS optionLabel,
+				domain_code AS optionValue
+			FROM 
+				domain_design
+			WHERE
+				datasource_id = #{codeListId}
+			AND 
+				datasource_type = '1'
+		]]>
+	</select>
+	<select id="getTableDesignUsedCodelist" parameterType="Long" resultMap="autocompleteResultMap">
+		<![CDATA[
+			SELECT 
+				tdd.column_name AS optionLabel,
+				tdd.column_code AS optionValue,
+				td.tbl_design_name AS output01
+			FROM 
+				table_design_details tdd
+			INNER JOIN
+				table_design td
+			ON
+				tdd.tbl_design_id = td.tbl_design_id
+			WHERE 
+				tdd.datasource_id =  #{codeListId}
+			AND 
+				tdd.datasource_type = '1'
+		]]>
+	</select>
+	<select id="getScreenItemUsedCodelist" parameterType="Long" resultMap="autocompleteResultMap">
+		<![CDATA[
+			SELECT 
+				mdd.message_string AS optionLabel,
+				si.item_code AS optionValue,
+				md.message_string AS output01
+			FROM 
+				screen_item si
+			INNER JOIN
+				message_design mdd
+			ON
+				si.message_code = mdd.message_code
+			AND 
+				mdd.language_id = #{languageId}	
+			INNER JOIN
+				screen_design sd
+			ON
+				sd.screen_id = si.screen_id
+			INNER JOIN
+				message_design md
+			ON
+				sd.message_code = md.message_code
+			AND 
+				md.language_id = #{languageId}
+			WHERE
+				si.codelist_id = #{codeListId}
+		]]>
+	</select>
+	<!-- Counts codelist information by moduleId -->
+	<select id="countByModuleId" parameterType="Module" resultType="_int">
+		SELECT
+			COUNT(*) AS rowCount
+		FROM
+			codelist
+		<where>
+			<if test="module.moduleId != null">
+				module_id = #{module.moduleId}
+			</if>
+			<if test="module.moduleId == null">
+				FALSE
+			</if>
+		</where>
+	</select>
+	
+	<select id="getAllCodeListId" resultType="_long">
+		SELECT DISTINCT
+				C.codelist_id
+			FROM
+				codelist as C
+			WHERE
+				C.project_id = #{projectId}
+	</select>
+	
+	<select id="checkCodeListExists" resultType="long">
+		SELECT
+			codelist_id
+		FROM
+			codelist
+		<where>
+			<if test="listOfId != null and listOfId.size > 0">
+				<foreach item="codelistId" collection="listOfId" open="codelist_id IN (" separator="," close=")">
+					#{codelistId}
+				</foreach>
+			</if>
+			<if test="listOfId == null or listOfId.size == 0">
+				FALSE
+			</if>
+		</where>
+		ORDER BY codelist_id
+	</select>
+	
+</mapper>

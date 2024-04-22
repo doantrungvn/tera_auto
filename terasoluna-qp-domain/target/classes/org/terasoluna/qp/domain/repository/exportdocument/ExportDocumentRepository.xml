@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.exportdocument.ExportDocumentRepository">
+
+    <resultMap id="ExportDocumentResultMap" type="ExportDocument">
+        <id property="projectId" column="decision_table_id" />
+        <result property="moduleId" column="decision_table_id" />
+        <result property="moduleIdAutocomplete" column="decision_table_name" />
+        <result property="screenId" column="decision_table_id" />
+        <result property="screenIdAutocomplete" column="decision_table_name" />
+        <result property="businessTypeId" column="decision_table_id" />
+        <result property="businessTypeIdAutocomplete" column="decision_table_name" />
+        <result property="businessLogicId" column="decision_table_id" />
+        <result property="businessLogicIdAutocomplete" column="decision_table_name" />
+        <result property="designStatus" column="decision_table_id" />
+        <result property="remark" column="decision_table_name" />
+        <result property="createdBy" column="created_by" />
+        <result property="createdDate" column="created_date" />
+        <result property="updatedBy" column="updated_by" />
+        <result property="updatedDate" column="updated_date" />
+    </resultMap>
+
+    <!-- Process for get all data for export to file -->
+    <select id="findAllDataExportDocument" resultMap="ExportDocumentResultMap">
+          SELECT 
+              a.decision_table_id,
+              a.decision_table_name,
+              a.decision_table_code,
+              a.remark,
+              a.updated_date,
+              a.design_status,
+              b.module_id,
+              b.module_name, 
+              c.project_id,
+              b.module_name, 
+              b.status 
+        FROM 
+              decision_table a 
+              LEFT JOIN module b ON a.module_id = b.module_id
+              LEFT JOIN project c ON a.project_id = c.project_id
+    </select>
+</mapper>

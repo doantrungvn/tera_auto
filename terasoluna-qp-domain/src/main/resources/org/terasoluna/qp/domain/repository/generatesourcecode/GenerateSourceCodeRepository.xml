@@ -1,0 +1,841 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.generatesourcecode.GenerateSourceCodeRepository">
+
+    <resultMap id="businessDesignResultMap" type="BusinessDesign">
+    	<id property="businessLogicId" column="business_logic_id" />
+        <result property="businessLogicCode" column="business_logic_code" />
+        <result property="businessLogicName" column="business_logic_name" />
+        <result property="returnType" column="return_type" />
+        <result property="screenId" column="screen_id" />
+        <result property="moduleId" column="module_id" />
+        <result property="moduleIdAutocomplete" column="module_name" />
+        <result property="moduleCode" column="module_code" />
+        <result property="projectId" column="project_id" />
+        <result property="screenIdAutocomplete" column="screen_name" />
+        <result property="screenCode" column="screen_code" />
+        <result property="screenFormId" column="screen_form_id" />
+        <result property="navigateType" column="navigate_type" />
+        <result property="patternType" column="pattern_type" />
+        <result property="blogicType" column="blogic_type" />
+        <result property="customizeFlg" column="customize_flg" />
+        <result property="uploadFileId" column="upload_file_id" />
+        <result property="fileName" column="file_name" />
+        <result property="requestMethod" column="request_method" />
+        <result property="authenticatedFlg" column="authenticated_flg" />
+        <result property="author" column="username" />
+    </resultMap>
+
+	<resultMap id="inputbeanResultMap" type="InputBean">
+    	<id property="inputBeanId" column="input_bean_id" />
+        <result property="inputBeanCode" column="input_bean_code" />
+        <result property="inputBeanName" column="input_bean_name" />
+        <result property="messageString" column="message_string" />
+        <result property="messageStringAutocomplete" column="message_string_autocomplete" />
+        <result property="inputBeanType" column="input_bean_type" />
+        <result property="dataType" column="data_type" />
+        <result property="arrayFlg" column="array_flg" />
+        <result property="screenItemId" column="screen_item_id" />
+        <result property="businessLogicId" column="business_logic_id" />
+        <result property="parentInputBeanId" column="parent_input_bean_id" />
+        <result property="itemSequenceNo" column="item_sequence_no" />
+        <result property="tblDesignId" column="tbl_design_id" />
+        <result property="tblDesignName" column="tbl_design_name" />
+        <result property="tblDesignCode" column="tbl_design_code" />
+        <result property="columnId" column="column_id" />
+        <result property="columnName" column="column_name" />
+        <result property="objectType" column="object_type" />
+        <result property="objectId" column="object_id" />
+        <result property="objectFlg" column="object_flg" />
+        <result property="commonObjDefiCode" column="common_object_definition_code" />
+        <result property="externalObjDefiCode" column="external_object_definition_code" />
+        <result property="packageNameObjExt" column="package_name" />
+        <result property="sessionManagementCode" column="session_management_code" />
+        <result property="scopeType" column="scope_type" />
+        <result property="sessionManagementType" column="session_management_type" />
+        <result property="sessionManagementTableDesignCode" column="session_management_table_design_code" />
+        <result property="moduleCode" column="module_code" />
+        <result property="defaultValue" column="default_value" />
+        <result property="defaultValueTo" column="default_value_to" />
+        <result property="dataTypeSession" column="dataTypeSession" />
+        <result property="arrayFlagSession" column="arrayFlagSession" />
+    </resultMap>
+    
+    <resultMap id="outputbeanResultMap" type="OutputBean">
+    	<id property="outputBeanId" column="output_bean_id" />
+        <result property="outputBeanCode" column="output_bean_code" />
+        <result property="outputBeanName" column="output_bean_name" />
+        <result property="messageString" column="output_bean_name" />
+        <result property="messageStringAutocomplete" column="message_string" />
+        <result property="dataType" column="data_type" />
+        <result property="arrayFlg" column="array_flg" />
+        <result property="businessLogicId" column="business_logic_id" />
+        <result property="parentOutputBeanId" column="parent_output_bean_id" />
+        <result property="itemSequenceNo" column="item_sequence_no" />
+        <result property="tblDesignId" column="tbl_design_id" />
+        <result property="tblDesignName" column="tbl_design_name" />
+        <result property="tblDesignCode" column="tbl_design_code" />
+        <result property="columnId" column="column_id" />
+        <result property="columnName" column="column_name" />
+        <result property="columnCode" column="column_code" />
+        <result property="groupBaseTypeId" column="group_base_type_id" />
+        <result property="impactStatus" column="impact_status" />
+        <result property="screenItemId" column="screen_item_id" />
+        <result property="screenItemIdAutocomplete" column="screen_item_id_autocomplete" />
+        <result property="objectType" column="object_type" />
+        <result property="objectId" column="object_id" />
+        <result property="objectFlg" column="object_flg" />
+        <result property="commonObjDefiCode" column="common_object_definition_code" />
+        <result property="externalObjDefiCode" column="external_object_definition_code" />
+        <result property="packageNameObjExt" column="package_name" />
+        <result property="sessionManagementCode" column="session_management_code" />
+        <result property="scopeType" column="scope_type" />
+        <result property="moduleCode" column="module_code" />
+    </resultMap>
+    
+    <resultMap id="objectdefinitionResultMap" type="ObjectDefinition">
+    	<id property="objectDefinitionId" column="object_definition_id" />
+        <result property="objectDefinitionCode" column="object_definition_code" />
+        <result property="objectDefinitionName" column="object_definition_name" />
+        <result property="dataType" column="data_type" />
+        <result property="arrayFlg" column="array_flg" />
+        <result property="businessLogicId" column="business_logic_id" />
+        <result property="parentObjectDefinitionId" column="parent_object_definition_id" />
+        <result property="itemSequenceNo" column="item_sequence_no" />
+        <result property="tblDesignId" column="tbl_design_id" />
+        <result property="tblDesignName" column="tbl_design_name" />
+        <result property="tblDesignCode" column="tbl_design_code" />
+        <result property="columnId" column="column_id" />
+        <result property="columnName" column="column_name" />
+        <result property="columnCode" column="column_code" />
+        <result property="groupBaseTypeId" column="group_base_type_id" />
+        <result property="impactStatus" column="impact_status" />
+        <result property="baseType" column="base_type" />
+        <result property="commonObjDefiCode" column="common_object_definition_code" />
+        <result property="externalObjDefiCode" column="external_object_definition_code" />
+        <result property="packageNameObjExt" column="package_name" />
+        <result property="moduleCode" column="module_code" />
+    </resultMap>
+    
+    <resultMap id="tableDesignDetailsResultMap" type="TableDesignDetails">
+        <result property="columnId" column="column_id" />
+        <result property="tableDesignId" column="tbl_design_id" />
+        <result property="tableDesignName" column="tbl_design_name"/>
+        <result property="tableDesignCode" column="tbl_design_code"/>
+        <result property="name" column="column_name" />
+        <result property="code" column="column_code" />
+        <result property="maxlength" column="maxlength" />
+        <result property="isMandatory" column="mandatory_flg" />
+        <result property="keyType" column="key_type" />
+        <result property="groupBaseTypeId" column="group_base_type_id" />
+        <result property="remark" column="remark" />
+        <result property="defaultValue" column="default_value" />
+        <result property="defaultType" column="default_type" />
+        <result property="itemSeqNo" column="item_seq_no" />
+        <result property="autoIncrementFlag" column="autoincrement_flg" />
+        <result property="decimalPart" column="decimal_part" />
+        <result property="dataType" column="data_type" />
+        <result property="constrainsType" column="constrains_type" />
+        <result property="datasourceType" column="datasource_type" />
+        <result property="datasourceId" column="datasource_id" />
+        <result property="fmtCode" column="fmt_code" />
+        <result property="dataTypeFlg" column="data_type_flg" />
+        <result property="itemType" column="item_type" />
+        <result property="displayType" column="display_type" />
+        <result property="minVal" column="min_val" />
+        <result property="maxVal" column="max_val" />
+        <result property="operatorCode" column="operator_code" />
+        <result property="dataTypeName" column="domain_name" />
+        <result property="baseType" column="base_type" />
+    </resultMap>
+    
+    <resultMap id="moduleTableMappingResultMap" type="ModuleTableMapping">
+        <id property="moduleTableMappingId" column="module_table_mapping_id" />
+        <result property="tblDesignId" column="tbl_design_id" />
+        <result property="moduleId" column="module_id" />
+        <result property="tblDesignCode" column="tbl_design_code" />
+    </resultMap>
+    
+    <select id="findBLogicByBlogicId" parameterType="_long" resultMap="businessDesignResultMap">
+    	<![CDATA[
+			SELECT
+				a.business_logic_id,
+				a.business_logic_code,
+				a.business_logic_name,
+				a.return_type,
+				a.blogic_type,
+				a.customize_flg,
+				b.file_name
+			FROM 
+				business_logic a
+			LEFT JOIN upload_file b ON a.upload_file_id = b.upload_file_id
+			WHERE
+				a.business_logic_id = #{businessLogicId}
+		]]>
+	</select>
+
+	<select id="findAllBusinessLogicByModuleLst" resultMap="businessDesignResultMap">
+		SELECT
+			a.business_logic_id,
+			a.business_logic_code,
+			a.business_logic_name,
+			a.return_type,
+			a.blogic_type, 
+			a.screen_id,
+			(
+				CASE WHEN (a.return_type = 1) 
+					THEN 
+					(
+						SELECT f.business_logic_code
+						FROM sequence_logic c 
+						INNER JOIN navigator_component d ON d.sequence_logic_id = c.sequence_logic_id
+						INNER JOIN business_logic f ON f.business_logic_id = d.navigator_to_id
+						WHERE c.business_logic_id = a.business_logic_id
+						LIMIT 1
+					)
+					ELSE 
+					(
+						SELECT c.screen_code
+						FROM screen_design c
+						WHERE c.screen_id = a.screen_id
+						LIMIT 1
+					)
+				END
+			) screen_code,
+			(
+				CASE WHEN (a.return_type = 1) 
+					THEN 
+					(
+						SELECT d.transition_type
+						FROM sequence_logic c 
+						INNER JOIN navigator_component d ON d.sequence_logic_id = c.sequence_logic_id
+						WHERE c.business_logic_id = a.business_logic_id
+						LIMIT 1
+					)
+					ELSE 
+					(
+						CASE WHEN (a.pattern_type = 1)
+							THEN
+								(
+									NULL
+								)
+							ELSE
+								(
+									1
+								)
+						END
+					)
+				END
+			) navigate_type,
+			a.module_id,
+			a.project_id,
+			b.module_name as module_name,
+			b.module_code,
+			a.pattern_type,
+			a.remark,
+			a.request_method,
+			a.authenticated_flg,
+            acc.username,
+            a.http_status  
+		FROM 
+			business_logic a
+		LEFT JOIN
+			module b ON a.module_id = b.module_id
+		LEFT JOIN project c ON c.project_id = b.project_id
+        LEFT JOIN account acc ON (acc.account_id = a.created_by)
+		WHERE 
+			c.project_id = #{projectId}
+			<if test="moduleLst != null and  generateType == 0 ">
+				AND a.blogic_type in (0,2) AND b.module_type = 0 
+			</if>
+			<if test="moduleLst != null and  generateType == 1 ">
+				AND b.module_type = 1 
+			</if>
+			<if test="moduleLst != null and  moduleLst.size() > 0 ">
+			AND b.module_id in
+				<foreach item="item" index="index" collection="moduleLst" open="(" separator="," close=")">
+                    #{item.moduleId}
+                </foreach>
+			</if>
+			<if test="moduleLst == null or moduleLst.size() == 0 ">
+				AND b.module_id in (0)
+			</if>
+	</select>
+
+	<select id="findAllInputBeanByBusinessIdLst" resultMap="inputbeanResultMap">
+	SELECT * FROM (	
+		SELECT
+			input.input_bean_id, 
+			input.input_bean_code, 
+			input.input_bean_name, 
+			input.input_bean_type, 
+			input.data_type, 
+			input.array_flg, 
+			input.business_logic_id, 
+			input.parent_input_bean_id, 
+			input.item_sequence_no, 
+			input.screen_item_id, 
+			input.tbl_design_id,
+			tb.tbl_design_code,
+			input.object_type, 
+			input.object_id, 
+			input.object_flg, 
+			cod.common_object_definition_code,
+			eod.external_object_definition_code, 
+			eod.package_name, 
+            '' AS session_management_code, 
+            input.scope_type, 
+            0 AS session_management_type,
+            '' AS session_management_table_design_code,
+            module.module_code, 
+            si.logical_data_type,
+            si.default_value, 
+            si.default_value_to,
+            0 as dataTypeSession,
+            false as arrayFlagSession
+		FROM input_bean input
+		LEFT JOIN table_design tb ON tb.tbl_design_id = input.tbl_design_id
+		LEFT JOIN common_object_definition cod ON cod.common_object_definition_id = input.object_id
+		LEFT JOIN external_object_definition eod ON eod.external_object_definition_id = input.object_id
+		LEFT JOIN module ON cod.module_id = module.module_id
+		LEFT JOIN screen_item si ON si.screen_item_id = input.screen_item_id
+		<if test="businessDesignLst != null and  businessDesignLst.size() > 0 ">
+			where input.business_logic_id in
+				<foreach item="item" index="index" collection="businessDesignLst" open="(" separator="," close=")">
+					#{item.businessLogicId}
+				</foreach>
+		</if>
+		<if test="businessDesignLst == null or businessDesignLst.size() == 0 ">
+			where input.business_logic_id in (0)
+		</if>
+            AND input.scope_type = 0
+<!-- 		order by item_sequence_no -->
+        
+        UNION
+        
+        SELECT
+            input.input_bean_id, 
+            input.input_bean_code, 
+            input.input_bean_name, 
+            input.input_bean_type, 
+            input.data_type, 
+            input.array_flg, 
+            input.business_logic_id, 
+            input.parent_input_bean_id, 
+            input.item_sequence_no, 
+            input.screen_item_id, 
+            input.tbl_design_id,
+            tb.tbl_design_code,
+            input.object_type, 
+            input.object_id, 
+            input.object_flg, 
+            cod.common_object_definition_code,
+            eod.external_object_definition_code, 
+            eod.package_name, 
+            sm.session_management_code, 
+            input.scope_type, 
+            sm.session_management_type,
+            tb2.tbl_design_code AS session_management_table_design_code,
+            module.module_code,
+            si.logical_data_type,
+            si.default_value, 
+            si.default_value_to,
+            sm.data_type as dataTypeSession,
+            sm.array_flg as arrayFlagSession
+        FROM input_bean input
+        LEFT JOIN table_design tb ON tb.tbl_design_id = input.tbl_design_id
+        LEFT JOIN common_object_definition cod ON cod.common_object_definition_id = input.object_id
+        LEFT JOIN external_object_definition eod ON eod.external_object_definition_id = input.object_id
+        LEFT JOIN session_management sm ON sm.session_management_id = CAST (input.scope_value AS NUMERIC)
+        LEFT JOIN table_design tb2 ON tb2.tbl_design_id = sm.object_id
+        LEFT JOIN module ON cod.module_id = module.module_id
+        LEFT JOIN screen_item si ON si.screen_item_id = input.screen_item_id
+        <if test="businessDesignLst != null and  businessDesignLst.size() > 0 ">
+            where input.business_logic_id in
+                <foreach item="item" index="index" collection="businessDesignLst" open="(" separator="," close=")">
+                    #{item.businessLogicId}
+                </foreach>
+        </if>
+        <if test="businessDesignLst == null or businessDesignLst.size() == 0 ">
+            where input.business_logic_id in (0)
+        </if>
+            AND input.scope_type = 1
+<!--         order by item_sequence_no -->
+	)AS T ORDER BY item_sequence_no
+	</select>
+
+	<select id="findAllInputBeanByBusinessId" resultMap="inputbeanResultMap">
+		SELECT * FROM (	
+			SELECT
+				input.input_bean_id, 
+				input.input_bean_code, 
+				input.input_bean_name, 
+				input.input_bean_type, 
+				input.data_type, 
+				input.array_flg, 
+				input.business_logic_id, 
+				input.parent_input_bean_id, 
+				input.item_sequence_no, 
+				input.screen_item_id, 
+				input.tbl_design_id,
+				tb.tbl_design_code,
+				input.object_type, 
+				input.object_id, 
+				input.object_flg, 
+				cod.common_object_definition_code,
+				eod.external_object_definition_code, 
+				eod.package_name, 
+	            '' AS session_management_code, 
+	            input.scope_type, 
+	            0 AS session_management_type,
+	            '' AS session_management_table_design_code,
+	            module.module_code,
+	            0 as dataTypeSession,
+	            false as arrayFlagSession
+			FROM input_bean input
+			LEFT JOIN table_design tb ON tb.tbl_design_id = input.tbl_design_id
+			LEFT JOIN common_object_definition cod ON cod.common_object_definition_id = input.object_id
+			LEFT JOIN external_object_definition eod ON eod.external_object_definition_id = input.object_id
+			LEFT JOIN module ON cod.module_id = module.module_id
+			WHERE input.business_logic_id = #{businessLogicId}
+	            AND input.scope_type = 0
+	            
+	        UNION
+	        
+	        SELECT
+	            input.input_bean_id, 
+	            input.input_bean_code, 
+	            input.input_bean_name, 
+	            input.input_bean_type, 
+	            input.data_type, 
+	            input.array_flg, 
+	            input.business_logic_id, 
+	            input.parent_input_bean_id, 
+	            input.item_sequence_no, 
+	            input.screen_item_id, 
+	            input.tbl_design_id,
+	            tb.tbl_design_code,
+	            input.object_type, 
+	            input.object_id, 
+	            input.object_flg, 
+	            cod.common_object_definition_code,
+	            eod.external_object_definition_code, 
+	            eod.package_name, 
+	            sm.session_management_code, 
+	            input.scope_type, 
+	            session_management_type,
+	            tb2.tbl_design_code AS session_management_table_design_code,
+	            module.module_code,
+	            sm.data_type as dataTypeSession,
+	            sm.array_flg as arrayFlagSession
+	        FROM input_bean input
+	        LEFT JOIN table_design tb ON tb.tbl_design_id = input.tbl_design_id
+	        LEFT JOIN common_object_definition cod ON cod.common_object_definition_id = input.object_id
+	        LEFT JOIN external_object_definition eod ON eod.external_object_definition_id = input.object_id
+	        LEFT JOIN session_management sm ON sm.session_management_id = CAST (input.scope_value AS NUMERIC)
+	        LEFT JOIN table_design tb2 ON tb2.tbl_design_id = sm.object_id
+	        LEFT JOIN module ON cod.module_id = module.module_id
+	        WHERE input.business_logic_id = #{businessLogicId}
+	            AND input.scope_type = 1
+		)AS T ORDER BY item_sequence_no
+	</select>
+
+	<select id="findAllOutputBeanByBusinessIdLst" resultMap="outputbeanResultMap">
+	SELECT * FROM(
+		SELECT
+			ou.output_bean_id, 
+			ou.output_bean_code, 
+			ou.output_bean_name, 
+			ou.data_type, 
+			ou.array_flg, 
+			ou.business_logic_id, 
+			ou.parent_output_bean_id, 
+			ou.item_sequence_no, 
+			ou.tbl_design_id, 
+			tb.tbl_design_code, 
+			ou.group_base_type_id, 
+			ou.impact_status, 
+			ou.screen_item_id, 
+			ou.column_id, 
+			ou.object_type, 
+			ou.object_id, 
+			ou.object_flg, 
+			cod.common_object_definition_code, 
+			eod.external_object_definition_code, 
+			eod.package_name,
+            '' AS session_management_code, 
+            ou.scope_type,
+            module.module_code
+		FROM output_bean ou
+		LEFT JOIN table_design tb ON tb.tbl_design_id = ou.tbl_design_id
+		LEFT JOIN common_object_definition cod ON cod.common_object_definition_id = ou.object_id
+		LEFT JOIN external_object_definition eod ON eod.external_object_definition_id = ou.object_id
+		LEFT JOIN module ON cod.module_id = module.module_id
+		<if test="businessDesignLst != null and  businessDesignLst.size() > 0 ">
+			where ou.business_logic_id in
+				<foreach item="item" index="index" collection="businessDesignLst" open="(" separator="," close=")">
+					#{item.businessLogicId}
+				</foreach>
+		</if>
+		<if test="businessDesignLst == null or businessDesignLst.size() == 0 ">
+			where ou.business_logic_id in (0)
+		</if>
+            AND ou.scope_type = 0
+            
+        UNION             
+        SELECT
+            ou.output_bean_id, 
+            ou.output_bean_code, 
+            ou.output_bean_name, 
+            ou.data_type, 
+            ou.array_flg, 
+            ou.business_logic_id, 
+            ou.parent_output_bean_id, 
+            ou.item_sequence_no, 
+            ou.tbl_design_id, 
+            tb.tbl_design_code, 
+            ou.group_base_type_id, 
+            ou.impact_status, 
+            ou.screen_item_id, 
+            ou.column_id, 
+            ou.object_type, 
+            ou.object_id, 
+            ou.object_flg, 
+            cod.common_object_definition_code, 
+            eod.external_object_definition_code, 
+            eod.package_name,
+            sm.session_management_code, 
+            ou.scope_type,
+            module.module_code
+        FROM output_bean ou
+        LEFT JOIN table_design tb ON tb.tbl_design_id = ou.tbl_design_id
+        LEFT JOIN common_object_definition cod ON cod.common_object_definition_id = ou.object_id
+        LEFT JOIN external_object_definition eod ON eod.external_object_definition_id = ou.object_id
+        LEFT JOIN session_management sm ON sm.session_management_id = CAST (ou.scope_value AS NUMERIC)
+        LEFT JOIN module ON cod.module_id = module.module_id
+        <if test="businessDesignLst != null and  businessDesignLst.size() > 0 ">
+            where ou.business_logic_id in
+                <foreach item="item" index="index" collection="businessDesignLst" open="(" separator="," close=")">
+                    #{item.businessLogicId}
+                </foreach>
+        </if>
+        <if test="businessDesignLst == null or businessDesignLst.size() == 0 ">
+            where ou.business_logic_id in (0)
+        </if>
+            AND ou.scope_type = 1
+        ) AS T ORDER BY item_sequence_no
+	</select>
+	
+	<select id="findAllOutputBeanByBusinessId" resultMap="outputbeanResultMap">
+		SELECT * FROM(
+			SELECT
+				ou.output_bean_id, 
+				ou.output_bean_code, 
+				ou.output_bean_name, 
+				ou.data_type, 
+				ou.array_flg, 
+				ou.business_logic_id, 
+				ou.parent_output_bean_id, 
+				ou.item_sequence_no, 
+				ou.tbl_design_id, 
+				tb.tbl_design_code, 
+				ou.group_base_type_id, 
+				ou.impact_status, 
+				ou.screen_item_id, 
+				ou.column_id, 
+				ou.object_type, 
+				ou.object_id, 
+				ou.object_flg, 
+				cod.common_object_definition_code, 
+				eod.external_object_definition_code, 
+				eod.package_name,
+	            '' AS session_management_code, 
+	            ou.scope_type,
+	            module.module_code
+			FROM output_bean ou
+			LEFT JOIN table_design tb ON tb.tbl_design_id = ou.tbl_design_id
+			LEFT JOIN common_object_definition cod ON cod.common_object_definition_id = ou.object_id
+			LEFT JOIN external_object_definition eod ON eod.external_object_definition_id = ou.object_id
+			LEFT JOIN module ON cod.module_id = module.module_id
+			WHERE ou.business_logic_id = #{businessLogicId}
+	            AND ou.scope_type = 0
+	        
+	        UNION
+	            SELECT
+	                ou.output_bean_id, 
+	                ou.output_bean_code, 
+	                ou.output_bean_name, 
+	                ou.data_type, 
+	                ou.array_flg, 
+	                ou.business_logic_id, 
+	                ou.parent_output_bean_id, 
+	                ou.item_sequence_no, 
+	                ou.tbl_design_id, 
+	                tb.tbl_design_code, 
+	                ou.group_base_type_id, 
+	                ou.impact_status, 
+	                ou.screen_item_id, 
+	                ou.column_id, 
+	                ou.object_type, 
+	                ou.object_id, 
+	                ou.object_flg, 
+	                cod.common_object_definition_code, 
+	                eod.external_object_definition_code, 
+	                eod.package_name,
+	                sm.session_management_code, 
+	                ou.scope_type,
+	                module.module_code
+	            FROM output_bean ou
+	            LEFT JOIN table_design tb ON tb.tbl_design_id = ou.tbl_design_id
+	            LEFT JOIN common_object_definition cod ON cod.common_object_definition_id = ou.object_id
+	            LEFT JOIN external_object_definition eod ON eod.external_object_definition_id = ou.object_id
+	            LEFT JOIN session_management sm ON sm.session_management_id = CAST (ou.scope_value AS NUMERIC)
+	            LEFT JOIN module ON cod.module_id = module.module_id
+	            WHERE ou.business_logic_id = #{businessLogicId}
+	                AND ou.scope_type = 1
+		) AS T ORDER BY item_sequence_no
+	</select>
+
+	<select id="findAllObjDefinedByBusinessIdLst" resultMap="objectdefinitionResultMap">
+		SELECT
+			ob.object_definition_id,
+			ob.object_definition_code,
+			ob.object_definition_name,
+			ob.data_type,
+			ob.array_flg,
+			ob.business_logic_id,
+			ob.parent_object_definition_id,
+			ob.item_sequence_no,
+			ob.tbl_design_id, 
+			tb.tbl_design_code, 
+			ob.column_id, 
+			ob.group_base_type_id, 
+			ob.impact_status, 
+			cod.common_object_definition_code, 
+			eod.external_object_definition_code, 
+			eod.package_name,
+			module.module_code
+		FROM object_definition ob
+		LEFT JOIN table_design tb ON tb.tbl_design_id = ob.tbl_design_id
+		LEFT JOIN common_object_definition cod ON cod.common_object_definition_id = ob.object_id
+		LEFT JOIN external_object_definition eod ON eod.external_object_definition_id = ob.object_id
+		LEFT JOIN module ON cod.module_id = module.module_id
+		<if test="businessDesignLst != null and  businessDesignLst.size() > 0 ">
+			where ob.business_logic_id in
+				<foreach item="item" index="index" collection="businessDesignLst" open="(" separator="," close=")">
+					#{item.businessLogicId}
+				</foreach>
+		</if>
+		<if test="businessDesignLst == null or businessDesignLst.size() == 0 ">
+			where ob.business_logic_id in (0)
+		</if>
+		ORDER BY ob.item_sequence_no
+	</select>
+	
+	<select id="findAllObjDefinedByBusinessId" resultMap="objectdefinitionResultMap">
+		SELECT
+			ob.object_definition_id,
+			ob.object_definition_code,
+			ob.object_definition_name,
+			ob.data_type,
+			ob.array_flg,
+			ob.business_logic_id,
+			ob.parent_object_definition_id,
+			ob.item_sequence_no,
+			ob.tbl_design_id, 
+			tb.tbl_design_code, 
+			ob.column_id, 
+			ob.group_base_type_id, 
+			ob.impact_status, 
+			cod.common_object_definition_code, 
+			eod.external_object_definition_code, 
+			eod.package_name,
+			module.module_code
+		FROM object_definition ob
+		LEFT JOIN table_design tb ON tb.tbl_design_id = ob.tbl_design_id
+		LEFT JOIN common_object_definition cod ON cod.common_object_definition_id = ob.object_id
+		LEFT JOIN external_object_definition eod ON eod.external_object_definition_id = ob.object_id
+		LEFT JOIN module ON cod.module_id = module.module_id
+		where ob.business_logic_id = #{businessLogicId}
+		ORDER BY ob.item_sequence_no
+	</select>
+
+	<select id="findAllTableInformationByProjectId" resultMap="tableDesignDetailsResultMap">
+		SELECT
+			a.column_id, 
+			a.tbl_design_id, 
+			a.column_name, 
+			a.column_code, 
+			b.maxlength, 
+			b.mandatory_flg, 
+			a.key_type, 
+			b.group_base_type_id, 
+			b.remark, 
+			b.default_value, 
+			b.default_type, 
+			a.item_seq_no, 
+			a.autoincrement_flg, 
+			a.decimal_part, 
+			a.data_type, 
+			b.constrains_type, 
+			b.datasource_type, 
+			b.datasource_id, 
+			b.fmt_code, 
+			b.domain_name,
+			a.data_type_flg, 
+			a.item_type, 
+			a.display_type, 
+			b.min_val, 
+			b.max_val, 
+			b.operator_code,
+			b.base_type
+		FROM
+			table_design_details a LEFT JOIN domain_design b ON  a.data_type = b.domain_id
+			INNER JOIN table_design c ON c.tbl_design_id = a.tbl_design_id
+		WHERE 
+			c.project_id = #{projectId} AND a.data_type_flg = 1
+		UNION ALL
+		SELECT
+			a.column_id, 
+			a.tbl_design_id, 
+			a.column_name, 
+			a.column_code, 
+			a.maxlength, 
+			a.mandatory_flg, 
+			a.key_type, 
+			a.group_base_type_id, 
+			a.remark, 
+			a.default_value, 
+			a.default_type, 
+			a.item_seq_no, 
+			a.autoincrement_flg, 
+			a.decimal_part, 
+			a.data_type, 
+			a.constrains_type, 
+			a.datasource_type, 
+			a.datasource_id, 
+			a.fmt_code,
+			b.value1 as domain_name,
+			a.data_type_flg,
+			a.item_type, 
+			a.display_type, 
+			a.min_val, 
+			a.max_val, 
+			a.operator_code,
+			a.data_type AS base_type
+		FROM
+			table_design_details a
+		LEFT JOIN
+			resources b ON b.category_cd = 'clBasetype'
+		AND
+			a.data_type = CAST (b.value2 AS NUMERIC)
+		INNER JOIN table_design c ON c.tbl_design_id = a.tbl_design_id
+		WHERE 
+			c.project_id = #{projectId}
+		AND
+			a.data_type_flg = 0
+    </select>
+
+    <select id="findAllModuleTableMappingByModuleLst" resultMap="moduleTableMappingResultMap">
+        SELECT 
+			a.module_id,
+			b.tbl_design_id,
+			b.module_table_mapping_id, 
+			(
+				SELECT tbl_design_code FROM table_design WHERE tbl_design_id = b.tbl_design_id
+			) tbl_design_code
+		FROM module a
+		LEFT JOIN 
+			module_table_mapping b ON b.module_id = a.module_id 
+		<if test="moduleLst != null and  moduleLst.size() > 0 ">
+			where b.module_id IN
+				<foreach item="item" index="index" collection="moduleLst" open="(" separator="," close=")">
+                    #{item.moduleId}
+                </foreach>
+		</if>
+		<if test="moduleLst == null or moduleLst.size() == 0 ">
+			where b.module_id IN (0)
+		</if>
+	</select>
+	
+	<select id="findAllCommonBusinessLogicByProject" resultMap="businessDesignResultMap">
+		SELECT
+			a.business_logic_id,
+			a.business_logic_code,
+			a.business_logic_name,
+			a.return_type,
+			a.blogic_type,
+			a.screen_id,
+			(
+				SELECT c.screen_code
+				FROM screen_design c
+				WHERE c.screen_id = a.screen_id
+			) screen_code,
+			1 AS navigate_type,
+			a.module_id,
+			a.project_id,
+			null AS module_name,
+			null AS module_code,
+			a.pattern_type,
+			a.remark,
+			a.customize_flg,
+			a.upload_file_id,
+            acc.username
+		FROM 
+			business_logic a
+		INNER JOIN 
+			project c ON c.project_id = a.project_id AND a.project_id = #{projectId}
+        LEFT JOIN account acc ON (acc.account_id = a.created_by)
+		WHERE 
+			a.blogic_type = 1
+	</select>
+	
+		<select id="findAllCommonBusinessLogicCustomizeByProject" resultMap="businessDesignResultMap">
+		SELECT
+			a.business_logic_id,
+			a.business_logic_code,
+			a.business_logic_name,
+			a.return_type,
+			a.blogic_type,
+			a.screen_id,
+			(
+				SELECT c.screen_code
+				FROM screen_design c
+				WHERE c.screen_id = a.screen_id
+			) screen_code,
+			1 AS navigate_type,
+			a.module_id,
+			a.project_id,
+			null AS module_name,
+			null AS module_code,
+			a.pattern_type,
+			a.remark,
+			a.customize_flg,
+			a.upload_file_id
+		FROM 
+			business_logic a
+		INNER JOIN 
+			project c ON c.project_id = a.project_id AND a.project_id = #{projectId}
+		WHERE 
+			a.blogic_type = 1 AND a.customize_flg = TRUE
+	</select>
+
+	<select id="getAllScreenActionIsPostByScreenId" resultMap ="businessDesignResultMap">
+		SELECT
+			a.business_logic_id,
+			a.business_logic_code
+		FROM business_logic a 
+		INNER JOIN  
+                (
+                	SELECT
+						ac.navigate_to_blogic_id AS business_logic_id
+					FROM
+						screen_action ac 
+					WHERE
+						ac.from_screen_id = #{screenId}
+						AND ac.submit_method_type = 2
+                ) r ON r.business_logic_id = a.business_logic_id
+	</select>
+</mapper>

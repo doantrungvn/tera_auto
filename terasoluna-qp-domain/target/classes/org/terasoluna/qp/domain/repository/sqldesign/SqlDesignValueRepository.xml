@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.sqldesign.SqlDesignValueRepository">
+	<resultMap id="resultMap" type="SqlDesignValue">
+		<result property="sqlDesignValueId" column="sql_design_value_id" />
+		<result property="sqlDesignId" column="sql_design_id" />
+		<result property="itemSeqNo" column="item_seq_no" />
+		<result property="columnId" column="column_id" />
+		<result property="columnName" column="column_name" />
+		<result property="columnCode" column="column_code" />
+		<result property="parameter" column="parameter" />
+		<result property="columnMissingFlag" column="column_missing_flg" />
+		<result property="dataType" column="data_type" />
+		<result property="valueType" column="value_type"/>
+	</resultMap>
+	
+	<select id="findAllBySqlDesignId" parameterType="Long" resultMap="resultMap">
+		SELECT A.sql_design_value_id,
+				A.sql_design_id,
+				A.item_seq_no,
+				A.column_id,
+				CASE WHEN B.column_name IS NULL THEN '1'
+					ELSE '0'
+				END column_missing_flg,
+				COALESCE(B.column_name,A.column_name) column_name,
+				B.column_code,
+				A.parameter, 
+				A.data_type,
+				A.pattern_format,
+				CASE WHEN A.value_type IS NULL THEN 0 ELSE A.value_type
+				END value_type
+		FROM 
+		sql_design_value A
+		LEFT JOIN
+		table_design_details B
+		ON 
+		A.column_id = B.column_id	
+		WHERE 
+			A.sql_design_id = #{sqlDesignId}
+		ORDER BY 
+			item_seq_no
+	</select>
+	
+	<select id="findById" parameterType="Long" resultMap="resultMap">
+		SELECT A.sql_design_value_id,
+				A.sql_design_id,
+				A.item_seq_no,
+				A.column_id,
+				A.column_name,
+				A.parameter,
+				A.pattern_format
+		FROM sql_design_value A
+		WHERE A.sql_design_value_id = #{sqlDesignValueId}
+	</select>
+	
+	<insert id="register" parameterType="SqlDesignValue">
+		<selectKey keyProperty="sqlDesignValueId" resultType="long" order="BEFORE">
+			SELECT nextval('sql_design_value_seq') AS sqlDesignValueId
+		</selectKey>
+		INSERT INTO
+			sql_design_value
+		(
+			sql_design_id,
+			item_seq_no,
+			column_id,
+			column_name,
+			parameter,
+			value_type,
+			pattern_format
+		)
+		VALUES
+		(
+			#{sqlDesignId},
+			#{itemSeqNo},
+			#{columnId},
+			#{columnName},
+			#{parameter},
+			#{valueType},
+			#{patternFormat}
+		)
+	</insert>
+	
+	<insert id="registerAll">
+		INSERT INTO
+			sql_design_value
+		(
+			sql_design_id,
+			item_seq_no,
+			column_id,
+			column_name,
+			parameter, 
+			data_type,
+			value_type,
+			pattern_format
+		)
+		VALUES
+		<foreach collection="sqlDesignValues" item="item" separator=",">
+		(
+			#{item.sqlDesignId},
+			#{item.itemSeqNo},
+			#{item.columnId},
+			#{item.columnName},
+			#{item.parameter},
+			#{item.dataType},
+			#{item.valueType},
+			#{item.patternFormat}
+		)
+		</foreach>
+	</insert>
+	
+	<update id="modify" parameterType="SqlDesignValue">
+		UPDATE sql_design_value
+		SET sql_design_id = #{sqlDesignId},
+			item_seq_no = #{itemSeqNo},
+			column_id = #{columnId},
+			column_name = #{columnName},
+			parameter = #{parameter},
+			value_type = #{valueType},
+			pattern_format = #{patternFormat}
+		WHERE sql_design_value_id = #{sqlDesignValueId}
+	</update>
+	
+	<update id="modifyAll">
+		<foreach collection="sqlDesignValues" item="item" separator=";">
+			UPDATE sql_design_value
+			SET sql_design_id = #{item.sqlDesignId},
+				item_seq_no = #{item.itemSeqNo},
+				column_id = #{item.columnId},
+				column_name = #{item.columnName},
+				parameter = #{item.parameter}, 
+				data_type = #{item.dataType},
+				value_type = #{item.valueType},
+				pattern_format = #{item.patternFormat}
+			WHERE sql_design_value_id = #{item.sqlDesignValueId}
+		</foreach>
+	</update>
+	
+	<update id="updateNameAffect">
+		<foreach collection="tableDesigns" item="tableDesign" separator=";">
+			<foreach collection="tableDesign.listTableDesignDetails" item="item" separator=";">
+				UPDATE
+					sql_design_value
+				SET
+					column_name = #{item.name}
+				WHERE 
+					column_id = #{item.columnId}
+			</foreach>
+		</foreach>
+	</update>
+
+	<delete id="delete" parameterType="SqlDesignValue">
+		DELETE FROM sql_design_value
+		WHERE sql_design_value_id = #{sqlDesignValueId}
+	</delete>
+
+	<delete id="deleteByExceptionalGroup">
+		DELETE FROM 
+			sql_design_value
+		<where>
+			sql_design_id = #{sqlDesignId}
+		 	<if test="exceptionGroup !=null and exceptionGroup.size() &gt; 0">
+				AND sql_design_value_id NOT IN
+				<foreach collection="exceptionGroup" separator="," open="(" close=")" item="id">
+					#{id}
+				</foreach>
+			</if>
+			<if test="exceptionGroup ==null or exceptionGroup.size() &lt;= 0">
+				AND TRUE
+			</if>
+		</where>
+	</delete>
+	
+	<delete id="deleteBySqlDesignId">
+		DELETE FROM 
+			sql_design_value
+		WHERE
+			sql_design_id = #{sqlDesignId}
+	</delete>
+</mapper>

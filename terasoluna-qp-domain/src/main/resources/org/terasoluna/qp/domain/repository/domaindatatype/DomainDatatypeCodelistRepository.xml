@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.terasoluna.qp.domain.repository.domaindatatype.DomainDatatypeCodelistRepository">
+	<resultMap type="org.terasoluna.qp.domain.model.DomainDatatypeCodelist" id="domainDatatypeCodelistResultMap">
+		<id property="codelistId" column="codelist_id" />
+		<result property="domainDatatypeItemId" column="domain_tbl_mapping_item_id" />
+		<result property="codelistName" column="codelist_name" />
+		<result property="codelistValue" column="codelist_value" />
+		<result property="supportOptionFlag" column="support_option_flag" />
+	</resultMap>
+
+	<select id="findAllByDomainDatatype" parameterType="long" resultMap="domainDatatypeCodelistResultMap">
+		<![CDATA[
+		SELECT 
+			c.codelist_id,
+			c.codelist_name,
+			c.codelist_value,
+			c.support_option_flag, 
+			c.domain_tbl_mapping_item_id
+		FROM 
+			domain_table_mapping_codelist c INNER JOIN domain_table_mapping_items m
+		ON
+			c.domain_tbl_mapping_item_id = m.domain_tbl_mapping_item_id
+		WHERE	
+			domain_tbl_mapping_id=#{domainDatatypeId}
+		]]>
+	</select>
+	
+	<select id="findAllByDomainDatatypeItem" parameterType="long" resultMap="domainDatatypeCodelistResultMap">
+		<![CDATA[
+		SELECT 
+			c.codelist_id,
+			c.codelist_name,
+			c.codelist_value,
+			c.support_option_flag, 
+			c.domain_tbl_mapping_item_id
+		FROM 
+			domain_table_mapping_codelist c 
+		WHERE	
+			c.domain_tbl_mapping_item_id = #{domainDatatypeItemId}
+		ORDER BY codelist_id
+		]]>
+	</select>
+	
+	<select id="findAllByScreenId" parameterType="long" resultMap="domainDatatypeCodelistResultMap">
+		<![CDATA[
+		SELECT 
+			c.codelist_id,
+			c.codelist_name,
+			c.codelist_value,
+			c.support_option_flag, 
+			c.domain_tbl_mapping_item_id
+		FROM 
+			domain_table_mapping_codelist c 
+		WHERE	
+			domain_tbl_mapping_item_id in
+			(
+				select distinct domain_tbl_mapping_item_id from screen_item
+				where screen_id = #{screenId}
+			)
+		ORDER BY codelist_id
+		]]>
+	</select>
+	
+	<delete id="deleteAllByDomainDatatype" parameterType="long">
+		<![CDATA[
+		DELETE FROM
+			domain_table_mapping_codelist c
+		WHERE
+			EXISTS
+			(
+				SELECT
+					1
+				FROM
+					domain_table_mapping_items i
+				WHERE
+					domain_tbl_mapping_id=#{id}
+				AND
+					c.domain_tbl_mapping_item_id = i.domain_tbl_mapping_item_id
+			)
+		]]>
+	</delete>
+	
+	<insert id="insertDomainDatatypeCodelist" parameterType="org.terasoluna.qp.domain.model.DomainDatatypeCodelist">
+		<![CDATA[
+			INSERT INTO
+				domain_table_mapping_codelist
+			(
+				codelist_name,
+				codelist_value,
+				support_option_flag,
+				domain_tbl_mapping_item_id
+			)
+			VALUES 
+			(
+				#{codelistName},
+				#{codelistValue},
+				#{supportOptionFlag},
+				#{domainDatatypeItemId}
+			)
+		]]>	
+	</insert>
+</mapper>

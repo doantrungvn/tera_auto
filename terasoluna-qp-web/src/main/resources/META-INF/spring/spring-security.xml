@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sec="http://www.springframework.org/schema/security"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- <sec:http pattern="/resources/**" security="none"/> -->
+	<sec:http auto-config="false" use-expressions="true" entry-point-ref="authenticationEntryPoint">
+		<sec:intercept-url pattern="/login" access="permitAll" />
+		<sec:intercept-url pattern="/session-expired" access="permitAll" />
+		<sec:intercept-url pattern="/resources/media/**" access="permitAll" />
+		<sec:intercept-url pattern="/resources/app/**" access="permitAll" />
+		<sec:intercept-url pattern="/jsMsgSource*" access="permitAll" />
+		
+		<!--  capture url -->
+		<sec:intercept-url pattern="/capture/*" access="permitAll" />
+
+		<!-- business type permission -->
+		<sec:intercept-url pattern="/businesstype/search*" access="hasRole('businesstypeSearch')" />
+		<sec:intercept-url pattern="/businesstype/form*" access="hasRole('businesstypeForm')" />
+		<sec:intercept-url pattern="/businesstype/searchForm*" access="hasRole('businesstypeSearchForm')" />
+		
+		<!-- license management permission -->
+		<sec:intercept-url pattern="/licensemanagement/search*" access="hasRole('licensemanagementSearch')" />
+		<sec:intercept-url pattern="/licensemanagement/register*" access="hasRole('licensemanagementRegister')" />
+		<sec:intercept-url pattern="/licensemanagement/view*" access="hasRole('licensemanagementView')" />
+		<sec:intercept-url pattern="/licensemanagement/modify*" access="hasRole('licensemanagementModify')" />
+		<sec:intercept-url pattern="/licensemanagement/delete*" access="hasRole('licensemanagementDelete')" />
+		<sec:intercept-url pattern="/licensemanagement/import*" access="hasRole('licensemanagementRegister')" />
+		
+		<!-- license design permission -->
+		<sec:intercept-url pattern="/licensedesign/search*" access="hasRole('licensedesignSearch')" />
+		<sec:intercept-url pattern="/licensedesign/register*" access="hasRole('licensedesignRegister')" />	
+		<sec:intercept-url pattern="/licensedesign/view*" access="hasRole('licensedesignView')" />
+		<sec:intercept-url pattern="/licensedesign/modify*" access="hasRole('licensedesignModify')" />	
+		<sec:intercept-url pattern="/licensedesign/delete*" access="hasRole('licensedesignDelete')" />
+		
+		<!-- project permission -->
+		<sec:intercept-url pattern="/project/search*" access="hasRole('projectSearch')" />
+		<sec:intercept-url pattern="/project/register*" access="hasRole('projectRegister')" />
+		<sec:intercept-url pattern="/project/view*" access="hasRole('projectView')" />
+		<sec:intercept-url pattern="/project/modify*" access="hasRole('projectModify')" />
+		<sec:intercept-url pattern="/project/delete*" access="hasRole('projectDelete')" />
+		
+		<!-- module permission -->
+		<sec:intercept-url pattern="/module/search*" access="hasRole('moduleSearch')" />
+		<sec:intercept-url pattern="/module/register*" access="hasRole('moduleRegister')" />
+		<sec:intercept-url pattern="/module/view*" access="hasRole('moduleView')" />
+		<sec:intercept-url pattern="/module/modify*" access="hasRole('moduleModify')" />	
+		<sec:intercept-url pattern="/module/delete*" access="hasRole('moduleDelete')" />
+		
+		<!-- account roles -->	
+		<sec:intercept-url pattern="/accountrole/view*" access="hasRole('accountroleView')" />
+		<sec:intercept-url pattern="/accountrole/modify*" access="hasRole('accountroleModify')" />
+		
+		<!-- account permission -->
+		<sec:intercept-url pattern="/account/search*" access="hasRole('accountSearch')" />
+		<sec:intercept-url pattern="/account/register*" access="hasRole('accountRegister')" />
+		<sec:intercept-url pattern="/account/view*" access="hasRole('accountView')" />
+		<sec:intercept-url pattern="/account/modify*" access="hasRole('accountModify')" />
+		<sec:intercept-url pattern="/account/delete*" access="hasRole('accountDelete')" />
+		
+		<!-- role permission -->
+		<sec:intercept-url pattern="/role/search*" access="hasRole('roleSearch')" />
+		<sec:intercept-url pattern="/role/register*" access="hasRole('roleRegister')" />
+		<sec:intercept-url pattern="/role/view*" access="hasRole('roleView')" />
+		<sec:intercept-url pattern="/role/modify*" access="hasRole('roleModify')" />
+		<sec:intercept-url pattern="/role/delete*" access="hasRole('roleDelete')" />
+		
+		<!-- message permission -->
+		<sec:intercept-url pattern="/message/search*" access="hasRole('messageSearch')" />
+		<sec:intercept-url pattern="/message/modify*" access="hasRole('messageModify')" />
+		
+		<!-- screen design -->
+		<sec:intercept-url pattern="/screendesign/design*" access="hasRole('screendesignDesign')" />
+		<sec:intercept-url pattern="/screendesign/search*" access="hasRole('screendesignSearch')" />
+		<sec:intercept-url pattern="/screendesign/transition*" access="hasRole('screendesignTransition')" />
+		<sec:intercept-url pattern="/screendesign/register*" access="hasRole('screendesignRegister')" />
+		<sec:intercept-url pattern="/screendesign/view*" access="hasRole('screendesignView')" />
+		
+		<!-- autocomplete design -->
+		<sec:intercept-url pattern="/autocomplete/register*" access="hasRole('autocompleteRegister')" />
+		<sec:intercept-url pattern="/autocomplete/search*" access="hasRole('autocompleteSearch')" />
+		<sec:intercept-url pattern="/autocomplete/view*" access="hasRole('autocompleteView')" />
+		<sec:intercept-url pattern="/autocomplete/delete*" access="hasRole('autocompleteDelete')" />
+		<sec:intercept-url pattern="/autocomplete/modify*" access="hasRole('autocompleteModify')" />
+		
+		<!-- sql design -->
+		<sec:intercept-url pattern="/sqldesign/register*" access="hasRole('sqldesignRegister')" />
+		<sec:intercept-url pattern="/sqldesign/search*" access="hasRole('sqldesignSearch')" />
+		<sec:intercept-url pattern="/sqldesign/view*" access="hasRole('sqldesignView')" />
+		<sec:intercept-url pattern="/sqldesign/delete*" access="hasRole('sqldesignDelete')" />
+		<sec:intercept-url pattern="/sqldesign/modify*" access="hasRole('sqldesignModify')" />
+
+		<!-- account profile -->
+		<sec:intercept-url pattern="/accountprofile/modifyTheme*" access="hasRole('accountprofileModifytheme')" />
+		<sec:intercept-url pattern="/accountprofile/setDefaultTheme*" access="hasRole('accountprofileSetdefaulttheme')" />
+		
+		<!-- account  permission -->
+		<sec:intercept-url pattern="/accountpermission/view*" access="hasRole('accountpermissionView')" />
+		<sec:intercept-url pattern="/accountpermission/modify*" access="hasRole('accountpermissionModify')" />
+		
+		<!-- Account rule definition -->
+		<sec:intercept-url pattern="/accountruledefinition/register*" access="hasRole('accountruledefinitionRegister')" />
+		<sec:intercept-url pattern="/accountruledefinition/search*" access="hasRole('accountruledefinitionSearch')" />
+		<sec:intercept-url pattern="/accountruledefinition/view*" access="hasRole('accountruledefinitionView')" />
+		<sec:intercept-url pattern="/accountruledefinition/delete*" access="hasRole('accountruledefinitionDelete')" />
+		<sec:intercept-url pattern="/accountruledefinition/modify*" access="hasRole('accountruledefinitionModify')" />
+
+		<!-- business logic design permission -->
+		<sec:intercept-url pattern="/businessdesign/search*" access="hasRole('businesslogicSearch')" />
+		<sec:intercept-url pattern="/businessdesign/register*" access="hasRole('businesslogicRegister')" />
+		<sec:intercept-url pattern="/businessdesign/view*" access="hasRole('businesslogicView')" />
+		<sec:intercept-url pattern="/businessdesign/delete*" access="hasRole('businesslogicDelete')" />
+		<sec:intercept-url pattern="/businessdesign/modify*" access="hasRole('businesslogicModify')" />
+		
+		<!-- domain datatype mapping -->
+		<sec:intercept-url pattern="/domaindatatype/search*" access="hasRole('domaindatatypeSearch')" />
+		<sec:intercept-url pattern="/domaindatatype/modify*" access="hasRole('domaindatatypeModify')" />
+		<sec:intercept-url pattern="/domaindatatype/view*" access="hasRole('domaindatatypeView')" />
+		
+		<!-- domain design mapping -->
+		<sec:intercept-url pattern="/domaindesign/search*" access="hasRole('domaindesignSearch')" />
+		<sec:intercept-url pattern="/domaindesign/modify*" access="hasRole('domaindesignModify')" />
+		<sec:intercept-url pattern="/domaindesign/view*" access="hasRole('domaindesignView')" />
+		<sec:intercept-url pattern="/domaindesign/register*" access="hasRole('domaindesignRegister')" />
+		
+		<!-- table design design permission -->
+		<sec:intercept-url pattern="/tabledesign/search*" access="hasRole('tabledesignSearch')" />
+		<sec:intercept-url pattern="/tabledesign/register*" access="hasRole('tabledesignRegister')" />
+		<sec:intercept-url pattern="/tabledesign/view*" access="hasRole('tabledesignView')" />
+		<sec:intercept-url pattern="/tabledesign/modify*" access="hasRole('tabledesignModify')" />
+		<sec:intercept-url pattern="/tabledesign/delete*" access="hasRole('tabledesignDelete')" />
+		
+		<!-- import schema permission -->
+		<sec:intercept-url pattern="/importschema/*" access="hasRole('importschema')" />
+		
+		<!-- subject area design permission -->
+		<sec:intercept-url pattern="/subjectarea/search*" access="hasRole('subjectareaSearch')" />
+		<sec:intercept-url pattern="/subjectarea/register*" access="hasRole('subjectareaRegister')" />
+		<sec:intercept-url pattern="/subjectarea/view*" access="hasRole('subjectareaView')" />
+		<sec:intercept-url pattern="/subjectarea/modify*" access="hasRole('subjectareaModify')" />
+		<sec:intercept-url pattern="/subjectarea/delete*" access="hasRole('subjectareaDelete')" />
+		
+		<!-- graphic database design permission -->
+		<sec:intercept-url pattern="/graphicdatabasedesign/search*" access="hasRole('graphicdatabasedesignSearch')" />
+		<sec:intercept-url pattern="/graphicdatabasedesign/modify*" access="hasRole('graphicdatabasedesignModify')" />
+
+		<!-- subject area design permission -->
+		<sec:intercept-url pattern="/sample/search*" access="hasRole('sampleSearch')" />
+		<sec:intercept-url pattern="/sample/register*" access="hasRole('sampleRegister')" />
+		<sec:intercept-url pattern="/sample/view*" access="hasRole('sampleView')" />
+		<sec:intercept-url pattern="/sample/modify*" access="hasRole('sampleModify')" />
+		<sec:intercept-url pattern="/sample/delete*" access="hasRole('sampleDelete')" />
+		
+		<!-- message design permission -->
+		<sec:intercept-url pattern="/messagedesign/search*" access="hasRole('messagedesignSearch')" />
+		<sec:intercept-url pattern="/messagedesign/register*" access="hasRole('messagedesignRegister')" />
+		<sec:intercept-url pattern="/messagedesign/view*" access="hasRole('messagedesignView')" />
+		<sec:intercept-url pattern="/messagedesign/modify*" access="hasRole('messagedesignModify')" />
+		<sec:intercept-url pattern="/messagedesign/delete*" access="hasRole('messagedesignDelete')" />
+		
+		 <!-- language design permission -->
+		<sec:intercept-url pattern="/languagedesign/register*" access="hasRole('languagedesignRegister')" />
+		<sec:intercept-url pattern="/languagedesign/view*" access="hasRole('languagedesignView')" />
+		<sec:intercept-url pattern="/languagedesign/modify*" access="hasRole('languagedesignModify')" />
+		<sec:intercept-url pattern="/languagedesign/delete*" access="hasRole('languagedesignDelete')" />
+		<sec:intercept-url pattern="/languagedesign/translate*" access="hasRole('languagedesignTranslate')" />
+		<sec:intercept-url pattern="/languagedesign/search*" access="hasRole('languagedesignSearch')" />
+		<sec:intercept-url pattern="/languagedesign/languagedesignBingsetting*" access="hasRole('languagedesignBingsetting')" />
+		
+		<!-- language permission -->
+		<sec:intercept-url pattern="/language/register*" access="hasRole('languageRegister')" />
+		<sec:intercept-url pattern="/language/view*" access="hasRole('languageView')" />
+		<sec:intercept-url pattern="/language/modify*" access="hasRole('languageModify')" />
+		<sec:intercept-url pattern="/language/delete*" access="hasRole('languageDelete')" />
+		<sec:intercept-url pattern="/language/search*" access="hasRole('languageSearch')" />
+		<sec:intercept-url pattern="/language/translate*" access="hasRole('languageTranslate')" />
+		
+		
+		<!-- generation -->
+		<sec:intercept-url pattern="/generation/generateddl*" access="hasRole('generationGenerateddl')" />
+		<sec:intercept-url pattern="/generation/generatescreen*" access="hasRole('generationGeneratescreen')" />
+		<sec:intercept-url pattern="/generation/generatemanagement*" access="hasRole('generationGeneratemanagement')" />
+		<sec:intercept-url pattern="/generation/generatehtml*" access="hasRole('generationGeneratehtml')" />
+		<sec:intercept-url pattern="/generatedocument/generatedocument*" access="hasRole('generationGeneratedocument')" />
+		<sec:intercept-url pattern="/generatesourcecode/generatesourcecode*" access="hasRole('generationGeneratesourcecode')" />
+		
+		<!-- importmanagement -->
+		<sec:intercept-url pattern="/importmanagement/importmanagement*" access="hasRole('importmanagement')" />
+		
+		<!-- generation blogic -->
+		<sec:intercept-url pattern="/generation/generatedbblogic*" access="hasRole('generationGeneratedbblogic')" />
+		
+		<!-- decision table permission -->
+		<sec:intercept-url pattern="/decisiontable/search*" access="hasRole('decisiontableSearch')" />
+		<sec:intercept-url pattern="/decisiontable/register*" access="hasRole('decisiontableRegister')" />
+		<sec:intercept-url pattern="/decisiontable/view*" access="hasRole('decisiontableView')" />
+		<sec:intercept-url pattern="/decisiontable/modify*" access="hasRole('decisiontableModify')" />
+		<sec:intercept-url pattern="/decisiontable/delete*" access="hasRole('decisiontableDelete')" />
+		
+		<!-- Function master permission -->
+		<sec:intercept-url pattern="/functionmaster/search*" access="hasRole('functionmasterSearch')" />
+		<sec:intercept-url pattern="/functionmaster/register*" access="hasRole('functionmasterRegister')" />
+		<sec:intercept-url pattern="/functionmaster/view*" access="hasRole('functionmasterView')" />
+		<sec:intercept-url pattern="/functionmaster/modify*" access="hasRole('functionmasterModify')" />
+		<sec:intercept-url pattern="/functionmaster/delete*" access="hasRole('functionmasterDelete')" />
+		
+		<!-- codelist design permission -->
+		<sec:intercept-url pattern="/codelist/search*" access="hasRole('codelistSearch')" />
+		<sec:intercept-url pattern="/codelist/register*" access="hasRole('codelistRegister')" />
+		<sec:intercept-url pattern="/codelist/view*" access="hasRole('codelistView')" />
+		<sec:intercept-url pattern="/codelist/modify*" access="hasRole('codelistModify')" />
+		<sec:intercept-url pattern="/codelist/delete*" access="hasRole('codelistDelete')" />
+		
+		<!-- design information permission -->
+		<sec:intercept-url pattern="/designinformation/search*" access="hasRole('designinformationSearch')" />
+		<sec:intercept-url pattern="/designinformation/register*" access="hasRole('designinformationRegister')" />
+		<sec:intercept-url pattern="/designinformation/modify*" access="hasRole('designinformationModify')" />
+		<sec:intercept-url pattern="/designinformation/view*" access="hasRole('designinformationView')" />
+		<sec:intercept-url pattern="/designinformation/delete*" access="hasRole('designinformationDelete')" />
+		
+		<!-- problem list permission -->
+		<sec:intercept-url pattern="/problemlist/search*" access="hasRole('problemlistSearch')" />
+		<sec:intercept-url pattern="/problemlist/autofix*" access="hasRole('problemlistAutofix')" />
+		<sec:intercept-url pattern="/problemlist/view*" access="hasRole('problemlistView')" />
+		
+		<!-- function design permission -->
+		<sec:intercept-url pattern="/functiondesign/search*" access="hasRole('functiondesignSearch')" />
+		<sec:intercept-url pattern="/functiondesign/register*" access="hasRole('functiondesignRegister')" />
+		<sec:intercept-url pattern="/functiondesign/view*" access="hasRole('functiondesignView')" />
+		<sec:intercept-url pattern="/functiondesign/modify*" access="hasRole('functiondesignModify')" />
+		<sec:intercept-url pattern="/functiondesign/delete*" access="hasRole('functiondesignDelete')" />
+		
+		<!-- common object definition permission -->
+		<sec:intercept-url pattern="/commonobjectdefinition/search*" access="hasRole('commonobjectdefinitionSearch')" />
+		<sec:intercept-url pattern="/commonobjectdefinition/register*" access="hasRole('commonobjectdefinitionRegister')" />
+		<sec:intercept-url pattern="/commonobjectdefinition/view*" access="hasRole('commonobjectdefinitionView')" />
+		<sec:intercept-url pattern="/commonobjectdefinition/modify*" access="hasRole('commonobjectdefinitionModify')" />
+		<sec:intercept-url pattern="/commonobjectdefinition/delete*" access="hasRole('commonobjectdefinitionDelete')" />
+		
+		<!-- external object definition permission -->
+		<sec:intercept-url pattern="/externalobjectdefinition/search*" access="hasRole('externalobjectdefinitionSearch')" />
+		<sec:intercept-url pattern="/externalobjectdefinition/register*" access="hasRole('externalobjectdefinitionRegister')" />
+		<sec:intercept-url pattern="/externalobjectdefinition/view*" access="hasRole('externalobjectdefinitionView')" />
+		<sec:intercept-url pattern="/externalobjectdefinition/modify*" access="hasRole('externalobjectdefinitionModify')" />
+		<sec:intercept-url pattern="/externalobjectdefinition/delete*" access="hasRole('externalobjectdefinitionDelete')" />
+		
+		<!-- library management permission -->
+		<sec:intercept-url pattern="/librarymanagement/search*" access="hasRole('librarymanagementSearch')" />
+		<sec:intercept-url pattern="/librarymanagement/register*" access="hasRole('librarymanagementRegister')" />
+		<sec:intercept-url pattern="/librarymanagement/view*" access="hasRole('librarymanagementView')" />
+		<sec:intercept-url pattern="/librarymanagement/modify*" access="hasRole('librarymanagementModify')" />	
+		<sec:intercept-url pattern="/librarymanagement/delete*" access="hasRole('librarymanagementDelete')" />
+		
+		<!-- menu design -->
+		<sec:intercept-url pattern="/menudesign/preview*" access="hasRole('menudesignPreview')" />
+		<sec:intercept-url pattern="/menudesign/modify*" access="hasRole('menudesignModify')" />	
+		
+		<!-- logging management -->
+		<sec:intercept-url pattern="/loggingmanagement/modify*" access="hasRole('loggingmanagementModify')" />
+		
+		<!-- web service token management permission -->
+		<sec:intercept-url pattern="/webservicetokenmanagement/search*" access="hasRole('webservicetokenmanagementSearch')" />
+		<sec:intercept-url pattern="/webservicetokenmanagement/register*" access="hasRole('webservicetokenmanagementRegister')" />	
+		<sec:intercept-url pattern="/webservicetokenmanagement/view*" access="hasRole('webservicetokenmanagementView')" />
+		<sec:intercept-url pattern="/webservicetokenmanagement/modify*" access="hasRole('webservicetokenmanagementModify')" />	
+		<sec:intercept-url pattern="/webservicetokenmanagement/delete*" access="hasRole('webservicetokenmanagementDelete')" />
+		
+		<!-- external object definition permission -->
+		<sec:intercept-url pattern="/sessionmanagement/search*" access="hasRole('sessionmanagementSearch')" />
+		<sec:intercept-url pattern="/sessionmanagement/register*" access="hasRole('sessionmanagementRegister')" />
+		<sec:intercept-url pattern="/sessionmanagement/view*" access="hasRole('sessionmanagementView')" />
+		<sec:intercept-url pattern="/sessionmanagement/modify*" access="hasRole('sessionmanagementModify')" />
+		<sec:intercept-url pattern="/sessionmanagement/delete*" access="hasRole('sessionmanagementDelete')" />
+		
+		<sec:intercept-url pattern="/**" access="isAuthenticated()" /> 
+		<!-- login configuration -->
+		<!-- 
+		<sec:form-login login-page="/login" default-target-url="/getUserDetailInfo" always-use-default-target="true" authentication-failure-handler-ref="redirectErrorHandler" authentication-success-handler-ref="authSuccessHandlerEx" />
+		 -->
+
+		<!-- logout configuration -->
+		<sec:logout logout-url="/logout" logout-success-url="/login" invalidate-session="true" delete-cookies="JSESSIONID" />
+		
+		<!-- Allow fancybox load iframe -->
+		<sec:headers><sec:frame-options policy="SAMEORIGIN" /></sec:headers>
+		
+		<sec:access-denied-handler ref="accessDeniedHandler" />
+		
+		<sec:csrf />
+		
+		<sec:custom-filter position="FORM_LOGIN_FILTER" ref="authenticationFilter" />
+		<sec:custom-filter position="CONCURRENT_SESSION_FILTER" ref="concurrencyFilter" />
+		<sec:custom-filter after="ANONYMOUS_FILTER" ref="userIdMDCPutFilter"/>
+		<sec:custom-filter before="LOGOUT_FILTER" ref="csrfFilter"/>
+		
+		<!-- QP management checking -->
+		<sec:custom-filter after="FORM_LOGIN_FILTER" ref="cstFilter"/>
+		
+		<sec:session-management session-authentication-strategy-ref="sessionAuthenticationStrategy" />
+		
+	</sec:http>
+	
+	<bean id="authenticationEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+		<constructor-arg value="/login" />
+	</bean>
+	
+	<bean id="authenticationFilter" class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
+	   	<!-- 
+		<property name="requiresAuthenticationRequestMatcher">
+			<bean class="org.springframework.security.web.authentication.logout.LogoutFilter$FilterProcessUrlRequestMatcher">
+				<constructor-arg value="/authentication" />
+			</bean>
+		</property>
+		 -->
+		<property name="sessionAuthenticationStrategy" ref="sessionAuthenticationStrategy" />
+		<property name="authenticationManager" ref="authenticationManager" />
+		<property name="authenticationFailureHandler" ref="redirectErrorHandler"/>
+		<property name="authenticationSuccessHandler" ref="authSuccessHandlerEx"/>
+	</bean>
+	
+	<bean id="redirectErrorHandler" class="org.terasoluna.qp.app.account.AuthenticationFailureHandlerEx">
+		<property name="defaultFailureUrl" value="/login?error=true" />
+		<property name="useForward" value="true" />
+	</bean>
+	
+	<bean id="authSuccessHandlerEx" class="org.terasoluna.qp.app.account.AuthenticationSuccessHandlerEx">
+		<property name="defaultTargetUrl" value="/getUserDetailInfo" />
+		<property name="alwaysUseDefaultTargetUrl" value="true"></property>
+	</bean>
+	
+	<sec:authentication-manager alias="authenticationManager">
+		<sec:authentication-provider user-service-ref="accountDetailsService">
+			<sec:password-encoder ref="passwordEncoder" />
+		</sec:authentication-provider>
+	</sec:authentication-manager>
+	
+	<bean id="concurrencyFilter" class="org.springframework.security.web.session.ConcurrentSessionFilter">
+	   <property name="sessionRegistry" ref="sessionRegistry" />
+	   <property name="expiredUrl" value="/session-expired" />
+	</bean>
+
+	<bean id="sessionAuthenticationStrategy" class="org.springframework.security.web.authentication.session.ConcurrentSessionControlStrategy">
+		<constructor-arg name="sessionRegistry" ref="sessionRegistry" />
+		<property name="maximumSessions" value="1" /> 
+	</bean>
+					
+	<bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl" />
+
+	<bean id="accountDetailsService" class="org.terasoluna.qp.domain.service.account.AccountDetailServiceImpl"></bean>
+
+	<bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+
+	<bean id="redirectHandler" class="org.terasoluna.gfw.security.web.redirect.RedirectAuthenticationHandler"></bean>
+
+	<!-- CSRF Protection -->
+	<bean id="accessDeniedHandler" class="org.springframework.security.web.access.DelegatingAccessDeniedHandler">
+		<constructor-arg index="0">
+			<map>
+				<entry key="org.springframework.security.web.csrf.InvalidCsrfTokenException">
+					<bean class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
+						<property name="errorPage" value="/WEB-INF/views/common/error/invalidCsrfTokenError.jsp" />
+					</bean>
+				</entry>
+				<entry key="org.springframework.security.web.csrf.MissingCsrfTokenException">
+					<bean class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
+						<property name="errorPage" value="/WEB-INF/views/common/error/missingCsrfTokenError.jsp" />
+					</bean>
+				</entry>
+			</map>
+		</constructor-arg>
+		<constructor-arg index="1">
+			<bean class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
+				<property name="errorPage" value="/WEB-INF/views/common/error/accessDeniedError.jsp" />
+			</bean>
+		</constructor-arg>
+	</bean>
+
+	<!-- Put UserID into MDC -->
+	<bean id="userIdMDCPutFilter" class="org.terasoluna.gfw.security.web.logging.UserIdMDCPutFilter">
+		<property name="removeValue" value="true" />
+	</bean>
+	
+	<bean id="cstFilter" class="org.terasoluna.qp.app.common.filter.CustomFilter"/>
+	
+	<bean id="csrfFilter" class="org.springframework.security.web.csrf.CsrfFilter">
+		<constructor-arg index="0" ref="csrfTokenRepository" />
+		<property name="accessDeniedHandler">
+			<bean class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
+				<property name="errorPage" value="/WEB-INF/views/common/error/csrfTokenError.jsp" />
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="csrfTokenRepository" class="org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository" />
+
+</beans>

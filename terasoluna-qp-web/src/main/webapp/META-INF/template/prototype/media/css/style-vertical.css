@@ -1,0 +1,42 @@
+.sm-blue a, .sm-blue a:hover, .sm-blue a:focus, .sm-blue a:active {
+	background-image: linear-gradient(to bottom, #7895CF 0%, #7895CF 100%);
+	padding-top: 9px !important;
+	padding-bottom: 15px !important;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	line-height: 20px;
+	font-weight: normal;
+}
+
+.sm-blue a:hover, .sm-blue a:focus, .sm-blue a:active {
+	color: #333;
+	background-color: transparent;
+}
+
+.sm-blue a.highlighted {
+	background: #F0F0F0 !important;
+	color: #333;
+}
+
+.sm-blue.sm-vertical ul a, .sm-blue.sm-vertical ul a:hover, .sm-blue.sm-vertical ul a:focus,
+	.sm-blue.sm-vertical ul a:active {
+	display: block;
+	padding: 9px 20px !important;
+	clear: both;
+	font-weight: normal;
+	line-height: 20px;
+	color: #333;
+	white-space: nowrap;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: normal;
+}
+
+.sm-blue ul a:hover, .sm-blue ul a:focus, .sm-blue ul a:active, .sm-blue ul a.highlighted
+	{
+	background: #F0F0F0 !important;
+}
+.divider{
+	background: #E5E5E5;
+	height: 0.5px;
+}

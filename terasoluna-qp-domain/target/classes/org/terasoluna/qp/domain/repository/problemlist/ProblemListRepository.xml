@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.terasoluna.qp.domain.repository.problemlist.ProblemListRepository">
+	<resultMap id="resultMap" type="ProblemList">
+		<id property="problemId" column="problem_id" />
+		<result property="problemName" column="problem_name" />
+		<result property="resourceType" column="resource_type" />
+		<result property="resourceId" column="resource_id" />
+		<result property="resourceName" column="resource_name" />
+		<result property="problemType" column="problem_type" /> 
+		<result property="autofixFlg" column="autofix_flg" />
+		<result property="urlId" column="url_id" />
+		<result property="moduleId" column="module_id" />
+		<result property="moduleIdAutocomplete" column="module_name" />
+		<result property="projectId" column="project_id" />
+		<result property="countDisplay" column="count_display" />
+		<result property="fromResourceType" column="from_resource_type" />
+		<result property="fromResourceId" column="from_resource_id" />
+		<result property="createdBy" column="created_by" />
+		<result property="createdDate" column="created_date" />
+		<result property="createdByName" column="username" />
+	</resultMap>
+	
+	<!-- Count problem list by search condition -->
+	<select id="countBySearchCriteria" parameterType="org.terasoluna.qp.domain.repository.problemlist.ProblemListCriteria" resultType="_long">
+		<![CDATA[
+			SELECT 
+				COUNT(*) 
+			FROM 
+				problem_list AS A
+			LEFT JOIN
+				module as M on A.module_id = M.module_Id
+		]]>
+		<include refid="findPageByCriteriaWherePhrase" />
+	</select>
+
+	<!-- Finds problem list by search condition -->
+	<select id="findPageBySearchCriteria" parameterType="org.terasoluna.qp.domain.repository.problemlist.ProblemListCriteria" resultMap="resultMap">
+			SELECT
+				A.problem_id,
+				A.problem_name,
+				A.resource_type,
+				A.problem_type,
+				A.autofix_flg,
+				A.module_id,
+				A.url_id,
+				A.created_by,
+				A.created_date,
+				AC.username,
+				M.module_name,
+				M.module_id,
+				CASE 
+					WHEN A.url_id = 1 then 
+						(
+							SELECT 
+								business_logic_name 
+							FROM 
+								business_logic bl
+							WHERE
+								A.resource_id = bl.business_logic_id
+						)
+					WHEN A.url_id = 4 then 
+						(
+							SELECT 
+								decision_table_name 
+							FROM 
+								decision_table dl
+							WHERE  
+								A.resource_id = dl.decision_table_id
+						)
+					WHEN A.url_id = 2 then 
+						(
+							SELECT 
+								message_string 
+							FROM 
+								message_design md
+							INNER JOIN 
+								screen_design sd on sd.message_code = md.message_code
+							WHERE  
+								A.resource_id = sd.screen_id AND md.language_id = #{languageId}
+						)
+					WHEN A.url_id = 3 then 
+						(
+							SELECT 
+								sql_design_name 
+							FROM 
+								sql_design sd
+							WHERE  
+								A.resource_id = sd.sql_design_id
+						)
+					WHEN A.url_id = 5 then 
+						(
+							SELECT 
+								domain_name 
+							FROM 
+								domain_design tab
+							WHERE  
+								A.resource_id = tab.domain_id
+						)	
+					WHEN A.url_id = 6 then 
+						(
+							SELECT 
+								tbl_design_name 
+							FROM 
+								table_design tab
+							WHERE  
+								A.resource_id = tab.tbl_design_id
+						)
+					WHEN A.url_id = 9 then 
+						(
+							SELECT 
+								tdd.column_name 
+							FROM 
+								table_design tab
+							INNER JOIN table_design_details tdd ON tab.tbl_design_id = tdd.tbl_design_id
+							WHERE  
+								A.resource_id = tdd.column_id
+						)
+					WHEN A.url_id = 11 then 
+						(
+							SELECT 
+								function_master_name
+							FROM 
+								function_master
+							WHERE  
+								A.resource_id = function_master_id
+						)
+					WHEN A.url_id = 10 then 
+						(
+							SELECT 
+								session_management_name
+							FROM 
+								session_management
+							WHERE  
+								A.resource_id = session_management_id
+						)
+					WHEN A.url_id = 12  then 
+						(
+							SELECT 
+								external_object_definition_name
+							FROM 
+								external_object_definition
+							WHERE  
+								A.resource_id = external_object_definition_id
+						)
+					WHEN A.url_id = 13 then 
+						(
+							SELECT 
+								common_object_definition_name
+							FROM 
+								common_object_definition
+							WHERE  
+								A.resource_id = common_object_definition_id
+						)
+				END AS resource_name,
+				CASE 
+					WHEN A.url_id = 9 then 
+						(
+							SELECT 
+								tab.tbl_design_id
+							FROM 
+								table_design tab
+							INNER JOIN table_design_details tdd ON tab.tbl_design_id = tdd.tbl_design_id
+							WHERE  
+								A.resource_id = tdd.column_id
+						)
+					ELSE (SELECT A.resource_id)
+				END AS resource_id
+			FROM 
+				problem_list AS A
+			LEFT JOIN
+				module AS M on A.module_id = M.module_Id
+			INNER JOIN
+				account AS AC on AC.account_id = A.created_by
+		<include refid="findPageByCriteriaWherePhrase" />
+		<if test="pageable.sort != null">
+			ORDER BY
+			<foreach collection="pageable.sort" item="order" separator=",">
+				${order.property} ${order.direction}
+			</foreach>
+		</if>
+		<![CDATA[
+			LIMIT
+				#{pageable.pageSize}
+			OFFSET
+				#{pageable.offset}
+		]]>
+	</select>
+	
+	<!-- Problem list search criteria -->
+	<sql id="findPageByCriteriaWherePhrase">
+		<where>
+			A.project_id = #{criteria.projectId}
+			<if test="criteria.problemName != null and criteria.problemName != ''">
+				<bind name="problemName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.problemName)" />
+				<![CDATA[
+					AND A.problem_name ILIKE #{problemName} ESCAPE '~'
+				]]>
+			</if>
+			
+			<if test="criteria.moduleId !=null and criteria.moduleId != ''">
+				<if test="criteria.moduleId != -1">
+					<![CDATA[
+						AND A.module_id = #{criteria.moduleId}
+					]]>
+				</if>
+				<if test="criteria.moduleId == -1">
+					AND A.module_id IS NULL
+				</if>
+			</if>
+			
+			<if test="criteria.resourceType != null and criteria.resourceType.length > 0">
+				AND resource_type IN
+				<foreach collection="criteria.resourceType" item="resourceType" index="index" open="(" separator="," close=")">
+					#{resourceType}
+				</foreach>
+			</if>
+			
+			<if test="criteria.problemType != null and criteria.problemType.length > 0">
+				AND problem_type IN
+				<foreach collection="criteria.problemType" item="problemType" index="index" open="(" separator="," close=")">
+					#{problemType}
+				</foreach>
+			</if>
+
+			<if test="criteria.createdBy !=null and criteria.createdBy != ''">
+				AND A.created_by = ${criteria.createdBy}
+			</if>
+
+			<if test="criteria.fromCreatedDate !=null and criteria.fromCreatedDate != ''">
+				<![CDATA[AND A.created_date >= '${criteria.fromCreatedDate}']]>
+			</if>
+
+			<if test="criteria.toCreatedDate !=null and criteria.toCreatedDate != ''">
+				<![CDATA[AND A.created_date <= '${criteria.toCreatedDate}']]>
+			</if>
+		</where>
+	</sql>
+
+	<!-- Insert problem into problem list -->
+	<insert id="registerProblemList" parameterType="map">
+		<selectKey keyProperty="problemId" resultType="long" order="BEFORE">
+			SELECT nextval('problem_list_seq') AS problemId
+		</selectKey>
+		<![CDATA[
+			INSERT INTO
+				problem_list
+			(
+				problem_id,
+				problem_name,
+				resource_type,
+				resource_id,
+				problem_type,
+				autofix_flg,
+				module_id,
+				url_id,
+				project_id,
+				from_resource_type,
+				from_resource_id,
+				created_by,
+				created_date
+			)
+			VALUES
+			(
+				#{problemId},
+				#{problemName},
+				#{resourceType},
+				#{resourceId},
+				#{problemType},
+				#{autofixFlg},
+				#{moduleId},
+				#{urlId},
+				#{projectId},
+				#{fromResourceType},
+				#{fromResourceId},
+				#{createdBy},
+				#{createdDate}
+			)
+		]]>
+	</insert>
+	
+	<insert id="multiRegisterProblem">
+		INSERT INTO
+				problem_list
+			(
+				problem_name,
+				resource_type,
+				resource_id,
+				problem_type,
+				autofix_flg,
+				module_id,
+				url_id,
+				project_id,
+				from_resource_type,
+				from_resource_id,
+				created_by,
+				created_date
+			)
+			VALUES
+		<foreach item="item" collection="problemLists" separator=",">
+		(
+				#{item.problemName},
+				#{item.resourceType},
+				#{item.resourceId},
+				#{item.problemType},
+				#{item.autofixFlg},
+				#{item.moduleId},
+				#{item.urlId},
+				#{item.projectId},
+				#{item.fromResourceType},
+				#{item.fromResourceId},
+				#{item.createdBy},
+				#{item.createdDate}
+		)
+		</foreach>
+	</insert>
+	
+	 <!-- Delete problem by problem id -->
+	<delete id="deleteProblem" parameterType="Long">
+		DELETE FROM 
+			problem_list
+		WHERE
+			problem_id = #{problemId}
+	</delete>
+	
+	<!-- Delete resource type by resource name & resource id -->
+	<delete id="deleteResourceType">
+		DELETE FROM 
+			problem_list
+		WHERE
+			from_resource_type = #{fromResourceType}
+		AND	
+			<if test="listFromResouceId != null and listFromResouceId.size() > 0">
+				from_resource_id IN 
+				<foreach item="status" index="index" collection="listFromResouceId" open="(" separator="," close=")">
+					#{status}
+				</foreach>
+			</if>
+			<if test="listFromResouceId == null or listFromResouceId.size() == 0">
+				FALSE
+			</if>
+	</delete>
+	
+	<!-- Delete resource type by resource name & resource id -->
+	<delete id="deleteFromResourceTypeOfProject">
+		DELETE FROM 
+			problem_list
+		WHERE
+			<if test="resourceType != null and resourceType != ''">
+				from_resource_type = #{resourceType}
+			</if>
+
+			<if test="resourceId != null and resourceId != ''">
+				AND from_resource_id = #{resourceId}
+			</if>
+	</delete>
+	
+	<!-- Delete resource type by resource name & resource id -->
+	<delete id="deleteFromResourceTypeOfTblDesign">
+		DELETE FROM 
+			problem_list
+		WHERE
+			<if test="listFromResourceType != null and listFromResourceType.size() > 0">
+				from_resource_type IN 
+				<foreach item="status" index="index" collection="listFromResourceType" open="(" separator="," close=")">
+					#{status}
+				</foreach>
+			</if>
+
+			<if test="listFromResouceId != null and listFromResouceId.size() > 0">
+				AND	from_resource_id IN 
+				<foreach item="status" index="index" collection="listFromResouceId" open="(" separator="," close=")">
+					#{status}
+			</foreach>
+			</if>
+
+			<if test="listFromResourceType == null or listFromResourceType.size() == 0 or listFromResouceId == null or listFromResouceId.size() == 0">
+				FALSE
+			</if>
+	</delete>
+	
+	<!-- Delete resource of business logic by resource name & resource id -->
+	<delete id="deleteResourceOfBLogic">
+		DELETE FROM 
+			problem_list
+		WHERE
+			from_resource_type = #{fromResourceType}
+		AND	from_resource_id = #{fromResourceId};
+		
+		DELETE FROM 
+			problem_list a
+		WHERE
+			a.from_resource_type = 8
+			AND EXISTS
+			(
+			SELECT b.input_bean_id
+			FROM INPUT_BEAN b
+			WHERE b.business_logic_id =#{fromResourceId}
+			AND b.input_bean_id = a.from_resource_id
+			);
+			
+		DELETE FROM 
+			problem_list a
+		WHERE
+			a.from_resource_type = 9
+			AND EXISTS
+			(
+			SELECT b.output_bean_id
+			FROM OUTPUT_BEAN b
+			WHERE b.business_logic_id =#{fromResourceId}
+			AND b.output_bean_id = a.from_resource_id
+			);
+	</delete>
+	<select id="findOneById" resultMap="resultMap">
+		SELECT
+			A.problem_id,
+			A.problem_name,
+			A.resource_type,
+			A.resource_id,
+			A.problem_type,
+			A.autofix_flg,
+			A.module_id,
+			A.url_id,
+			M.module_name,
+			M.module_id,
+			A.from_resource_type,
+ 			A.from_resource_id 
+		FROM 
+			problem_list AS A
+			LEFT JOIN
+			module as M on A.module_id = M.module_Id
+		WHERE A.problem_id = #{problemId}
+	</select>
+	<select id="findByResourceType" resultMap="resultMap">
+		SELECT
+			A.problem_id,
+			A.problem_name,
+			A.resource_type,
+			A.resource_id,
+			A.problem_type,
+			A.autofix_flg,
+			A.module_id,
+			A.url_id,
+			M.module_name,
+			M.module_id,
+			A.from_resource_type,
+ 			A.from_resource_id 
+		FROM 
+			problem_list AS A
+			LEFT JOIN
+			module as M on A.module_id = M.module_Id
+		WHERE A.resource_type = #{resourceType} AND 
+				A.resource_id = #{resourceId} AND 
+			A.problem_type = #{problemType} AND
+			A.url_id = #{urlId} AND
+			A.from_resource_type = #{fromResourceType} AND
+ 			A.from_resource_id = #{fromResourceId}
+ 		Limit 1
+	</select>
+	<!-- Delete resource type by resource name & resource id -->
+	<delete id="deleteByTargetId">
+		DELETE FROM 
+			problem_list
+		WHERE
+			resource_type = #{resourceType}
+			AND resource_id = #{resourceId}
+	</delete>
+</mapper>

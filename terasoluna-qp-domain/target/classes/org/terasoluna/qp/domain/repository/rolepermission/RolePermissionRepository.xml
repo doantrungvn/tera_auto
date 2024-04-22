@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="org.terasoluna.qp.domain.repository.rolepermission.RolePermissionRepository">
+
+	<resultMap id="roleResultMap" type="RolePermission">
+		<result property="roleId" column="role_id" />
+		<result property="permissionId" column="permission_id" />
+	</resultMap>
+    <insert id="register" >
+    	<if test="lstItems != null and  lstItems.size() > 0 ">
+			INSERT INTO 
+				role_permission
+			(
+	           	role_id,
+	           	permission_id
+	        )
+	    	VALUES 
+	    	<foreach item="item" collection="lstItems" separator=",">
+	    	(
+	    		#{item.roleId},
+	    		#{item.permissionId}
+			)
+			</foreach>;
+		</if>
+    </insert>
+    
+    <select id="getPermissionByRole" resultMap="roleResultMap" parameterType="Long">
+    <![CDATA[
+        SELECT   
+            role_id, 
+            permission_id
+        FROM 
+        	role_permission 
+       	WHERE
+       		role_id= #{roleId}
+    ]]>
+    </select>
+    
+    <update id="delete" parameterType="Long">
+        DELETE 
+        FROM role_permission
+        WHERE 
+        role_id = #{roleId}
+    </update>
+</mapper>

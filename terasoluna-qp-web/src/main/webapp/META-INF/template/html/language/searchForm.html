@@ -1,0 +1,287 @@
+<!-- appendHeaderHere -->
+			<div class="qp-breadcrumb">
+				<ul class="breadcrumb" style="float:left;color:#337ab7;font-size:14px;">
+					<li><a href="#{homePage}"><i class="qp-link-header-icon glyphicon glyphicon-home"></i></a></li>
+					<li><span>Language management</span></li>
+					<li><span>Search language system</span></li>
+				</ul>
+			</div>
+			<div class="qp-link-header">
+				<span class="qp-link-header-icon glyphicon glyphicon-plus"></span>
+                <a href="registerForm.html">Register language system</a></div>
+			<div class="qp-header-main">
+<!-- 				<h4> -->
+<!-- 					<span class="qp-header-main-text"> -->
+<!-- 					</span> -->
+					
+<!-- 				</h4> -->
+				</div>
+			
+			
+			<!-- End toolbar-->
+			
+			<!-- Start message -->
+			<div class="qp-message">
+				</div>
+			<!-- End message -->
+
+			<!-- Start content -->
+			<div class="qp-body">
+<form id="languageSearchForm" action="searchForm.html" method="post">
+<input type="hidden" name="sort" id="fcomHeaderSortSubmit">
+<div class="panel panel-default qp-div-search-condition">
+                <div class="panel-heading">
+                    <span class="glyphicon qp-heading-icon" aria-hidden="true">&nbsp;</span>
+                    <span class="qp-heading-text"> Search condition</span>
+                </div>
+                
+                <div class="panel-body">
+                    <table class="table table-bordered qp-table-form">
+                        <colgroup>
+                            <col width="20%">
+                            <col width="30%">
+                            <col width="20%">
+                            <col width="30%">
+                        </colgroup>
+                        <tbody><tr>
+                            <th><label for="languageName">Language system name</label></th>
+                            <td><input id="languageName" name="languageName" class="form-control qp-input-text" autofocus="true" type="text" value=""></td><th><label for="languageCode">Language system code</label></th>
+                            <td><input id="languageCode" name="languageCode" class="form-control qp-input-text" type="text" value=""></td></tr>
+                    </tbody></table>
+                </div>
+            </div>
+
+            <div class="qp-div-action">
+                
+
+
+
+
+
+
+
+
+
+
+
+
+	<button type="submit" class="btn qp-button">Search</button>
+                
+
+
+</div>
+        <div>
+<input type="hidden" name="_csrf" value="4e2ec143-4d76-412c-9f7e-69fdfe397a17">
+</div></form><div class="panel panel-default qp-div-search-result">
+            <div class="panel-heading">
+                
+
+
+
+
+
+
+
+<script type="text/javascript">
+	var actionPath = '/language/search';
+	var form = "#"+'languageSearchForm';
+	var href = CONTEXT_PATH + "/PageSize/setPageSize?r="+Math.random();
+	function calSavePageSize() {
+		if($(form).length >0){
+			var size = $( "#fcomPageSizeSelect" ).val();
+			var param =  {
+					action : actionPath,
+					size : size
+				};
+			$.ajax({
+				method : "GET",
+				url : href,
+				data : {data:JSON.stringify(param)}
+			}).done(function(msg) {
+				if(msg.status == '1'){
+					$(form).submit();
+				}
+				else{
+					// Error when save information of pagesize
+					alert("");
+				}
+			});
+		}else{
+			// This form is not exist.
+			alert("");
+		}
+		
+	}
+</script>
+
+ 
+
+	
+		
+		<span class="glyphicon qp-heading-icon" style="width: 24px;" aria-hidden="true">&nbsp;</span>
+		<span class="qp-heading-text">
+			Search results
+			&nbsp;
+			<span class="badge">&nbsp;1&nbsp;</span>
+		</span>
+		<div class="form-inline qp-item-per-page">
+			<label>
+				<select id="fcomPageSizeSelect" style="margin-top: -3px;" name="size" aria-controls="dataTables-example" class="form-control qp-input-select" onchange="calSavePageSize()">
+					
+						
+		    				<option value="10" selected="selected">10</option>
+		    			
+		    			
+		  			
+						
+		    			
+		    				<option value="20">20</option>
+		    			
+		  			
+						
+		    			
+		    				<option value="30">30</option>
+		    			
+		  			
+						
+		    			
+		    				<option value="50">50</option>
+		    			
+		  			
+						
+		    			
+		    				<option value="100">100</option>
+		    			
+		  			
+				</select>
+			</label>
+		</div>
+	
+	
+
+</div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered qp-table-list-none-action">
+                            <colgroup>
+                                <col width="5%">
+                                <col width="45%">
+                                <col width="50%">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>
+
+
+
+
+
+
+
+
+<div class="form-inline" onclick="$.qp.sortDataByColumn('languageSearchForm','language_name')" style="cursor: pointer;">
+	<label style="margin-bottom: 0px;cursor: pointer;">Language system name</label>
+	
+	
+		<input type="hidden" value="language_name,DESC" id="fcomHeaderSortlanguage_name">
+	
+</div></th>
+                                    <th>
+
+
+
+
+
+
+
+
+<div class="form-inline" onclick="$.qp.sortDataByColumn('languageSearchForm','language_code')" style="cursor: pointer;">
+	<label style="margin-bottom: 0px;cursor: pointer;">Language system code</label>
+	
+	
+		<input type="hidden" value="language_code,DESC" id="fcomHeaderSortlanguage_code">
+	
+</div></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                        <td>1</td>
+                                        <td>
+                                            
+
+
+
+
+
+
+
+
+
+
+
+
+	<a href="viewForm.html?languageCode=en&amp;countryCode=US" class="qp-link-popup">
+                                                    
+
+
+
+Japanese</a>
+                                            
+
+
+</td>
+                                        <td>
+
+
+
+jp</td>
+                                    </tr>               
+                                </tbody>
+                        </table>
+                        
+
+
+
+
+
+
+
+
+
+
+
+
+	<div class="qp-div-action">
+                                <ul class="pagination pagination-md"><li class="disabled"><a href="javascript:void(0)">&lt;&lt;</a></li><li class="disabled"><a href="javascript:void(0)">&lt;</a></li><li class="active"><a href="javascript:void(0)">1</a></li><li class="disabled"><a href="javascript:void(0)">&gt;</a></li><li class="disabled"><a href="javascript:void(0)">&gt;&gt;</a></li></ul></div>
+                        
+
+
+</div>
+            </div>
+        </div></div>
+
+			<div class="qp-footer">
+				<ul class="pull-left">
+	<li><a href="">About this Site</a></li>
+	<li><a href="">Contact Us</a></li>
+</ul>
+<address class="pull-right">Copyright © 2015 NTT DATA Corporation</address></div>
+
+		</div>
+		<!-- End body panel -->
+	</div>
+	<script type="text/javascript">
+	$(document).ready(
+			function() {
+				//window.clearInterval(this);
+				buildNavTopProblemMenu();
+				//var refInterval = window.setInterval('buildNavTopProblemMenu()', INTERVAL_RELOAD); 
+
+			});
+	</script>
+
+
+
+			<!-- appendFooterHere -->

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.decisiontable.DecisionTableConditionItemRepository">
+
+    <resultMap id="ResultMap" type="DecisionTableConditionItem">
+        <id property="conditionItemId" column="condition_item_id" />
+        <result property="conditionGroupId" column="condition_group_id" />
+        <result property="itemSequenceNo" column="item_sequence_no" />
+        <result property="opertatorType" column="opertator_type" />
+        <result property="itemType" column="item_type" />
+        <result property="itemValue" column="item_value" />
+        <result property="formulaDefinitionId" column="formula_definition_id" />
+        <result property="formulaDefinitionContent" column="formula_definition_content" />
+        <result property="decisionTbCode" column="decision_table_code" />
+        <result property="decisionTbId" column="decision_table_id" />
+        <result property="moduleId" column="module_id" />
+    </resultMap>
+
+	<!-- Process for display view and modify -->
+    <select id="findConditionItemById" parameterType="org.terasoluna.qp.domain.model.DecisionTableConditionGroup" resultMap="ResultMap">
+        SELECT 
+           a.condition_item_id, 
+           b.condition_group_id,
+           a.item_sequence_no, 
+           a.opertator_type, 
+           a.item_type,
+           a.item_value, 
+           a.formula_definition_id, 
+           a.formula_definition_content 
+        FROM 
+           decision_condition_item a LEFT JOIN  decision_condition_group b
+              ON a.condition_group_id = b.condition_group_id
+         WHERE 
+            b.condition_group_id IN 
+            <foreach item="item" collection="conditionGroupIds" open="(" separator="," close=")">
+                 <![CDATA[
+                  CAST(#{item.conditionGroupId} AS numeric(16,0))
+                  ]]>
+             </foreach>
+        ORDER BY b.condition_group_id, a.item_sequence_no
+    </select>
+    
+    <insert id="registerCondItem" >
+         INSERT INTO decision_condition_item
+             (
+             condition_group_id, 
+             item_sequence_no, 
+             opertator_type, 
+             item_type, 
+             item_value, 
+             formula_definition_id, 
+             formula_definition_content 
+             )
+             VALUES 
+             <foreach item="item" collection="conditionitems" separator=",">
+             (
+                 CAST(#{item.conditionGroupId} AS numeric(16,0)),
+                 #{item.itemSequenceNo}, 
+                 #{item.opertatorType}, 
+                 #{item.itemType}, 
+                 #{item.itemValue}, 
+                 #{item.formulaDefinitionId},
+                 #{item.formulaDefinitionContent} 
+             )
+             </foreach>;
+    </insert>
+
+    <delete id="deleteBeforModifyCondItem">
+        DELETE 
+        FROM decision_condition_item 
+        WHERE 
+            condition_group_id IN 
+            (
+                SELECT condition_group_id 
+		        FROM decision_condition_group 
+		        WHERE 
+		             decision_item_design_id IN
+			          (
+			             SELECT decision_item_design_id 
+			             FROM decision_item_design
+			             WHERE decision_table_id = #{id} 
+			             <if test="itemdesigns == null">
+			                 AND decision_item_design_id NOT IN  (0) 
+			             </if>
+			             <if test="itemdesigns != null and itemdesigns.size() > 0 ">
+			                 AND decision_item_design_id NOT IN  
+                            <foreach item="item" index="index" collection="itemdesigns" open="(" separator="," close=")">
+                                CAST(#{item.decisionItemDesignId} AS numeric(16,0))
+                            </foreach> 
+                         </if>
+			           ) 
+			            <if test="conditiongroups == null" >
+			                 AND condition_group_id NOT IN  (0) 
+			            </if>
+				        <if test="conditiongroups != null and conditiongroups.size() > 0" >
+				            AND condition_group_id NOT IN  
+                            <foreach item="item" index="index" collection="conditiongroups" open="(" separator="," close=")">
+                                CAST(#{item.conditionGroupId} AS numeric(16,0))
+                            </foreach>
+                         </if>
+            )  
+             <if test="conditionitems == null" >
+                AND condition_item_id NOT IN  (0)
+             </if>
+             <if test="conditionitems != null and conditionitems.size() > 0" >
+                AND condition_item_id NOT IN  
+                <foreach item="item" index="index" collection="conditionitems" open="(" separator="," close=")">
+                    CAST(#{item.conditionItemId} AS numeric(16,0))
+                </foreach>
+             </if>
+    </delete>
+    
+    <update id="modifyCondItem" >
+        <foreach item="item" collection="conditionitems" separator=";">
+            <![CDATA[
+                UPDATE decision_condition_item
+                SET 
+                    item_sequence_no = #{item.itemSequenceNo}, 
+                    opertator_type = #{item.opertatorType}, 
+                    item_type= #{item.itemType}, 
+                    item_value= #{item.itemValue}, 
+                    formula_definition_id = #{item.formulaDefinitionId}, 
+                    formula_definition_content = #{item.formulaDefinitionContent} 
+                 WHERE 
+                   condition_item_id = CAST(#{item.conditionItemId} AS numeric(16,0))
+            ]]>
+        </foreach>
+    </update>
+    
+    <delete id="deleteCondItem">
+        DELETE 
+        FROM decision_condition_item 
+        WHERE 
+            condition_group_id IN 
+            <foreach item="item" index="index" collection="conditiongroups" open="(" separator="," close=")">
+                CAST(#{item.conditionGroupId} AS numeric(16,0))
+            </foreach>
+    </delete>
+    
+    <select id="findConditionItemByByUsingLstFunctionMethod" resultMap="ResultMap">
+    	SELECT 
+    		a.condition_item_id, 
+    		a.condition_group_id, 
+    		a.item_sequence_no, 
+    		a.opertator_type, 
+       		a.item_type, 
+       		a.item_value, 
+       		a.formula_definition_id, 
+       		a.formula_definition_content,
+       		e.decision_table_id,
+       		e.decision_table_code,
+       		f.module_id
+  		FROM decision_condition_item a
+  		LEFT JOIN formula_detail b on (b.formula_definition_id = a.formula_definition_id)
+  		LEFT JOIN decision_condition_group c on (c.condition_group_id = a.condition_group_id)
+  		LEFT JOIN decision_item_design d on (d.decision_item_design_id = c.decision_item_design_id)
+  		LEFT JOIN decision_table e on (e.decision_table_id = d.decision_table_id)
+  		LEFT JOIN module f on (f.module_id = e.module_id)
+  		WHERE
+  				<if test="lstFunctionMethods != null and lstFunctionMethods.size > 0">
+					b.function_method_id IN
+					<foreach collection="lstFunctionMethods" item="item" open="(" close=")" separator=",">
+						#{item.functionMethodId}
+					</foreach>
+				</if>
+				<if test="lstFunctionMethods == null or lstFunctionMethods.size == 0">
+					FALSE
+				</if>
+    </select>
+</mapper>

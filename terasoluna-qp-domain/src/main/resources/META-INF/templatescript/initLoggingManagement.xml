@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sql>
+	<loggingManagement>
+		<status>1</status>
+		<logType>1</logType>
+		<logDetail>
+			<configMode>1</configMode>
+			<logLevel>3</logLevel>
+			<logTarget>System.out</logTarget>
+			<charset>UTF-8</charset>
+			<conversionPatterStr>[%d{yyyy-MM-dd HH:mm:ss}]\t[%-5level]\t[%-48logger{48}]\t%msg%n</conversionPatterStr>
+		</logDetail>
+	</loggingManagement>
+	<loggingManagement>
+		<status>1</status>
+		<logType>2</logType>
+		<logDetail>
+			<configMode>1</configMode>
+			<logLevel>3</logLevel>
+			<layout>3</layout>
+			<logFileType>1</logFileType>
+			<filePath>logs</filePath>
+			<charset>UTF-8</charset>
+			<immediateFlush>1</immediateFlush>
+			<appendType>1</appendType>
+			<conversionPatterStr>[%d{yyyy-MM-dd HH:mm:ss}]\t[%-5level]\t[%-48logger{48}]\t%msg%n</conversionPatterStr>
+		</logDetail>
+	</loggingManagement>
+	<loggingManagement>
+		<status>0</status>
+		<logType>3</logType>
+	</loggingManagement>
+</sql>

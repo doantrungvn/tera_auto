@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozer.sourceforge.net" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://dozer.sourceforge.net
+          http://dozer.sourceforge.net/schema/beanmapping.xsd">
+	<mapping>
+		<class-a>org.terasoluna.qp.app.sample.SampleSearchForm</class-a>
+		<class-b>org.terasoluna.qp.domain.repository.sample.SampleCriteria
+		</class-b>
+		<field>
+			<a>columnDateFrom</a>
+			<b>columnDateFrom</b>
+		</field>
+		<field>
+			<a>columnDateTo</a>
+			<b>columnDateTo</b>
+		</field>
+		<field>
+			<a>columnDatetimeFrom</a>
+			<b>columnDatetimeFrom</b>
+		</field>
+		<field>
+			<a>columnDatetimeTo</a>
+			<b>columnDatetimeTo</b>
+		</field>
+		<field>
+			<a>columnTimeFrom</a>
+			<b>columnTimeFrom</b>
+		</field>
+		<field>
+			<a>columnTimeTo</a>
+			<b>columnTimeTo</b>
+		</field>		
+	</mapping>
+	<mapping>
+		<class-a>org.terasoluna.qp.app.sample.SampleForm</class-a>
+		<class-b>org.terasoluna.qp.domain.model.Sample</class-b>
+		<field>
+			<a>sampleChild</a>
+			<b>sampleChild</b>
+		</field>
+		<field>
+			<a>columnImage</a>
+			<b>columnImage</b>
+		</field>
+	</mapping>
+	<mapping>
+		<class-a>org.terasoluna.qp.app.sample.SampleChildForm</class-a>
+		<class-b>org.terasoluna.qp.domain.model.SampleChild</class-b>
+		<field>
+			<a>columnDatetime</a>
+			<b>columnDatetime</b>
+		</field>
+	</mapping>
+	
+</mappings> 

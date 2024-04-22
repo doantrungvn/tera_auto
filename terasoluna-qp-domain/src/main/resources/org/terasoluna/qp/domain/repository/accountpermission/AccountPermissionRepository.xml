@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="org.terasoluna.qp.domain.repository.accountpermission.AccountPermissionRepository">
+
+	<resultMap id="resultMap" type="AccountPermission">
+		<result property="permissionId" column="permission_id" />
+		<result property="accountId" column="account_id" />
+	</resultMap>
+	
+	<delete id="deleteByAccountId" parameterType="Long">
+        DELETE 
+        FROM account_permission
+        WHERE account_id = #{accountId}
+    </delete>
+    
+    <delete id="deleteByAccountPermisson" parameterType="AccountPermission">
+        DELETE FROM account_permission
+        WHERE account_id = #{accountId} and permission_id = #{permissionId}
+    </delete>
+    
+    <insert id="registerAccountPermisson" >
+    	<if test="permissionItems != null and  permissionItems.size() > 0 ">
+			INSERT INTO 
+				account_permission
+			(
+	           	permission_id,
+	           	account_id
+	        )
+	    	VALUES 
+	    	<foreach item="item" collection="permissionItems" separator=",">
+	    	(
+	    		#{item.permissionId},
+	    		#{item.accountId} 
+			)
+			</foreach>;
+		</if>
+    </insert>
+</mapper>

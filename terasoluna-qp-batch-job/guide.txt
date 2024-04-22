@@ -1,0 +1,5 @@
+- Step 1: At project terasoluna-qp-domain: Right click to pom.xml choice run as -> maven install
+- Step 2: Run file scripts\compile.bat
+- Step 3: Export folder deployment
+- Step 4: Go to qp web site -> config dir to folder export in Step 3
+ 

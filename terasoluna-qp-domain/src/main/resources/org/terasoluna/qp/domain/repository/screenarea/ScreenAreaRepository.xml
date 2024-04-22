@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="org.terasoluna.qp.domain.repository.screenarea.ScreenAreaRepository">
+
+	<resultMap id="screenAreaResultMap" type="ScreenArea">
+		<id property="screenAreaId" column="screen_area_id" />
+		<result property="areaSeqNo" column="area_seq_no" />
+		<result property="screenId" column="screen_id" />
+		<result property="screenPatternType" column="screen_pattern_type" />
+		<result property="areaLocalName" column="area_local_name" />
+		<result property="colWidthUnit" column="col_width_unit" />
+		<result property="totalCol" column="total_col" />
+		<result property="totalElement" column="total_element" />
+		<result property="areaType" column="area_type" />
+		<result property="tblWidthUnit" column="tbl_width_unit" />
+		<result property="tblHeaderRow" column="tbl_header_row" />
+		<result property="alignPositionType" column="align_position_type" />
+		<result property="areaPatternType" column="area_pattern_type" />
+		<result property="screenFormId" column="screen_form_id" />
+		<result property="messageDesign.messageCode" column="message_code" />
+		<result property="messageDesign.messageString" column="message_string" />
+		<result property="areaCode" column="area_code" />
+		<result property="createdBy" column="created_by" />
+	   <result property="createdDate" column="created_date" />
+	   <result property="updatedBy" column="updated_by" />
+	   <result property="updatedDate" column="updated_date" />
+	   <result property="areaCustomType" column="area_custom_type" />
+	   <result property="fixedRow" column="fixed_row" />
+	   <result property="areaTypeAction" column="area_type_action" />
+	   <result property="objectMappingType" column="object_mapping_type" />
+	   <result property="objectMappingId" column="object_mapping_id" />
+	   <result property="formCode" column="form_code" />
+	</resultMap>
+	
+	<resultMap type="ScreenAreaSortMapping" id="screenAreaSortMappingResultMap">
+		<id property="screenAreaSortMappingId" column="screen_area_sort_mapping_id" />
+		<result property="screenAreaCode" column="screen_area_code" />
+		<result property="screenItemCode" column="screen_item_code" />
+		<result property="sqlColumnCode" column="sql_column_code" />
+		<result property="screenAreaId" column="screen_area_id" />
+		<result property="screenId" column="screen_id" />
+	</resultMap>
+
+	<insert id="insertScreenArea" parameterType="ScreenArea">
+		<selectKey keyProperty="screenAreaId" resultType="Long"
+			order="BEFORE">
+			SELECT NEXTVAL('screen_area_seq'::REGCLASS)
+		</selectKey>
+		INSERT INTO
+		screen_area
+		(
+			screen_area_id,
+			screen_id,
+			area_seq_no,
+			area_local_name,
+			col_width_unit,
+			total_col,
+			total_element,
+			area_type,
+			tbl_width_unit,
+			tbl_header_row,
+			align_position_type,
+			area_pattern_type,
+			screen_form_id,
+			message_code,
+			area_code,
+			created_by,
+		   created_date,
+		   updated_by,
+		   updated_date,
+		   area_custom_type,
+		   fixed_row,
+		   area_type_action,
+		   object_mapping_type,
+		   object_mapping_id,
+		   enable_sort
+		)
+		VALUES
+		(
+			#{screenAreaId},
+			#{screenId},
+			#{areaSeqNo},
+			#{areaLocalName},
+			#{colWidthUnit},
+			#{totalCol},
+			#{totalElement},
+			#{areaType},
+			#{tblWidthUnit},
+			#{tblHeaderRow},
+			#{alignPositionType},
+			#{areaPatternType},
+			#{screenFormId},
+			#{messageDesign.messageCode},
+			#{areaCode},
+			#{createdBy},
+		   #{createdDate},
+		   #{updatedBy},
+		   #{updatedDate},
+		   #{areaCustomType},
+		   #{fixedRow},
+		   #{areaTypeAction},
+		   #{objectMappingType},
+		   #{objectMappingId},
+		   #{enableSort}
+		)
+	</insert>
+	
+	<select id="getMaxScreenAreaSeqNoByScreenFormId"
+		parameterType="Long"
+		resultType="Integer">
+			SELECT
+				MAX(area_seq_no) 
+			FROM 
+				screen_area AS a	
+			 WHERE
+				a.screen_form_id = #{screenFormId}
+	</select>
+	
+	<select id="getScreenAreaByScreenId"
+		parameterType="Map"
+		resultMap="screenAreaResultMap">
+			SELECT
+				c.screen_area_id AS screenAreaId,
+				c.area_seq_no AS areaSeqNo,
+				c.area_local_name AS areaLocalName,
+				c.col_width_unit AS colWidthUnit,
+				c.total_col AS totalCol,
+				c.total_element AS totalElement,
+				c.area_type AS areaType,
+				c.tbl_width_unit AS tblWidthUnit,
+				c.tbl_header_row AS tblHeaderRow,
+				c.align_position_type AS alignPositionType,
+				c.area_pattern_type AS areaPatternType,
+				c.screen_form_id AS screenFormId,
+				c.area_code AS areaCode,
+				(
+					SELECT 
+						md.message_string
+					FROM 
+						message_design md
+					WHERE 
+						c.message_code = md.message_code 
+					AND
+						md.language_id = #{languageId}
+					AND
+						md.project_id = #{projectId}
+				) as message_string,
+				(
+					SELECT 
+						md.message_design_id
+					FROM 
+						message_design md
+					WHERE 
+						c.message_code = md.message_code 
+					AND
+						md.language_id = #{languageId}
+					AND
+						md.project_id = #{projectId}
+				) as message_design_id,
+				(
+					SELECT 
+						md.message_code
+					FROM 
+						message_design md
+					WHERE 
+						c.message_code = md.message_code 
+					AND
+						md.language_id = #{languageId}
+					AND
+						md.project_id = #{projectId}
+				) as message_code
+			FROM 
+				screen_design a 
+				LEFT JOIN screen_form b ON a.screen_id = b.screen_id
+				LEFT JOIN screen_area c ON b.screen_form_id = c.screen_form_id
+				LEFT JOIN message_design d ON (c.message_code = d.message_code AND d.language_id = #{languageId} AND d.project_id = #{projectId})
+			 WHERE
+				a.screen_id = #{screenId} AND c.area_type = ANY (VALUES (0), (1), (2))
+				<!--AND d.language_code = #{languageCode} AND d.country_code = #{countryCode} -->
+	</select>
+	
+	<select id="getScreenAreaByLstScreenId"
+		resultMap="screenAreaResultMap">
+			SELECT
+				c.screen_area_id AS screenAreaId,
+				c.area_seq_no AS areaSeqNo,
+				c.area_local_name AS areaLocalName,
+				c.col_width_unit AS colWidthUnit,
+				c.total_col AS totalCol,
+				c.total_element AS totalElement,
+				c.area_type AS areaType,
+				c.tbl_width_unit AS tblWidthUnit,
+				c.tbl_header_row AS tblHeaderRow,
+				c.align_position_type AS alignPositionType,
+				c.area_pattern_type AS areaPatternType,
+				c.screen_form_id AS screenFormId,
+				c.area_code AS areaCode,
+				a.screen_pattern_type,
+				a.screen_id,
+				COALESCE(md.message_string,c.message_code) AS message_string,
+				md.message_design_id,
+				c.message_code
+			FROM 
+				screen_area c
+				INNER JOIN screen_design a ON a.screen_id = c.screen_id
+				LEFT JOIN message_design md ON c.message_code = md.message_code AND md.language_id = #{languageId} AND md.project_id = #{projectId}
+			WHERE
+				(c.area_type = 0 OR c.area_type = 1)
+				<if test="lstScreenDesign != null and  lstScreenDesign.size() > 0 ">
+					AND a.screen_id = ANY (VALUES 
+					<foreach item="status" index="index" collection="lstScreenDesign" open="" separator="," close="">
+						(#{status})
+					</foreach>
+					)
+				</if>
+			ORDER BY a.screen_id
+	</select>
+	
+	<select id="getLstScreenAreaByScreenId"
+		resultMap="screenAreaResultMap">
+			SELECT
+				t1.screen_area_id,
+				t1.area_code, 
+				t1.screen_form_id , 
+				t1.total_element, 
+				t2.message_string,
+				t2.message_code,
+				t1.object_mapping_type, 
+				t1.object_mapping_id
+			FROM screen_area t1
+				LEFT JOIN message_design t2 ON (t2.message_code = t1.message_code AND t2.language_id = #{languageId} AND t2.project_id = #{projectId}) 
+			WHERE 
+				t1.screen_id = #{screenId} AND t1.total_element > 0
+			ORDER BY 
+				t1.area_seq_no	
+	</select>
+	
+	<update id="updateObjectMappingTypeOfScreenArea">
+		 UPDATE 
+			screen_area
+		 SET 
+		 	object_mapping_type = #{screenArea.objectMappingType},
+			object_mapping_id = #{screenArea.objectMappingId}
+		 WHERE
+			screen_area_id = #{screenArea.screenAreaId}
+	</update>
+	
+	<select id="getScreenAreaByAreaId" resultMap="screenAreaResultMap" parameterType="Long">
+		SELECT
+			screen_area_id,
+			custom_section_content
+		FROM
+			screen_area
+		WHERE
+			screen_area_id = #{screenAreaId}
+	</select>
+	
+	<select id="getLstScreenAreaByScreenFormId" resultMap="screenAreaResultMap">
+		SELECT
+				t1.screen_area_id,
+				t1.area_code, 
+				t1.screen_form_id , 
+				t1.total_element, 
+				t2.message_string,
+				t2.message_code,
+				t1.object_mapping_type, 
+				t1.object_mapping_id
+			FROM screen_area t1
+				LEFT JOIN message_design t2 ON (t2.message_code = t1.message_code AND t2.language_id = #{languageId} AND t2.project_id = #{projectId}) 
+			WHERE
+				t1.screen_id = #{screenId} 
+				AND t1.screen_form_id = #{screenFormId}
+				AND t1.total_element > 0
+			ORDER BY 
+				t1.area_seq_no	
+	</select>
+	
+	<select id="insertScreenAreaSortMapping" resultMap="screenAreaSortMappingResultMap">
+		INSERT INTO 
+			screen_area_sort_mapping
+			(
+				screen_area_code,
+				screen_item_code, 
+				sql_column_code,
+				screen_id
+			) VALUES 
+			<foreach item="item" collection="areaSorts" separator=",">
+			(
+				#{item.screenAreaCode},
+				#{item.screenItemCode},
+				#{item.sqlColumnCode},
+				#{item.screenId}
+			)
+			</foreach>;
+	</select>
+	
+	<update id="updateSqlColumnIdOfScreenArea">
+		 UPDATE 
+			screen_area
+		 SET 
+			sql_column_id = #{screenArea.sqlColumnId}
+		 WHERE
+			screen_area_id = #{screenArea.screenAreaId}
+	</update>
+	
+	<select id="findScreenAreaByOutputbeanId" resultMap="screenAreaResultMap" parameterType="Long">
+		SELECT
+			d.screen_area_id,
+			d.area_code,
+			d.area_type_action,
+			b.mapping_type as object_mapping_type
+		FROM output_bean  a 
+			INNER JOIN outputbean_screenitem_mapping b ON a.output_bean_id = b.output_bean_id
+			INNER JOIN screen_item c ON b.screen_item_id = c.screen_item_id
+			INNER JOIN screen_area d ON c.screen_area_id = d.screen_area_id
+		WHERE
+			a.output_bean_id = #{outputbeanId}
+	</select>
+	
+	<select id="findScreenAreaByOutputbeanIdOfTotalCount" resultMap="screenAreaResultMap" parameterType="Long">
+		SELECT
+			c.screen_area_id,
+			c.area_code,
+			c.area_type_action,
+			b.mapping_type as object_mapping_type
+		FROM output_bean  a 
+			INNER JOIN outputbean_screenitem_mapping b ON a.output_bean_id = b.output_bean_id 
+			INNER JOIN screen_area c ON b.screen_item_id = c.screen_area_id
+		WHERE
+			a.output_bean_id = #{outputbeanId}
+	</select>
+	
+	<select id="findPageableScreenAreaByScreenId" resultMap="screenAreaResultMap" parameterType="Long">
+		SELECT a.screen_area_id,
+			c.screen_form_id,
+			c.form_code,
+			a.screen_area_id,
+			b.message_string AS area_local_name,
+			a.area_type
+		FROM screen_area a
+		LEFT JOIN message_design b on (a.message_code = b.message_code and  b.language_id = #{languageId} and b.project_id = #{projectId})
+		LEFT JOIN screen_form c ON a.screen_form_id = c.screen_form_id
+		WHERE a.screen_id = #{screenId}
+			AND a.area_type = 1
+			AND (a.area_type_action = 2 or a.area_type_action = 0)
+		ORDER BY a.area_seq_no
+	</select>
+</mapper>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="org.terasoluna.qp.domain.repository.uploadfile.UploadFileRepository">
+
+	<resultMap id="uploadFileResultMap" type="UploadFile">
+		<id property="uploadFileId" column="upload_file_id" />
+		<result property="fileName" column="file_name" />
+		<result property="content" column="content" />
+	</resultMap>
+	
+	<select id="findOne" resultMap="uploadFileResultMap" parameterType="Long">
+    <![CDATA[
+        SELECT   
+            upload_file_id, 
+            file_name,
+            content
+        FROM 
+        	upload_file 
+       	WHERE
+       		upload_file_id= #{uploadFileId}
+    ]]>
+    </select>
+	
+    <insert id="register" parameterType="UploadFile">
+    	<selectKey keyProperty="uploadFileId" resultType="long" order="BEFORE">
+	        SELECT NEXTVAL('upload_file_seq') AS uploadFileId
+	    </selectKey>
+		<![CDATA[
+			INSERT INTO 
+				upload_file
+			(
+				upload_file_id,
+	           	file_name,
+	           	content,
+	           	created_by,
+	            created_date,
+	            updated_by,
+	            updated_date
+	        )
+	    	VALUES 
+	    	(
+	    		#{uploadFileId},
+	    		#{fileName},
+	    		#{content},
+	    		 #{createdBy},
+	            #{createdDate},
+	            #{updatedBy},
+	            #{updatedDate}
+			)
+		]]>
+    </insert>
+    
+    <update id="modify" parameterType="UploadFile">
+		<![CDATA[
+			UPDATE upload_file
+   			SET  
+	   			file_name= #{fileName},
+	   			content= #{content},
+	            updated_by = #{updatedBy},
+	            updated_date = #{sysDatetime}
+	 		WHERE 
+	 			upload_file_id= #{uploadFileId}
+		]]>
+    </update>
+    
+    <delete id="delete" parameterType="Long">
+        DELETE 
+        	FROM upload_file
+        WHERE 
+        	upload_file_id = #{uploadFileId}
+    </delete>
+</mapper>

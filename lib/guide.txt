@@ -1,0 +1,2 @@
+Step 1 : Run file install_local_repo.bat
+Step 2 : Maven update all project

@@ -1,0 +1,52 @@
+.design-header {
+    height: 75px;
+    border: 2px dashed blue;
+    margin: 4px;
+    float: left;
+    width: 100%;
+}
+.design-body {
+    min-height: 300px;
+    margin: 4px;
+    float: left;
+    width: 100%;
+}
+.design-footer {
+    min-height: 75px;
+    border: 2px dashed blue;
+    margin: 4px;
+    float: left;
+    width: 100%;
+}
+.text-design {
+	/* border: 1px solid #66AFE9; */
+	/* border: 0px; */
+    min-height: 30px;
+    margin: 4px;
+    /* padding: 4px; */
+    padding-top: 10px;
+}
+.element {
+    line-height: 18px;
+    color: #000000;
+    padding: 3px 5px;
+    border-collapse: collapse;
+    font-weight: bold;
+    border: 1px solid #CBCFED;
+    background-color: #eff5f9;
+    margin: 3px;
+    width: 150px;
+    cursor: move;
+    float:right;
+}
+.state-droppable {
+	background-color: #96fe9e;
+}
+.item {
+	margin-left: 4px;
+	cursor: pointer;
+}
+.span-addon {
+	text-align: left;
+    width: 30%;
+}

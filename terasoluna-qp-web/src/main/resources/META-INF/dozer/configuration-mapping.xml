@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozer.sourceforge.net" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://dozer.sourceforge.net
+          http://dozer.sourceforge.net/schema/beanmapping.xsd">
+	<configuration>
+		<custom-converters>
+			<converter type="org.terasoluna.qp.app.common.ultils.DateCustomConverter">
+				<class-a>java.lang.String</class-a>
+				<class-b>java.sql.Date</class-b>
+			</converter>
+			<converter type="org.terasoluna.qp.app.common.ultils.DateCustomConverter">
+				<class-a>java.lang.String</class-a>
+				<class-b>java.sql.Time</class-b>
+			</converter>
+			<converter type="org.terasoluna.qp.app.common.ultils.DateCustomConverter">
+				<class-a>java.lang.String</class-a>
+				<class-b>java.sql.Timestamp</class-b>
+			</converter>
+
+			<converter type="org.terasoluna.qp.app.common.ultils.FileCustomConverter">
+				<class-a>org.springframework.web.multipart.MultipartFile</class-a>
+				<class-b>[B</class-b>
+			</converter>
+			<converter
+				type="org.terasoluna.qp.app.autocomplete.converter.SqlDesignConditionConverter">
+				<class-a>org.terasoluna.qp.app.sqldesign.WhereForm</class-a>
+				<class-b>org.terasoluna.qp.domain.model.SqlDesignCondition</class-b>
+			</converter>
+			<converter
+				type="org.terasoluna.qp.app.autocomplete.converter.SqlDesignHavingConverter">
+				<class-a>org.terasoluna.qp.app.sqldesign.HavingForm</class-a>
+				<class-b>org.terasoluna.qp.domain.model.SqlDesignHaving</class-b>
+			</converter>
+			<converter
+				type="org.terasoluna.qp.app.sqldesign.converter.SqlDesignInputConverter">
+				<class-a>org.terasoluna.qp.app.sqldesign.InputForm</class-a>
+				<class-b>org.terasoluna.qp.domain.model.SqlDesignInput</class-b>
+			</converter>
+			<converter
+				type="org.terasoluna.qp.app.sqldesign.converter.SqlDesignOutputConverter">
+				<class-a>org.terasoluna.qp.app.sqldesign.OutputForm</class-a>
+				<class-b>org.terasoluna.qp.domain.model.SqlDesignOutput</class-b>
+			</converter>
+			<converter
+				type="org.terasoluna.qp.app.autocomplete.converter.SqlDesignResultSelectFormConverter">
+				<class-a>org.terasoluna.qp.app.sqldesign.SelectForm</class-a>
+				<class-b>org.terasoluna.qp.domain.model.SqlDesignResult</class-b>
+			</converter>
+			<converter
+				type="org.terasoluna.qp.app.sqldesign.converter.SqlDesignConverter">
+				<class-a>org.terasoluna.qp.app.sqldesign.SqlDesignForm</class-a>
+				<class-b>org.terasoluna.qp.domain.model.SqlDesign</class-b>
+			</converter>
+		</custom-converters>
+	</configuration>
+</mappings> 

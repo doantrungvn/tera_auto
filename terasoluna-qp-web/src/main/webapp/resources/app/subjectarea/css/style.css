@@ -1,0 +1,14 @@
+.table > tbody > tr > td {
+	word-wrap: break-word;
+}
+
+.trChange {
+	background: none repeat scroll 0 0 #e6eaaa;
+}
+
+.ui-sortable-helper {
+	border: 2px dashed red;
+	background-color: #fcfeda;
+	padding: 0px;
+	margin: 0px;
+}

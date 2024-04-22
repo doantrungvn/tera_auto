@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.sqldesign.SqlDesignInputRepository">
+    <resultMap id="resultMap" type="SqlDesignInput">
+        <result property="sqlDesignInputId" column="sql_design_input_id" />
+        <result property="sqlDesignId" column="sql_design_id" />
+        <result property="sqlDesignInputName" column="sql_design_input_name" />
+        <result property="sqlDesignInputCode" column="sql_design_input_code" />
+        <result property="dataType" column="data_type" />
+        <result property="sqlDesignInputParentId" column="sql_design_input_parent_id" />
+        <result property="arrayFlag" column="array_flg" />
+        <result property="itemSeqNo" column="item_seq_no" />
+        <result property="businessDesignId" column="business_logic_id" />
+        <result property="businessDesignModuleId" column="business_logic_module_id" />
+        <result property="groupIndex" column="group_index" />
+        <result property="tableId" column="table_id"/>
+        <result property="columnId" column="column_id"/>
+        <result property="designType" column="design_type"/>
+        <result property="objectType" column="object_type"/>
+        <result property="objectTypeCode" column="object_type_code"/>
+        <result property="tableCode" column="tbl_design_code"/>
+        <result property="pakageExternal" column="package_name" />
+        <result property="externalObjCode" column="external_object_definition_code" />
+        <result property="commonObjCode" column="common_object_definition_code" />
+        <result property="sqlDesignCode" column="sql_design_code" />
+        <result property="moduleId" column="module_id" />
+        <result property="moduleCode" column="module_code" />
+    </resultMap>
+	
+	<select id="findAllBySqlDesignId" parameterType="Long" resultMap="resultMap">
+		WITH RECURSIVE ordered_inputs(sql_design_input_id, sql_design_input_parent_id) as (
+			SELECT sdi.sql_design_input_id,
+					sdi.sql_design_input_parent_id,
+					sdi.sql_design_input_id as root_id,
+					cast(row_number() over(ORDER BY sdi.item_seq_no) as text) as group_index,
+					sdi.sql_design_id,
+					sdi.sql_design_input_name,
+					sdi.sql_design_input_code,
+					sdi.data_type,
+					sdi.array_flg,
+					sdi.item_seq_no,
+					sdi.table_id,
+					sdi.column_id,
+					sdi.design_type,
+					sdi.object_type
+			FROM sql_design_input sdi
+			WHERE sdi.sql_design_id =  #{sqlDesignId} AND sdi.sql_design_input_parent_id IS NULL
+		
+		
+			UNION ALL
+		
+			SELECT A.sql_design_input_id,
+					A.sql_design_input_parent_id,
+					B.root_id,
+					(B.group_index ||'.'|| cast(row_number() over(PARTITION BY B.group_index ORDER BY A.item_seq_no) as text)) as group_index,
+					A.sql_design_id,
+					A.sql_design_input_name,
+					A.sql_design_input_code,
+					A.data_type,
+					A.array_flg,
+					A.item_seq_no,
+					A.table_id,
+					A.column_id,
+					A.design_type,
+					A.object_type
+			FROM 
+			sql_design_input A
+			INNER JOIN 
+			ordered_inputs B
+			ON 
+			A.sql_design_input_parent_id = B.sql_design_input_id
+			
+		)	
+			SELECT 
+				* ,
+				tb.tbl_design_code,
+				c.package_name,
+				c.external_object_definition_code,
+				d.common_object_definition_code,
+				module.module_code
+			FROM ordered_inputs oi
+			LEFT JOIN table_design tb ON tb.tbl_design_id = oi.table_id
+			LEFT JOIN external_object_definition c ON (oi.object_type = 1 AND oi.table_id = c.external_object_definition_id)
+			LEFT JOIN common_object_definition d ON (oi.object_type = 0 AND oi.table_id = d.common_object_definition_id)
+			LEFT JOIN module ON d.module_id = module.module_id
+			ORDER BY oi.item_seq_no;
+    </select>
+    
+    <select id="findAllForGenerationBySqlDesignId" parameterType="Long" resultMap="resultMap">
+		WITH RECURSIVE ordered_inputs(sql_design_input_id,sql_design_input_parent_id) as (
+			SELECT A.sql_design_input_id,
+					A.sql_design_input_parent_id,
+					A.sql_design_input_id as root_id,
+					cast(row_number() over(ORDER BY A.item_seq_no) as text) as group_index,
+					A.sql_design_id,
+					A.sql_design_input_name,
+					A.sql_design_input_code,
+					A.data_type,
+					A.array_flg,
+					A.item_seq_no,
+					A.table_id,
+					A.column_id,
+					A.design_type,
+					A.object_type,
+					C.package_name,
+					COALESCE(E.tbl_design_code,D.common_object_definition_code,C.external_object_definition_code) as object_type_code,
+					module.module_code
+			FROM sql_design_input A
+			LEFT JOIN 
+			external_object_definition C
+			ON (A.object_type = 1 AND A.table_id = C.external_object_definition_id)
+			LEFT JOIN 
+			common_object_definition D
+			ON (A.object_type = 0 AND A.table_id = D.common_object_definition_id)
+			LEFT JOIN 
+			table_design E
+			ON (A.object_type = 4 AND A.table_id = E.tbl_design_id)
+			LEFT JOIN module ON D.module_id = module.module_id
+			WHERE A.sql_design_id =  #{sqlDesignId} AND A.sql_design_input_parent_id IS NULL
+		
+		
+			UNION ALL
+		
+			SELECT A.sql_design_input_id,
+					A.sql_design_input_parent_id,
+					B.root_id,
+					(B.group_index ||'.'|| cast(row_number() over(PARTITION BY B.group_index ORDER BY A.item_seq_no) as text)) as group_index,
+					A.sql_design_id,
+					A.sql_design_input_name,
+					A.sql_design_input_code,
+					A.data_type,
+					A.array_flg,
+					A.item_seq_no,
+					A.table_id,
+					A.column_id,
+					A.design_type,
+					A.object_type,
+					C.package_name,
+					COALESCE(E.tbl_design_code,D.common_object_definition_code,C.external_object_definition_code) as object_type_code,
+					module.module_code
+			FROM 
+			sql_design_input A
+			INNER JOIN 
+			ordered_inputs B
+			ON 
+			A.sql_design_input_parent_id = B.sql_design_input_id
+			LEFT JOIN 
+			external_object_definition C
+			ON (A.object_type = 1 AND A.table_id = C.external_object_definition_id)
+			LEFT JOIN 
+			common_object_definition D
+			ON (A.object_type = 0 AND A.table_id = D.common_object_definition_id)
+			LEFT JOIN 
+			table_design E
+			ON (A.object_type = 4 AND A.table_id = E.tbl_design_id)
+			LEFT JOIN module ON D.module_id = module.module_id
+		)		SELECT * FROM ordered_inputs ORDER BY item_seq_no;
+    </select>
+    
+    <select id="findById" parameterType="Long" resultMap="resultMap">
+        SELECT A.sql_design_input_id,
+				A.sql_design_id,
+				A.sql_design_input_name,
+				A.sql_design_input_code,
+				A.data_type,
+				A.sql_design_input_parent_id,
+				A.array_flg,
+				A.item_seq_no,
+				A.table_id,
+				A.column_id,
+				A.design_type,
+				A.object_type
+		FROM sql_design_input A
+		WHERE A.sql_design_input_id = #{sqlDesignInputId}
+
+    </select>
+    <insert id="register" parameterType="SqlDesignInput">
+        <selectKey keyProperty="sqlDesignInputId" resultType="long" order="BEFORE">
+            SELECT nextval('sql_design_input_seq') AS sqlDesignInputId
+        </selectKey>
+        INSERT INTO
+            sql_design_input
+        (
+			sql_design_id,
+			sql_design_input_name,
+			sql_design_input_code,
+			data_type,
+			sql_design_input_parent_id,
+			array_flg,
+			item_seq_no,
+			table_id,
+			column_id,
+			design_type,
+			object_type
+        )
+        VALUES
+        (
+            #{sqlDesignId},
+            #{sqlDesignInputName},
+            #{sqlDesignInputCode},
+            #{dataType},
+            #{sqlDesignInputParentId},
+            #{functionCode},
+            #{arrayFlag},
+            #{itemSeqNo},
+            #{tableId},
+            #{columnId},
+            #{designType},
+            #{objectType}
+        )
+    </insert>
+    
+    <insert id="registerAll">
+        INSERT INTO
+            sql_design_input
+        (
+        	sql_design_input_id,
+			sql_design_id,
+			sql_design_input_name,
+			sql_design_input_code,
+			data_type,
+			sql_design_input_parent_id,
+			array_flg,
+			item_seq_no,
+			table_id,
+			column_id,
+			design_type,
+			object_type
+        )
+        VALUES
+        <foreach collection="sqlDesignInputs" item="item" separator=",">
+        (
+            #{item.sqlDesignInputId},
+            #{item.sqlDesignId},
+            #{item.sqlDesignInputName},
+            #{item.sqlDesignInputCode},
+            #{item.dataType},
+            #{item.sqlDesignInputParentId},
+            #{item.arrayFlag},
+            #{item.itemSeqNo},
+            #{item.tableId},
+            #{item.columnId},
+            #{item.designType},
+            #{item.objectType}
+        )
+        </foreach>
+    </insert>
+	
+	<update id="modify" parameterType="SqlDesignInput">
+		UPDATE sql_design_input
+        SET sql_design_id = #{sqlDesignId},
+            sql_design_input_name = #{sqlDesignInputName},
+            sql_design_input_code = #{sqlDesignInputCode},
+            data_type = #{dataType},
+            sql_design_input_parent_id = #{sqlDesignInputParentId},
+            array_flg = #{arrayFlag},
+            item_seq_no = #{itemSeqNo},
+            table_id = #{tableId},
+            column_id = #{columnId},
+            design_type = #{designType},
+            object_type = #{objectType}
+        WHERE sql_design_input_id = #{sqlDesignInputId}
+	</update>
+	
+	<update id="modifyAll">
+		<foreach collection="sqlDesignInputs" item="item" separator=";">
+			UPDATE sql_design_input
+	        SET sql_design_id = #{item.sqlDesignId},
+	            sql_design_input_name = #{item.sqlDesignInputName},
+	            sql_design_input_code = #{item.sqlDesignInputCode},
+	            data_type = #{item.dataType},
+	            sql_design_input_parent_id = #{item.sqlDesignInputParentId},
+	            array_flg = #{item.arrayFlag},
+	            item_seq_no = #{item.itemSeqNo},
+	            table_id = #{item.tableId},
+            	column_id = #{item.columnId},
+            	design_type = #{item.designType},
+            	object_type = #{item.objectType}
+        	WHERE sql_design_input_id = #{item.sqlDesignInputId}
+		</foreach>
+	</update>
+	
+	<delete id="delete" parameterType="SqlDesignInput">
+		DELETE FROM sql_design_input
+        WHERE sql_design_input_id = #{sqlDesignInputId}
+	</delete>
+	
+	<delete id="deleteByExceptionalGroup">
+		DELETE FROM 
+			sql_design_input
+        <where>
+        	sql_design_id = #{sqlDesignId}
+         	<if test="exceptionGroup !=null and exceptionGroup.size() &gt; 0">
+        		AND sql_design_input_id NOT IN
+	        	<foreach collection="exceptionGroup" separator="," open="(" close=")" item="id">
+	        		#{id}
+	        	</foreach>
+        	</if>
+        </where>
+	</delete>
+	
+	<delete id="deleteBySqlDesignId">
+		DELETE FROM 
+			sql_design_input
+        WHERE
+        	sql_design_id = #{sqlDesignId}
+	</delete>
+	<select id="preserveIds" resultType="Long">
+		SELECT SETVAL('sql_design_input_seq'::regclass,NEXTVAL('sql_design_input_seq'::regclass)+#{preservedNumber})
+	</select>
+	
+	<select id="getReferencedFromBusinessLogic" resultMap="resultMap">
+		SELECT B.sql_design_input_id,D.business_logic_id,e.module_id as business_logic_module_id,B.sql_design_input_name
+		FROM execution_input_value B
+			LEFT JOIN 
+			execution_component C
+			ON B.execution_component_id = C.execution_component_id
+			LEFT JOIN
+			sequence_logic D
+			ON C.sequence_logic_id = D.sequence_logic_id
+			LEFT JOIN
+			business_logic E
+			ON D.business_logic_id = E.business_logic_id
+			LEFT JOIN
+			sql_design_input F
+			ON 
+			B.sql_design_input_id = F.sql_design_input_id
+		WHERE C.sql_design_id = #{sqlDesignId}
+		
+	</select>
+</mapper>

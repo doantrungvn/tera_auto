@@ -1,0 +1,34 @@
+/*html, body {position: relative}*/
+/* screen design */
+
+.div-decision-row {
+    float: left;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 100%
+}
+
+.div-decision-row-add {
+    float: left;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 100%
+}
+
+/* For sort order */
+.ui-sortable-helper {
+    border: 2px dashed red;
+    background-color: #fcfeda;
+    padding: 0px;
+    margin: 0px;
+}
+
+#contextMenuCondition,#contextMenuAction {
+  position: absolute;
+  display:none;
+  padding-bottom : 10px;
+}
+
+.removeRow {
+	background : none repeat scroll 0 0 #EAAAAA
+}

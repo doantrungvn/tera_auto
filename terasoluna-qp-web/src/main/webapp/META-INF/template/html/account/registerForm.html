@@ -1,0 +1,199 @@
+﻿<!-- appendHeaderHere -->
+			<div class="qp-body-container" style="margin: -15px 0px 20px 0px;">
+			<div class="qp-link-header">
+				<span class="qp-link-header-icon glyphicon glyphicon-search"></span>
+			<a href="searchForm.html">Search account</a></div>
+			
+		<div class="qp-breadcrumb">
+				<ul class="breadcrumb" style="float:left;color:#337ab7;font-size:14px;">
+					<li><a href="#{homePage}"><i class="qp-link-header-icon glyphicon glyphicon-home"></i></a></li>
+					<li><span>Account management</span></li>
+					<li><span>Register account</span></li>
+				</ul>
+		</div>
+			
+			<!-- End toolbar-->
+			
+			<!-- Start message -->
+			<div class="qp-message">
+				</div>
+			<!-- End message -->
+
+			<!-- Start content -->
+			<div class="qp-body">
+<form id="accountForm" action="searchForm.html" method="post"><div class="panel panel-default qp-div-information">
+				<div class="panel-heading">
+					<span class="glyphicon qp-heading-icon" aria-hidden="true">&nbsp;</span>
+					<span class="qp-heading-text">Account information</span>
+				</div>
+				<div class="panel-body">
+					<input type="password" style="display:none">
+					<table class="table table-bordered qp-table-form">
+						<colgroup>
+							<col width="20%">
+							<col width="30%">
+							<col width="20%">
+							<col width="30%">
+						</colgroup>
+						<tbody><tr>
+							<th>
+								<label for="username">User name&nbsp;
+									<label class="qp-required-field">(*)</label>
+									<a style="margin-left:5px" class="glyphicon glyphicon-info-sign qp-link-toggle" title="" data-html="true" data-toggle="tooltip" data-placement="top" data-original-title="Only support code pattern and email pattern"></a>
+								</label>
+							</th>
+							<td><input id="username" name="username" class="form-control qp-input-text" type="text" autofocus="true" value=""></td>
+							<th>
+								<label for="accountNonLocked">Account non locked</label></th>
+							<td>
+								<label class="qp-input-radio-margin qp-input-radio radio-inline"><input id="accountNonLocked1" name="accountNonLocked" type="radio" value="true" checked="checked">Yes</label> 
+								<label class="qp-input-radio-margin qp-input-radio radio-inline"><input id="accountNonLocked2" name="accountNonLocked" type="radio" value="false">No</label>
+							</td>
+						</tr>
+						<tr>
+							<th>
+								Account rule definition</th>
+							<td>
+								
+
+
+
+<!--  attribute -->
+
+<div class="input-group " style="">
+	<input type="text" name="accountRuleDefinitionIdAutocomplete" id="accountRuleDefinitionIdAutocompleteId" class="form-control qp-input-autocomplete  ui-autocomplete-input" value="" optionvalue="optionValue" optionlabel="optionLabel" selectsqlid="getAllRuleDefinitionForAutocomplete" emptylabel="" onselectevent="checkRuleHasInitialPassword" onchangeevent="removeInputPassword" onremoveevent="" mustmatch="true" maxlength="" minlength="" arg01="" arg02="20" arg03="" arg04="" arg05="" arg06="" arg07="" arg08="" arg09="" arg10="" arg11="" arg12="" arg13="" arg14="" arg15="" arg16="" arg17="" arg18="" arg19="" arg20="" sourcetype="" sourcecallback="" placeholder="Search..." autocomplete="off" previousvalue="" previouslabel="" selectedvalue="false">
+	<input type="hidden" class="" name="accountRuleDefinitionId" value=""><span class="input-group-addon dropdown-toggle" data-dropdown="dropdown" style="cursor: pointer;" onclick="$.qp.searchAutocompleteData(this)"> <span class="caret"></span></span>
+</div></td>
+							<th></th>
+							<td></td>
+						</tr>
+						<tr id="inputPassword">
+							<th>
+								<label for="password">Password&nbsp;
+									<label class="qp-required-field">(*)</label>
+								</label></th>
+							<td><input id="password" name="password" class="form-control qp-input-text" type="password" value=""></td>
+							<th>
+								<label for="confirmPassword">Password confirmation&nbsp;
+									<label class="qp-required-field">(*)</label>
+								</label></th>
+							<td><input id="confirmPassword" name="confirmPassword" class="form-control qp-input-text" type="password" value=""></td>
+						</tr>
+					</tbody></table>
+				</div>
+			</div>
+			
+<div class="panel panel-default qp-div-search-result">
+					<div class="panel-heading">
+						<span class="glyphicon qp-heading-icon" aria-hidden="true">&nbsp;</span>
+						<span class="qp-heading-text">Role information</span>
+					</div>
+					<div class="panel-body">
+						<div class="table-responsive">
+							<table class="table table-bordered qp-table-list">
+								<colgroup>
+									<col width="3%">
+									<col width="30%">
+									<col width="17%">
+									<col width="50%">
+								</colgroup>
+								<thead>
+									<tr>
+										<th></th>
+										<th>Role name</th>
+										<th>Role code</th>
+										<th style="text-align: left;">Remark</th>
+									</tr>
+								</thead>
+								<tbody><tr>
+										<td><input id="accRoleList0.selected1" name="accRoleList[0].selected" class="qp-input-checkbox qp-input-checkbox-margin" type="checkbox" value="true"><input type="hidden" name="_accRoleList[0].selected" value="on"></td>
+										<td>
+											role03<input id="accRoleList0.roleName" name="accRoleList[0].roleName" value="role03" type="hidden"></td>
+										<td>
+											role03<input id="accRoleList0.roleCd" name="accRoleList[0].roleCd" value="role03" type="hidden"></td>
+										<td style="text-align: left;">
+											<input id="accRoleList0.remark" name="accRoleList[0].remark" type="hidden" value=""></td>
+										<input id="accRoleList0.roleId" name="accRoleList[0].roleId" value="75" type="hidden"></tr>
+								<tr>
+										<td><input id="accRoleList1.selected1" name="accRoleList[1].selected" class="qp-input-checkbox qp-input-checkbox-margin" type="checkbox" value="true"><input type="hidden" name="_accRoleList[1].selected" value="on"></td>
+										<td>
+											UAT Role<input id="accRoleList1.roleName" name="accRoleList[1].roleName" value="UAT Role" type="hidden"></td>
+										<td>
+											uatrole<input id="accRoleList1.roleCd" name="accRoleList[1].roleCd" value="uatrole" type="hidden"></td>
+										<td style="text-align: left;">
+											role for uat<input id="accRoleList1.remark" name="accRoleList[1].remark" value="role for uat" type="hidden"></td>
+										<input id="accRoleList1.roleId" name="accRoleList[1].roleId" value="11" type="hidden"></tr>
+								<tr>
+										<td><input id="accRoleList2.selected1" name="accRoleList[2].selected" class="qp-input-checkbox qp-input-checkbox-margin" type="checkbox" value="true"><input type="hidden" name="_accRoleList[2].selected" value="on"></td>
+										<td>
+											Admin<input id="accRoleList2.roleName" name="accRoleList[2].roleName" value="Admin" type="hidden"></td>
+										<td>
+											role2<input id="accRoleList2.roleCd" name="accRoleList[2].roleCd" value="role2" type="hidden"></td>
+										<td style="text-align: left;">
+											<input id="accRoleList2.remark" name="accRoleList[2].remark" type="hidden" value=""></td>
+										<input id="accRoleList2.roleId" name="accRoleList[2].roleId" value="2" type="hidden"></tr>
+								<tr>
+										<td><input id="accRoleList3.selected1" name="accRoleList[3].selected" class="qp-input-checkbox qp-input-checkbox-margin" type="checkbox" value="true"><input type="hidden" name="_accRoleList[3].selected" value="on"></td>
+										<td>
+											User<input id="accRoleList3.roleName" name="accRoleList[3].roleName" value="User" type="hidden"></td>
+										<td>
+											role3<input id="accRoleList3.roleCd" name="accRoleList[3].roleCd" value="role3" type="hidden"></td>
+										<td style="text-align: left;">
+											<input id="accRoleList3.remark" name="accRoleList[3].remark" type="hidden" value=""></td>
+										<input id="accRoleList3.roleId" name="accRoleList[3].roleId" value="3" type="hidden"></tr>
+								<tr>
+										<td><input id="accRoleList4.selected1" name="accRoleList[4].selected" class="qp-input-checkbox qp-input-checkbox-margin" type="checkbox" value="true"><input type="hidden" name="_accRoleList[4].selected" value="on"></td>
+										<td>
+											Full role<input id="accRoleList4.roleName" name="accRoleList[4].roleName" value="Full role" type="hidden"></td>
+										<td>
+											fullrole<input id="accRoleList4.roleCd" name="accRoleList[4].roleCd" value="fullrole" type="hidden"></td>
+										<td style="text-align: left;">
+											dfsdfsdf<input id="accRoleList4.remark" name="accRoleList[4].remark" value="dfsdfsdf" type="hidden"></td>
+										<input id="accRoleList4.roleId" name="accRoleList[4].roleId" value="1" type="hidden"></tr>
+								<tr>
+										<td><input id="accRoleList5.selected1" name="accRoleList[5].selected" class="qp-input-checkbox qp-input-checkbox-margin" type="checkbox" value="true"><input type="hidden" name="_accRoleList[5].selected" value="on"></td>
+										<td>
+											RoleTestTHK<input id="accRoleList5.roleName" name="accRoleList[5].roleName" value="RoleTestTHK" type="hidden"></td>
+										<td>
+											roleTestTHK<input id="accRoleList5.roleCd" name="accRoleList[5].roleCd" value="roleTestTHK" type="hidden"></td>
+										<td style="text-align: left;">
+											<input id="accRoleList5.remark" name="accRoleList[5].remark" type="hidden" value=""></td>
+										<input id="accRoleList5.roleId" name="accRoleList[5].roleId" value="77" type="hidden"></tr>
+								<tr>
+										<td><input id="accRoleList6.selected1" name="accRoleList[6].selected" class="qp-input-checkbox qp-input-checkbox-margin" type="checkbox" value="true"><input type="hidden" name="_accRoleList[6].selected" value="on"></td>
+										<td>
+											role for testing role<input id="accRoleList6.roleName" name="accRoleList[6].roleName" value="role for testing role" type="hidden"></td>
+										<td>
+											roleForTestingRole<input id="accRoleList6.roleCd" name="accRoleList[6].roleCd" value="roleForTestingRole" type="hidden"></td>
+										<td style="text-align: left;">
+											<input id="accRoleList6.remark" name="accRoleList[6].remark" type="hidden" value=""></td>
+										<input id="accRoleList6.roleId" name="accRoleList[6].roleId" value="78" type="hidden"></tr>
+								</tbody></table>
+						</div>
+					</div>
+				</div>
+<div class="qp-div-action">
+				
+
+
+
+
+
+
+
+
+
+
+
+
+	<button type="submit" class="btn qp-button qp-dialog-confirm">Save</button>
+				
+
+
+</div>
+		<div>
+<input type="hidden" name="_TRANSACTION_TOKEN" value="account/register~e045012d9a3083dd547b924625ecd4a1~49811af699f51ba06f98eee1cba51162">
+<input type="hidden" name="_csrf" value="6e22c002-28d3-4e24-95c7-75e956cd53c5">
+</div></form></div>
+
+			<!-- appendFooterHere -->

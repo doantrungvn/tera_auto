@@ -1,0 +1,179 @@
+<!-- appendHeaderHere -->
+
+
+			<div class="qp-link-header">
+				<span class="qp-link-header-icon glyphicon glyphicon-search"></span>
+				<a href="searchForm.html">Search account rule definition</a>
+			</div>
+			
+		<div class="qp-breadcrumb">
+				<ul class="breadcrumb">
+					<li><a href="#{homePage}"><i class="qp-link-header-icon glyphicon glyphicon-home"></i></a></li>
+					<li><span>Account rule definition</span></li>
+					<li><span>Register account rule definition</span></li>
+				</ul>
+		</div>
+			
+			<!-- End toolbar-->
+			
+			<!-- Start message -->
+			<div class="qp-message">
+				</div>
+			<!-- End message -->
+
+			<!-- Start content -->
+			<div class="qp-body">
+<form id="accountRuleDefinitionForm" action="./registerForm_files/registerForm.html" method="post"><div class="panel panel-default qp-div-information">
+				<div class="panel-heading">
+					<span class="glyphicon  qp-heading-icon" aria-hidden="true">&nbsp;</span>
+					<span class="pq-heading-text">Account rule definition information</span>
+				</div>
+				<div class="panel-body">
+					<table class="table table-bordered qp-table-form">
+						<colgroup>
+							<col width="20%">
+							<col width="30%">
+							<col width="20%">
+							<col width="30%">
+						</colgroup>
+						<tbody><tr>
+							<th>
+								<label for="accountRuleDefinitionName">Account rule definition name&nbsp;
+									<label class="qp-required-field">(*)</label>
+								</label></th>
+							<td><input id="accountRuleDefinitionName" name="accountRuleDefinitionName" class="form-control qp-input-text qp-convention-name-row" type="text" autofocus="true" value=""></td>
+							<th>
+								<label for="accountRuleDefinitionCode">Account rule definition code&nbsp;
+									<label class="qp-required-field">(*)</label>
+								</label></th>
+							<td><input id="accountRuleDefinitionCode" name="accountRuleDefinitionCode" class="form-control qp-input-text qp-convention-code-row" type="text" autofocus="true" value=""></td>
+						</tr>
+					</tbody></table>
+				</div>
+			</div>
+			
+			<div class="panel panel-default qp-div-information">
+				<div class="panel-heading">
+					<span class="glyphicon  qp-heading-icon" aria-hidden="true">&nbsp;</span>
+					<span class="pq-heading-text">Password rules information</span>
+				</div>
+				<div class="panel-body">
+					<table class="table table-bordered qp-table-form">
+						<colgroup>
+							<col width="20%">
+							<col width="30%">
+							<col width="50%">
+						</colgroup>
+						<tbody><tr>
+							<th style="text-align: left">Contents</th>
+							<th style="text-align: left">Setting</th>
+							<th style="text-align: left">Remark</th>
+						</tr>
+						<tr class="success form-inline">
+							<td colspan="3">Password management</td>
+						</tr>
+						<tr>
+							<td>
+								<input id="rangeOfStringCheckbox1" name="rangeOfStringCheckbox" class="qp-input-checkbox-margin qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_rangeOfStringCheckbox" value="on"><label for="rangeOfStringCheckbox1">Range of string</label>
+							</td>
+							<td>
+								<input id="rangeOfStringMinimum" name="rangeOfStringMinimum" class="form-control qp-input-from-integer pull-left" type="text" autofocus="true" value="" disabled=""><div class="qp-separator-from-to">~</div>
+								<input id="rangeOfStringMaximum" name="rangeOfStringMaximum" class="form-control qp-input-from-integer pull-right" type="text" autofocus="true" value="" disabled=""></td>
+							<td>The range of the password string length.</td>
+						</tr>
+						<tr>
+							<td>
+								<input id="charactersTypeCheckbox1" name="charactersTypeCheckbox" class="qp-input-checkbox-margin qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_charactersTypeCheckbox" value="on"><label for="charactersTypeCheckbox1">Characters type</label>
+							</td>
+							<td>
+								<input id="charactersTypeUpper1" name="charactersTypeUpper" class="qp-input-checkbox-margin qp-input-checkbox" type="checkbox" value="true" disabled=""><input type="hidden" name="_charactersTypeUpper" value="on"><label for="charactersTypeUpper1">Upper</label><br>
+								<input id="charactersTypeLower1" name="charactersTypeLower" class="qp-input-checkbox-margin qp-input-checkbox" type="checkbox" value="true" disabled=""><input type="hidden" name="_charactersTypeLower" value="on"><label for="charactersTypeLower1">Lower</label><br>
+								<input id="charactersTypeNumeric1" name="charactersTypeNumeric" class="qp-input-checkbox-margin qp-input-checkbox" type="checkbox" value="true" disabled=""><input type="hidden" name="_charactersTypeNumeric" value="on"><label for="charactersTypeNumeric1">Numeric</label>
+							</td>
+							<td>Check the password that including the selected character types.</td>
+						</tr>
+						<tr>
+							<td>
+								<input id="generationsCountCheckbox1" name="generationsCountCheckbox" class="qp-input-checkbox-margin qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_generationsCountCheckbox" value="on"><label for="generationsCountCheckbox1">Generations count</label>
+							</td>
+							<td>
+								<input id="generationsCount" name="generationsCount" class="form-control qp-input-from-integer pull-left" type="text" autofocus="true" value="" disabled="">&nbsp;
+								times</td>
+							<td>The number of successive generations. Cannot change the password for the past of this times.</td>
+						</tr>
+						<tr>
+							<td>
+								<input id="lifeTimeCheckbox1" name="lifeTimeCheckbox" class="qp-input-checkbox-margin qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_lifeTimeCheckbox" value="on"><label for="lifeTimeCheckbox1">Lifetime</label>
+							</td>
+							<td>
+								<input id="lifeTime" name="lifeTime" class="form-control qp-input-from-integer pull-left" type="text" autofocus="true" value="" disabled="">&nbsp;
+								days</td>
+							<td>Maximum password age days.</td>
+						</tr>
+						<tr class="success form-inline">
+							<td colspan="3">Account lock management</td>
+						</tr>
+						<tr>
+							<td>
+								<input id="loginContinuousFailureCountCheckbox1" name="loginContinuousFailureCountCheckbox" class="qp-input-checkbox-margin qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_loginContinuousFailureCountCheckbox" value="on"><label for="loginContinuousFailureCountCheckbox1">Login continuous failure count</label>
+							</td>
+							<td>
+								<input id="loginContinuousFailureCount" name="loginContinuousFailureCount" class="form-control qp-input-from-integer pull-left" type="text" autofocus="true" value="" disabled="">&nbsp;
+								times</td>
+							<td>Failure possible number of times in succession for login. If the number of failures exceeds of this times, it becomes account lock.</td>
+						</tr>
+						<tr>
+							<td>
+								<input id="accountLockTimeCheckbox1" name="accountLockTimeCheckbox" class="qp-input-checkbox-margin qp-input-checkbox" type="checkbox" value="true" disabled=""><input type="hidden" name="_accountLockTimeCheckbox" value="on"><label for="accountLockTimeCheckbox1">Account lock time</label>
+							</td>
+							<td>
+								<input id="accountLockTime" name="accountLockTime" class="form-control qp-input-from-integer pull-left" type="text" autofocus="true" value="" disabled="">&nbsp;
+								times</td>
+							<td>Account lock time by login error. Even if the user inputs a right password this time, they cannot log in.</td>
+						</tr>
+						<tr class="success form-inline">
+							<td colspan="3">Initial password management</td>
+						</tr>
+						<tr>
+							<td>
+								<input id="initialPassword1" name="initialPassword" class="qp-input-checkbox-margin qp-input-checkbox" type="checkbox" value="true"><input type="hidden" name="_initialPassword" value="on"><label for="initialPassword1">Initial password</label>
+							</td>
+							<td></td>
+							<td>Whether to issue the initial password.</td>
+						</tr>
+						<tr>
+							<td>
+								<input id="initialPasswordForceChange1" name="initialPasswordForceChange" class="qp-input-checkbox-margin qp-input-checkbox" type="checkbox" value="true" disabled=""><input type="hidden" name="_initialPasswordForceChange" value="on"><label for="initialPasswordForceChange1">Initial password force change</label>
+							</td>
+							<td></td>
+							<td>If the user login with the initial password, forced to change the passwords.</td>
+						</tr>
+					</tbody></table>
+				</div>
+			</div>
+			
+			<div class="qp-div-action">
+				
+
+
+
+
+
+
+
+
+
+
+
+
+	<input type="button" onclick="window.location.href='searchForm.html'" class="btn qp-button " value="Save" style="null">
+				
+
+
+</div>
+		<div>
+<input type="hidden" name="_TRANSACTION_TOKEN" value="accountruledefinition/register~488ad502f367cef04eb895e31b68547a~cea3e4ad5dbb8f18478e269b0781c204">
+<input type="hidden" name="_csrf" value="6e22c002-28d3-4e24-95c7-75e956cd53c5">
+</div></form></div>
+
+			<!-- appendFooterHere -->

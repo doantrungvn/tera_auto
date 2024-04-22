@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.businessdesigncomponent.ExportFileComponentRepository">
+
+    <resultMap id="exportFileComponentResultMap" type="ExportFileComponent">
+        <id property="exportFileComponentId" column="export_file_component_id" />
+        <result property="label" column="label" />
+        <result property="remark" column="remark" />
+        <result property="sequenceLogicId" column="sequence_logic_id" />
+        <result property="destinationPathType" column="destination_path_type" />
+        <result property="destinationPathContent" column="destination_path_content" />
+        <result property="destinationPathFormulaId" column="destination_path_formula_id" />
+        <result property="parameterScope" column="parameter_scope" />
+        <result property="parameterId" column="parameter_id" />
+        <result property="objectDefinition.objectDefinitionId" column="object_definition_id" />
+        <result property="objectDefinition.objectDefinitionCode" column="object_definition_code" />
+        <result property="objectDefinition.arrayFlg" column="array_flg" />
+        <result property="objectDefinition.dataType" column="data_type" />
+        <result property="fileFormat.fileType" column="file_type" />
+        <result property="fileFormat.fileEncoding" column="file_encoding" />
+        <result property="fileFormat.lineFeedCharType" column="line_feed_char_type" />
+        <result property="fileFormat.lineFeedChar" column="line_feed_char" />
+        <result property="fileFormat.delimiter" column="delimiter" />
+        <result property="fileFormat.encloseCharType" column="enclose_char_type" />
+        <result property="fileFormat.encloseChar" column="enclose_char" />
+        <result property="fileFormat.headLineCount" column="head_line_count" />
+        <result property="fileFormat.trailerLineCount" column="trailer_line_count" />
+        <result property="fileFormat.overwriteFlg" column="overwrite_flg" />
+    </resultMap>
+	<resultMap id="exportAssignValueResultMap" type="ExportAssignValue">
+        <id property="exportAssignValueId" column="export_assign_value_id" />
+        <result property="exportFileComponentId" column="export_file_component_id" />
+        <result property="parameterScope" column="parameter_scope" />
+        <result property="parameterId" column="parameter_id" />
+        <result property="columnNo" column="column_no" />
+        <result property="columnFileFormat.paddingType" column="padding_type" />
+        <result property="columnFileFormat.paddingCharType" column="padding_char_type" />
+        <result property="columnFileFormat.paddingChar" column="padding_char" />
+        <result property="columnFileFormat.specifyByte" column="specify_byte" />
+        <result property="columnFileFormat.columnFormat" column="column_format" />
+        <result property="columnFileFormat.trimType" column="trim_type" />
+        <result property="columnFileFormat.trimChar" column="trim_char" />
+        <result property="columnFileFormat.converter" column="converter" />
+    </resultMap>
+	<resultMap id="columnFileFormatResultMap" type="ColumnFileFormat">
+        <id property="exportAssignValueId" column="export_assign_value_id" />
+        <result property="paddingType" column="padding_type" />
+        <result property="paddingCharType" column="padding_char_type" />
+        <result property="paddingChar" column="padding_char" />
+        <result property="specifyByte" column="specify_byte" />
+        <result property="columnFormat" column="column_format" />
+        <result property="trimType" column="trim_type" />
+        <result property="trimChar" column="trim_char" />
+        <result property="converter" column="converter" />
+    </resultMap>
+    <select id="getSequencesExportFileComponent" resultType="Long">
+    	select SETVAL('export_file_component_seq'::regclass, NEXTVAL('export_file_component_seq'::regclass) + #{size})
+    </select>
+    <select id="getSequencesExportAssignValue" resultType="Long">
+    	select SETVAL('export_assign_value_seq'::regclass, NEXTVAL('export_assign_value_seq'::regclass) + #{size})
+    </select>
+    <insert id="registerExportFileComponent" >
+		<foreach item="item" collection="exportFileComponentItems">
+			INSERT INTO export_file_component
+				(
+            		export_file_component_id, 
+            		label, 
+            		remark, 
+            		sequence_logic_id,
+            		destination_path_type, 
+            		destination_path_content, 
+            		destination_path_formula_id, 
+            		parameter_scope, 
+            		parameter_id
+            	)
+	    		VALUES 
+	    		(
+					#{item.exportFileComponentId},
+					#{item.label},
+	            	#{item.remark},
+	            	#{item.sequenceLogicId},
+					#{item.destinationPathType},
+					#{item.destinationPathContent},
+					#{item.destinationPathFormulaId},
+					#{item.parameterScope},
+	            	CAST(#{item.parameterId} AS numeric(16,0))
+	            );
+	        INSERT INTO file_format
+				(
+            		file_type, 
+            		file_id, 
+            		file_encoding, 
+            		line_feed_char_type,
+            		line_feed_char,
+            		delimiter, 
+            		enclose_char_type, 
+            		enclose_char, 
+            		head_line_count, 
+            		trailer_line_count, 
+            		overwrite_flg
+            	)
+	    		VALUES 
+	    		(
+					1,
+					#{item.exportFileComponentId},
+	            	#{item.fileFormat.fileEncoding},
+	            	#{item.fileFormat.lineFeedCharType},
+	            	#{item.fileFormat.lineFeedChar},
+					#{item.fileFormat.delimiter},
+					#{item.fileFormat.encloseCharType},
+					#{item.fileFormat.encloseChar},
+					#{item.fileFormat.headLineCount},
+					#{item.fileFormat.trailerLineCount},
+	            	#{item.fileFormat.overwriteFlg}
+	            );
+	        <if test="item.lstExportAssignValues.size() > 0">
+	    		<foreach item="detail" collection="item.lstExportAssignValues">
+		        	INSERT INTO export_assign_value
+		        	(
+		        		export_assign_value_id,
+	           			export_file_component_id, 
+	           			parameter_scope,
+	           			parameter_id,
+	           			column_no
+	           		)
+		    		VALUES 
+					(
+						#{detail.exportAssignValueId},
+						#{item.exportFileComponentId},
+						#{detail.parameterScope},
+						CAST(#{detail.parameterId} AS numeric(16,0)),
+						#{detail.columnNo}
+		            );
+		            
+		            INSERT INTO column_file_format
+		        	(
+	           			export_assign_value_id, 
+	           			padding_type,
+	           			padding_char_type,
+	           			padding_char,
+	           			specify_byte,
+	           			column_format,
+	           			trim_type,
+	           			trim_char,
+	           			converter
+	           		)
+	           		VALUES
+           			(
+						#{detail.columnFileFormat.exportAssignValueId},
+						#{detail.columnFileFormat.paddingType},
+						#{detail.columnFileFormat.paddingCharType},
+						#{detail.columnFileFormat.paddingChar},
+						#{detail.columnFileFormat.specifyByte},
+						#{detail.columnFileFormat.columnFormat},
+						#{detail.columnFileFormat.trimType},
+						#{detail.columnFileFormat.trimChar},
+						#{detail.columnFileFormat.converter}
+		            );
+				</foreach>;
+	        </if>
+		</foreach>
+    </insert>
+    
+    <select id="findExportFileComponentByBusinessLogic" resultMap="exportFileComponentResultMap">
+    	SELECT 
+    		a.export_file_component_id, 
+    		a.label, 
+    		a.remark, 
+    		a.sequence_logic_id, 
+       		a.destination_path_type, 
+       		a.destination_path_content, 
+       		a.destination_path_formula_id, 
+       		a.parameter_scope, 
+       		a.parameter_id
+  		FROM export_file_component a
+  		WHERE EXISTS
+		    (
+			    SELECT sl.sequence_logic_id
+			    FROM sequence_logic sl
+			    WHERE sl.business_logic_id = #{businessLogicId}
+			       	AND component_type = 17
+			       	AND sl.sequence_logic_id = a.sequence_logic_id 
+		     )
+		ORDER BY a.export_file_component_id
+    </select>
+    
+    <select id="findExportAssignValueByBusinessLogic" resultMap="exportAssignValueResultMap">
+    	SELECT 
+    		a.export_assign_value_id, 
+    		a.export_file_component_id, 
+    		a.parameter_scope,
+    		a.parameter_id, 
+    		a.column_no 
+  		FROM export_assign_value a
+  		LEFT JOIN export_file_component b on (b.export_file_component_id = a.export_file_component_id)
+  		WHERE EXISTS
+		    (
+			    SELECT sl.sequence_logic_id
+			    FROM sequence_logic sl
+			    WHERE sl.business_logic_id = #{businessLogicId}
+			       	AND component_type = 17
+			       	AND sl.sequence_logic_id = b.sequence_logic_id 
+		     )
+		ORDER BY a.export_assign_value_id
+    </select>
+    
+    <select id="findColumnFileFormatByBusinessLogic" resultMap="columnFileFormatResultMap">
+    	SELECT 
+    		a.export_assign_value_id, 
+       		a.padding_type,  
+       		a.padding_char_type,
+       		a.padding_char, 
+       		a.specify_byte,
+       		a.column_format, 
+       		a.trim_type, 
+       		a.trim_char, 
+       		a.converter
+  		FROM column_file_format a
+  		LEFT JOIN export_assign_value b on (b.export_assign_value_id = a.export_assign_value_id)
+  		LEFT JOIN export_file_component c on (c.export_file_component_id = b.export_file_component_id)
+  		WHERE EXISTS
+		    (
+			    SELECT sl.sequence_logic_id
+			    FROM sequence_logic sl
+			    WHERE sl.business_logic_id = #{businessLogicId}
+			       	AND component_type = 17
+			       	AND sl.sequence_logic_id = c.sequence_logic_id 
+		     )
+		ORDER BY a.export_assign_value_id
+    </select>
+    
+    <select id="findAllExportFileComponentByModule" resultMap="exportFileComponentResultMap">
+    	SELECT 
+    		a.export_file_component_id, 
+    		a.label, 
+    		a.remark, 
+    		a.sequence_logic_id, 
+       		a.destination_path_type, 
+       		a.destination_path_content, 
+       		a.destination_path_formula_id, 
+       		a.parameter_scope, 
+       		a.parameter_id,	
+       		b.object_definition_id,
+       		b.object_definition_code,
+       		b.array_flg,
+       		b.data_type,
+       		f.file_type, 
+			f.file_encoding, 
+			f.line_feed_char_type,
+			f.line_feed_char,
+			f.delimiter, 
+			f.enclose_char_type, 
+			f.enclose_char, 
+			f.head_line_count, 
+			f.trailer_line_count, 
+			f.overwrite_flg 
+  		FROM export_file_component a
+  		LEFT JOIN object_definition b ON b.object_definition_id = a.parameter_id
+  		LEFT JOIN file_format f ON f.file_id = a.export_file_component_id
+  		WHERE EXISTS
+		    (
+			    SELECT sl.sequence_logic_id
+			    FROM sequence_logic sl
+			    INNER JOIN business_logic bl ON bl.business_logic_id = sl.business_logic_id
+			    WHERE bl.module_id = #{moduleId}
+			       	AND component_type = 17
+			       	AND sl.sequence_logic_id = a.sequence_logic_id  
+		     )
+        AND f.file_type = 1
+		ORDER BY a.export_file_component_id
+    </select>
+    
+    <select id="findAllExportAssignValueByModule" resultMap="exportAssignValueResultMap">
+    	SELECT 
+    		a.export_assign_value_id, 
+    		a.export_file_component_id, 
+    		a.parameter_scope,
+    		a.parameter_id, 
+    		a.column_no,
+    		c.padding_type,
+    		c.padding_char_type,
+    		c.padding_char,
+    		c.specify_byte,
+    		c.column_format,
+    		c.trim_type,
+    		c.trim_char,
+    		c.converter
+  		FROM export_assign_value a
+  		LEFT JOIN export_file_component b on (b.export_file_component_id = a.export_file_component_id)
+  		LEFT JOIN column_file_format c on (c.export_assign_value_id = a.export_assign_value_id)
+  		WHERE EXISTS
+		    (
+			    SELECT sl.sequence_logic_id
+			    FROM sequence_logic sl
+			    INNER JOIN business_logic bl ON bl.business_logic_id = sl.business_logic_id
+			    WHERE bl.module_id = #{moduleId}
+			       	AND component_type = 17
+			       	AND sl.sequence_logic_id = b.sequence_logic_id  
+		     )
+		ORDER BY a.export_assign_value_id
+    </select>
+    
+    <select id="findAllColumnFileFormatByModule" resultMap="columnFileFormatResultMap">
+    	SELECT 
+    		a.export_assign_value_id, 
+       		a.padding_type,  
+       		a.padding_char_type,
+       		a.padding_char, 
+       		a.specify_byte,
+       		a.column_format, 
+       		a.trim_type, 
+       		a.trim_char, 
+       		a.converter
+  		FROM column_file_format a
+  		LEFT JOIN export_assign_value b on (b.export_assign_value_id = a.export_assign_value_id)
+  		LEFT JOIN export_file_component c on (c.export_file_component_id = b.export_file_component_id)
+  		WHERE EXISTS
+		    (
+			    SELECT sl.sequence_logic_id
+			    FROM sequence_logic sl
+			    LEFT JOIN business_logic bl on (bl.business_logic_id = sl.business_logic_id)
+			    WHERE bl.module_id = #{moduleId}
+			       	AND component_type = 17
+			       	AND sl.sequence_logic_id = c.sequence_logic_id 
+		     )
+		ORDER BY a.export_assign_value_id
+    </select>
+    
+    <!-- generate source code of commmon blogic -->
+    <select id="findAllExportFileComponentByModuleCommon" resultMap="exportFileComponentResultMap">
+        SELECT 
+            a.export_file_component_id, 
+            a.label, 
+            a.remark, 
+            a.sequence_logic_id, 
+            a.destination_path_type, 
+            a.destination_path_content, 
+            a.destination_path_formula_id, 
+            a.parameter_scope, 
+            a.parameter_id, 
+            b.object_definition_id,
+            b.object_definition_code,
+            b.array_flg,
+            b.data_type,
+            f.file_type, 
+            f.file_encoding, 
+            f.line_feed_char_type,
+            f.line_feed_char,
+            f.delimiter, 
+            f.enclose_char_type, 
+            f.enclose_char, 
+            f.head_line_count, 
+            f.trailer_line_count, 
+            f.overwrite_flg 
+        FROM export_file_component a
+        LEFT JOIN object_definition b ON b.object_definition_id = a.parameter_id
+        LEFT JOIN file_format f ON f.file_id = a.export_file_component_id
+        WHERE EXISTS
+            (
+                SELECT sl.sequence_logic_id
+                FROM sequence_logic sl
+                INNER JOIN business_logic bl ON bl.business_logic_id = sl.business_logic_id
+                WHERE bl.project_id = #{projectId} AND bl.module_id is null and bl.blogic_type = 1   
+                    AND component_type = 17
+                    AND sl.sequence_logic_id = a.sequence_logic_id  
+             )
+        AND f.file_type = 1
+        ORDER BY a.export_file_component_id
+    </select>
+    
+    <select id="findAllExportAssignValueByModuleCommon" resultMap="exportAssignValueResultMap">
+        SELECT 
+            a.export_assign_value_id, 
+            a.export_file_component_id, 
+            a.parameter_scope,
+            a.parameter_id, 
+            a.column_no,
+            c.padding_type,
+            c.padding_char_type,
+            c.padding_char,
+            c.specify_byte,
+            c.column_format,
+            c.trim_type,
+            c.trim_char,
+            c.converter
+        FROM export_assign_value a
+        LEFT JOIN export_file_component b on (b.export_file_component_id = a.export_file_component_id)
+        LEFT JOIN column_file_format c on (c.export_assign_value_id = a.export_assign_value_id)
+        WHERE EXISTS
+            (
+                SELECT sl.sequence_logic_id
+                FROM sequence_logic sl
+                INNER JOIN business_logic bl ON bl.business_logic_id = sl.business_logic_id
+                WHERE bl.project_id = #{projectId} AND bl.module_id is null and bl.blogic_type = 1   
+                    AND component_type = 17
+                    AND sl.sequence_logic_id = b.sequence_logic_id  
+             )
+        ORDER BY a.export_assign_value_id
+    </select>
+    
+    <select id="findAllColumnFileFormatByModuleCommon" resultMap="columnFileFormatResultMap">
+        SELECT 
+            a.export_assign_value_id, 
+            a.padding_type,  
+            a.padding_char_type,
+            a.padding_char, 
+            a.specify_byte,
+            a.column_format, 
+            a.trim_type, 
+            a.trim_char, 
+            a.converter
+        FROM column_file_format a
+        LEFT JOIN export_assign_value b on (b.export_assign_value_id = a.export_assign_value_id)
+        LEFT JOIN export_file_component c on (c.export_file_component_id = b.export_file_component_id)
+        WHERE EXISTS
+            (
+                SELECT sl.sequence_logic_id
+                FROM sequence_logic sl
+                LEFT JOIN business_logic bl on (bl.business_logic_id = sl.business_logic_id)
+                WHERE bl.project_id = #{projectId} AND bl.module_id is null and bl.blogic_type = 1   
+                    AND component_type = 17
+                    AND sl.sequence_logic_id = c.sequence_logic_id 
+             )
+        ORDER BY a.export_assign_value_id
+    </select>
+</mapper>

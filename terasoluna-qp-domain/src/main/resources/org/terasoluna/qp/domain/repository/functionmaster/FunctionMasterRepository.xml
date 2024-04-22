@@ -1,0 +1,2114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.terasoluna.qp.domain.repository.functionmaster.FunctionMasterRepository">
+	<resultMap id="functionMasterResultMap" type="FunctionMaster">
+		<id property="functionMasterId" column="function_master_id" />
+		<result property="functionMasterCode" column="function_master_code" />
+		<result property="functionMasterName" column="function_master_name" />
+		<result property="functionMasterType" column="function_master_type" />
+		<result property="projectId" column="project_id" />
+		<result property="uploadFileId" column="upload_file_id" />
+		<result property="remark" column="remark" />
+		<result property="fileName" column="file_name" />
+		<result property="content" column="content" /> 
+		<result property="updatedateOfUploadFile" column="updatedate_of_uploadfile" /> 
+		<result property="packageName" column="package_name" />
+		<result property="createdBy" column="created_by" />
+        <result property="createdDate" column="created_date" />
+        <result property="updatedBy" column="updated_by" />
+        <result property="updatedDate" column="updated_date" />
+        <result property="author" column="username" />
+	</resultMap>
+	
+	<resultMap id="functionMethodResultMap" type="FunctionMethod">
+		<id property="functionMasterId" column="function_master_id" />
+		<result property="functionMethodId" column="function_method_id" />
+		<result property="functionMethodName" column="function_method_name" />
+		<result property="functionMethodCode" column="function_method_code" />
+		<result property="remark" column="remark" />
+		<result property="itemSeqNo" column="item_seq_no" />
+		<result property="functionMasterCode" column="function_master_code" />
+	</resultMap>
+	
+	<resultMap id="functionMethodInputResultMap" type="FunctionMethodInput">
+		<id property="methodInputId" column="method_input_id" />
+		<result property="methodInputCode" column="method_input_code" />
+		<result property="methodInputName" column="method_input_name" />
+		<result property="dataType" column="data_type" />
+		<result property="arrayFlg" column="array_flg" />
+		<result property="itemSeqNo" column="item_seq_no" />
+		<result property="functionMethodId" column="function_method_id" />
+		<result property="functionMethodName" column="function_method_name" />
+		<result property="functionMasterName" column="function_master_name" />
+		<result property="parentFunctionMethodInputId" column="parent_function_method_input_id" />
+		<result property="objectType" column="object_type" />
+		<result property="objectId" column="object_id" />
+		<result property="objectFlg" column="object_flg" />
+        <result property="commonObjDefiCode" column="common_object_definition_code" />
+        <result property="externalObjDefiCode" column="external_object_definition_code" />
+        <result property="packageNameObjExt" column="package_name" />
+        <result property="moduleCode" column="module_code" />
+        <result property="functionMethodCode" column="function_method_code" />
+		<result property="functionMasterCode" column="function_master_code" />
+		<result property="functionMasterId" column="function_master_id" />
+	</resultMap>
+	
+	<resultMap id="businessDesignResultMap" type="BusinessDesign">
+        <id property="businessLogicId" column="business_logic_id" />
+        <result property="businessLogicCode" column="business_logic_code" />
+        <result property="businessLogicName" column="business_logic_name" />
+        <result property="returnType" column="return_type" />
+        <result property="screenId" column="screen_id" />
+        <result property="moduleId" column="module_id" />
+        <result property="moduleStatus" column="module_status" />
+        <result property="moduleIdAutocomplete" column="module_name" />
+        <result property="projectId" column="project_id" />
+        <result property="customizeFlg" column="customize_flg" />
+        <result property="uploadFileId" column="upload_file_id" />
+        <result property="createdBy" column="created_by" />
+        <result property="createdDate" column="created_date" />
+        <result property="updatedBy" column="updated_by" />
+        <result property="updatedDate" column="updated_date" />
+        <result property="fileName" column="file_name" />
+        <result property="file" column="content" />
+        <result property="designStatus" column="design_status" />
+        <result property="packageName" column="package_name" />
+        <result property="screenIdAutocomplete" column="screen_name" />
+        <result property="screenCode" column="screen_name_code" />
+        <result property="messageString" column="message_string" />
+        <result property="patternType" column="pattern_type" />
+        <result property="confirmFlg" column="confirm_flg" />
+        <result property="completeFlg" column="complete_flg" />
+        <result property="remark" column="remark" />
+        <result property="screenFormId" column="screen_form_id" />
+    </resultMap>
+    
+    <resultMap id="affectedBusinessDesignResultMap" type="AffectedBusinessDesign">
+        <id property="businessLogicId" column="business_logic_id" />
+        <result property="businessLogicCode" column="business_logic_code" />
+        <result property="businessLogicName" column="business_logic_name" />
+        <result property="moduleId" column="module_id" />
+        <result property="moduleName" column="module_name" />
+        <result property="sequenceLogicId" column="sequence_logic_id" />
+        <result property="functionMethodId" column="function_method_id" />
+        <result property="functionMethodName" column="function_method_name" />
+        <result property="methodInputId" column="method_input_id" />
+        <result property="methodInputName" column="method_input_name" />
+        <result property="methodOutputId" column="method_output_id" />
+        <result property="methodOutputName" column="method_output_name" />
+    </resultMap>
+    
+    <resultMap id="affectedDecisionTableResultMap" type="AffectedDecisionTable">
+        <id property="decisionTbId" column="decision_table_id" />
+        <result property="decisionTbName" column="decision_table_name" />
+        <result property="decisionTbCode" column="decision_table_code" />
+        <result property="moduleId" column="module_id" />
+        <result property="moduleName" column="module_name" />
+      	<result property="functionMethodId" column="function_method_id" />
+        <result property="functionMethodName" column="function_method_name" />
+        <result property="methodInputId" column="method_input_id" />
+        <result property="methodInputName" column="method_input_name" />
+        <result property="methodOutputId" column="method_output_id" />
+        <result property="methodOutputName" column="method_output_name" />
+    </resultMap>
+    
+    <resultMap id="decisionResultMap" type="DecisionTable">
+        <id property="decisionTbId" column="decision_table_id" />
+        <result property="decisionTbName" column="decision_table_name" />
+        <result property="decisionTbCode" column="decision_table_code" />
+        <result property="moduleId" column="module_id" />
+        <result property="moduleName" column="module_name" />
+        <result property="projectId" column="project_id" />
+        <result property="projectName" column="project_name" />
+        <result property="remark" column="remark" />
+        <result property="designStatus" column="design_status" />
+        <result property="designStatusParent" column="status" />
+        <result property="createdBy" column="created_by" />
+        <result property="createdDate" column="created_date" />
+        <result property="updatedBy" column="updated_by" />
+        <result property="updatedDate" column="updated_date" />
+        <result property="methodInputName" column="method_input_name" />
+        <result property="methodInputId" column="method_input_id" />
+        <result property="methodInputDatatype" column="method_input_datatype" />
+        <result property="methodInputStatus" column="method_input_status" />
+        <result property="methodOutputName" column="method_output_name" />
+        <result property="methodOutputId" column="method_output_id" />
+        <result property="methodOutputDatatype" column="method_output_datatype" />
+        <result property="methodOutputStatus" column="method_output_status" />
+    </resultMap>
+
+	<resultMap id="autocompleteResultMap" type="Autocomplete">
+		<result property="optionValue" column="optionValue" />
+		<result property="optionLabel" column="optionLabel" />
+		<result property="output01" column="output01" />
+	</resultMap>
+	
+	<resultMap id="functionMethodOutputResultMap" type="FunctionMethodOutput">
+		<id property="methodOutputId" column="method_output_id" />
+		<result property="methodOutputCode" column="method_output_code" />
+		<result property="methodOutputName" column="method_output_name" />
+		<result property="dataType" column="data_type" />
+		<result property="arrayFlg" column="array_flg" />
+		<result property="itemSeqNo" column="item_seq_no" />
+		<result property="functionMethodId" column="function_method_id" />
+		<result property="functionMethodName" column="function_method_name" />
+		<result property="functionMasterName" column="function_master_name" />
+		<result property="parentFunctionMethodOutputId" column="parent_function_method_output_id" />
+		<result property="objectType" column="object_type" />
+		<result property="objectId" column="object_id" />
+		<result property="objectFlg" column="object_flg" />
+        <result property="commonObjDefiCode" column="common_object_definition_code" />
+        <result property="externalObjDefiCode" column="external_object_definition_code" />
+        <result property="packageNameObjExt" column="package_name" />
+        <result property="moduleCode" column="module_code" />
+        <result property="functionMethodCode" column="function_method_code" />
+		<result property="functionMasterCode" column="function_master_code" />
+		<result property="functionMasterId" column="function_master_id" />
+	</resultMap>
+
+     <select id="getSequencesFunctionMethod" resultType="Long">
+    	select SETVAL('function_method_seq'::regclass, NEXTVAL('function_method_seq'::regclass) + #{size})
+    </select>
+
+     <select id="getSequencesFunctionMethodInput" resultType="Long">
+    	select SETVAL('method_input_seq'::regclass, NEXTVAL('method_input_seq'::regclass) + #{size})
+    </select>
+
+     <select id="getSequencesFunctionMethodOutput" resultType="Long">
+    	select SETVAL('method_output_seq'::regclass, NEXTVAL('method_output_seq'::regclass) + #{size})
+    </select>
+    
+	<!-- Count function master by search condition -->
+	<select id="countBySearchCriteria" parameterType="org.terasoluna.qp.domain.repository.functionmaster.FunctionMasterCriteria" resultType="_long">
+		<![CDATA[
+			SELECT 
+				COUNT(*) 
+			FROM 
+				function_master
+		]]>
+		<include refid="findPageByCriteriaWherePhrase" />
+	</select>
+
+	<!-- Finds all function master by search condition -->
+	<select id="findPageBySearchCriteria" parameterType="org.terasoluna.qp.domain.repository.functionmaster.FunctionMasterCriteria" resultMap="functionMasterResultMap">
+		<![CDATA[
+			SELECT
+				function_master_id,
+				function_master_code,
+				function_master_name,
+				function_master_type,
+				project_id,
+				upload_file_id,
+				remark,
+				package_name
+			FROM function_master
+		]]>
+		<include refid="findPageByCriteriaWherePhrase" />
+		<if test="pageable.sort != null">
+			ORDER BY
+			<foreach collection="pageable.sort" item="order" separator=",">
+				${order.property} ${order.direction}
+			</foreach>
+		</if>
+		<if test="pageable.sort == null">
+			ORDER BY
+				updated_date DESC
+		</if>
+		<![CDATA[
+			 LIMIT
+				 #{pageable.pageSize}
+			 OFFSET
+				 #{pageable.offset}
+		]]>
+	</select>
+	
+	<!-- function master search criteria -->
+	<sql id="findPageByCriteriaWherePhrase">
+		<where>
+			<if test="criteria.functionMasterName != null and criteria.functionMasterName != ''">
+				<bind name="functionMasterName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.functionMasterName)" />
+				<![CDATA[
+					function_master_name ILIKE #{functionMasterName} ESCAPE '~'
+				]]>
+			</if>
+			<if test="criteria.functionMasterCode != null and criteria.functionMasterCode != ''">
+				<bind name="functionMasterCode" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.functionMasterCode)" />
+				<![CDATA[
+					AND function_master_code ILIKE #{functionMasterCode} ESCAPE '~'
+				]]>
+			</if>
+			<if test="criteria.projectId != null and criteria.projectId != ''">
+				<![CDATA[
+					AND project_id = #{criteria.projectId}
+				]]>
+			</if>
+			<if test="criteria.functionMasterType != null and criteria.functionMasterType.length > 0">
+				AND function_master_type IN			  
+				<foreach item="type" index="index" collection="criteria.functionMasterType" open="(" separator="," close=")">
+					#{type}
+				</foreach>
+			</if>
+		</where>
+	</sql>
+	
+	
+	
+	<select id="findOneFuntionMasterById" parameterType="_long" resultMap="functionMasterResultMap">
+		SELECT
+			fm.function_master_id,
+			fm.function_master_code,
+			fm.function_master_name,
+			fm.function_master_type,
+			fm.project_id,
+			fm.upload_file_id,
+			fm.remark,
+			fm.created_by,
+			fm.created_date,
+			fm.updated_by,
+			fm.updated_date,
+			f.file_name as file_name,
+			f.content as content,
+			f.updated_date as updatedate_of_uploadfile,
+			fm.package_name
+		FROM 
+			function_master fm
+		LEFT JOIN 
+			upload_file f ON fm.upload_file_id = f.upload_file_id
+		WHERE
+			fm.function_master_id = #{functionMasterId}
+	</select>
+	
+	<select id="countNameCodeExisted" parameterType="FunctionMaster" resultType="Long">
+		SELECT 
+			SUM(rowVal) AS totalCount 
+		FROM (
+				(SELECT 
+						1 AS rowVal 
+				 FROM 
+						function_master 
+				 <where>
+					 <if test="functionMasterName != null and functionMasterName != ''">
+						UPPER(function_master_name) = UPPER(#{functionMasterName})
+					 </if> 
+					 <if test="functionMasterId != null">AND function_master_id != #{functionMasterId}</if>
+					 <if test="functionMasterName == null and functionMasterName == ''">AND FALSE</if>
+					 AND 
+					 	project_id = #{projectId} 
+				 </where>
+				 LIMIT 1
+				 ) 
+				 UNION
+				(SELECT 
+						2 AS rowVal 
+				 FROM 
+						function_master
+				 <where>
+						<if test="functionMasterCode != null and functionMasterCode != ''">
+							UPPER(function_master_code) = UPPER(#{functionMasterCode})
+						</if> 
+						<if test="functionMasterId != null">AND function_master_id != #{functionMasterId}</if>
+						<if test="functionMasterCode == null and functionMasterCode == ''">AND FALSE</if>
+						AND 
+					 		project_id = #{projectId} 
+				 </where>
+				 LIMIT 1
+				 )
+			 ) AS foo
+	</select> 
+	
+	<select id="findFuntionMethodByFunctionMasterId" parameterType="_long" resultMap="functionMethodResultMap">
+		SELECT 
+			function_method_id,
+			function_method_name, 
+			function_method_code, 
+			remark, 
+			item_seq_no
+  		FROM 
+  			function_method
+  		WHERE
+  			function_master_id = #{functionMasterId}
+  		ORDER BY
+  			item_seq_no
+	</select>
+	
+	<select id="findFunctionMethodInputByFunctionMasterId" parameterType="_long" resultMap="functionMethodInputResultMap">
+		SELECT 
+			fmi.method_input_id as method_input_id,
+			fmi.method_input_name as method_input_name, 
+			fmi.method_input_code as method_input_code, 
+			fmi.data_type as data_type, 
+			CAST( (fmi.array_flg) AS INTEGER ), 
+			fmi.item_seq_no as item_seq_no,
+			fmi.function_method_id as function_method_id,
+			fmi.parent_function_method_input_id as parent_function_method_input_id,
+			fmi.object_type as object_type,
+			fmi.object_id as object_id,
+			fmi.object_flg as object_flg
+  		FROM 
+  			function_master fmas
+ 		INNER JOIN function_method fm ON fm.function_master_id = fmas.function_master_id AND fmas.function_master_id = #{functionMasterId}
+  		INNER JOIN function_method_input fmi ON fm.function_method_id = fmi.function_method_id
+  		ORDER BY
+  			fmi.item_seq_no
+	</select>
+	
+	<select id="findFunctionMethodOutputByFunctionMasterId" parameterType="_long" resultMap="functionMethodOutputResultMap">
+		SELECT 
+			fmo.method_output_id as method_output_id,
+			fmo.method_output_name as method_output_name, 
+			fmo.method_output_code as method_output_code, 
+			fmo.data_type as data_type, 
+			CAST( (fmo.array_flg) AS INTEGER ), 
+			fmo.item_seq_no as item_seq_no,
+			fmo.function_method_id as function_method_id,
+			fmo.parent_function_method_output_id as parent_function_method_output_id,
+			fmo.object_type as object_type,
+			fmo.object_id as object_id,
+			fmo.object_flg as object_flg
+  		FROM 
+  			function_master fmas
+ 		INNER JOIN function_method fm ON fm.function_master_id = fmas.function_master_id AND fmas.function_master_id = #{functionMasterId}
+  		INNER JOIN function_method_output fmo ON fm.function_method_id = fmo.function_method_id
+  		ORDER BY
+  			fmo.item_seq_no
+	</select>
+	
+	<!-- Register function master -->
+	<insert id="register" parameterType="FunctionMaster">
+	<selectKey keyProperty="functionMasterId" resultType="long" order="BEFORE">
+		SELECT NEXTVAL('function_master_seq') AS functionMasterId
+	</selectKey>
+		<![CDATA[
+			INSERT INTO function_master (
+				function_master_id,
+				function_master_code,
+				function_master_name,
+				function_master_type,
+				project_id,
+				upload_file_id,
+				remark,
+				package_name,
+				created_by,
+				created_date,
+				updated_by,
+				updated_date
+			) VALUES (
+				#{functionMasterId},
+				#{functionMasterCode},
+				#{functionMasterName},
+				#{functionMasterType},
+				#{projectId},
+				#{uploadFileId},
+				#{remark},
+				#{packageName},
+				#{createdBy},
+				#{createdDate},
+				#{updatedBy},
+				#{updatedDate}
+			);
+		]]>
+	</insert>
+	
+	<insert id="multiCreateFunctionMethod">
+		INSERT INTO
+				function_method
+			(
+				function_method_name, 
+					function_method_code, 
+					remark, 
+					item_seq_no, 
+					function_master_id
+			)
+			VALUES
+		<foreach item="item" collection="functionMethods" separator=",">
+		(
+				#{item.functionMethodName},
+				#{item.functionMethodCode},
+				#{item.remark},
+				#{item.itemSeqNo},
+				#{item.functionMasterId}
+		)
+		</foreach>
+	</insert>
+	
+	<insert id="multiCreateFunctionInput">
+		INSERT INTO
+				function_method_input
+			(
+				method_input_name, 
+					method_input_code, 
+					method_input_id, 
+					data_type, 
+					array_flg, 
+					item_seq_no,
+					function_method_id,
+					parent_function_method_input_id,
+					object_type,
+					object_id,
+					object_flg
+			)
+			VALUES
+		<foreach item="item" collection="methodInputs" separator=",">
+		(
+				#{item.methodInputName},
+				#{item.methodInputCode},
+				CAST(#{item.methodInputId} AS numeric(16,0)),
+				#{item.dataType},
+				CAST( #{item.arrayFlg} AS BOOLEAN ),
+				#{item.itemSeqNo},
+				#{item.functionMethodId},
+            	CAST(#{item.parentFunctionMethodInputId} AS numeric(16,0)),
+            	CAST(#{item.objectType} AS numeric(16,0)),
+            	CAST(#{item.objectId} AS numeric(16,0)), 
+            	#{item.objectFlg}
+		)
+		</foreach>
+	</insert>
+	
+	<insert id="multiCreateFunctionOutput">
+		INSERT INTO
+				function_method_output
+			(
+				method_output_name, 
+				method_output_code, 
+				method_output_id, 
+				data_type, 
+				array_flg, 
+				item_seq_no,
+				function_method_id,
+				parent_function_method_output_id,
+				object_type,
+				object_id,
+				object_flg
+			)
+			VALUES
+		<foreach item="item" collection="methodOutputs" separator=",">
+		(
+				#{item.methodOutputName},
+				#{item.methodOutputCode},
+            	CAST(#{item.methodOutputId} AS numeric(16,0)),
+				#{item.dataType},
+				CAST( #{item.arrayFlg} AS BOOLEAN ),
+				#{item.itemSeqNo},
+				#{item.functionMethodId},
+            	CAST(#{item.parentFunctionMethodOutputId} AS numeric(16,0)),
+            	CAST(#{item.objectType} AS numeric(16,0)),
+            	CAST(#{item.objectId} AS numeric(16,0)), 
+            	#{item.objectFlg}
+		)
+		</foreach>
+	</insert>
+	
+	<!-- QuangVD : reflector source code -->
+	<insert id="insertFunctionMethods">
+		<foreach item="item" collection="functionMethods" separator=";">
+			INSERT INTO
+				function_method
+				(
+					function_method_id,
+					function_method_name, 
+					function_method_code, 
+					remark, 
+					item_seq_no, 
+					function_master_id
+				)
+				VALUES
+				(
+					#{item.functionMethodId},
+					#{item.functionMethodName},
+					#{item.functionMethodCode},
+					#{item.remark},
+					#{item.itemSeqNo},
+					#{item.functionMasterId}
+				);
+			<if test="item.functionMethodInput != null and  item.functionMethodInput.size() > 0 ">
+	            INSERT INTO
+					function_method_input
+				(
+					method_input_name, 
+					method_input_code, 
+					method_input_id, 
+					data_type, 
+					array_flg, 
+					item_seq_no,
+					function_method_id,
+					parent_function_method_input_id,
+					object_type,
+					object_id,
+					object_flg
+				)
+				VALUES
+				<foreach item="input" collection="item.functionMethodInput" separator=",">
+				(
+					#{input.methodInputName},
+					#{input.methodInputCode},
+	            	CAST(#{input.methodInputId} AS numeric(16,0)),
+					#{input.dataType},
+					CAST( #{input.arrayFlg} AS BOOLEAN ),
+					#{input.itemSeqNo},
+					#{input.functionMethodId},
+	            	CAST(#{input.parentFunctionMethodInputId} AS numeric(16,0)),
+	            	CAST(#{input.objectType} AS numeric(16,0)),
+	            	CAST(#{input.objectId} AS numeric(16,0)), 
+	            	#{input.objectFlg}
+				)
+				</foreach>;
+            </if>
+            <if test="item.functionMethodOutput != null and  item.functionMethodOutput.size() > 0 ">
+	            INSERT INTO
+					function_method_output
+				(
+					method_output_name, 
+					method_output_code, 
+					method_output_id, 
+					data_type, 
+					array_flg, 
+					item_seq_no,
+					function_method_id,
+					parent_function_method_output_id,
+					object_type,
+					object_id,
+					object_flg
+				)
+				VALUES
+				<foreach item="output" collection="item.functionMethodOutput" separator=",">
+				(
+					#{output.methodOutputName},
+					#{output.methodOutputCode},
+	            	CAST(#{output.methodOutputId} AS numeric(16,0)),
+					#{output.dataType},
+					CAST( #{output.arrayFlg} AS BOOLEAN ),
+					#{output.itemSeqNo},
+					#{output.functionMethodId},
+	            	CAST(#{output.parentFunctionMethodOutputId} AS numeric(16,0)),
+	            	CAST(#{output.objectType} AS numeric(16,0)),
+	            	CAST(#{output.objectId} AS numeric(16,0)), 
+	            	#{output.objectFlg}
+				)
+				</foreach>;
+            </if>
+		</foreach>
+	</insert>
+	
+	<update id="modify" parameterType="FunctionMaster">
+		<![CDATA[
+			 UPDATE 
+				function_master
+			 SET 
+				function_master_name = #{functionMasterName}, 
+				function_master_code = #{functionMasterCode}, 
+				function_master_type = #{functionMasterType}, 
+				project_id = #{projectId},
+				upload_file_id = #{uploadFileId},
+				remark = #{remark},
+				package_name = #{packageName},
+				updated_by = #{updatedBy},
+				updated_date = #{sysDatetime}
+			 WHERE 
+				function_master_id = #{functionMasterId}
+			AND
+				updated_date = #{updatedDate}
+		]]>
+	</update>
+	
+	<update id="multiUpdateFunctionMethod">
+		<foreach item="functionMethod" collection="functionMethodsUpdate" >
+			UPDATE 
+				function_method
+   			SET 
+   				function_method_name= #{functionMethod.functionMethodName},
+   				function_method_code= #{functionMethod.functionMethodCode}, 
+	   			remark= #{functionMethod.remark}, 
+	   			item_seq_no= #{functionMethod.itemSeqNo}
+			WHERE function_method_id = #{functionMethod.functionMethodId};
+		</foreach>
+	</update>
+	
+	<update id="multiUpdateMethodInput">
+		<foreach item="methodInput" collection="functionMethodInputUpdate" >
+			UPDATE 
+				function_method_input
+			SET
+				method_input_code= #{methodInput.methodInputCode}, 
+				method_input_name= #{methodInput.methodInputName}, 
+				data_type= #{methodInput.dataType}, 
+				array_flg= CAST( #{methodInput.arrayFlg} AS BOOLEAN ), 
+				item_seq_no= #{methodInput.itemSeqNo}, 
+				parent_function_method_input_id= CAST(#{methodInput.parentFunctionMethodInputId} AS numeric(16,0)), 
+				object_type= #{methodInput.objectType}, 
+				object_id= #{methodInput.objectId}, 
+				object_flg= CAST(#{methodInput.objectFlg} AS BOOLEAN )
+ 			WHERE method_input_id = CAST(#{methodInput.methodInputId} AS numeric(16,0));
+		</foreach>
+	</update>
+	
+	<update id="multiUpdateMethodOutput">
+		<foreach item="methodOutput" collection="functionMethodOutputUpdate" >
+			UPDATE 
+				function_method_output
+			SET
+				method_output_code= #{methodOutput.methodOutputCode}, 
+				method_output_name= #{methodOutput.methodOutputName}, 
+				data_type= #{methodOutput.dataType}, 
+				array_flg= CAST( #{methodOutput.arrayFlg} AS BOOLEAN ), 
+				item_seq_no= #{methodOutput.itemSeqNo}, 
+				parent_function_method_output_id= CAST(#{methodOutput.parentFunctionMethodOutputId} AS numeric(16,0)), 
+				object_type= #{methodOutput.objectType}, 
+				object_id= #{methodOutput.objectId}, 
+				object_flg= CAST(#{methodOutput.objectFlg} AS BOOLEAN )
+ 			WHERE method_output_id = CAST(#{methodOutput.methodOutputId} AS numeric(16,0));
+		</foreach>
+	</update>
+	
+	<delete id="multiDeleteFunctionMethod">
+		<foreach item="functionMethod" collection="multiDeleteFunctionMethod" >
+			<![CDATA[
+				DELETE FROM
+					function_method_input
+				WHERE
+					function_method_id = #{functionMethod.functionMethodId};
+				
+				DELETE FROM
+					function_method_output
+				WHERE
+					function_method_id = #{functionMethod.functionMethodId};
+					
+				DELETE FROM
+					function_method
+				WHERE
+					function_method_id = #{functionMethod.functionMethodId};
+			]]>
+		</foreach>
+	</delete>
+	
+	<delete id="multiDeleteMethodInput">
+		<foreach item="methodInput" collection="functionMethodInputDelete" >
+			DELETE FROM
+					function_method_input
+				WHERE
+					method_input_id = CAST(#{methodInput.methodInputId} AS numeric(16,0));
+		</foreach>
+	</delete>
+	
+	<delete id="multiDeleteMethodOutput">
+		<foreach item="methodOutput" collection="functionMethodOutputDelete" >
+			DELETE FROM
+					function_method_output
+				WHERE
+					method_output_id = CAST(#{methodOutput.methodOutputId} AS numeric(16,0));
+		</foreach>
+	</delete>
+	
+	<delete id="deleteOneFunctionMaster" parameterType="Long">
+		DELETE FROM
+					upload_file ul
+				WHERE
+					EXISTS 
+					(
+						SELECT
+							1
+						FROM
+							function_master fmas
+						WHERE
+							fmas.upload_file_id = ul.upload_file_id AND fmas.function_master_id = #{functionMasterId}
+					);
+		DELETE FROM 
+					function_master
+			 	WHERE 
+					function_master_id = #{functionMasterId}
+	</delete>
+	
+	<delete id="delete" parameterType="Long">
+		<![CDATA[
+			DELETE FROM
+					function_method_input fmi
+				WHERE
+					EXISTS 
+					(
+						SELECT
+							1
+						FROM
+							function_method fm
+						INNER JOIN
+							function_master fmas ON fm.function_master_id = fmas.function_master_id AND fm.function_master_id = #{functionMasterId}
+						WHERE
+							fm.function_method_id = fmi.function_method_id
+					);
+					
+			DELETE FROM
+					function_method_output fmo
+				WHERE
+					EXISTS 
+					(
+						SELECT
+							1
+						FROM
+							function_method fm
+						INNER JOIN
+							function_master fmas ON fm.function_master_id = fmas.function_master_id AND fm.function_master_id = #{functionMasterId}
+						WHERE
+							fm.function_method_id = fmo.function_method_id
+					);
+			
+			DELETE FROM 
+					function_method
+			 	WHERE 
+					function_master_id = #{functionMasterId};
+					
+			DELETE FROM
+					upload_file ul
+				WHERE
+					EXISTS 
+					(
+						SELECT
+							1
+						FROM
+							function_master fmas
+						WHERE
+							fmas.upload_file_id = ul.upload_file_id AND fmas.function_master_id = #{functionMasterId}
+					);
+				
+			DELETE FROM 
+					function_master
+			 	WHERE 
+					function_master_id = #{functionMasterId}
+		]]>
+	</delete>
+	
+	<!-- Finds all function master by formula -->
+	<!-- @author quangvd -->
+	<select id="findFunctionMasterByProjectId"  resultMap="functionMasterResultMap">
+		<![CDATA[
+			SELECT
+				function_master_id,
+				function_master_code,
+				function_master_name,
+				function_master_type,
+				project_id,
+				upload_file_id,
+				remark,
+				package_name
+			FROM function_master
+			WHERE 
+				project_id = #{projectId}
+			ORDER BY function_master_id
+		]]>
+	</select>
+	<select id="findAllFunctionMasterByProjectId"  resultMap="functionMasterResultMap">
+		<![CDATA[
+			SELECT
+			fm.function_master_id,
+			fm.function_master_code,
+			fm.function_master_name,
+			fm.function_master_type,
+			fm.project_id,
+			fm.upload_file_id,
+			fm.remark,
+			fm.created_by,
+			fm.created_date,
+			fm.updated_by,
+			fm.updated_date,
+			f.file_name as file_name,
+			f.content as content,
+			f.updated_date as updatedate_of_uploadfile,
+			fm.package_name,
+            acc.username
+		FROM 
+			function_master fm
+		LEFT JOIN 
+			upload_file f ON fm.upload_file_id = f.upload_file_id
+        LEFT JOIN account acc ON (acc.account_id = fm.created_by)
+		WHERE
+			fm.project_id = #{projectId}
+		]]>
+	</select>
+	
+	<select id="findFuntionMethodByProjectId" resultMap="functionMethodResultMap">
+		SELECT 
+			t1.function_method_id,
+			t1.function_method_name, 
+			t1.function_method_code, 
+			t1.remark, 
+			t1.item_seq_no,
+			t1.function_master_id
+		FROM 
+			function_method t1
+		WHERE EXISTS
+		(
+			SELECT
+				a1.function_master_id
+			FROM function_master a1
+			WHERE a1.project_id = #{projectId} 
+			AND a1.function_master_id =  t1.function_master_id
+		)
+		ORDER BY t1.item_seq_no
+	</select>
+    
+    <select id="findFuntionMethodNotCommonByProjectId" resultMap="functionMethodResultMap">
+        SELECT 
+            t1.function_method_id,
+            t1.function_method_name, 
+            t1.function_method_code, 
+            t1.remark, 
+            t1.item_seq_no,
+            t1.function_master_id
+        FROM 
+            function_method t1
+        WHERE EXISTS
+        (
+            SELECT
+                a1.function_master_id
+            FROM function_master a1
+            WHERE a1.project_id = #{projectId} 
+            AND a1.function_master_id =  t1.function_master_id
+            AND a1.function_master_type = 1
+        )
+        ORDER BY t1.item_seq_no
+    </select>
+	
+	<select id="findFunctionMethodInputByProjectId" resultMap="functionMethodInputResultMap">
+		SELECT 
+			t1.method_input_id, 
+			t1.method_input_code, 
+			t1.method_input_name, 
+			t1.data_type, 
+			CAST( (t1.array_flg) AS INTEGER ),
+			t1.item_seq_no, 
+			t1.function_method_id,
+			t2.function_master_id,
+			t1.parent_function_method_input_id,
+			t1.object_type,
+			t1.object_id,
+			t1.object_flg,
+            cod.common_object_definition_code,
+            eod.external_object_definition_code, 
+            eod.package_name,
+            module.module_code
+		FROM function_method_input t1
+		LEFT JOIN function_method t2 on (t2.function_method_id = t1.function_method_id)
+        LEFT JOIN common_object_definition cod ON cod.common_object_definition_id = t1.object_id
+        LEFT JOIN external_object_definition eod ON eod.external_object_definition_id = t1.object_id
+        LEFT JOIN module ON cod.module_id = module.module_id
+		WHERE EXISTS
+				(
+					SELECT
+						a1.function_master_id
+					FROM function_master a1
+					WHERE a1.project_id = #{projectId}
+					AND a1.function_master_id =  t2.function_master_id
+				)
+		ORDER BY t1.item_seq_no 
+	</select>
+    
+    <select id="findFunctionMethodInputNotCommonByProjectId" resultMap="functionMethodInputResultMap">
+        SELECT 
+            t1.method_input_id, 
+            t1.method_input_code, 
+            t1.method_input_name, 
+            t1.data_type, 
+            CAST( (t1.array_flg) AS INTEGER ),
+            t1.item_seq_no, 
+            t1.function_method_id,
+            t2.function_master_id,
+            t1.parent_function_method_input_id,
+            t1.object_type,
+            t1.object_id,
+            t1.object_flg,
+            cod.common_object_definition_code,
+            eod.external_object_definition_code, 
+            eod.package_name
+        FROM function_method_input t1
+        LEFT JOIN function_method t2 on (t2.function_method_id = t1.function_method_id)
+        LEFT JOIN common_object_definition cod ON cod.common_object_definition_id = t1.object_id
+        LEFT JOIN external_object_definition eod ON eod.external_object_definition_id = t1.object_id
+        WHERE EXISTS
+                (
+                    SELECT
+                        a1.function_master_id
+                    FROM function_master a1
+                    WHERE a1.project_id = #{projectId}
+                    AND a1.function_master_id =  t2.function_master_id
+                    AND a1.function_master_type = 1
+                )
+        ORDER BY t1.item_seq_no 
+    </select>
+	
+	<select id="findFunctionMethodOutputByProjectId" resultMap="functionMethodOutputResultMap">
+		SELECT 
+			t1.method_output_id, 
+			t1.method_output_code, 
+			t1.method_output_name, 
+			t1.data_type, 
+			CAST( (t1.array_flg) AS INTEGER ),
+			t1.item_seq_no, 
+			t1.function_method_id,
+			t2.function_master_id,
+			t1.parent_function_method_output_id,
+			t1.object_type,
+			t1.object_id,
+			t1.object_flg,
+            cod.common_object_definition_code,
+            eod.external_object_definition_code, 
+            eod.package_name,
+            module.module_code
+		FROM function_method_output t1
+		LEFT JOIN function_method t2 on (t2.function_method_id = t1.function_method_id)
+        LEFT JOIN common_object_definition cod ON cod.common_object_definition_id = t1.object_id
+        LEFT JOIN external_object_definition eod ON eod.external_object_definition_id = t1.object_id
+        LEFT JOIN module ON cod.module_id = module.module_id
+		WHERE EXISTS
+				(
+					SELECT
+						a1.function_master_id
+					FROM function_master a1
+					WHERE a1.project_id = #{projectId}
+					AND a1.function_master_id =  t2.function_master_id
+				)
+		ORDER BY t1.item_seq_no 
+	</select>
+    
+    <select id="findFunctionMethodOutputNotCommonByProjectId" resultMap="functionMethodOutputResultMap">
+        SELECT 
+            t1.method_output_id, 
+            t1.method_output_code, 
+            t1.method_output_name, 
+            t1.data_type, 
+            CAST( (t1.array_flg) AS INTEGER ),
+            t1.item_seq_no, 
+            t1.function_method_id,
+            t2.function_master_id,
+            t1.parent_function_method_output_id,
+            t1.object_type,
+            t1.object_id,
+            t1.object_flg,
+            cod.common_object_definition_code,
+            eod.external_object_definition_code, 
+            eod.package_name
+        FROM function_method_output t1
+        LEFT JOIN function_method t2 on (t2.function_method_id = t1.function_method_id)
+        LEFT JOIN common_object_definition cod ON cod.common_object_definition_id = t1.object_id
+        LEFT JOIN external_object_definition eod ON eod.external_object_definition_id = t1.object_id
+        WHERE EXISTS
+                (
+                    SELECT
+                        a1.function_master_id
+                    FROM function_master a1
+                    WHERE a1.project_id = #{projectId}
+                    AND a1.function_master_id =  t2.function_master_id
+                    AND a1.function_master_type = 1
+                )
+        ORDER BY t1.item_seq_no 
+    </select>
+	
+	<select id="findFunctionMethodInputByFunctionMethodId" resultMap="functionMethodInputResultMap">
+			SELECT 
+			t1.method_input_id, 
+			t1.method_input_code, 
+			t1.method_input_name, 
+			t1.data_type, 
+			CAST( (t1.array_flg) AS INTEGER ),
+			t1.item_seq_no, 
+			t1.function_method_id,
+			t2.function_master_id,
+			t1.parent_function_method_input_id,
+			t1.object_type,
+			t1.object_id,
+			t1.object_flg
+		FROM function_method_input t1
+		LEFT JOIN function_method t2 on (t2.function_method_id = t1.function_method_id)
+		WHERE t1.function_method_id = #{functionMethodId}
+		ORDER BY t1.item_seq_no 
+	</select>
+	
+	<select id="findFunctionMethodOutputByFunctionMethodId" resultMap="functionMethodOutputResultMap">
+		SELECT 
+			t1.method_output_id, 
+			t1.method_output_code, 
+			t1.method_output_name, 
+			t1.data_type, 
+			CAST( (t1.array_flg) AS INTEGER ),
+			t1.item_seq_no, 
+			t1.function_method_id,
+			t2.function_master_id,
+			t1.parent_function_method_output_id,
+			t1.object_type,
+			t1.object_id,
+			t1.object_flg
+		FROM function_method_output t1
+		LEFT JOIN function_method t2 on (t2.function_method_id = t1.function_method_id)
+		WHERE t1.function_method_id = #{functionMethodId}
+		ORDER BY t1.item_seq_no 
+	</select>
+	
+	<!-- Start DungNN init function master default when create new project -->
+	<select id="findFunctionMasterDefault" resultMap="functionMasterResultMap">
+		<![CDATA[
+			SELECT
+				function_master_id,
+				function_master_code,
+				function_master_name,
+				function_master_type,
+				project_id,
+				upload_file_id,
+				remark,
+				package_name
+			FROM
+				function_master
+			WHERE
+				project_id IS NULL
+		]]>
+	</select>
+	<select id="findFuntionMethodDefault" resultMap="functionMethodResultMap">
+		SELECT
+			t1.function_method_id,
+			t1.function_method_name,
+			t1.function_method_code,
+			t1.remark,
+			t1.item_seq_no,
+			t1.function_master_id
+		FROM
+			function_method t1
+		WHERE
+			EXISTS
+			(
+				SELECT 1
+				FROM
+					function_master a1
+				WHERE
+					a1.project_id IS NULL
+				AND 
+					a1.function_master_id = t1.function_master_id
+			)
+		ORDER BY t1.item_seq_no
+	</select>
+	<select id="findFunctionMethodInputDefault" resultMap="functionMethodInputResultMap">
+		SELECT
+			t1.method_input_id,
+			t1.method_input_code,
+			t1.method_input_name,
+			t1.data_type,
+			CAST( (t1.array_flg) AS INTEGER ),
+			t1.item_seq_no,
+			t1.function_method_id,
+			t2.function_master_id,
+			t1.parent_function_method_input_id,
+			t1.object_type,
+			t1.object_id,
+			t1.object_flg
+		FROM
+			function_method_input t1 INNER JOIN function_method t2 ON (t2.function_method_id = t1.function_method_id)
+		WHERE
+			EXISTS
+			(
+				SELECT 1
+				FROM 
+					function_master a1
+				WHERE
+					a1.project_id IS NULL
+				AND 
+					a1.function_master_id = t2.function_master_id
+			)
+		ORDER BY t1.item_seq_no
+	</select>
+	<select id="findFunctionMethodOutputDefault" resultMap="functionMethodOutputResultMap">
+		SELECT
+			t1.method_output_id,
+			t1.method_output_code,
+			t1.method_output_name,
+			t1.data_type,
+			CAST( (t1.array_flg) AS INTEGER ),
+			t1.item_seq_no,
+			t1.function_method_id,
+			t2.function_master_id,
+			t1.parent_function_method_output_id,
+			t1.object_type,
+			t1.object_id,
+			t1.object_flg
+			FROM 
+				function_method_output t1 INNER JOIN function_method t2 on (t2.function_method_id = t1.function_method_id)
+			WHERE 
+				EXISTS
+				(
+					SELECT 1
+					FROM 
+						function_master a1
+					WHERE 
+						a1.project_id IS NULL
+					AND 
+						a1.function_master_id = t2.function_master_id
+			)
+		ORDER BY t1.item_seq_no
+	</select>
+	<!-- End DungNN init function master default when create new project -->
+	
+	<!-- Start QuangVD : reflector code : get effected decision table by modify function master -->
+	
+	<select id="getEffectedDecisionTableByInput" resultMap="affectedDecisionTableResultMap">
+		WITH table_temp as (
+			SELECT 
+				a.decision_table_id,
+				e.method_input_id,
+				f.method_input_name
+			FROM 
+				decision_item_design a
+			INNER JOIN decision_condition_group b ON b.decision_item_design_id = a.decision_item_design_id
+			INNER JOIN decision_condition_item c ON c.condition_group_id = b.condition_group_id
+			INNER JOIN formula_detail d ON d.formula_definition_id = c.formula_definition_id
+			INNER JOIN formula_method_input e ON e.formula_detail_id = d.formula_detail_id
+			LEFT JOIN function_method_input f ON f.method_input_id = e.method_input_id
+			WHERE
+				<if test="methodInputs != null and methodInputs.size > 0">
+					e.method_input_id IN
+					<foreach collection="methodInputs" item="status" open="(" separator="," close=")">
+						CAST(#{status.methodInputId} AS numeric(16,0))
+					</foreach>
+				</if>
+				<if test="methodInputs == null or methodInputs.size == 0">
+					FALSE
+				</if>
+			)
+			
+			SELECT DISTINCT
+				t.method_input_id,
+				t.method_input_name,
+				a.decision_table_id,
+				a.decision_table_code, 
+				a.decision_table_name,
+				a.module_id,
+				b.module_name
+			FROM 
+				table_temp t
+			LEFT JOIN
+				decision_table a ON a.decision_table_id = t.decision_table_id
+			LEFT JOIN 
+				module b ON b.module_id = a.module_id
+			ORDER BY a.decision_table_id
+	</select>
+	
+	<select id="getEffectedDecisionTableByOutput" resultMap="affectedDecisionTableResultMap">
+		WITH table_temp as (
+			SELECT 
+				a.decision_table_id,
+				e.method_output_id,
+				f.method_output_name
+			FROM 
+				decision_item_design a
+			INNER JOIN decision_condition_group b ON b.decision_item_design_id = a.decision_item_design_id
+			INNER JOIN decision_condition_item c ON c.condition_group_id = b.condition_group_id
+			INNER JOIN formula_detail d ON d.formula_definition_id = c.formula_definition_id
+			INNER JOIN formula_method_output e ON e.formula_detail_id = d.formula_detail_id
+			LEFT JOIN function_method_output f ON f.method_output_id = e.method_output_id
+			WHERE
+				<if test="methodOutputs != null and methodOutputs.size > 0">
+					e.method_output_id IN
+					<foreach collection="methodOutputs" item="status" open="(" separator="," close=")">
+						CAST(#{status.methodOutputId} AS numeric(16,0))
+					</foreach>
+				</if>
+				<if test="methodOutputs == null or methodOutputs.size == 0">
+					FALSE
+				</if>
+			)
+			
+			SELECT DISTINCT
+				t.method_output_id,
+				t.method_output_name,
+				a.decision_table_id,
+				a.decision_table_code, 
+				a.decision_table_name,
+				a.module_id,
+				b.module_name
+			FROM 
+				table_temp t
+			LEFT JOIN
+				decision_table a ON a.decision_table_id = t.decision_table_id
+			LEFT JOIN 
+				module b ON b.module_id = a.module_id
+			ORDER BY a.decision_table_id
+	</select>
+	
+	<select id="getEffectedDecisionTableByAddedInput" resultMap="affectedDecisionTableResultMap">
+		WITH table_temp as (
+			SELECT 
+				a.decision_table_id,
+				d.function_method_id,
+				e.function_method_name
+			FROM 
+				decision_item_design a
+			INNER JOIN decision_condition_group b ON b.decision_item_design_id = a.decision_item_design_id
+			INNER JOIN decision_condition_item c ON c.condition_group_id = b.condition_group_id
+			INNER JOIN formula_detail d ON d.formula_definition_id = c.formula_definition_id
+			LEFT JOIN function_method e ON e.function_method_id = d.function_method_id
+			WHERE
+				<if test="functionMethods != null and functionMethods.size > 0">
+					d.function_method_id IN
+					<foreach collection="functionMethods" item="status" open="(" close=")" separator=",">
+						#{status}
+					</foreach>
+				</if>
+				<if test="functionMethods == null or functionMethods.size == 0">
+					FALSE
+				</if>
+			)
+				
+			SELECT DISTINCT
+				t.function_method_id,
+				t.function_method_name,
+				a.decision_table_id,
+				a.decision_table_code, 
+				a.decision_table_name,
+				a.module_id,
+				b.module_name
+			FROM 
+				table_temp t
+			LEFT JOIN
+				decision_table a ON a.decision_table_id = t.decision_table_id
+			LEFT JOIN 
+				module b ON b.module_id = a.module_id
+			ORDER BY a.decision_table_id
+		
+	</select>
+	
+	<select id="getEffectedDecisionTableByDeletedFunctionMethod" resultMap="affectedDecisionTableResultMap">
+		WITH table_temp as (
+			SELECT 
+				a.decision_table_id,
+				d.function_method_id,
+				e.function_method_name
+			FROM 
+				decision_item_design a
+			INNER JOIN decision_condition_group b ON b.decision_item_design_id = a.decision_item_design_id
+			INNER JOIN decision_condition_item c ON c.condition_group_id = b.condition_group_id
+			INNER JOIN formula_detail d ON d.formula_definition_id = c.formula_definition_id
+			LEFT JOIN function_method e ON e.function_method_id = d.function_method_id
+			WHERE
+				<if test="functionMethods != null and functionMethods.size > 0">
+					d.function_method_id IN
+					<foreach collection="functionMethods" item="status" open="(" close=")" separator=",">
+						#{status}
+					</foreach>
+				</if>
+				<if test="functionMethods == null or functionMethods.size == 0">
+					FALSE
+				</if>
+			)
+				
+			SELECT DISTINCT
+				t.function_method_id,
+				t.function_method_name,
+				a.decision_table_id,
+				a.decision_table_code, 
+				a.decision_table_name,
+				a.module_id,
+				b.module_name
+			FROM 
+				table_temp t
+			LEFT JOIN
+				decision_table a ON a.decision_table_id = t.decision_table_id
+			LEFT JOIN 
+				module b ON b.module_id = a.module_id
+			ORDER BY a.decision_table_id
+	</select>
+	
+	<!-- End QuangVD : reflector code : get effected decision table by modify function master -->
+	
+	<!-- TungHT -  -->
+	<select id="getEffectedBDesignByInput" resultMap="affectedBusinessDesignResultMap">
+		WITH table_temp as (
+			SELECT 
+				sequence_logic_id,
+				f.method_input_id,
+				g.method_input_name
+			FROM 
+				business_check_component c
+			INNER JOIN business_check_detail d ON d.business_check_component_id = c.business_check_component_id
+			INNER JOIN formula_detail e ON e.formula_definition_id = d.formula_definition_id
+			INNER JOIN formula_method_input f ON f.formula_detail_id = e.formula_detail_id
+			LEFT JOIN function_method_input g ON g.method_input_id = f.method_input_id
+			WHERE
+				<if test="methodInputs != null and methodInputs.size > 0">
+					f.method_input_id IN
+					<foreach collection="methodInputs" item="status" open="(" separator="," close=")">
+						CAST(#{status.methodInputId} AS numeric(16,0))
+					</foreach>
+				</if>
+				<if test="methodInputs == null or methodInputs.size == 0">
+					FALSE
+				</if>
+				
+			UNION ALL
+			SELECT 
+				sequence_logic_id,
+				f.method_input_id,
+				g.method_input_name
+			FROM 
+				assign_component c
+			INNER JOIN assign_detail d ON d.assign_component_id = c.assign_component_id
+			INNER JOIN formula_detail e ON e.formula_definition_id = d.formula_definition_id
+			INNER JOIN formula_method_input f ON f.formula_detail_id = e.formula_detail_id
+			LEFT JOIN function_method_input g ON g.method_input_id = f.method_input_id
+			WHERE
+				<if test="methodInputs != null and methodInputs.size > 0">
+					f.method_input_id IN
+					<foreach collection="methodInputs" item="status" open="(" separator="," close=")">
+						CAST(#{status.methodInputId} AS numeric(16,0))
+					</foreach>
+				</if>
+				<if test="methodInputs == null or methodInputs.size == 0">
+					FALSE
+				</if>
+			
+			UNION ALL
+			SELECT 
+				sequence_logic_id,
+				f.method_input_id,
+				g.method_input_name
+			FROM 
+				if_component c
+			INNER JOIN if_condition_detail d ON d.if_component_id = c.if_component_id
+			INNER JOIN formula_detail e ON e.formula_definition_id = d.formula_definition_id
+			INNER JOIN formula_method_input f ON f.formula_detail_id = e.formula_detail_id
+			LEFT JOIN function_method_input g ON g.method_input_id = f.method_input_id
+			WHERE
+				<if test="methodInputs != null and methodInputs.size > 0">
+					f.method_input_id IN
+					<foreach collection="methodInputs" item="status" open="(" separator="," close=")">
+						CAST(#{status.methodInputId} AS numeric(16,0))
+					</foreach>
+				</if>
+				<if test="methodInputs == null or methodInputs.size == 0">
+					FALSE
+				</if>
+			
+			UNION ALL
+			SELECT 
+				sequence_logic_id,
+				f.method_input_id,
+				g.method_input_name
+			FROM 
+				loop_component c
+			INNER JOIN formula_detail e ON e.formula_definition_id = c.formula_definition_id
+			INNER JOIN formula_method_input f ON f.formula_detail_id = e.formula_detail_id
+			LEFT JOIN function_method_input g ON g.method_input_id = f.method_input_id
+			WHERE
+				<if test="methodInputs != null and methodInputs.size > 0">
+					f.method_input_id IN
+					<foreach collection="methodInputs" item="status" open="(" separator="," close=")">
+						CAST(#{status.methodInputId} AS numeric(16,0))
+					</foreach>
+				</if>
+				<if test="methodInputs == null or methodInputs.size == 0">
+					FALSE
+				</if>
+			)
+			
+			SELECT DISTINCT
+				t.method_input_id,
+				t.method_input_name,
+				a.business_logic_id,
+				a.business_logic_name, 
+				a.business_logic_code,
+				a.module_id,
+				b.module_name
+			FROM 
+				table_temp t
+			LEFT JOIN 
+				sequence_logic se  ON se.sequence_logic_id = t.sequence_logic_id
+			LEFT JOIN 
+				business_logic a ON a.business_logic_id = se.business_logic_id
+			LEFT JOIN 
+				module b ON b.module_id = a.module_id
+			ORDER BY a.business_logic_id
+	</select>
+	
+	<select id="getEffectedBDesignByOutput" resultMap="affectedBusinessDesignResultMap">
+		WITH table_temp as (
+			SELECT 
+				sequence_logic_id,
+				f.method_output_id,
+				g.method_output_name
+			FROM 
+				business_check_component c
+			INNER JOIN business_check_detail d ON d.business_check_component_id = c.business_check_component_id
+			INNER JOIN formula_detail e ON e.formula_definition_id = d.formula_definition_id
+			INNER JOIN formula_method_output f ON f.formula_detail_id = e.formula_detail_id
+			LEFT JOIN function_method_output g ON g.method_output_id = f.method_output_id
+			WHERE
+				<if test="methodOutputs != null and methodOutputs.size > 0">
+					f.method_output_id IN
+					<foreach collection="methodOutputs" item="status" open="(" separator="," close=")">
+						CAST(#{status.methodOutputId} AS numeric(16,0))
+					</foreach>
+				</if>
+				<if test="methodOutputs == null or methodOutputs.size == 0">
+					FALSE
+				</if>
+				
+			UNION ALL
+			SELECT 
+				sequence_logic_id,
+				f.method_output_id,
+				g.method_output_name
+			FROM 
+				assign_component c
+			INNER JOIN assign_detail d ON d.assign_component_id = c.assign_component_id
+			INNER JOIN formula_detail e ON e.formula_definition_id = d.formula_definition_id
+			INNER JOIN formula_method_output f ON f.formula_detail_id = e.formula_detail_id
+			LEFT JOIN function_method_output g ON g.method_output_id = f.method_output_id
+			WHERE
+				<if test="methodOutputs != null and methodOutputs.size > 0">
+					f.method_output_id IN
+					<foreach collection="methodOutputs" item="status" open="(" separator="," close=")">
+						CAST(#{status.methodOutputId} AS numeric(16,0))
+					</foreach>
+				</if>
+				<if test="methodOutputs == null or methodOutputs.size == 0">
+					FALSE
+				</if>
+			
+			UNION ALL
+			SELECT 
+				sequence_logic_id,
+				f.method_output_id,
+				g.method_output_name
+			FROM 
+				if_component c
+			INNER JOIN if_condition_detail d ON d.if_component_id = c.if_component_id
+			INNER JOIN formula_detail e ON e.formula_definition_id = d.formula_definition_id
+			INNER JOIN formula_method_output f ON f.formula_detail_id = e.formula_detail_id
+			LEFT JOIN function_method_output g ON g.method_output_id = f.method_output_id
+			WHERE
+				<if test="methodOutputs != null and methodOutputs.size > 0">
+					f.method_output_id IN
+					<foreach collection="methodOutputs" item="status" open="(" separator="," close=")">
+						CAST(#{status.methodOutputId} AS numeric(16,0))
+					</foreach>
+				</if>
+				<if test="methodOutputs == null or methodOutputs.size == 0">
+					FALSE
+				</if>
+			
+			UNION ALL
+			SELECT 
+				sequence_logic_id,
+				f.method_output_id,
+				g.method_output_name
+			FROM 
+				loop_component c
+			INNER JOIN formula_detail e ON e.formula_definition_id = c.formula_definition_id
+			INNER JOIN formula_method_output f ON f.formula_detail_id = e.formula_detail_id
+			LEFT JOIN function_method_output g ON g.method_output_id = f.method_output_id
+			WHERE
+				<if test="methodOutputs != null and methodOutputs.size > 0">
+					f.method_output_id IN
+					<foreach collection="methodOutputs" item="status" open="(" separator="," close=")">
+						CAST(#{status.methodOutputId} AS numeric(16,0))
+					</foreach>
+				</if>
+				<if test="methodOutputs == null or methodOutputs.size == 0">
+					FALSE
+				</if>
+			)
+			
+			SELECT DISTINCT
+				t.method_output_id,
+				t.method_output_name,
+				a.business_logic_id,
+				a.business_logic_name, 
+				a.business_logic_code,
+				a.module_id,
+				b.module_name
+			FROM 
+				table_temp t
+			LEFT JOIN 
+				sequence_logic se  ON se.sequence_logic_id = t.sequence_logic_id
+			LEFT JOIN 
+				business_logic a ON a.business_logic_id = se.business_logic_id
+			LEFT JOIN 
+				module b ON b.module_id = a.module_id
+			ORDER BY a.business_logic_id
+	</select>
+	
+	<select id="getEffectedBDesignByAddedInput" resultMap="affectedBusinessDesignResultMap">
+		WITH table_temp as (
+			SELECT 
+				sequence_logic_id,
+				e.function_method_id,
+				g.function_method_name
+			FROM 
+				business_check_component c
+			INNER JOIN business_check_detail d ON d.business_check_component_id = c.business_check_component_id
+			INNER JOIN formula_detail e ON e.formula_definition_id = d.formula_definition_id
+			LEFT JOIN function_method g ON g.function_method_id = e.function_method_id
+			WHERE
+				<if test="functionMethods != null and functionMethods.size > 0">
+					e.function_method_id IN
+					<foreach collection="functionMethods" item="status" open="(" close=")" separator=",">
+						#{status}
+					</foreach>
+				</if>
+				<if test="functionMethods == null or functionMethods.size == 0">
+					FALSE
+				</if>
+				
+			UNION ALL
+			SELECT 
+				sequence_logic_id,
+				e.function_method_id,
+				g.function_method_name
+			FROM 
+				assign_component c
+			INNER JOIN assign_detail d ON d.assign_component_id = c.assign_component_id
+			INNER JOIN formula_detail e ON e.formula_definition_id = d.formula_definition_id
+			LEFT JOIN function_method g ON g.function_method_id = e.function_method_id
+			WHERE
+				<if test="functionMethods != null and functionMethods.size > 0"> 
+					e.function_method_id IN
+					<foreach collection="functionMethods" item="status" open="(" close=")" separator=",">
+						#{status}
+					</foreach>
+				</if>
+				<if test="functionMethods == null or functionMethods.size == 0">
+					FALSE
+				</if>
+			
+			UNION ALL
+			SELECT 
+				sequence_logic_id,
+				e.function_method_id,
+				g.function_method_name
+			FROM 
+				if_component c
+			INNER JOIN if_condition_detail d ON d.if_component_id = c.if_component_id
+			INNER JOIN formula_detail e ON e.formula_definition_id = d.formula_definition_id
+			LEFT JOIN function_method g ON g.function_method_id = e.function_method_id
+			WHERE
+				<if test="functionMethods != null and functionMethods.size > 0"> 
+					e.function_method_id IN
+					<foreach collection="functionMethods" item="status" open="(" close=")" separator=",">
+						#{status}
+					</foreach>
+				</if>
+				<if test="functionMethods == null or functionMethods.size == 0">
+					FALSE
+				</if>
+			
+			UNION ALL
+			SELECT 
+				sequence_logic_id,
+				e.function_method_id,
+				g.function_method_name
+			FROM 
+				loop_component c
+			INNER JOIN formula_detail e ON e.formula_definition_id = c.formula_definition_id
+			LEFT JOIN function_method g ON g.function_method_id = e.function_method_id
+			WHERE
+				<if test="functionMethods != null and functionMethods.size > 0">
+					e.function_method_id IN
+					<foreach collection="functionMethods" item="status" open="(" close=")" separator=",">
+						#{status}
+					</foreach>
+				</if>
+				<if test="functionMethods == null or functionMethods.size == 0">
+					FALSE
+				</if>
+			)
+				
+			SELECT DISTINCT
+				t.function_method_id,
+				t.function_method_name,
+				a.business_logic_id,
+				a.business_logic_name, 
+				a.business_logic_code,
+				a.module_id,
+				b.module_name
+			FROM 
+				table_temp t
+			LEFT JOIN 
+				sequence_logic se  ON se.sequence_logic_id = t.sequence_logic_id
+			LEFT JOIN 
+				business_logic a ON a.business_logic_id = se.business_logic_id
+			LEFT JOIN 
+				module b ON b.module_id = a.module_id
+			ORDER BY a.business_logic_id
+		
+	</select>
+	
+	<select id="getEffectedBDesignByDeletedFunctionMethod" resultMap="affectedBusinessDesignResultMap">
+		WITH table_temp as (
+			SELECT 
+				sequence_logic_id,
+				e.function_method_id,
+				g.function_method_name
+			FROM 
+				business_check_component c
+			INNER JOIN business_check_detail d ON d.business_check_component_id = c.business_check_component_id
+			INNER JOIN formula_detail e ON e.formula_definition_id = d.formula_definition_id
+			LEFT JOIN function_method g ON g.function_method_id = e.function_method_id
+			WHERE
+				<if test="functionMethods != null and functionMethods.size > 0">
+					e.function_method_id IN
+					<foreach collection="functionMethods" item="status" open="(" close=")" separator=",">
+						#{status}
+					</foreach>
+				</if>
+				<if test="functionMethods == null or functionMethods.size == 0">
+					FALSE
+				</if>
+				
+			UNION ALL
+			SELECT 
+				sequence_logic_id,
+				e.function_method_id,
+				g.function_method_name
+			FROM 
+				assign_component c
+			INNER JOIN assign_detail d ON d.assign_component_id = c.assign_component_id
+			INNER JOIN formula_detail e ON e.formula_definition_id = d.formula_definition_id
+			LEFT JOIN function_method g ON g.function_method_id = e.function_method_id
+			WHERE
+				<if test="functionMethods != null and functionMethods.size > 0">
+					e.function_method_id IN
+					<foreach collection="functionMethods" item="status" open="(" close=")" separator=",">
+						#{status}
+					</foreach>
+				</if>
+				<if test="functionMethods == null or functionMethods.size == 0">
+					FALSE
+				</if>
+			
+			UNION ALL
+			SELECT 
+				sequence_logic_id,
+				e.function_method_id,
+				g.function_method_name
+			FROM 
+				if_component c
+			INNER JOIN if_condition_detail d ON d.if_component_id = c.if_component_id
+			INNER JOIN formula_detail e ON e.formula_definition_id = d.formula_definition_id
+			LEFT JOIN function_method g ON g.function_method_id = e.function_method_id
+			WHERE
+				<if test="functionMethods != null and functionMethods.size > 0">
+					e.function_method_id IN
+					<foreach collection="functionMethods" item="status" open="(" close=")" separator=",">
+						#{status}
+					</foreach>
+				</if>
+				<if test="functionMethods == null or functionMethods.size == 0">
+					FALSE
+				</if>
+			
+			UNION ALL
+			SELECT 
+				sequence_logic_id,
+				e.function_method_id,
+				g.function_method_name
+			FROM 
+				loop_component c
+			INNER JOIN formula_detail e ON e.formula_definition_id = c.formula_definition_id
+			LEFT JOIN function_method g ON g.function_method_id = e.function_method_id
+			WHERE
+				<if test="functionMethods != null and functionMethods.size > 0">
+					e.function_method_id IN
+					<foreach collection="functionMethods" item="status" open="(" close=")" separator=",">
+						#{status}
+					</foreach>
+				</if>
+				<if test="functionMethods == null or functionMethods.size == 0">
+					FALSE
+				</if>
+			)
+			
+			SELECT DISTINCT
+				t.function_method_id,
+				t.function_method_name,
+				a.business_logic_id,
+				a.business_logic_name, 
+				a.business_logic_code,
+				a.module_id,
+				b.module_name
+			FROM 
+				table_temp t
+			LEFT JOIN 
+				sequence_logic se  ON se.sequence_logic_id = t.sequence_logic_id
+			LEFT JOIN 
+				business_logic a ON a.business_logic_id = se.business_logic_id
+			LEFT JOIN 
+				module b ON b.module_id = a.module_id
+			ORDER BY a.business_logic_id
+	</select>
+	
+	
+	
+	<select id="getFunctionMethodByFMId" resultMap="functionMethodResultMap" parameterType="_Long">
+		SELECT 
+			function_method_code,
+			function_method_name
+		FROM 
+			function_method
+		WHERE 
+			function_method_id = #{functionMethodId}
+	</select>
+	
+	<select id="getBDesignEffectedDeleteFMaster" resultMap="businessDesignResultMap">
+		WITH table_temp as (
+			SELECT 
+				sequence_logic_id, 1 as component_type
+			FROM 
+				business_check_component
+			WHERE FALSE
+			<if test="functionMethods != null and functionMethods.size > 0">
+			UNION ALL
+				SELECT 
+					sequence_logic_id, 4 as component_type
+				FROM 
+					business_check_component c
+				INNER JOIN business_check_detail d ON d.business_check_component_id = c.business_check_component_id
+				INNER JOIN formula_detail e ON e.formula_definition_id = d.formula_definition_id
+				INNER JOIN function_method g ON g.function_method_id = e.function_method_id
+					and g.function_method_id IN
+					<foreach collection="functionMethods" item="status" open="(" close=")" separator=",">
+						#{status.functionMethodId}
+					</foreach>
+			</if>
+				
+			
+			<if test="functionMethods != null and functionMethods.size > 0">
+			UNION ALL
+				SELECT 
+					sequence_logic_id, 8 as component_type
+				FROM 
+					assign_component c
+				INNER JOIN assign_detail d ON d.assign_component_id = c.assign_component_id
+				INNER JOIN formula_detail e ON e.formula_definition_id = d.formula_definition_id
+				INNER JOIN function_method g ON g.function_method_id = e.function_method_id
+					AND g.function_method_id IN
+						<foreach collection="functionMethods" item="status" open="(" close=")" separator=",">
+							#{status.functionMethodId}
+						</foreach>
+			</if>
+			
+			
+			<if test="functionMethods != null and functionMethods.size > 0">
+			UNION ALL
+				SELECT 
+					sequence_logic_id, 9 as component_type
+				FROM 
+					if_component c
+				INNER JOIN if_condition_detail d ON d.if_component_id = c.if_component_id
+				INNER JOIN formula_detail e ON e.formula_definition_id = d.formula_definition_id
+				INNER JOIN function_method g ON g.function_method_id = e.function_method_id
+					AND 
+						g.function_method_id IN
+						<foreach collection="functionMethods" item="status" open="(" close=")" separator=",">
+							#{status.functionMethodId}
+						</foreach>
+			</if>
+			
+			<if test="functionMethods != null and functionMethods.size > 0">
+			UNION ALL
+				SELECT 
+					sequence_logic_id, 10 as component_type
+				FROM 
+					loop_component c
+				INNER JOIN formula_detail e ON e.formula_definition_id = c.formula_definition_id
+				INNER JOIN function_method g ON g.function_method_id = e.function_method_id
+					AND 
+						g.function_method_id IN
+						<foreach collection="functionMethods" item="status" open="(" close=")" separator=",">
+							#{status.functionMethodId}
+						</foreach>
+			</if>
+			)
+			
+		SELECT 
+			a.business_logic_id,
+			a.business_logic_name, 
+			a.business_logic_code,
+			c.module_name as module_name
+		FROM 
+			business_logic a
+		LEFT JOIN 
+			module c ON c.module_id = a.module_id
+		WHERE EXISTS (
+			SELECT 1
+			FROM 
+				table_temp t
+			LEFT JOIN sequence_logic t1
+				on t1.sequence_logic_id = t.sequence_logic_id
+			WHERE 
+				t1.business_logic_id = a.business_logic_id 
+		)
+	</select>
+	
+	<select id="getDTableEffectedDeleteFMaster" resultMap="decisionResultMap">
+		WITH table_temp as (
+			SELECT 
+				a.decision_table_id
+			FROM 
+				decision_item_design a
+			INNER JOIN decision_condition_group b ON b.decision_item_design_id = a.decision_item_design_id
+			INNER JOIN decision_condition_item c ON c.condition_group_id = b.condition_group_id
+			INNER JOIN formula_detail d ON d.formula_definition_id = c.formula_definition_id
+			WHERE
+				<if test="functionMethods != null and functionMethods.size > 0">
+					d.function_method_id IN
+					<foreach item="status" index="index" collection="functionMethods" open="(" separator="," close=")">
+						#{status.functionMethodId}
+					</foreach>
+				</if>
+				<if test="functionMethods == null or functionMethods.size == 0">
+					FALSE
+				</if>
+			)
+				
+			SELECT DISTINCT
+				a.decision_table_id,
+				a.decision_table_code, 
+				a.decision_table_name,
+				a.module_id,
+				b.module_name
+			FROM 
+				table_temp t
+			LEFT JOIN
+				decision_table a ON a.decision_table_id = t.decision_table_id
+			LEFT JOIN 
+				module b ON b.module_id = a.module_id
+			ORDER BY a.decision_table_id
+	</select>
+	
+	
+	<select id="getAutocompleteCommonObjectForFM" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+			a.common_object_definition_id AS optionValue,
+			a.common_object_definition_name AS optionLabel,
+			a.common_object_definition_code AS output01
+		FROM 
+			common_object_definition a
+		<where>
+		      a.module_id IS NULL
+			<if test="searchKey != null and searchKey != ''">
+				AND a.common_object_definition_name iLIKE '%' || #{searchKey} || '%'
+			</if>
+			<if test="arg01 != null and arg01 != ''">
+				<![CDATA[
+					AND a.project_id = CAST(#{arg01} AS numeric(16,0))
+				]]>
+			</if>
+			<if test="arg01 == null or arg01 == ''">
+				FALSE
+			</if>
+		</where>
+		ORDER BY common_object_definition_id ASC
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+		<if test="arg02 == null or arg02 == ''">
+			LIMIT 20
+		</if>
+	</select>
+	
+	<select id="getAutocompleteExternalObjectForFM" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+			a.external_object_definition_id AS optionValue,
+			a.external_object_definition_name AS optionLabel,
+			a.external_object_definition_code AS output01
+		FROM 
+			external_object_definition a
+		<where>
+			<if test="searchKey != null and searchKey != ''">
+				AND a.external_object_definition_name iLIKE '%' || #{searchKey} || '%'
+			</if>
+			<if test="arg01 != null and arg01 != ''">
+				<![CDATA[
+					AND a.project_id = CAST(#{arg01} AS numeric(16,0))
+				]]>
+			</if>
+			<if test="arg01 == null or arg01 == ''">
+				FALSE
+			</if>
+		</where>
+		ORDER BY external_object_definition_id ASC
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+		<if test="arg02 == null or arg02 == ''">
+			LIMIT 20
+		</if>
+	</select>
+	
+	<select id="getAutocompleteCommonObjectForSO" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+			a.common_object_definition_id AS optionValue,
+			a.common_object_definition_name AS optionLabel,
+			a.common_object_definition_code AS output01
+		FROM 
+			common_object_definition a
+		<where>
+			<if test="searchKey != null and searchKey != ''">
+				AND a.common_object_definition_name iLIKE '%' || #{searchKey} || '%'
+			</if>
+			<if test="arg01 != null and arg01 != ''">
+				<![CDATA[
+					AND a.project_id = CAST(#{arg01} AS numeric(16,0))
+				]]>
+			</if>
+			<if test="arg01 == null or arg01 == ''">
+				FALSE
+			</if>
+		</where>
+		ORDER BY common_object_definition_id ASC
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+		<if test="arg02 == null or arg02 == ''">
+			LIMIT 20
+		</if>
+	</select>
+	
+	<select id="getAutocompleteExternalObjectForSO" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+			a.external_object_definition_id AS optionValue,
+			a.external_object_definition_name AS optionLabel,
+			a.external_object_definition_code AS output01
+		FROM 
+			external_object_definition a
+		<where>
+			<if test="searchKey != null and searchKey != ''">
+				AND a.external_object_definition_name iLIKE '%' || #{searchKey} || '%'
+			</if>
+			<if test="arg01 != null and arg01 != ''">
+				<![CDATA[
+					AND a.project_id = CAST(#{arg01} AS numeric(16,0))
+				]]>
+			</if>
+			<if test="arg01 == null or arg01 == ''">
+				FALSE
+			</if>
+		</where>
+		ORDER BY external_object_definition_id ASC
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+		<if test="arg02 == null or arg02 == ''">
+			LIMIT 20
+		</if>
+	</select>
+	
+	<!-- find function master use external object -->
+	<select id="findFunctionMasterByUsingExternalObject" resultMap="functionMasterResultMap">
+		<![CDATA[
+			SELECT
+				DISTINCT a.function_master_id,
+				a.function_master_code,
+				a.function_master_name,
+				a.function_master_type,
+				a.project_id,
+				a.upload_file_id,
+				a.remark,
+				a.package_name
+			FROM function_master a
+			WHERE EXISTS 
+			(
+				SELECT d1.function_master_id
+				FROM function_method_input c1
+				LEFT JOIN function_method d1 on (c1.function_method_id = d1.function_method_id)
+				WHERE c1.data_type = 17 and c1.object_type = 1 
+					and c1.object_id = #{externalObjectDefinitionId} and d1.function_master_id = a.function_master_id
+			
+			)
+			OR EXISTS 
+			(
+				SELECT c2.function_method_id
+				FROM function_method_output c2
+				LEFT JOIN function_method d2 on (c2.function_method_id = d2.function_method_id)
+				WHERE c2.data_type = 17 and c2.object_type = 1 
+					and c2.object_id = #{externalObjectDefinitionId} and d2.function_master_id = a.function_master_id
+			)
+		]]>
+	</select>
+	
+	<!-- find function master use common object -->
+	<select id="findFunctionMasterByUsingCommonObject" resultMap="functionMasterResultMap">
+		<![CDATA[
+			SELECT
+				DISTINCT a.function_master_id,
+				a.function_master_code,
+				a.function_master_name,
+				a.function_master_type,
+				a.project_id,
+				a.upload_file_id,
+				a.remark,
+				a.package_name
+			FROM function_master a
+			WHERE EXISTS 
+			(
+				SELECT d1.function_master_id
+				FROM function_method_input c1
+				LEFT JOIN function_method d1 on (c1.function_method_id = d1.function_method_id)
+				WHERE c1.data_type = 16 and c1.object_type = 0 and c1.object_id = #{commonObjectDefinitionId} and d1.function_master_id = a.function_master_id
+			
+			)
+			OR EXISTS 
+			(
+				SELECT c2.function_method_id
+				FROM function_method_output c2
+				LEFT JOIN function_method d2 on (c2.function_method_id = d2.function_method_id)
+				WHERE c2.data_type = 16 and c2.object_type = 0 and c2.object_id = #{commonObjectDefinitionId} and d2.function_master_id = a.function_master_id
+			)
+		]]>
+	</select>
+	
+	<!-- find function master modify external object -->
+	<select id="findFunctionMasterByMofidingExternalAttributes" resultMap="functionMasterResultMap">
+		SELECT
+			DISTINCT a.function_master_id,
+			a.function_master_code,
+			a.function_master_name,
+			a.function_master_type,
+			a.project_id,
+			a.upload_file_id,
+			a.remark,
+			a.package_name
+		FROM function_master a
+		WHERE EXISTS 
+		(
+			SELECT d1.function_master_id
+			FROM function_method_input c1
+			LEFT JOIN function_method d1 on (c1.function_method_id = d1.function_method_id)
+			WHERE c1.object_type = 3 and d1.function_master_id = a.function_master_id
+				and c1.object_id IN
+				<foreach collection="lstExternalObjectAttributes" item="attribute" open="(" close=")" separator=",">
+					CAST(#{attribute.externalObjectAttributeId} as numeric)
+				</foreach>
+		
+		)
+		OR EXISTS 
+		(
+			SELECT c2.function_method_id
+			FROM function_method_output c2
+			LEFT JOIN function_method d2 on (c2.function_method_id = d2.function_method_id)
+			WHERE c2.object_type = 3 and d2.function_master_id = a.function_master_id
+				and c2.object_id IN
+				<foreach collection="lstExternalObjectAttributes" item="attribute" open="(" close=")" separator=",">
+					CAST(#{attribute.externalObjectAttributeId} as numeric)
+				</foreach>
+		)
+	</select>
+	
+	<select id="findOneFuntionMethodById" resultMap="functionMethodResultMap">
+		SELECT 
+			a.function_method_id, 
+			a.function_method_name, 
+			a.function_method_code, 
+       		a.remark, 
+       		a.item_seq_no, 
+       		a.function_master_id,
+       		b.function_master_code
+  		FROM function_method a
+  		LEFT JOIN function_master b on (b.function_master_id = a.function_master_id)
+		WHERE a.function_method_id = #{functionMethodId}
+	</select>
+	
+</mapper>

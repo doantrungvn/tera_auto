@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.screenitemstatus.ScreenItemStatusRepository">
+	<resultMap id="screenItemStatusResultMap" type="ScreenItemStatus">
+		<result property="screenItemStatusId" column="screen_item_status_id" />
+		<result property="formulaDefinitionId" column="formula_definition_id" />
+		<result property="itemId" column="screen_item_id" />
+		<result property="status" column="status" />
+		<result property="itemType" column="type" />
+		<result property="enabled" column="enabled" />
+	</resultMap>
+	
+	<insert id="registerScreenItemStatus" parameterType="ScreenItemStatus">
+		<if test="screenItemStatuses != null and  screenItemStatuses.size() > 0 ">
+			INSERT INTO
+				screen_item_status
+			(
+				formula_definition_id,
+				screen_item_id,
+				status,
+				type,
+				enabled
+			)
+			VALUES
+			<foreach item="item" collection="screenItemStatuses" separator=",">
+			(
+				#{item.formulaDefinitionId},
+				#{item.itemId},
+				#{item.status},
+				#{item.itemType},
+				#{item.enabled}
+			)
+			</foreach>
+		</if>
+	</insert>
+	
+	<delete id="deleteAllScreenItemStatusByFormulaDefinitionId" parameterType="FormulaDefinition">
+		DELETE FROM
+			screen_item_status
+		WHERE 
+			<if test="lstFormulaDefinition != null and lstFormulaDefinition.size() > 0">
+			formula_definition_id IN
+				<foreach collection="lstFormulaDefinition" item="item" separator="," open="(" close=")">
+					#{item.formulaDefinitionId}
+				</foreach>
+			</if>
+			<if test="lstFormulaDefinition == null or lstFormulaDefinition.size() == 0">
+				FALSE
+			</if>
+	</delete>
+	
+	<select id="getScreenItemStatusByFormulaDefinitionId" resultMap="screenItemStatusResultMap">
+		SELECT
+			formula_definition_id,
+			screen_item_id,
+			status,
+			type,
+			enabled
+		FROM 
+			screen_item_status
+		WHERE 
+			<if test="lstFormulaDefinition != null and lstFormulaDefinition.size() > 0">
+			formula_definition_id IN
+				<foreach collection="lstFormulaDefinition" item="item" separator="," open="(" close=")">
+					#{item.formulaDefinitionId}
+				</foreach>
+			</if>
+			<if test="lstFormulaDefinition == null or lstFormulaDefinition.size() == 0">
+				FALSE
+			</if>
+	</select>
+	
+</mapper>

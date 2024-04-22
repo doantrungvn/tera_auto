@@ -1,0 +1,587 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.sessionmanagement.SessionManagementRepository">
+
+    <resultMap id="sessionManagementResultMap" type="SessionManagement">
+        <id property="sessionManagementId" column="session_management_id" />
+        <result property="sessionManagementName" column="session_management_name" />
+        <result property="sessionManagementCode" column="session_management_code" />
+        <result property="dataType" column="data_type" />
+        <result property="objectId" column="object_id" />
+        <result property="createdBy" column="created_by" />
+        <result property="createdDate" column="created_date" />
+        <result property="updatedBy" column="updated_by" />
+        <result property="updatedDate" column="updated_date" />
+        <result property="projectId" column="project_id" />
+        <result property="objectIdAutocomplete" column="object_code" />
+        <result property="module_code" column="module_code" />
+        <result property="sessionManagementType" column="session_management_type" />
+        <result property="packageNameExternalObject" column="package_name" />
+        <result property="arrayFlg" column="array_flg" />
+    </resultMap>
+    
+    <resultMap id="autocompleteResultMap" type="Autocomplete">
+		<result property="optionValue" column="optionValue" />
+		<result property="optionLabel" column="optionLabel" />
+	</resultMap>
+	
+	<select id="countBySearchCriteria" parameterType="org.terasoluna.qp.domain.repository.sessionmanagement.SessionManagementSearchCriteria" resultType="_long">
+        <![CDATA[
+            SELECT 
+                COUNT(*) 
+            FROM 
+                session_management a
+        ]]>
+		<include refid="findPageByCriteriaWhere" />
+	</select>
+
+    <select id="countNameCodeById" parameterType="SessionManagement" resultType="Long">
+    	<bind name="clName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toLikeCondition(sessionManagementName)" />
+		<bind name="clCode" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toLikeCondition(sessionManagementCode)" />
+		SELECT
+			SUM(rowVal) AS totalCount
+		FROM (
+			(SELECT
+				1 AS rowVal
+			FROM
+				session_management c
+				<where>
+					<if test="sessionManagementName != null and sessionManagementName != ''">
+						session_management_name iLIKE #{clName} ESCAPE '~'
+					</if>
+					<if test="sessionManagementId != null">
+						AND session_management_id != #{sessionManagementId}
+					</if>
+					<if test="sessionManagementName == null and sessionManagementName == ''">AND FALSE</if>
+					<if test="projectId != null">
+						AND project_id = #{projectId}
+					</if>
+				</where>
+				LIMIT 1
+			)
+			UNION
+			(SELECT
+				2 AS rowVal
+			FROM
+			session_management c
+			<where>
+				<if test="sessionManagementCode != null and sessionManagementCode != ''">
+					session_management_code iLIKE #{clCode} ESCAPE '~'
+				</if>
+				<if test="sessionManagementId != null">
+					AND session_management_id != #{sessionManagementId}
+				</if>
+				<if test="sessionManagementCode == null and sessionManagementCode == ''">AND FALSE</if>
+				<if test="projectId != null">
+					AND project_id = #{projectId}
+				</if>
+			</where>
+			LIMIT 1
+			)
+		) AS foo
+    </select>
+    
+    <select id="findPageBySearchCriteria"
+		parameterType="org.terasoluna.qp.domain.repository.sessionmanagement.SessionManagementSearchCriteria"
+		resultMap="sessionManagementResultMap">
+		SELECT * FROM
+		(
+			SELECT
+	            a.session_management_id,
+	            a.session_management_name,
+	            a.session_management_code,
+	            a.data_type,
+	            a.object_id,
+	            a.created_by,
+	            a.created_date,
+	            a.updated_by,
+	            a.updated_date,
+	            a.project_id,
+	            a.session_management_type,
+	            a.array_flg,
+				b.tbl_design_code AS object_code
+	        FROM
+	            session_management a
+	        LEFT JOIN table_design b
+	        	ON a.object_id = b.tbl_design_id
+	        WHERE
+	            data_type = 14
+	        UNION
+			SELECT
+	            a.session_management_id,
+	            a.session_management_name,
+	            a.session_management_code,
+	            a.data_type,
+	            a.object_id,
+	            a.created_by,
+	            a.created_date,
+	            a.updated_by,
+	            a.updated_date,
+	            a.project_id,
+	            a.session_management_type,
+	            a.array_flg,
+	            c.common_object_definition_name AS object_code
+	        FROM
+	            session_management a
+	        LEFT JOIN common_object_definition c
+	        	ON a.object_id = c.common_object_definition_id
+	        WHERE
+	            data_type = 16
+	        UNION
+			SELECT
+	            a.session_management_id,
+	            a.session_management_name,
+	            a.session_management_code,
+	            a.data_type,
+	            a.object_id,
+	            a.created_by,
+	            a.created_date,
+	            a.updated_by,
+	            a.updated_date,
+	            a.project_id,
+	            a.session_management_type,
+	            a.array_flg,
+				d.external_object_definition_name AS object_code
+	        FROM
+	            session_management a
+	        LEFT JOIN external_object_definition d
+	        	ON a.object_id = d.external_object_definition_id
+	        WHERE
+	            data_type = 17
+	        UNION
+			SELECT
+	            a.session_management_id,
+	            a.session_management_name,
+	            a.session_management_code,
+	            a.data_type,
+	            a.object_id,
+	            a.created_by,
+	            a.created_date,
+	            a.updated_by,
+	            a.updated_date,
+	            a.project_id,
+	            a.session_management_type,
+	            a.array_flg,
+				'' AS object_code
+	        FROM
+	            session_management a
+	        WHERE
+	            data_type != 14 AND data_type != 16 AND data_type != 17
+	    ) as a
+		<include refid="findPageByCriteriaWhere" />
+		
+		<if test="pageable.sort != null">
+			ORDER BY
+		 	<foreach collection="pageable.sort" item="session_management" separator=",">
+		 		${session_management.property} ${session_management.direction} 
+		 	</foreach>
+			
+		</if>
+		<if test="pageable.sort == null">
+			ORDER BY
+		 	a.updated_date DESC
+		</if>
+		<![CDATA[		   	
+		       LIMIT
+		           #{pageable.pageSize}
+		       OFFSET
+		           #{pageable.offset}
+	     ]]>
+	</select>
+	<sql id="findPageByCriteriaWhere">
+		<where>
+			<if test="criteria.sessionManagementName != null and criteria.sessionManagementName != ''">
+                <bind name="sessionManagementName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.sessionManagementName)" />
+				<![CDATA[
+					AND a.session_management_name ILIKE #{sessionManagementName} ESCAPE '~'
+				]]>
+			</if>
+			<if test="criteria.sessionManagementCode != null and criteria.sessionManagementCode != ''">
+                <bind name="sessionManagementCode" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.sessionManagementCode)" />
+				<![CDATA[
+					AND a.session_management_code ILIKE #{sessionManagementCode} ESCAPE '~'
+				]]>
+			</if>
+			<if test="criteria.projectId != null ">
+			    <bind name="projectId" value="criteria.projectId" />
+			    <![CDATA[
+			        AND a.project_id = #{projectId}
+			    ]]>
+			</if>
+		</where>
+	</sql>
+    <select id="findById" parameterType="Long" resultMap="sessionManagementResultMap">
+        SELECT
+            a.session_management_id,
+            a.session_management_name,
+            a.session_management_code,
+            a.data_type,
+            a.object_id,
+            a.created_by,
+            a.created_date,
+            a.updated_by,
+            a.updated_date,
+            a.project_id,
+            a.session_management_type,
+            a.array_flg,
+            b.tbl_design_code AS object_code
+        FROM
+            session_management a
+        LEFT JOIN table_design b
+        	ON a.object_id = b.tbl_design_id
+        WHERE
+            session_management_id = #{sessionManagementId}
+            AND data_type = 14
+        UNION
+        SELECT
+            a.session_management_id,
+            a.session_management_name,
+            a.session_management_code,
+            a.data_type,
+            a.object_id,
+            a.created_by,
+            a.created_date,
+            a.updated_by,
+            a.updated_date,
+            a.project_id,
+            a.session_management_type,
+            a.array_flg,
+            c.common_object_definition_name AS object_code
+        FROM
+            session_management a
+        LEFT JOIN common_object_definition c
+        	ON a.object_id = c.common_object_definition_id
+        WHERE
+            session_management_id = #{sessionManagementId}
+            AND data_type = 16
+        UNION
+        SELECT
+            a.session_management_id,
+            a.session_management_name,
+            a.session_management_code,
+            a.data_type,
+            a.object_id,
+            a.created_by,
+            a.created_date,
+            a.updated_by,
+            a.updated_date,
+            a.project_id,
+            a.session_management_type,
+            a.array_flg,
+            d.external_object_definition_name AS object_code
+        FROM
+            session_management a
+        LEFT JOIN external_object_definition d
+        	ON a.object_id = d.external_object_definition_id
+        WHERE
+            session_management_id = #{sessionManagementId}
+            AND data_type = 17
+        UNION
+        SELECT
+            a.session_management_id,
+            a.session_management_name,
+            a.session_management_code,
+            a.data_type,
+            a.object_id,
+            a.created_by,
+            a.created_date,
+            a.updated_by,
+            a.updated_date,
+            a.project_id,
+            a.session_management_type,
+            a.array_flg,
+            '' AS object_code
+        FROM
+            session_management a
+        WHERE
+            session_management_id = #{sessionManagementId}
+            AND data_type != 14 AND data_type != 16 AND data_type != 17
+    </select>
+    
+    <insert id="register" parameterType="SessionManagement">
+        <selectKey keyProperty="sessionManagementId" resultType="long" order="BEFORE">
+            SELECT nextval('session_management_seq') AS sessionManagementId
+        </selectKey>
+        INSERT INTO
+            session_management
+        (
+            session_management_id,
+            session_management_name,
+            session_management_code,
+            data_type,
+            object_id,
+            created_by,
+            created_date,
+            updated_by,
+            updated_date,
+            project_id,
+            array_flg
+        )
+        VALUES
+        (
+            #{sessionManagementId},
+            #{sessionManagementName},
+            #{sessionManagementCode},
+            #{dataType},
+            #{objectId},
+            #{createdBy},
+            #{createdDate},
+            #{updatedBy},
+            #{updatedDate},
+            #{projectId},
+            #{arrayFlg}
+        )
+    </insert>
+    
+    <update id="modify" parameterType="SessionManagement">
+        UPDATE 
+        	session_management
+        SET 
+            session_management_name = #{sessionManagementName},
+            session_management_code = #{sessionManagementCode},
+            data_type = #{dataType},
+            object_id = #{objectId},
+            updated_date = #{systemTime},
+			updated_by = #{updatedBy},
+			array_flg = #{arrayFlg}
+        WHERE  
+        	session_management_id = #{sessionManagementId} and updated_date = #{updatedDate}
+    </update>
+    
+    <delete id="delete" parameterType="SessionManagement">
+  		DELETE FROM session_management WHERE session_management_id = #{sessionManagementId};
+    </delete>
+
+	<select id="getAutocompleteEntity" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+			td.tbl_design_id AS optionValue,
+			td.tbl_design_name AS optionLabel,
+			td.tbl_design_code AS output01
+		FROM 
+			table_design td
+		<where>
+			<if test="searchKey != null and searchKey != ''">
+				AND td.tbl_design_name iLIKE '%' || #{searchKey} || '%'
+			</if>
+			<if test="arg01 != null and arg01 != ''">
+				AND td.project_id = CAST(#{arg01} AS NUMERIC)
+			</if>
+		</where>
+		ORDER BY tbl_design_id ASC
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+		<if test="arg02 == null or arg02 == ''">
+			LIMIT 20
+		</if>
+	</select>
+
+	<select id="getAutocompleteCommonObject" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+		common_object_definition_id AS optionValue,
+		common_object_definition_name AS optionLabel,
+		common_object_definition_code AS output01
+		FROM
+		common_object_definition
+		<where>
+			<if test="searchKey != null and searchKey != ''">
+				AND common_object_definition_name iLIKE '%' ||
+				#{searchKey} || '%'
+			</if>
+			<if test="arg01 != null and arg01 != ''">
+				AND project_id = CAST(#{arg01} AS NUMERIC)
+			</if>
+		</where>
+		ORDER BY common_object_definition_id ASC
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+		<if test="arg02 == null or arg02 == ''">
+			LIMIT 20
+		</if>
+	</select>
+
+	<select id="getAutocompleteExternalObject" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+		ex.external_object_definition_id AS optionValue,
+		ex.external_object_definition_name AS optionLabel,
+		ex.external_object_definition_code AS output01
+		FROM
+		external_object_definition ex
+		<where>
+			<if test="searchKey != null and searchKey != ''">
+				AND ex.external_object_definition_name iLIKE '%' ||
+				#{searchKey} || '%'
+			</if>
+			<if test="arg01 != null and arg01 != ''">
+				AND ex.project_id = CAST(#{arg01} AS NUMERIC)
+			</if>
+		</where>
+		ORDER BY ex.external_object_definition_id ASC
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+		<if test="arg02 == null or arg02 == ''">
+			LIMIT 20
+		</if>
+	</select>
+	
+	<insert id="registerListOfSessionManagement" parameterType="SessionManagement">
+	
+		INSERT INTO	
+		 	session_management
+		(
+			session_management_name,
+			session_management_code,
+			data_type,
+			object_id,
+			created_by,
+			created_date,
+			updated_by,
+			updated_date,
+			project_id,
+			session_management_type,
+			array_flg
+		)    	
+        VALUES
+        <foreach item="item" collection="sessionManagements" separator=",">
+        (
+        <![CDATA[
+			#{item.sessionManagementName},
+            #{item.sessionManagementCode},
+            #{item.dataType},
+            #{item.objectId},
+            #{item.createdBy},
+            #{item.createdDate},
+            #{item.updatedBy},
+            #{item.updatedDate},
+            #{item.projectId},
+            #{item.sessionManagementType},
+            #{item.arrayFlg}
+	    	]]>
+        )
+		</foreach>
+    </insert>
+    
+    <select id="findAllOfProject" parameterType="Long" resultMap="sessionManagementResultMap">
+        SELECT
+            a.session_management_id,
+            a.session_management_name,
+            a.session_management_code,
+            a.data_type,
+            a.object_id,
+            a.created_by,
+            a.created_date,
+            a.updated_by,
+            a.updated_date,
+            a.project_id,
+            a.session_management_type,
+            a.array_flg,
+            b.tbl_design_code AS object_code,
+            '' AS package_name,
+            '' as module_code
+        FROM
+            session_management a
+        LEFT JOIN table_design b
+            ON a.object_id = b.tbl_design_id
+        WHERE
+            a.project_id = #{projectId}
+            AND data_type = 14
+            AND a.session_management_type = 1
+        UNION
+        SELECT
+            a.session_management_id,
+            a.session_management_name,
+            a.session_management_code,
+            a.data_type,
+            a.object_id,
+            a.created_by,
+            a.created_date,
+            a.updated_by,
+            a.updated_date,
+            a.project_id,
+            a.session_management_type,
+            a.array_flg,
+            c.common_object_definition_code AS object_code,
+            '' AS package_name,
+            module.module_code as module_code
+        FROM
+            session_management a
+        LEFT JOIN common_object_definition c
+            ON a.object_id = c.common_object_definition_id
+        LEFT JOIN module
+            ON c.module_id = module.module_id
+        WHERE
+            a.project_id = #{projectId}
+            AND data_type = 16
+            AND a.session_management_type = 1
+        UNION
+        SELECT
+            a.session_management_id,
+            a.session_management_name,
+            a.session_management_code,
+            a.data_type,
+            a.object_id,
+            a.created_by,
+            a.created_date,
+            a.updated_by,
+            a.updated_date,
+            a.project_id,
+            a.session_management_type,
+            a.array_flg,
+            d.external_object_definition_code AS object_code,
+            d.package_name AS package_name,
+            module.module_code as module_code
+        FROM
+            session_management a
+        LEFT JOIN external_object_definition d
+            ON a.object_id = d.external_object_definition_id
+        LEFT JOIN module
+            ON d.module_id = module.module_id
+        WHERE
+            a.project_id = #{projectId}
+            AND data_type = 17
+            AND a.session_management_type = 1
+        UNION
+        SELECT
+            a.session_management_id,
+            a.session_management_name,
+            a.session_management_code,
+            a.data_type,
+            a.object_id,
+            a.created_by,
+            a.created_date,
+            a.updated_by,
+            a.updated_date,
+            a.project_id,
+            a.session_management_type,
+            a.array_flg,
+            '' AS object_code,
+            '' AS package_name,
+            '' AS module_code
+        FROM
+            session_management a
+        WHERE
+            a.project_id = #{projectId}
+            AND data_type != 14 AND data_type != 16 AND data_type != 17
+            AND a.session_management_type = 1
+    </select>
+    
+    <select id="findSesionManagementByUsingCommonObject" parameterType="Long" resultMap="sessionManagementResultMap">
+        SELECT
+            a.session_management_id,
+            a.session_management_name,
+            a.session_management_code,
+            a.data_type,
+            a.object_id,
+            a.project_id,
+            a.session_management_type,
+            a.array_flg
+        FROM
+            session_management a
+        WHERE
+            a.object_id = #{commonObjectDefinitionId} and a.data_type = 16
+    </select>
+</mapper>

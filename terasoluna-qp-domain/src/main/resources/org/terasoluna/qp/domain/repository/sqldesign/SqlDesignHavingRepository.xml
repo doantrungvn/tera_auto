@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.sqldesign.SqlDesignHavingRepository">
+
+    <resultMap id="resultMap" type="SqlDesignHaving">
+        <result property="havingId" column="having_id" />
+        <result property="sqlDesignId" column="sql_design_id" />
+        <result property="functionCode" column="function_code" />
+        <result property="tableId" column="tbl_design_id" />
+        <result property="tableName" column="tbl_design_name" />
+        <result property="columnId" column="column_id" />
+        <result property="columnName" column="column_name" />
+        <result property="operatorCode" column="operator_code" />
+        <result property="value" column="value" />
+        <result property="itemSeqNo" column="item_seq_no" />
+        <result property="logicCode" column="logic_code" />
+    </resultMap>
+	
+	<select id="findAllBySqlDesignId" parameterType="Long" resultMap="resultMap">
+        SELECT A.having_id,
+				A.sql_design_id,
+				A.function_code,
+				A.tbl_design_id,
+				B.tbl_design_name,
+				A.column_id,
+				C.column_name,
+				A.operator_code,
+				A.value,
+				A.item_seq_no,
+				A.logic_code
+		FROM sql_design_having A
+			LEFT JOIN 
+				table_design B 
+			ON 
+				A.tbl_design_id = B.tbl_design_id 
+			LEFT JOIN 
+				table_design_details C 
+			ON 
+				A.column_id = C.column_id 
+		WHERE 
+			A.sql_design_id = #{sqlDesignId}
+		ORDER BY 
+			item_seq_no
+
+    </select>
+    
+    <select id="findById" parameterType="Long" resultMap="resultMap">
+        SELECT having_id,
+				sql_design_id,
+				function_code,
+				tbl_design_id,
+				column_id,
+				operator_code,
+				value,
+				item_seq_no,
+				logic_code
+		FROM sql_design_having
+		WHERE having_id = #{havingId}
+
+    </select>
+    
+    <insert id="register" parameterType="SqlDesignHaving">
+        <selectKey keyProperty="havingId" resultType="long" order="BEFORE">
+            SELECT nextval('sql_design_having_seq') AS havingId
+        </selectKey>
+        INSERT INTO
+            sql_design_having
+        (
+        	having_id,
+            sql_design_id,
+            function_code,
+            tbl_design_id,
+            column_id,
+            operator_code,
+            value,
+            item_seq_no,
+            logic_code
+        )
+        VALUES
+        (
+        	#{havingId},
+            #{sqlDesignId},
+            #{functionCode},
+            #{tableId},
+            #{columnId},
+            #{operatorCode},
+            #{value},
+            #{itemSeqNo},
+            #{logicCode}
+        )
+    </insert>
+    
+    <insert id="registerAll">
+        INSERT INTO
+            sql_design_having
+        (
+            sql_design_id,
+            function_code,
+            tbl_design_id,
+            column_id,
+            operator_code,
+            value,
+            item_seq_no,
+            logic_code
+        )
+        VALUES
+        <foreach collection="sqlDesignHavings" item="item" separator=",">
+        (
+            #{item.sqlDesignId},
+            #{item.functionCode},
+            #{item.tableId},
+            #{item.columnId},
+            #{item.operatorCode},
+            #{item.value},
+            #{item.itemSeqNo},
+            #{item.logicCode}
+        )
+        </foreach>
+    </insert>
+	
+	<update id="modify" parameterType="SqlDesignHaving">
+		UPDATE sql_design_having
+        SET sql_design_id=#{sqlDesignId},
+            function_code=#{functionCode},
+            tbl_design_id=#{tableId},
+            column_id=#{columnId},
+            operator_code=#{operatorCode},
+            value=#{value},
+            item_seq_no=#{itemSeqNo},
+            logic_code=#{logicCode}
+        WHERE having_id = #{havingId}
+	</update>
+	
+	<update id="modifyAll">
+		<foreach collection="sqlDesignHavings" item="item" separator=";">
+			UPDATE sql_design_having
+	        SET sql_design_id=#{item.sqlDesignId},
+	            function_code=#{item.functionCode},
+	            tbl_design_id=#{item.tableId},
+	            column_id=#{item.columnId},
+	            operator_code=#{item.operatorCode},
+	            value=#{item.value},
+	            item_seq_no=#{item.itemSeqNo},
+	            logic_code=#{item.logicCode}
+	        WHERE having_id = #{item.havingId}
+		</foreach>
+	</update>
+	
+	<delete id="delete" parameterType="SqlDesignHaving">
+		DELETE FROM sql_design_having
+        WHERE having_id = #{havingId}
+	</delete>
+	
+	<delete id="deleteByExceptionalGroup">
+		DELETE FROM 
+			sql_design_having
+        <where>
+        	sql_design_id = #{sqlDesignId}
+          	
+         	<if test="exceptionGroup !=null and exceptionGroup.size() &gt; 0">
+        		AND having_id NOT IN
+	        	<foreach collection="exceptionGroup" separator="," open="(" close=")" item="id">
+	        		#{id}
+	        	</foreach>
+        	</if>
+        	<if test="exceptionGroup ==null or exceptionGroup.size() &lt;= 0">
+        		AND TRUE
+        	</if>
+        
+        </where>
+	</delete>
+	
+	<delete id="deleteBySqlDesignId">
+		DELETE FROM 
+			sql_design_having
+        WHERE
+        	sql_design_id = #{sqlDesignId}
+	</delete>
+</mapper>

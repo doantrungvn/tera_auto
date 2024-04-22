@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.sqldesign.SqlDesignFunctionRepository">
+
+	<resultMap id="resultMap" type="SqlDesignFunctionGroup">
+		<id property="groupCode" column="group_code"/>
+		<collection property="sqlDesignFunctions" ofType="SqlDesignFunction">
+			<result property="functionId" column="function_id"/>
+			<result property="functionName" column="function_name"/>
+			<result property="dialect" column="dialect"/>
+			<result property="functionCode" column="function_code"/>
+			<result property="functionText" column="function_text"/>
+			<result property="remark" column="remark"/>
+			<result property="groupCode" column="group_code"/>
+		</collection>
+	</resultMap>
+	<select id="findAllByGroup" resultMap="resultMap" parameterType="String">
+		SELECT A.function_id, 
+				A.function_name, 
+				A.dialect, 
+				A.function_code,
+				A.function_text,
+				A.remark,
+				A.group_code
+		FROM sql_design_function A
+		LEFT JOIN
+		message B
+		ON 
+		A.group_code = B.message_code AND B.language_code = #{language}
+		WHERE dialect = #{dialect}
+	</select>
+</mapper>

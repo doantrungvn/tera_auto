@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="org.terasoluna.qp.domain.repository.screentransition.ScreenTransitionRepository">
+
+	<resultMap id="screenTransitionResultMap" type="ScreenTransition">
+		<id property="screenTransitionId" column="screen_transition_id" />
+		<id property="transitionName" column="transition_name" />
+		<id property="transitionCode" column="transition_code" />
+		<id property="fromScreen" column="from_screen" />
+		<id property="toScreen" column="to_screen" />
+		<id property="moduleId" column="module_id" />
+		<id property="status" column="status" />
+		<id property="buttonOrLinkName" column="button_LinkName" />
+		<id property="bLogicName" column="bLogicName" />
+	</resultMap>
+	
+	<resultMap id="screenTransitionBranchResultMap" type="ScreenTransitionBranch">
+		<id property="branchId" column="screen_transition_branch_id" />
+		<id property="name" column="screen_transition_branch_name" />
+		<id property="remark" column="remark" />
+		<id property="moduleId" column="module_id" />
+		<id property="xCoordinates" column="x_coordinates" />
+		<id property="yCoordinates" column="y_coordinates" />
+		<id property="status" column="status" />
+		<id property="type" column="type" />
+	</resultMap>
+	
+	<resultMap id="screenTransitionBranchDetailsResultMap" type="ScreenTransitionBranchDetail">
+		<id property="branchDetailsId" column="screen_transition_branch_detail_id" />
+		<id property="branchId" column="screen_transition_branch_id" />
+		<id property="caption" column="condition_name" />
+		<id property="conditionRemark" column="remark" />
+	</resultMap>
+	
+	<select id="findAllTransitionByModuleId" resultMap="screenTransitionResultMap">
+	      SELECT 
+             a.screen_transition_id,
+             a.transition_name,
+             a.transition_code,
+             a.from_screen,
+             a.to_screen,
+             a.type,
+             1 as status,
+             (select md.message_string
+				from message_design md
+				inner join language_design ld on ld.language_id = md.language_id and ld.language_id = #{languageId}
+				inner join screen_item si on md.message_code = si.message_code
+				where si.screen_transition_id = a.screen_transition_id) AS button_LinkName,
+			(select bl.business_logic_name
+				from business_logic bl
+				inner join screen_action sa on sa.navigate_to_blogic_id = bl.business_logic_id
+				inner join screen_item si on sa.screen_action_id = si.screen_action_id
+				where si.screen_transition_id = a.screen_transition_id LIMIT 1) as bLogicName
+         FROM 
+          	screen_transition a
+         INNER JOIN module m on a.module_id = m.module_id AND m.project_id = #{projectId}
+         <where>
+         	<if test="moduleId != null">
+         		AND a.module_id = #{moduleId}
+         	</if>
+         </where>
+    </select>
+    
+    <select id="findAllTransitionBranchByModuleId" resultMap="screenTransitionBranchResultMap">
+	      SELECT 
+             a.screen_transition_branch_id,
+             a.screen_transition_branch_name,
+             a.remark,
+             a.module_id,
+             a.x_coordinates,
+             a.y_coordinates,
+             1 as status
+         FROM 
+          	screen_transition_branch a
+         INNER JOIN module m on a.module_id = m.module_id AND m.project_id = #{projectId}
+         <where>
+         	<if test="moduleId != null">
+         		AND a.module_id = #{moduleId}
+         	</if>
+         </where>
+    </select>
+    
+    <select id="findAllTransitionBranchDetailByModuleId" resultMap="screenTransitionBranchDetailsResultMap">
+	      SELECT 
+             a.screen_transition_branch_detail_id,
+             a.screen_transition_branch_id,
+             a.condition_name,
+             a.remark
+         FROM 
+          	screen_transition_branch_detail a
+         INNER JOIN screen_transition_branch b on a.screen_transition_branch_id = b.screen_transition_branch_id
+         INNER JOIN module m on b.module_id = m.module_id AND m.project_id = #{projectId}
+         <where>
+         	<if test="moduleId != null">
+         		AND b.module_id = #{moduleId}
+         	</if>
+         </where>
+    </select>
+    
+    <select id="getSequences" resultType="Long">
+		select SETVAL('screen_transition_seq'::regclass, NEXTVAL('screen_transition_seq'::regclass) + #{size})
+	</select>
+    
+    <insert id="createMultiTransition">
+    	<if test="listScreenTransitions !=null and listScreenTransitions.size > 0">
+	    	INSERT INTO 
+				screen_transition
+				(
+		            transition_name, 
+		            transition_code, 
+		            from_screen, 
+		            to_screen,
+		            module_id,
+		            type
+	         	)
+	         	VALUES
+	         	<foreach item="item" collection="listScreenTransitions" separator=",">
+		         	(
+						#{item.transitionName},
+						#{item.transitionCode},
+						cast(#{item.fromScreen} as numeric),
+						cast(#{item.toScreen} as numeric),
+						#{item.moduleId},
+						#{item.type}
+		         	)
+	         	</foreach>
+    	</if>
+    </insert>
+    
+    <insert id="createMultiTransitionHaveId">
+    	<if test="listScreenTransitions !=null and listScreenTransitions.size > 0">
+	    	INSERT INTO 
+				screen_transition
+				(
+					screen_transition_id,
+		            transition_name, 
+		            transition_code, 
+		            from_screen, 
+		            to_screen,
+		            module_id,
+		            type
+	         	)
+	         	VALUES
+	         	<foreach item="item" collection="listScreenTransitions" separator=",">
+		         	(
+		         		cast(#{item.screenTransitionId} as numeric),
+						#{item.transitionName},
+						#{item.transitionCode},
+						cast(#{item.fromScreen} as numeric),
+						cast(#{item.toScreen} as numeric),
+						#{item.moduleId},
+						#{item.type}
+		         	)
+	         	</foreach>
+    	</if>
+    </insert>
+    
+    <insert id="createMultiTransitionBranchDetail">
+    	<if test="transitionBranchDetails !=null and transitionBranchDetails.size > 0">
+	    	INSERT INTO 
+				screen_transition_branch_detail
+				(
+		            screen_transition_branch_id, 
+		            condition_name, 
+		            remark
+	         	)
+	         	VALUES
+	         	<foreach item="item" collection="transitionBranchDetails" separator=",">
+		         	(
+		         		cast(#{item.branchId} as numeric),
+						#{item.caption},
+						#{item.conditionRemark}
+		         	)
+	         	</foreach>
+    	</if>
+    </insert>
+    
+    <insert id="createTransitionBranch" parameterType="ScreenTransitionBranch" useGeneratedKeys="true" keyProperty="screenTransitionBranch.branchId" keyColumn="branchId">
+    	<selectKey keyProperty="branchId" resultType="String" order="BEFORE">
+			SELECT nextval('screen_transition_branch_seq') AS branchId
+		</selectKey>
+    	INSERT INTO 
+    		screen_transition_branch
+    		(
+    			screen_transition_branch_id,
+            	screen_transition_branch_name, 
+            	remark,
+            	module_id,
+            	x_coordinates,
+            	y_coordinates
+            )
+    		VALUES 
+    		(
+    			cast(#{branchId} as numeric),
+    			#{name},
+    			#{remark},
+    			#{moduleId},
+    			#{xCoordinates},
+    			#{yCoordinates}
+    		);
+    </insert>
+    
+    <update id="updateMultiTransition">
+    	<if test="listScreenTransitions !=null and listScreenTransitions.size > 0">
+    		<foreach item="item" collection="listScreenTransitions" separator=";">
+    			UPDATE screen_transition 
+				SET
+				 	transition_name = #{item.transitionName},
+					transition_code =  #{item.transitionCode},
+					from_screen =  cast(#{item.fromScreen} as numeric),
+					to_screen =  cast(#{item.toScreen} as numeric)
+				WHERE screen_transition_id = cast(#{item.screenTransitionId} as numeric)
+    		</foreach>
+    	</if>
+    </update>
+    
+    <update id="updateScreenTransitionBranch" parameterType="ScreenTransitionBranch">
+    	UPDATE screen_transition_branch 
+			SET
+			 	screen_transition_branch_name = #{updateScreenTransitionBranch.name},
+				remark = #{updateScreenTransitionBranch.remark},
+				x_coordinates = #{updateScreenTransitionBranch.xCoordinates},
+				y_coordinates = #{updateScreenTransitionBranch.yCoordinates}
+			WHERE screen_transition_branch_id = cast(#{updateScreenTransitionBranch.branchId} as numeric)
+    </update>
+    
+    <update id="updateScreenTransitionBranchDetail">
+    	<if test="updateScreenTransitionBranchDetail !=null and updateScreenTransitionBranchDetail.size > 0">
+    		<foreach item="item" collection="updateScreenTransitionBranchDetail" separator=";">
+		    	UPDATE screen_transition_branch_detail 
+					SET
+					 	condition_name = #{item.caption},
+						remark = #{item.conditionRemark}
+					WHERE screen_transition_branch_detail_id = cast(#{item.branchDetailsId} as numeric)
+    		</foreach>
+    	</if>
+    </update>
+    
+    <update id="deleteScreenTransitionBranchDetail">
+    	<if test="deleteScreenTransitionBranchDetail !=null and deleteScreenTransitionBranchDetail.size > 0">
+    		<foreach item="item" collection="deleteScreenTransitionBranchDetail" separator=";">
+    			DELETE 
+    				FROM screen_transition_branch_detail 
+				WHERE screen_transition_branch_detail_id IN 
+						<foreach item="item" index="index" collection="deleteScreenTransitionBranchDetail" open="(" separator="," close=")">
+							cast(#{item.branchDetailsId} as numeric)
+						</foreach>
+    		</foreach>
+    	</if>
+    </update>
+    
+    <update id="deleteMultiTransition">
+    	<if test="listScreenTransitions !=null and listScreenTransitions.size > 0">
+    		<foreach item="item" collection="listScreenTransitions" separator=";">
+    			DELETE 
+    				FROM screen_transition 
+				WHERE screen_transition_id IN 
+						<foreach item="item" index="index" collection="listScreenTransitions" open="(" separator="," close=")">
+							cast(#{item.screenTransitionId} as numeric)
+						</foreach>
+    		</foreach>
+    	</if>
+    </update>
+    
+    <update id="deleteMultiBranch">
+    	<if test="listBranch !=null and listBranch.size > 0">
+    		<foreach item="item" collection="listBranch" separator=";">
+    			DELETE 
+    				FROM screen_transition_branch 
+				WHERE screen_transition_branch_id IN 
+						<foreach item="item" index="index" collection="listBranch" open="(" separator="," close=")">
+							cast(#{item.branchId} as numeric)
+						</foreach>
+    		</foreach>
+    	</if>
+    </update>
+</mapper>

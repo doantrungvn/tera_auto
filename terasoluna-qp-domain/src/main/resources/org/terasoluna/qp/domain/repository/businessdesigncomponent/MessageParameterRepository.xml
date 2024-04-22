@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.businessdesigncomponent.MessageParameterRepository">
+
+    <resultMap id="messageParameterResultMap" type="MessageParameter">
+        <id property="messageParameterId" column="message_parameter_id" />
+        <result property="targetType" column="target_type" />
+        <result property="targetId" column="target_id" />
+        <result property="parameterCode" column="parameter_code" />
+        <result property="parameterCodeAutocomplete" column="message_string" />
+        <result property="parameterValue" column="parameter_value" />
+        <result property="parameterType" column="parameter_type" />
+        <result property="messageLevel" column="message_level" />
+        <result property="itemSequenceNo" column="item_sequence_no" />
+        <result property="businessLogicId" column="business_logic_id" />
+        <result property="parameterScope" column="parameter_scope" />
+        <result property="patternFormat" column="pattern_format" />
+    </resultMap>
+    <select id="getSequencesMessageParameter" resultType="Long">
+        select SETVAL('message_parameter_seq'::regclass, NEXTVAL('message_parameter_seq'::regclass) + #{size})
+    </select>
+    <insert id="registerMessageParameter" >
+    	<if test="messageParameterItems != null and  messageParameterItems.size() > 0 ">
+    		<foreach item="item" collection="messageParameterItems">
+                INSERT INTO message_parameter
+                (
+                    message_parameter_id,
+                    target_type, 
+                    target_id, 
+                    parameter_code, 
+                    parameter_value,
+                    parameter_type, 
+                    item_sequence_no,
+                    business_logic_id,
+                    parameter_scope,
+                    pattern_format
+                )
+                VALUES 
+				(
+                    #{item.messageParameterId}, 
+					#{item.targetType}, 
+					#{item.targetId}, 
+					#{item.parameterCode}, 
+					#{item.parameterValue},
+					#{item.parameterType},
+	            	#{item.itemSequenceNo},
+	            	#{item.businessLogicId},
+	            	#{item.parameterScope},
+	            	#{item.patternFormat}
+	            );
+                <if test="item.lstParameterIndex != null and  item.lstParameterIndex.size() > 0 ">
+                    INSERT INTO bd_parameter_index
+                    (
+                        table_type, 
+                        table_id, 
+                        parameter_id, 
+                        parameter_index_type, 
+                        parameter_index_id,
+                        business_logic_id
+                    )
+                    VALUES
+                    <foreach item="itemIndex" collection="item.lstParameterIndex" separator=",">
+                        (
+                            #{itemIndex.tableType}, 
+                            #{item.messageParameterId},
+                            CAST(#{itemIndex.parameterId} AS numeric(16,0)),
+                            #{itemIndex.parameterIndexType}, 
+                            CAST(#{itemIndex.parameterIndexId} AS numeric(16,0)),
+                            #{itemIndex.businessLogicId}
+                        )
+                    </foreach>;
+                </if>
+			</foreach>
+		</if>
+    </insert>
+    <select id="findMessageParameterByBusinessLogic" resultMap="messageParameterResultMap">
+		SELECT mp.message_parameter_id,
+		       mp.target_type,
+		       mp.target_id,
+		       mp.parameter_code,
+		       mp.parameter_type,
+		       mp.parameter_value,
+		       mp.item_sequence_no,
+		       md.message_string,
+		       md.message_level,
+		       mp.business_logic_id,
+		       mp.parameter_scope,
+		       mp.pattern_format
+		FROM message_parameter mp
+		LEFT JOIN message_design md on(md.message_code = mp.parameter_code
+		                               AND md.language_id = #{languageId} and md.project_id = #{projectId})
+		WHERE mp.business_logic_id = #{businessLogicId}
+		ORDER BY item_sequence_no
+    </select>
+
+    <!-- Adding HungHX for generate source code -->
+	<select id="findMessageParameterByModuleId" resultMap="messageParameterResultMap">
+		SELECT mp.message_parameter_id,
+		       mp.target_type,
+		       mp.target_id,
+		       mp.parameter_code,
+		       mp.parameter_type,
+		       mp.parameter_value,
+		       mp.item_sequence_no,
+		       md.message_string,
+		       md.message_level,
+		       mp.business_logic_id,
+		       mp.parameter_scope,
+		       mp.pattern_format
+		FROM message_parameter mp
+		INNER JOIN business_logic bl on (bl.business_logic_id = mp.business_logic_id)
+		LEFT JOIN message_design md on(md.message_code = mp.parameter_code and md.project_id =  bl.project_id AND md.language_id = #{languageId})
+		WHERE bl.module_id = #{moduleId}
+		ORDER BY item_sequence_no
+    </select>
+
+	<!-- Base on project -->
+	<select id="findMessageParameterByProjectId" resultMap="messageParameterResultMap">
+		SELECT mp.message_parameter_id,
+		       mp.target_type,
+		       mp.target_id,
+		       mp.parameter_code,
+		       mp.parameter_type,
+		       mp.parameter_value,
+		       mp.item_sequence_no,
+		       md.message_string,
+		       md.message_level,
+		       mp.business_logic_id,
+		       mp.parameter_scope
+		FROM message_parameter mp
+		LEFT JOIN message_design md on(md.message_code = mp.parameter_code
+		     AND md.language_id = #{languageId} and md.project_id = #{projectId})
+		ORDER BY item_sequence_no
+    </select>
+    
+    <!-- generate source code of commmon blogic -->
+    <select id="findMessageParameterByModuleCommon" resultMap="messageParameterResultMap">
+		SELECT mp.message_parameter_id,
+		       mp.target_type,
+		       mp.target_id,
+		       mp.parameter_code,
+		       mp.parameter_type,
+		       mp.parameter_value,
+		       mp.item_sequence_no,
+		       md.message_string,
+		       md.message_level,
+		       mp.business_logic_id,
+		       mp.parameter_scope
+		FROM message_parameter mp
+		LEFT JOIN message_design md on(md.message_code = mp.parameter_code
+		     AND md.language_id = #{languageId} and md.project_id = #{projectId})
+		ORDER BY item_sequence_no
+    </select>
+    
+</mapper>

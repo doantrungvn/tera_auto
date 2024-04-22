@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozer.sourceforge.net" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://dozer.sourceforge.net http://dozer.sourceforge.net/schema/beanmapping.xsd">
+	<mapping>
+		<class-a>org.terasoluna.qp.app.project.ProjectSearchForm</class-a>
+		<class-b>org.terasoluna.qp.domain.repository.project.ProjectCriteria</class-b>
+		<field>
+			<a>fromCreatedDate</a>
+			<b>fromCreatedDate</b>
+		</field>
+		<field>
+			<a>toCreatedDate</a>
+			<b>toCreatedDate</b>
+		</field>
+		<field>
+			<a>fromUpdatedDate</a>
+			<b>fromUpdatedDate</b>
+		</field>
+		<field>
+			<a>toUpdatedDate</a>
+			<b>toUpdatedDate</b>
+		</field>
+	</mapping>
+</mappings> 

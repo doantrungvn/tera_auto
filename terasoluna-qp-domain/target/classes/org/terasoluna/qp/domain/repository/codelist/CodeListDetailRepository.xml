@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.terasoluna.qp.domain.repository.codelist.CodeListDetailRepository">
+
+	<resultMap id="codeListDetailResultMap" type="CodeListDetail">
+		<id property="clDeatailId" column="codelist_detail_id" />
+		<result property="codeListId" column="codelist_id" />
+		<result property="name" column="key" />
+		<result property="value" column="value" />
+		<result property="value1" column="value1" />
+		<result property="value2" column="value2" />
+		<result property="value3" column="value3" />
+		<result property="value4" column="value4" />
+		<result property="value5" column="value5" />
+		<result property="isDefault" column="default_flg" />
+		<result property="createdBy" column="created_by" />
+		<result property="createdDate" column="created_date" />
+		<result property="updatedBy" column="updated_by" />
+		<result property="updatedDate" column="updated_date" />
+		<result property="codelistName" column="codelist_name" />
+	</resultMap>
+	<!-- get codelistDetail by codelistId -->
+	<select id="getCodeListDetail" parameterType="long" resultType="CodeListDetail"
+		resultMap="codeListDetailResultMap">
+		<![CDATA[
+		SELECT 
+			codelist_detail_id,
+			codelist_id,
+			key,
+			value,
+			value1,
+			value2,
+			value3,
+			value4,
+			value5,
+			default_flg
+		FROM 
+			codelist_detail 
+		WHERE
+			codelist_id = #{codeListId} ORDER BY key
+		 ]]>
+	</select>
+	
+	<!-- get codelistDetail by screen id -->
+	<select id="findAllByScreenId" parameterType="long" resultType="CodeListDetail" resultMap="codeListDetailResultMap">
+		<![CDATA[
+		SELECT 
+			cld.codelist_detail_id,
+			cld.codelist_id,
+			cld.key,
+			cld.value,
+			cld.value1,
+			cld.value2,
+			cld.value3,
+			cld.value4,
+			cld.value5,
+			cld.default_flg,
+			cl.codelist_name
+		FROM 
+			codelist_detail cld
+		INNER JOIN codelist cl on cld.codelist_id = cl.codelist_id
+		WHERE
+			EXISTS 
+			(
+				select si.codelist_id from screen_item si
+				where si.screen_id = #{screenId}
+				and cld.codelist_id = si.codelist_id
+			)
+			OR
+			EXISTS 
+			(
+				select a.codelist_id from domain_table_mapping_items a
+				where exists
+				(
+					select si.domain_tbl_mapping_item_id from screen_item si
+					where si.screen_id =  #{screenId} and a.domain_tbl_mapping_item_id = si.domain_tbl_mapping_item_id
+				)
+				and cld.codelist_id = a.codelist_id
+			)
+		 ]]>
+	</select>
+	<!-- get codelistDetail by domain datatype id -->
+	<select id="findAllByDomainTblMappingId" parameterType="long" resultType="CodeListDetail" resultMap="codeListDetailResultMap">
+		<![CDATA[
+		SELECT 
+			cld.codelist_detail_id,
+			cld.codelist_id,
+			cld.key,
+			cld.value,
+			cld.value1,
+			cld.value2,
+			cld.value3,
+			cld.value4,
+			cld.value5,
+			cld.default_flg,
+			cl.codelist_name
+		FROM 
+			codelist_detail cld
+		INNER JOIN codelist cl on cld.codelist_id = cl.codelist_id
+		WHERE
+			EXISTS 
+			(
+				select a.codelist_id from domain_table_mapping_items a
+				where a.domain_tbl_mapping_id = #{domainTblMappingId}
+				and cld.codelist_id = a.codelist_id
+			)
+		ORDER BY cld.key
+		 ]]>
+	</select>
+	
+	<!-- get codelistDetail by codelistDetailId -->
+	<select id="findCodeListDetail" parameterType="long" resultType="CodeListDetail"
+		resultMap="codeListDetailResultMap">
+		<![CDATA[
+		SELECT 
+			codelist_detail_id,
+			codelist_id,
+			key,
+			value,
+			value1,
+			value2,
+			value3,
+			value4,
+			value5,
+			default_flg
+		FROM 
+			codelist_detail 
+		WHERE
+			codelist_detail_id = #{clDeatailId} ORDER BY key
+		]]>
+	</select>
+	
+	<select id="findCodeListDetailByProject" parameterType="long" resultType="CodeListDetail" resultMap="codeListDetailResultMap">
+		<![CDATA[
+		SELECT 
+			a.codelist_detail_id,
+			a.codelist_id,
+			COALESCE(a.key, a.value) AS key,
+			a.value,
+			a.value1,
+			a.value2,
+			a.value3,
+			a.value4,
+			a.value5,
+			a.default_flg
+		FROM 
+			codelist_detail a
+		INNER JOIN 
+			codelist b ON a.codelist_id = b.codelist_id
+		WHERE
+			b.project_id = #{projectId}
+		]]>
+	</select>
+
+	<insert id="registerCodeListDetail" parameterType="CodeListDetail">
+	<selectKey keyProperty="clDeatailId" resultType="long" order="BEFORE">
+			SELECT NEXTVAL('codelist_detail_seq'::regclass)
+		</selectKey>
+    <![CDATA[
+        INSERT INTO 
+        	codelist_detail
+        (
+        	codelist_detail_id,
+        	codelist_id,
+        	key,
+        	value,
+        	value1,
+        	value2,
+        	value3,
+        	value4,
+        	value5,
+        	default_flg,
+        	created_by,
+        	created_date
+        )
+    	VALUES (
+    		#{clDeatailId},
+	    	#{codeListId},
+	    	#{name},
+	    	#{value},
+	    	#{value1},
+	    	#{value2},
+	    	#{value3},
+	    	#{value4},
+	    	#{value5},
+	    	#{isDefault},
+	    	#{createdBy},
+	    	#{createdDate}
+    	)
+    ]]>
+	</insert>
+	<!-- update codelistDetail -->
+	
+	<update id="modifyCodeListDetail" parameterType="CodeListDetail">
+    <![CDATA[
+       UPDATE
+        	codelist_detail
+        
+        SET
+        	key=#{name},
+        	value=#{value},
+        	value1=#{value1},
+        	value2=#{value2},
+        	value3=#{value3},
+        	value4=#{value4},
+        	value5=#{value5},
+        	default_flg=#{isDefault},
+        	updated_by=#{updatedBy},
+        	updated_date=#{updatedDate}
+        WHERE
+				codelist_detail_id=#{clDeatailId}
+    ]]>
+	</update>
+	
+	<!-- Find codelist detail by codelistId -->
+    <select id="findCodeListDetailByCodeListId" resultMap="codeListDetailResultMap">
+	<![CDATA[
+       SELECT 
+			codelist_detail_id,
+			codelist_id,
+			key,
+			value,
+			value1,
+			value2,
+			value3,
+			value4,
+			value5,
+			default_flg
+		FROM 
+			codelist_detail 
+		WHERE
+			codelist_id = #{codeListId} ORDER BY codelist_detail_id
+    ]]>
+	</select> 
+	
+
+	<delete id="deleteCodeListDetail" parameterType="long">
+	<![CDATA[
+		DELETE FROM
+			codelist_detail 
+		WHERE codelist_id = #{codeListId}
+	 ]]>
+	</delete>
+	
+	<!-- Delete codeListDetail by codeListId -->
+	<delete id="deleteAllByCodeListDetailArrayAndCodeListId">
+       <![CDATA[
+        DELETE 
+        FROM 
+            codelist_detail
+		WHERE 
+            codelist_id = #{codeListId}
+        ]]>	
+		AND 
+            codelist_detail_id NOT IN 
+		<foreach item="item" index="index" collection="codeListDetails" open="(" separator="," close=")"> 
+		    #{item.clDeatailId}
+		</foreach>	
+	
+	</delete>
+	
+	 <!-- register -->
+	<insert id="registerArray" parameterType="CodeListDetail">
+	
+		 INSERT INTO
+	         codelist_detail
+	        (
+		        codelist_id,
+	        	key,
+	        	value,
+	        	value1,
+	        	value2,
+	        	value3,
+	        	value4,
+	        	value5,
+	        	default_flg,
+	        	created_by,
+	        	created_date       
+	        )	        	
+	        VALUES
+	        <foreach item="item" collection="codeListDetail" separator=",">
+	        (
+	        <![CDATA[
+	        	#{item.codeListId},
+		    	#{item.name},
+		    	#{item.value},
+		    	#{item.value1},
+		    	#{item.value2},
+		    	#{item.value3},
+		    	#{item.value4},
+		    	#{item.value5},
+		    	#{item.isDefault},
+		    	#{item.createdBy},
+		    	#{item.createdDate}
+		    	]]>
+	        )
+			</foreach>
+		
+    </insert>
+</mapper>

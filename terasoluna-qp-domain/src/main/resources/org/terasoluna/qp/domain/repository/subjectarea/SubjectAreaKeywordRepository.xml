@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.subjectarea.SubjectAreaKeywordRepository">
+
+    <resultMap id="resultMap" type="SubjectAreaKeyword">
+        <id property="keywordId" column="keyword_id" />
+        <result property="keyword" column="keyword_value" />
+    </resultMap>
+    
+    <select id="getKeywordList" parameterType="_long" resultMap="resultMap">
+        <![CDATA[
+        SELECT
+             a.keyword_id,
+             a.keyword_value
+        FROM
+             subject_area_keyword a
+        WHERE
+             a.sub_area_design_id = #{areaId}
+         ]]>
+    </select>
+
+    <!-- Delete keywords NOT IN -->
+    <delete id="deleteKeyWordNotIn" parameterType="SubjectAreaKeyword">
+
+        DELETE
+        FROM
+             subject_area_keyword a
+        WHERE
+            <![CDATA[
+             a.sub_area_design_id = #{areaId} 
+             ]]> 
+             AND a.keyword_id NOT IN 
+             <foreach item="item" collection="areaKeywords" open="(" separator="," close=")">
+                 <![CDATA[
+                  #{item.keywordId}
+                  ]]>
+             </foreach>
+    </delete>
+    
+    <!-- Update keywords by PK -->
+    <update id="updateKeywordByAreaId" parameterType="SubjectAreaKeyword">
+        <foreach collection="areaKeywords" item="ak" separator=";">
+            UPDATE
+                subject_area_keyword
+	        SET
+	            <![CDATA[keyword_value=#{ak.keyword}]]>
+	        WHERE
+                <![CDATA[keyword_id=#{ak.keywordId}]]>
+        </foreach>
+    </update>
+    
+    <!-- Insert keyword information -->
+    <insert id="insertKeyword" parameterType="SubjectAreaKeyword">
+        <selectKey keyProperty="keywordId" resultType="_long" order="BEFORE">
+            SELECT NEXTVAL('sub_area_design_seq'::REGCLASS) as keywordId
+        </selectKey>
+        <![CDATA[
+            INSERT INTO
+             subject_area_keyword
+            (
+               keyword_id,
+               sub_area_design_id,
+               keyword_value
+             ) VALUES (
+               #{keywordId},
+               #{areaId},
+               #{areaKeyword.keyword}
+            );
+         ]]>
+    </insert>
+    
+    <!-- Process for delete -->
+    <update id="deleteKeyword" parameterType="_long">
+       <![CDATA[
+        DELETE
+            FROM
+                 subject_area_keyword a
+            WHERE
+                a.sub_area_design_id = #{areaId}
+       ]]>
+    </update>
+</mapper>

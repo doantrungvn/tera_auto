@@ -1,0 +1,20 @@
+.level_0 {
+	width: 100%;
+	float: right;
+}
+.level_1 {
+	width: 90%;
+	float: right;
+}
+
+.level_2 {
+	width: 80%;
+	float: right;
+}
+
+.sperator_1 {
+	margin-top: 10px;
+ 	margin-bottom: 10px;
+ 	border: 0;
+ 	border-top: 1px solid #eee;
+}

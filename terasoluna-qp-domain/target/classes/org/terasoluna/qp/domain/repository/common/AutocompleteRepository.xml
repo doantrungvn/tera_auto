@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.common.AutocompleteRepository">
+	<resultMap id="autocomplete" type="Autocomplete">
+		<result property="optionValue" column="optionValue" />
+		<result property="optionLabel" column="optionLabel" />
+		<result property="output01" column="output01" />
+		<result property="output02" column="output02" />
+		<result property="output03" column="output03" />
+		<result property="output04" column="output04" />
+		<result property="output05" column="output05" />
+	</resultMap>
+	<select id="findSystemMessage" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocomplete">
+		SELECT DISTINCT
+			md.message_code AS optionValue,
+			message_string AS optionLabel,
+			message_level AS output01
+		FROM
+			message_design md LEFT JOIN screen_item si ON si.message_code = md.message_code
+		WHERE
+			((md.message_level = 0 AND md.message_code ilike 'sc.sys.%' )  
+			<if test="arg01 != null and arg01 != ''">
+				OR ( md.message_level = 1 AND md.module_id = cast(#{arg01} as numeric))
+			</if> 
+			<if test="arg03 != null and arg03 != ''">
+				OR si.screen_id = cast(#{arg03} as numeric) 	
+			</if> 
+					
+			)
+			<if test="searchKey != null and searchKey != ''">
+				<![CDATA[
+					AND message_string iLIKE '%' || #{searchKey} || '%'
+				]]>
+			</if>
+			<if test="languageCode != null and languageCode != ''">
+				<![CDATA[ AND language_id = #{languageId} ]]>
+			</if>
+			<if test="arg05 != null and arg05 != ''">
+				AND project_id = cast(#{arg05} as numeric) 
+			</if> 
+		LIMIT 20
+	</select>
+	<select id="findInfoMessage" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocomplete">
+		SELECT
+			message_code AS optionValue,
+			message_string AS optionLabel
+		FROM
+			message_design
+		WHERE
+			message_type = 'inf'
+			<if test="arg01 != null and arg01 != ''">
+				AND (message_level = 0 or module_id = cast(#{arg01} as numeric))
+			</if> 
+			<if test="searchKey != null and searchKey != ''">
+				<![CDATA[
+					AND message_string iLIKE '%' || #{searchKey} || '%'
+				]]>
+			</if>
+			<if test="languageCode != null and languageCode != ''">
+				<![CDATA[ AND language_id = #{languageId} ]]>
+			</if>
+			<if test="arg05 != null and arg05 != ''">
+				AND project_id = cast(#{arg05} as numeric) 
+			</if>
+		LIMIT 20
+	</select>
+	<!-- DungNN - add for module domain datatype mapping -->
+	<select id="findAllAutocompleteForDomainDatatype" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocomplete">
+		SELECT 
+			autocomplete_id AS optionValue,
+			autocomplete_code AS optionLabel,
+			autocomplete_name output01,
+			display_col output02,
+			submit_col output03,
+			(
+				SELECT
+					string_agg( distinct (t.tbl_design_code), ', ')
+				FROM 
+					table_design t INNER JOIN sql_design_table s
+				ON
+					s.sql_design_id = a.sql_design_id AND (	t.tbl_design_id = s.tbl_design_id OR t.tbl_design_id = s.join_tbl_design_id)
+			) output04
+		FROM
+			autocomplete_design a INNER JOIN module m
+		ON
+			m.project_id = to_number(#{arg02}, '9999') AND a.module_id = m.module_id
+		<where>
+			<if test="searchKey != null and searchKey != ''">
+				<![CDATA[ AND autocomplete_code iLIKE '%' || #{searchKey} || '%' ]]>
+			</if>
+		
+			<if test="arg01 != null and arg01 != ''">
+				<![CDATA[ AND autocomplete_id = CAST(#{arg01} AS numeric(16,0))	]]>
+			</if>
+		</where>
+
+		LIMIT 20
+	</select>
+
+	<!-- DungNN - add for module domain management -->
+	<select id="getAllBasetypeAC" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocomplete">
+		SELECT
+			value1 AS optionLabel,
+			value2 AS optionValue,
+			value3 AS output01
+		FROM
+			resources
+		WHERE 
+			category_cd='clBasetype'
+		<if test="searchKey != null and searchKey != ''" >
+			<bind name="keyword" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(searchKey)" />
+			AND <![CDATA[ value1 ILIKE #{keyword} ESCAPE '~']]>
+		</if>
+		
+		ORDER BY 
+			resource_type, value3, value1
+		<if test="arg02 == null or arg02 == ''">
+			 LIMIT 20 
+		</if>
+		<if test="arg02 != null and arg02 != ''">
+			<![CDATA[ limit CAST(#{arg02} AS numeric(16,0)) ]]>
+		</if>
+	</select>
+	<select id="getAllSubjectAreaByProjectIdForAutocomplete" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocomplete">
+		SELECT
+			a.sub_area_design_id as optionValue,
+			a.sub_area_name as optionLabel,
+			a.sub_area_code as output01
+		FROM
+			subject_area_design a
+		<if test="arg01 != null and arg01 != ''">
+			<![CDATA[ WHERE a.project_id =to_number(#{arg01}, '9999') ]]>
+		</if>
+		<if test="arg01 == null or arg01 == ''">
+			FALSE
+		</if>
+		ORDER BY
+			a.item_seq_no ASC
+    </select>
+
+    <select id="getAllSubjectAreaBySubAreaIdForAutocomplete" parameterType="_long" resultMap="autocomplete">
+        
+            SELECT 
+              a.sub_area_design_id as optionValue,
+              a.sub_area_name as optionLabel,
+              a.sub_area_code as output01
+        FROM 
+              subject_area_design a LEFT JOIN project b ON a.project_id = b.project_id
+       	<where>
+       		<if test="arg01 != null and arg01 != ''">
+            	 a.project_id = CAST(#{arg01} AS numeric(16,0))
+			</if>
+			<if test="arg01 == null and arg01 == 0">
+            	 FALSE
+			</if>
+       	</where>  
+    </select>
+    <!-- DungNN -->
+	<select id="getProblemInformationForNavTop" parameterType="_long" resultMap="autocomplete">
+		SELECT
+			A.module_id optionValue,
+			M.module_name as optionLabel,
+			COUNT(A.problem_id) AS output01
+		FROM
+			problem_list AS A LEFT JOIN module AS M on A.module_id = M.module_id
+		<where>
+			<if test="arg01 != null and arg01 != ''">
+				A.project_id = CAST(#{arg01} AS numeric(16,0))
+			</if>
+			<if test="arg01 == null or arg01 == ''">
+				FALSE
+			</if>
+		</where>
+		GROUP BY
+			A.module_id,M.module_name
+		ORDER BY 
+			optionLabel DESC
+		LIMIT 20
+    </select>
+    <!-- KhanhTH -->
+    <select id="getDocumentType" parameterType="_long" resultMap="autocomplete">
+    	SELECT
+			value1 AS optionLabel,
+			value2 AS optionValue,
+			value3 AS output01
+		FROM
+			resources
+		WHERE 
+			category_cd='clDocumentType'
+		<if test="searchKey != null and searchKey != ''" >
+			<bind name="keyword" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(searchKey)" />
+			AND <![CDATA[ value1 ILIKE #{keyword} ESCAPE '~']]>
+		</if>
+		
+		ORDER BY 
+			value3
+		<if test="arg02 == null or arg02 == ''">
+			 LIMIT 20 
+		</if>
+		<if test="arg02 != null and arg02 != ''">
+			<![CDATA[ limit CAST(#{arg02} AS numeric(16,0)) ]]>
+		</if>
+    </select>
+</mapper>

@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.businessdesigncomponent.AdvanceComponentRepository">
+
+    <resultMap id="advanceComponentResultMap" type="advanceComponent">
+        <id property="advanceComponentId" column="advance_component_id" />
+        <result property="label" column="label" />
+        <result property="content" column="content" />
+        <result property="remark" column="remark" />
+        <result property="sequenceLogicId" column="sequence_logic_id" />
+        <result property="methodName" column="method_name" />
+    </resultMap>
+	<resultMap id="advanceInputValueResultMap" type="AdvanceInputValue">
+        <id property="advanceInputValueId" column="advance_input_value_id" />
+        <result property="inputBeanCode" column="input_bean_code" />
+        <result property="inputBeanName" column="input_bean_name" />
+        <result property="dataType" column="data_type" />
+        <result property="arrayFlg" column="array_flg" />
+        <result property="parameterScope" column="parameter_scope" />
+        <result property="parameterId" column="parameter_id" />
+        <result property="parentAdvanceInputValueId" column="parent_advance_input_value_id" />
+        <result property="advanceComponentId" column="advance_component_id" />
+        
+    </resultMap>
+    <resultMap id="advanceOutputValueResultMap" type="AdvanceOutputValue">
+        <id property="advanceOutputValueId" column="advance_output_value_id" />
+        <result property="outputBeanCode" column="output_bean_code" />
+        <result property="outputBeanName" column="output_bean_name" />
+        <result property="dataType" column="data_type" />
+        <result property="arrayFlg" column="array_flg" />
+        <result property="targetScope" column="target_scope" />
+        <result property="targetId" column="target_id" />
+        <result property="parentAdvanceOutputValueId" column="parent_advance_output_value_id" />
+        <result property="advanceComponentId" column="advance_component_id" />
+    </resultMap>
+    
+    <select id="getSequencesAdvanceComponent" resultType="Long">
+    	select SETVAL('advance_component_seq'::regclass, NEXTVAL('advance_component_seq'::regclass) + #{size})
+    </select>
+    <select id="getSequencesAdvanceInputBean" resultType="Long">
+    	select SETVAL('advance_input_value_seq'::regclass, NEXTVAL('advance_input_value_seq'::regclass) + #{size})
+    </select>    
+    <select id="getSequencesAdvanceOutputBean" resultType="Long">
+    	select SETVAL('advance_output_value_seq'::regclass, NEXTVAL('advance_output_value_seq'::regclass) + #{size})
+    </select>
+    
+    <insert id="registerAllAdvanceComponent" >
+    	<foreach item="item" collection="advanceComponentItems">
+    		INSERT INTO advance_component
+    		(
+            	advance_component_id, 
+            	label,
+            	content,
+            	remark, 
+            	sequence_logic_id,
+            	method_name
+            )
+    		VALUES
+    		(
+				#{item.advanceComponentId},
+				#{item.label},
+				#{item.content},
+				#{item.remark},
+            	#{item.sequenceLogicId},
+            	#{item.methodName}
+            );
+	    	<if test="item.parameterInputBeans != null and  item.parameterInputBeans.size() > 0 ">
+	    		<foreach item="itemInput" collection="item.parameterInputBeans" separator=";">
+					INSERT INTO advance_input_value
+					(
+		            	advance_input_value_id, 
+		            	input_bean_code, 
+		            	input_bean_name, 
+		            	data_type, 
+		            	array_flg, 
+		            	parameter_id, 
+		            	parameter_scope, 
+		            	parent_advance_input_value_id, 
+		            	advance_component_id
+		            )
+		    		VALUES
+					(
+						#{itemInput.advanceInputValueId},
+						#{itemInput.inputBeanCode}, 
+						#{itemInput.inputBeanName},
+		            	#{itemInput.dataType},
+		            	#{itemInput.arrayFlg},
+		            	CAST(#{itemInput.parameterId} AS numeric(16,0)),
+		            	#{itemInput.parameterScope},
+		            	#{itemInput.parentAdvanceInputValueId},
+		            	#{itemInput.advanceComponentId}
+		            );
+		            <if test="itemInput.lstParameterIndex != null and  itemInput.lstParameterIndex.size() > 0 ">
+		            	INSERT INTO bd_parameter_index
+		            	(
+		            		table_type, 
+		            		table_id, 
+		            		parameter_id, 
+		            		parameter_index_type, 
+		            		parameter_index_id,
+		            		business_logic_id
+		            	)
+		    			VALUES
+		    			<foreach item="itemIndex" collection="itemInput.lstParameterIndex" separator=",">
+			    			(
+			    				#{itemIndex.tableType}, 
+			    				#{itemInput.advanceInputValueId},
+			    				CAST(#{itemIndex.parameterId} AS numeric(16,0)),
+			    				#{itemIndex.parameterIndexType}, 
+			            		CAST(#{itemIndex.parameterIndexId} AS numeric(16,0)),
+			            		#{itemIndex.businessLogicId}
+			            	)
+		    			</foreach>;
+		    		</if>
+				</foreach>;
+			</if>
+			<if test="item.parameterOutputBeans != null and  item.parameterOutputBeans.size() > 0 ">
+	    		<foreach item="itemOutput" collection="item.parameterOutputBeans" separator=";">
+					INSERT INTO advance_output_value
+					(
+		            	advance_output_value_id, 
+		            	output_bean_code, 
+		            	output_bean_name, 
+		            	data_type, 
+		            	array_flg, 
+		            	target_id, 
+		            	target_scope,
+		            	parent_advance_output_value_id,
+		            	advance_component_id)
+		    		VALUES 
+					(
+						#{itemOutput.advanceOutputValueId},
+						#{itemOutput.outputBeanCode}, 
+						#{itemOutput.outputBeanName},
+		            	#{itemOutput.dataType},
+		            	#{itemOutput.arrayFlg},
+		            	CAST(#{itemOutput.targetId} AS numeric(16,0)),
+		            	#{itemOutput.targetScope},
+		            	#{itemOutput.parentAdvanceOutputValueId},
+		            	#{itemOutput.advanceComponentId}
+		            );
+		            <if test="itemOutput.lstTargetIndex != null and  itemOutput.lstTargetIndex.size() > 0 ">
+		            	INSERT INTO bd_parameter_index
+		            	(
+		            		table_type, 
+		            		table_id, 
+		            		parameter_id, 
+		            		parameter_index_type, 
+		            		parameter_index_id,
+		            		business_logic_id
+		            	)
+		    			VALUES
+		    			<foreach item="itemIndex" collection="itemOutput.lstTargetIndex" separator=",">
+			    			(
+			    				#{itemIndex.tableType}, 
+			    				#{itemOutput.advanceOutputValueId},
+			    				CAST(#{itemIndex.parameterId} AS numeric(16,0)),
+			    				#{itemIndex.parameterIndexType}, 
+			            		CAST(#{itemIndex.parameterIndexId} AS numeric(16,0)),
+			            		#{itemIndex.businessLogicId}
+			            	)
+		    			</foreach>;
+		    		</if>
+				</foreach>;
+			</if>
+	    </foreach>
+    </insert>
+    <select id="findAdvanceComponentByBusinessLogic" resultMap="advanceComponentResultMap">
+		SELECT 
+			a.advance_component_id, 
+			a.label,
+			a.content,
+			a.remark, 
+			a.sequence_logic_id,
+			a.method_name
+  		FROM advance_component a
+		WHERE EXISTS
+    		( 
+    		SELECT b.sequence_logic_id
+     		FROM sequence_logic b
+     		WHERE b.business_logic_id = #{businessLogicId}
+       			AND component_type = 6
+       			AND b.sequence_logic_id = a.sequence_logic_id
+       		)
+    </select>
+    
+    <select id="findAdvanceInputValueByBusinessLogic" resultMap="advanceInputValueResultMap">
+		SELECT 
+			a.advance_input_value_id, 
+			a.input_bean_code, 
+			a.input_bean_name, 
+			a.data_type, 
+       		a.array_flg, 
+       		a.parameter_id, 
+       		a.parameter_scope, 
+       		a.parent_advance_input_value_id, 
+       		a.advance_component_id
+  		FROM advance_input_value a
+		LEFT JOIN advance_component b
+			on (b.advance_component_id = a.advance_component_id )
+		WHERE EXISTS
+		    (
+				SELECT c.sequence_logic_id
+				FROM sequence_logic c
+				WHERE c.business_logic_id = #{businessLogicId}
+					AND component_type = 6
+					AND c.sequence_logic_id = b.sequence_logic_id
+			)
+		ORDER BY a.advance_input_value_id
+    </select>
+    
+    <select id="findAdvanceOutputValueByBusinessLogic" resultMap="advanceOutputValueResultMap">
+		SELECT 
+			a.advance_output_value_id, 
+			a.output_bean_code, 
+			a.output_bean_name, 
+       		a.data_type, 
+       		a.array_flg, 
+       		a.target_id, 
+       		a.target_scope, 
+       		a.advance_component_id, 
+       		a.parent_advance_output_value_id
+  		FROM advance_output_value a
+		lEFT JOIN advance_component b
+			on (b.advance_component_id = a.advance_component_id )
+		WHERE EXISTS
+		    (
+				SELECT c.sequence_logic_id
+				FROM sequence_logic c
+				WHERE c.business_logic_id = #{businessLogicId}
+					AND component_type = 6
+					AND c.sequence_logic_id = b.sequence_logic_id
+			)
+		ORDER BY a.advance_output_value_id
+    </select>
+    
+    <select id="findAdvanceComponentByModule" resultMap="advanceComponentResultMap">
+		SELECT 
+			a.advance_component_id, 
+			a.label, 
+			a.content, 
+			a.remark, 
+			a.sequence_logic_id,
+			a.method_name
+  		FROM advance_component a
+		WHERE 
+			EXISTS
+	    		( 
+		    		SELECT b.sequence_logic_id
+		     		FROM sequence_logic b
+		     		INNER JOIN business_logic d ON b.business_logic_id = d.business_logic_id
+		     		WHERE b.component_type = 6
+					AND b.sequence_logic_id = a.sequence_logic_id
+		 			AND d.module_id = #{moduleId}
+	 			)
+    </select>
+    
+    <select id="findAdvanceInputValueByModule" resultMap="advanceInputValueResultMap">
+		SELECT 
+			advance_input_value_id, 
+			input_bean_code, 
+			input_bean_name, 
+			data_type,
+			array_flg, 
+			parameter_id, 
+			parameter_scope, 
+			parent_advance_input_value_id,
+			b.advance_component_id
+  		FROM advance_input_value a
+		lEFT JOIN advance_component b
+		  on (b.advance_component_id = a.advance_component_id )
+		WHERE EXISTS
+		    (SELECT c.sequence_logic_id
+		     FROM sequence_logic c
+		     INNER JOIN business_logic d ON c.business_logic_id = d.business_logic_id
+		     WHERE d.module_id = #{moduleId}
+		       AND component_type = 6
+		       AND c.sequence_logic_id = b.sequence_logic_id)
+		ORDER BY a.advance_component_id
+    </select>
+    
+    <select id="findAdvanceOutValueByModule" resultMap="advanceOutputValueResultMap">
+		SELECT advance_output_value_id, 
+				output_bean_code, 
+				output_bean_name,
+				data_type, 
+				array_flg, 
+				target_id, 
+				target_scope, 
+				parent_advance_output_value_id,
+				b.advance_component_id
+  		FROM advance_output_value a
+		lEFT JOIN advance_component b
+		  on (b.advance_component_id = a.advance_component_id )
+		WHERE EXISTS
+		    (SELECT c.sequence_logic_id
+		     FROM sequence_logic c
+		     INNER JOIN business_logic d ON c.business_logic_id = d.business_logic_id
+		     WHERE d.module_id = #{moduleId}
+		       AND component_type = 6
+		       AND c.sequence_logic_id = b.sequence_logic_id)
+		ORDER BY a.advance_component_id
+    </select>
+    
+    <!-- generate source code of commmon blogic -->
+    <select id="findAdvanceComponentByModuleCommon" resultMap="advanceComponentResultMap">
+        SELECT 
+            a.advance_component_id, 
+            a.label, 
+            a.content, 
+            a.remark, 
+            a.sequence_logic_id,
+            a.method_name
+        FROM advance_component a
+        WHERE 
+            EXISTS
+                ( 
+                    SELECT b.sequence_logic_id
+                    FROM sequence_logic b
+                    INNER JOIN business_logic d ON b.business_logic_id = d.business_logic_id
+                    WHERE b.component_type = 6
+                    AND b.sequence_logic_id = a.sequence_logic_id
+                    AND d.project_id = #{projectId} AND d.module_id is null and d.blogic_type = 1   
+                )
+    </select>
+    
+    <select id="findAdvanceInputValueByModuleCommon" resultMap="advanceInputValueResultMap">
+        SELECT 
+            advance_input_value_id, 
+            input_bean_code, 
+            input_bean_name, 
+            data_type,
+            array_flg, 
+            parameter_id, 
+            parameter_scope, 
+            parent_advance_input_value_id,
+            b.advance_component_id
+        FROM advance_input_value a
+        lEFT JOIN advance_component b
+          on (b.advance_component_id = a.advance_component_id )
+        WHERE EXISTS
+            (SELECT c.sequence_logic_id
+             FROM sequence_logic c
+             INNER JOIN business_logic d ON c.business_logic_id = d.business_logic_id
+             WHERE d.project_id = #{projectId} AND d.module_id is null and d.blogic_type = 1   
+               AND component_type = 6
+               AND c.sequence_logic_id = b.sequence_logic_id)
+        ORDER BY a.advance_component_id
+    </select>
+    
+    <select id="findAdvanceOutValueByModuleCommon" resultMap="advanceOutputValueResultMap">
+        SELECT advance_output_value_id, 
+                output_bean_code, 
+                output_bean_name,
+                data_type, 
+                array_flg, 
+                target_id, 
+                target_scope, 
+                parent_advance_output_value_id,
+                b.advance_component_id
+        FROM advance_output_value a
+        lEFT JOIN advance_component b
+          on (b.advance_component_id = a.advance_component_id )
+        WHERE EXISTS
+            (SELECT c.sequence_logic_id
+             FROM sequence_logic c
+             INNER JOIN business_logic d ON c.business_logic_id = d.business_logic_id
+             WHERE d.project_id = #{projectId} AND d.module_id is null and d.blogic_type = 1   
+               AND component_type = 6
+               AND c.sequence_logic_id = b.sequence_logic_id)
+        ORDER BY a.advance_component_id
+    </select>
+</mapper>

@@ -1,0 +1,3112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.businessdesigncomponent.FormulaDefinitionRepository">
+
+    <resultMap id="formulaDefinitionResultMap" type="FormulaDefinition">
+        <id property="formulaDefinitionId" column="formula_definition_id" />
+        <result property="formulaDefinitionContent" column="formula_definition_content" />
+        <result property="projectId" column="project_id" />
+        <result property="screenFormId" column="screen_form_id" />
+        <result property="formulaName" column="formula_name" />
+        <result property="formulaType" column="formula_type" />
+    </resultMap>
+	<resultMap id="formulaDetailResultMap" type="FormulaDetail">
+        <id property="formulaDetailId" column="formula_detail_id" />
+        <result property="itemSequenceNo" column="item_sequence_no" />
+        <result property="type" column="type" />
+        <result property="value" column="value" />
+        <result property="parameterId" column="parameter_id" />
+        <result property="formulaDefinitionId" column="formula_definition_id" />
+        <result property="functionMethodId" column="function_method_id" />
+    </resultMap>
+    <resultMap id="formulaMethodInputResultMap" type="FormulaMethodInput">
+        <id property="formulaMethodInputId" column="formula_method_input_id" />
+        <result property="methodInputId" column="method_input_id" />
+        <result property="parameterScope" column="parameter_scope" />
+        <result property="parameterType" column="parameter_type" />
+        <result property="parameterId" column="parameter_id" />
+        <result property="parameterValue" column="parameter_value" />
+        <result property="formulaDetailId" column="formula_detail_id" />
+        <result property="parameterScope" column="parameter_scope" />
+        <result property="dataType" column="data_type" />
+        <result property="arrayFlg" column="array_flg" />
+    </resultMap>
+    <resultMap id="formulaMethodOutputResultMap" type="FormulaMethodOutput">
+        <id property="formulaMethodOutputId" column="formula_method_output_id" />
+        <result property="formulaDetailId" column="formula_detail_id" />
+        <result property="methodOutputId" column="method_output_id" />
+        <result property="functionMethodOutput.methodOutputCode" column="method_output_code" />
+        <result property="dataType" column="data_type" />
+        <result property="arrayFlg" column="array_flg" />
+        <result property="methodOutputCode" column="method_output_code" />
+    </resultMap>
+    <!-- formula builder -->
+     <select id="getSequencesFormulaDefinition" resultType="Long">
+    	select SETVAL('formula_definition_seq'::regclass, NEXTVAL('formula_definition_seq'::regclass) + #{size})
+    </select>
+    
+    <select id="getSequencesFormulaDetail" resultType="Long">
+        select SETVAL('formula_detail_seq'::regclass, NEXTVAL('formula_detail_seq'::regclass) + #{size})
+    </select>
+    
+    <select id="getSequencesFormulaMethodInput" resultType="Long">
+        select SETVAL('formula_method_input_seq'::regclass, NEXTVAL('formula_method_input_seq'::regclass) + #{size})
+    </select>
+    
+    <select id="getSequencesFormulaMethodOutput" resultType="Long">
+        select SETVAL('formula_method_output_seq'::regclass, NEXTVAL('formula_method_output_seq'::regclass) + #{size})
+    </select>
+    
+    <select id="findFormulaDefinitionByBusinessLogic" resultMap="formulaDefinitionResultMap">
+        SELECT t1.formula_definition_id,
+		       t1.formula_definition_content,
+		       t1.project_id
+		FROM formula_definition t1
+		WHERE EXISTS
+		    ( SELECT a.formula_definition_id
+		      FROM loop_component a
+		      WHERE EXISTS
+		         (
+		          SELECT b.sequence_logic_id
+		          FROM sequence_logic b
+		          WHERE b.business_logic_id = #{businessLogicId}
+		                  AND component_type = 10
+		                  AND b.sequence_logic_id = a.sequence_logic_id )
+		                  AND a.formula_definition_id = t1.formula_definition_id 
+		          )
+    </select>
+    
+    <select id="findFormulaDetailsByBusinessLogic" resultMap="formulaDetailResultMap">
+       SELECT 
+            t1.formula_detail_id, 
+            t1.item_sequence_no, 
+            t1.type, 
+            t1.value, 
+            t1.parameter_id, 
+            t1.formula_definition_id,
+            t1.function_method_id
+        FROM formula_detail t1
+        WHERE 
+            (
+            EXISTS (
+                SELECT a.message_formula_id
+                FROM log_component a
+                INNER JOIN sequence_logic c ON (c.sequence_logic_id = c.sequence_logic_id
+                                         AND c.component_type = 21)
+                WHERE c.business_logic_id = #{businessLogicId}
+                AND a.message_formula_id = t1.formula_definition_id
+             )
+             OR
+             EXISTS (
+                SELECT a.subject_formula_id
+                FROM email_component a
+                INNER JOIN sequence_logic c ON (c.sequence_logic_id = c.sequence_logic_id
+                                         AND c.component_type = 20)
+                WHERE c.business_logic_id = #{businessLogicId}
+                AND a.subject_formula_id = t1.formula_definition_id
+             )
+             OR
+             EXISTS (
+                SELECT a.recipient_formula_id
+                FROM email_recipient a
+                INNER JOIN email_component b ON (b.email_component_id = a.email_component_id)
+                INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+                                         AND c.component_type = 20)
+                WHERE c.business_logic_id = #{businessLogicId}
+                AND a.recipient_formula_id = t1.formula_definition_id
+             )
+             OR
+             EXISTS (
+                SELECT a.file_name_formula_id
+                FROM download_file_component a
+                INNER JOIN sequence_logic c ON (c.sequence_logic_id = c.sequence_logic_id
+                                         AND c.component_type = 23)
+                WHERE c.business_logic_id = #{businessLogicId}
+                AND a.file_name_formula_id = t1.formula_definition_id
+             )
+             OR
+             EXISTS ( 
+                SELECT a.formula_definition_id
+                FROM loop_component a
+                WHERE EXISTS
+	                (
+	                 SELECT b.sequence_logic_id
+	                 FROM sequence_logic b
+	                 WHERE b.business_logic_id = #{businessLogicId}
+	                         AND component_type = 10
+	                         AND b.sequence_logic_id = a.sequence_logic_id )
+	                         AND a.formula_definition_id = t1.formula_definition_id 
+	                 )
+	         OR
+             EXISTS ( 
+                SELECT a.formula_definition_id
+                FROM if_condition_detail a
+                WHERE EXISTS
+                    (SELECT b.if_component_id
+                    FROM if_component b
+                    INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+                                                 AND c.component_type = 9)
+                    WHERE c.business_logic_id =  #{businessLogicId}
+                    AND b.if_component_id = a.if_component_id)
+                    AND a.formula_definition_id = t1.formula_definition_id
+                    )
+             OR
+             EXISTS (
+                SELECT a.formula_definition_id
+                FROM business_check_detail a
+                WHERE EXISTS
+                    (SELECT b.business_check_component_id
+                    FROM  business_check_component b
+                    INNER JOIN sequence_logic c
+                    on (c.sequence_logic_id = b.sequence_logic_id)
+                    WHERE c.business_logic_id = #{businessLogicId}
+                    AND c.component_type = 4
+                    AND b.business_check_component_id = a.business_check_component_id)
+                    AND a.formula_definition_id = t1.formula_definition_id
+             )
+             OR
+             EXISTS (
+                SELECT a.formula_definition_id
+                FROM assign_detail a
+                WHERE EXISTS
+                    (
+                        SELECT b.assign_component_id
+                        FROM assign_component b
+                        INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+                                                 AND c.component_type = 8)
+                        WHERE c.business_logic_id = #{businessLogicId}
+                        AND b.assign_component_id = a.assign_component_id
+                     )
+                    AND a.formula_definition_id = t1.formula_definition_id
+             )
+             OR
+             EXISTS (
+                SELECT 
+                	a.source_path_formula_id,
+                	a.destination_path_formula_id,
+                	a.new_filename_formula_id
+                FROM fileoperation_component a
+               INNER JOIN sequence_logic c ON (c.sequence_logic_id = a.sequence_logic_id AND c.component_type = 15)
+               WHERE c.business_logic_id = #{businessLogicId}
+                    AND 
+                    (a.source_path_formula_id = t1.formula_definition_id or a.destination_path_formula_id = t1.formula_definition_id or a.new_filename_formula_id = t1.formula_definition_id)
+             )
+             OR
+             EXISTS (
+                SELECT a.source_path_formula_id
+                FROM merge_file_detail a
+                INNER JOIN fileoperation_component b ON (b.fileoperation_component_id = a.fileoperation_component_id)
+                INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+                                         AND c.component_type = 15)
+                WHERE c.business_logic_id = #{businessLogicId}
+                AND a.source_path_formula_id = t1.formula_definition_id
+             )
+             OR
+             EXISTS (
+                SELECT a.source_path_formula_id
+                FROM import_file_component a
+                INNER JOIN sequence_logic c ON (c.sequence_logic_id = c.sequence_logic_id
+                                         AND c.component_type = 16)
+                WHERE c.business_logic_id = #{businessLogicId}
+                AND a.source_path_formula_id = t1.formula_definition_id
+             )
+             OR
+             EXISTS (
+                SELECT a.destination_path_formula_id
+                FROM export_file_component a
+                INNER JOIN sequence_logic c ON (c.sequence_logic_id = c.sequence_logic_id
+                                         AND c.component_type = 17)
+                WHERE c.business_logic_id = #{businessLogicId}
+                AND a.destination_path_formula_id = t1.formula_definition_id
+             )
+            )
+         ORDER BY t1.item_sequence_no
+    </select>
+    
+    <select id="findFormulaMethodInputsByBusinessLogic" resultMap="formulaMethodInputResultMap">
+       SELECT 
+            t1.formula_method_input_id, 
+            t1.method_input_id, 
+            t1.parameter_scope, 
+            t1.parameter_type, 
+            t1.parameter_id, 
+            t1.parameter_value,
+            t1.data_type,
+            t1.array_flg,
+            t1.formula_detail_id,
+            t2.formula_definition_id
+        FROM formula_method_input t1
+        LEFT JOIN formula_detail t2
+            on (t2.formula_detail_id= t1.formula_detail_id)
+        WHERE 
+            (
+            EXISTS ( 
+                SELECT a.subject_formula_id
+                FROM email_component a
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b
+                     WHERE b.business_logic_id = #{businessLogicId}
+                             AND component_type = 20
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND a.subject_formula_id = t2.formula_definition_id 
+                     )
+             OR
+             EXISTS ( 
+                SELECT a.recipient_formula_id
+                FROM email_recipient a
+                WHERE EXISTS
+                    (SELECT b.email_component_id
+                    FROM email_component b
+                    INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+                                                 AND c.component_type = 20)
+                    WHERE c.business_logic_id =  #{businessLogicId}
+                    AND b.email_component_id = a.email_component_id)
+                    AND a.recipient_formula_id = t2.formula_definition_id
+                    )
+             OR
+            EXISTS ( 
+                SELECT a.message_formula_id
+                FROM log_component a
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b
+                     WHERE b.business_logic_id = #{businessLogicId}
+                             AND component_type = 21
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND a.message_formula_id = t2.formula_definition_id 
+                     )
+             OR
+            EXISTS ( 
+                SELECT a.file_name_formula_id
+                FROM download_file_component a
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b
+                     WHERE b.business_logic_id = #{businessLogicId}
+                             AND component_type = 23
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND a.file_name_formula_id = t2.formula_definition_id 
+                     )
+             OR
+            EXISTS ( 
+                SELECT a.formula_definition_id
+                FROM loop_component a
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b
+                     WHERE b.business_logic_id = #{businessLogicId}
+                             AND component_type = 10
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND a.formula_definition_id = t2.formula_definition_id 
+                     )
+             OR
+             EXISTS ( 
+                SELECT a.formula_definition_id
+                FROM if_condition_detail a
+                WHERE EXISTS
+                    (SELECT b.if_component_id
+                    FROM if_component b
+                    INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+                                                 AND c.component_type = 9)
+                    WHERE c.business_logic_id =  #{businessLogicId}
+                    AND b.if_component_id = a.if_component_id)
+                    AND a.formula_definition_id = t2.formula_definition_id
+                    )
+             OR
+             EXISTS (
+                SELECT a.formula_definition_id
+                FROM business_check_detail a
+                WHERE EXISTS
+                    (SELECT b.business_check_component_id
+                    FROM  business_check_component b
+                    INNER JOIN sequence_logic c
+                    on (c.sequence_logic_id = b.sequence_logic_id)
+                    WHERE c.business_logic_id = #{businessLogicId}
+                    AND c.component_type = 4
+                    AND b.business_check_component_id = a.business_check_component_id)
+                    AND a.formula_definition_id = t2.formula_definition_id
+             )
+             OR
+             EXISTS (
+                SELECT a.formula_definition_id
+                FROM assign_detail a
+                WHERE EXISTS
+                    (
+                        SELECT b.assign_component_id
+                        FROM assign_component b
+                        INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+                                                 AND c.component_type = 8)
+                        WHERE c.business_logic_id = #{businessLogicId}
+                        AND b.assign_component_id = a.assign_component_id
+                     )
+                    AND a.formula_definition_id = t2.formula_definition_id
+             )
+             OR
+             EXISTS (
+                SELECT 
+                	a.source_path_formula_id,
+                	a.destination_path_formula_id,
+                	a.new_filename_formula_id
+                FROM fileoperation_component a
+               INNER JOIN sequence_logic c ON (c.sequence_logic_id = a.sequence_logic_id AND c.component_type = 15)
+               WHERE c.business_logic_id = #{businessLogicId}
+                    AND 
+                    (a.source_path_formula_id = t2.formula_definition_id or a.destination_path_formula_id = t2.formula_definition_id or a.new_filename_formula_id = t2.formula_definition_id)
+             )
+             OR
+             EXISTS (
+                SELECT a.source_path_formula_id
+                FROM merge_file_detail a
+                INNER JOIN fileoperation_component b ON (b.fileoperation_component_id = a.fileoperation_component_id)
+                INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+                                         AND c.component_type = 15)
+                WHERE c.business_logic_id = #{businessLogicId}
+                AND a.source_path_formula_id = t2.formula_definition_id
+             )
+             OR
+             EXISTS (
+                SELECT a.source_path_formula_id
+                FROM import_file_component a
+                INNER JOIN sequence_logic c ON (c.sequence_logic_id = c.sequence_logic_id
+                                         AND c.component_type = 16)
+                WHERE c.business_logic_id = #{businessLogicId}
+                AND a.source_path_formula_id = t2.formula_definition_id
+             )
+             OR
+             EXISTS (
+                SELECT a.destination_path_formula_id
+                FROM export_file_component a
+                INNER JOIN sequence_logic c ON (c.sequence_logic_id = c.sequence_logic_id
+                                         AND c.component_type = 17)
+                WHERE c.business_logic_id = #{businessLogicId}
+                AND a.destination_path_formula_id = t2.formula_definition_id
+             )
+            )
+        ORDER BY t1.formula_method_input_id
+    </select>
+    
+    <select id="findFormulaMethodOutputsByBusinessLogic" resultMap="formulaMethodOutputResultMap">
+        SELECT 
+            t1.formula_method_output_id, 
+            t1.formula_detail_id, 
+            t1.method_output_id,
+            t1.data_type,
+            t1.array_flg,
+            t1.method_output_code,
+            t2.formula_definition_id
+        FROM formula_method_output t1
+        LEFT JOIN formula_detail t2
+            on (t2.formula_detail_id= t1.formula_detail_id)
+        WHERE 
+            (
+            EXISTS ( 
+                SELECT a.subject_formula_id
+                FROM email_component a
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b
+                     WHERE b.business_logic_id = #{businessLogicId}
+                             AND component_type = 20
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND a.subject_formula_id = t2.formula_definition_id 
+                     )
+             OR
+             EXISTS ( 
+                SELECT a.recipient_formula_id
+                FROM email_recipient a
+                WHERE EXISTS
+                    (SELECT b.email_component_id
+                    FROM email_component b
+                    INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+                                                 AND c.component_type = 20)
+                    WHERE c.business_logic_id =  #{businessLogicId}
+                    AND b.email_component_id = a.email_component_id)
+                    AND a.recipient_formula_id = t2.formula_definition_id
+                    )
+             OR
+            EXISTS ( 
+                SELECT a.message_formula_id
+                FROM log_component a
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b
+                     WHERE b.business_logic_id = #{businessLogicId}
+                             AND component_type = 21
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND a.message_formula_id = t2.formula_definition_id 
+                     )
+             OR
+            EXISTS ( 
+                SELECT a.file_name_formula_id
+                FROM download_file_component a
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b
+                     WHERE b.business_logic_id = #{businessLogicId}
+                             AND component_type = 23
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND a.file_name_formula_id = t2.formula_definition_id 
+                     )
+            OR
+            EXISTS ( 
+                SELECT a.formula_definition_id
+                FROM loop_component a
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b
+                     WHERE b.business_logic_id = #{businessLogicId}
+                             AND component_type = 10
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND a.formula_definition_id = t2.formula_definition_id 
+                     )
+             OR
+             EXISTS ( 
+                SELECT a.formula_definition_id
+                FROM if_condition_detail a
+                WHERE EXISTS
+                    (SELECT b.if_component_id
+                    FROM if_component b
+                    INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+                                                 AND c.component_type = 9)
+                    WHERE c.business_logic_id =  #{businessLogicId}
+                    AND b.if_component_id = a.if_component_id)
+                    AND a.formula_definition_id = t2.formula_definition_id
+                    )
+             OR
+             EXISTS (
+                SELECT a.formula_definition_id
+                FROM business_check_detail a
+                WHERE EXISTS
+                    (SELECT b.business_check_component_id
+                    FROM  business_check_component b
+                    INNER JOIN sequence_logic c
+                    on (c.sequence_logic_id = b.sequence_logic_id)
+                    WHERE c.business_logic_id = #{businessLogicId}
+                    AND c.component_type = 4
+                    AND b.business_check_component_id = a.business_check_component_id)
+                    AND a.formula_definition_id = t2.formula_definition_id
+             )
+             OR
+             EXISTS (
+                SELECT a.formula_definition_id
+                FROM assign_detail a
+                WHERE EXISTS
+                    (
+                        SELECT b.assign_component_id
+                        FROM assign_component b
+                        INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+                                                 AND c.component_type = 8)
+                        WHERE c.business_logic_id = #{businessLogicId}
+                        AND b.assign_component_id = a.assign_component_id
+                     )
+                    AND a.formula_definition_id = t2.formula_definition_id
+             )
+             OR
+             EXISTS (
+                SELECT 
+                	a.source_path_formula_id,
+                	a.destination_path_formula_id,
+                	a.new_filename_formula_id
+                FROM fileoperation_component a
+               INNER JOIN sequence_logic c ON (c.sequence_logic_id = a.sequence_logic_id AND c.component_type = 15)
+               WHERE c.business_logic_id = #{businessLogicId}
+                    AND 
+                    (a.source_path_formula_id = t2.formula_definition_id or a.destination_path_formula_id = t2.formula_definition_id or a.new_filename_formula_id = t2.formula_definition_id)
+             )
+             OR
+             EXISTS (
+                SELECT a.source_path_formula_id
+                FROM merge_file_detail a
+                INNER JOIN fileoperation_component b ON (b.fileoperation_component_id = a.fileoperation_component_id)
+                INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+                                         AND c.component_type = 15)
+                WHERE c.business_logic_id = #{businessLogicId}
+                AND a.source_path_formula_id = t2.formula_definition_id
+             )
+             OR
+             EXISTS (
+                SELECT a.source_path_formula_id
+                FROM import_file_component a
+                INNER JOIN sequence_logic c ON (c.sequence_logic_id = c.sequence_logic_id
+                                         AND c.component_type = 16)
+                WHERE c.business_logic_id = #{businessLogicId}
+                AND a.source_path_formula_id = t2.formula_definition_id
+             )
+             OR
+             EXISTS (
+                SELECT a.destination_path_formula_id
+                FROM export_file_component a
+                INNER JOIN sequence_logic c ON (c.sequence_logic_id = c.sequence_logic_id
+                                         AND c.component_type = 17)
+                WHERE c.business_logic_id = #{businessLogicId}
+                AND a.destination_path_formula_id = t2.formula_definition_id
+             )
+            )
+        ORDER BY t1.formula_method_output_id
+    </select>
+    
+    <insert id="registerFormulaDefinition" >
+    	<if test="formulaDefinitionItems != null and  formulaDefinitionItems.size() > 0 ">
+			INSERT INTO formula_definition
+			(
+                formula_definition_id, 
+                formula_definition_content, 
+                project_id,
+                formula_type,
+                screen_form_id,
+                formula_name
+            )
+    		VALUES 
+    		<foreach item="item" collection="formulaDefinitionItems" separator=",">
+			(
+				#{item.formulaDefinitionId},
+				#{item.formulaDefinitionContent},
+				#{item.projectId},
+				#{item.formulaType},
+				#{item.screenFormId},
+				#{item.formulaName}
+            )
+			</foreach>;
+		</if>
+    </insert>
+    <insert id="registerFormulaDetails" >
+        <foreach item="item" collection="formulaDetailItems" separator=";">
+            INSERT INTO formula_detail
+            (
+                formula_detail_id,
+                item_sequence_no, 
+                type, 
+                value, 
+                parameter_id, 
+                formula_definition_id,
+                function_method_id
+            )
+            VALUES 
+            (
+                #{item.formulaDetailId},
+                #{item.itemSequenceNo},
+                #{item.type},
+                #{item.value},
+                CAST(#{item.parameterId} AS numeric(16,0)),
+                #{item.formulaDefinitionId},
+                #{item.functionMethodId}
+            );
+            <if test="item.formulaMethodInputs != null and  item.formulaMethodInputs.size() > 0 ">
+	            
+	            <foreach item="input" collection="item.formulaMethodInputs" >
+                    INSERT INTO formula_method_input
+                    (
+                        formula_method_input_id,
+                        method_input_id, 
+                        parameter_scope, 
+                        parameter_type, 
+                        parameter_id, 
+                        parameter_value, 
+                        formula_detail_id,
+                        data_type,
+                        array_flg
+                    )
+                    VALUES 
+    	            (
+                        #{input.formulaMethodInputId},
+    	                #{input.methodInputId},
+    	                #{input.parameterScope},
+                        CAST(#{input.parameterType} AS numeric(16,0)),
+    	                CAST(#{input.parameterId} AS numeric(16,0)),
+    	                #{input.parameterValue},
+    	                #{item.formulaDetailId},
+    	                #{input.dataType},
+    	                #{input.arrayFlg}
+    	            );
+                    <if test="input.lstParameterIndex != null and input.lstParameterIndex.size() > 0 ">
+                        INSERT INTO bd_parameter_index
+                        (
+                            table_type, 
+                            table_id, 
+                            parameter_id, 
+                            parameter_index_type, 
+                            parameter_index_id,
+                            business_logic_id
+                        )
+                        VALUES
+                        <foreach item="itemIndex" collection="input.lstParameterIndex" separator=",">
+                            (
+                                #{itemIndex.tableType}, 
+                                #{input.formulaMethodInputId},
+                                CAST(#{itemIndex.parameterId} AS numeric(16,0)),
+                                #{itemIndex.parameterIndexType}, 
+                                CAST(#{itemIndex.parameterIndexId} AS numeric(16,0)),
+                                #{itemIndex.businessLogicId}
+                            )
+                        </foreach>;
+                    </if>
+                </foreach>
+	        </if>
+	        <if test="item.formulaMethodOutputs != null and  item.formulaMethodOutputs.size() > 0 ">
+                INSERT INTO formula_method_output
+                (
+                    formula_detail_id, 
+                    method_output_id,
+                    data_type,
+                    array_flg,
+                    method_output_code
+                )
+                VALUES 
+                <foreach item="input" collection="item.formulaMethodOutputs" separator=",">
+                (
+                    #{item.formulaDetailId},
+                    #{input.methodOutputId},
+                    #{input.dataType},
+                    #{input.arrayFlg},
+                    #{input.methodOutputCode}
+                )
+                </foreach>;
+            </if>
+            <if test="item.lstParameterIndex != null and  item.lstParameterIndex.size() > 0 ">
+            	INSERT INTO bd_parameter_index
+            	(
+            		table_type, 
+            		table_id, 
+            		parameter_id, 
+            		parameter_index_type, 
+            		parameter_index_id,
+            		business_logic_id
+            	)
+    			VALUES
+    			<foreach item="itemIndex" collection="item.lstParameterIndex" separator=",">
+	    			(
+	    				#{itemIndex.tableType}, 
+	    				#{itemIndex.tableId},
+	    				CAST(#{itemIndex.parameterId} AS numeric(16,0)),
+	    				#{itemIndex.parameterIndexType}, 
+	            		CAST(#{itemIndex.parameterIndexId} AS numeric(16,0)),
+	            		#{itemIndex.businessLogicId}
+	            	)
+    			</foreach>;
+    		</if>
+        </foreach>
+    </insert>
+    
+    <insert id="registerFormulaDetailsForCheckbox" >
+        <foreach item="item" collection="formulaDetailItems" separator=";">
+            INSERT INTO formula_detail
+            (
+                formula_detail_id,
+                item_sequence_no, 
+                type, 
+                value, 
+                parameter_id, 
+                formula_definition_id,
+                function_method_id
+            )
+            VALUES 
+            (
+                #{item.formulaDetailId},
+                #{item.itemSequenceNo},
+                #{item.type},
+                #{item.value},
+                CAST(#{item.parameterId} AS numeric(16,0)),
+                #{item.formulaDefinitionId},
+                #{item.functionMethodId}
+            );
+            <if test="item.formulaMethodInputs != null and  item.formulaMethodInputs.size() > 0 ">
+	            
+	            <foreach item="input" collection="item.formulaMethodInputs" >
+                    INSERT INTO formula_method_input
+                    (
+                        formula_method_input_id,
+                        method_input_id, 
+                        parameter_scope, 
+                        parameter_type, 
+                        parameter_id, 
+                        parameter_value, 
+                        formula_detail_id
+                    )
+                    VALUES 
+    	            (
+                        #{input.formulaMethodInputId},
+    	                #{input.methodInputId},
+    	                #{input.parameterScope},
+                        CAST(#{input.parameterType} AS numeric(16,0)),
+    	                CAST(#{input.parameterId} AS numeric(16,0)),
+    	                #{input.parameterValue},
+    	                #{item.formulaDetailId}
+    	            );
+                    <if test="input.lstParameterIndex != null and input.lstParameterIndex.size() > 0 ">
+                        INSERT INTO bd_parameter_index
+                        (
+							bd_parameter_index_id,
+                            table_type, 
+                            table_id, 
+                            parameter_id, 
+                            parameter_index_type, 
+                            parameter_index_id,
+                            business_logic_id
+                        )
+                        VALUES
+                        <foreach item="itemIndex" collection="input.lstParameterIndex" separator=",">
+                            (
+								#{itemIndex.bdParameterIndexId}, 
+                                #{itemIndex.tableType}, 
+                                #{input.formulaMethodInputId},
+                                CAST(#{itemIndex.parameterId} AS numeric(16,0)),
+                                #{itemIndex.parameterIndexType}, 
+                                CAST(#{itemIndex.parameterIndexId} AS numeric(16,0)),
+                                #{itemIndex.businessLogicId}
+                            )
+                        </foreach>;
+                    </if>
+                </foreach>
+	        </if>
+	        <if test="item.formulaMethodOutputs != null and  item.formulaMethodOutputs.size() > 0 ">
+                INSERT INTO formula_method_output
+                (
+                    formula_detail_id, 
+                    method_output_id
+                )
+                VALUES 
+                <foreach item="input" collection="item.formulaMethodOutputs" separator=",">
+                (
+                    #{item.formulaDetailId},
+                    #{input.methodOutputId}
+                )
+                </foreach>;
+            </if>
+            <if test="item.lstParameterIndex != null and  item.lstParameterIndex.size() > 0 ">
+            	INSERT INTO bd_parameter_index
+            	(
+            		table_type, 
+            		table_id, 
+            		parameter_id, 
+            		parameter_index_type, 
+            		parameter_index_id,
+            		business_logic_id
+            	)
+    			VALUES
+    			<foreach item="itemIndex" collection="item.lstParameterIndex" separator=",">
+	    			(
+	    				#{itemIndex.tableType}, 
+	    				#{itemIndex.tableId},
+	    				CAST(#{itemIndex.parameterId} AS numeric(16,0)),
+	    				#{itemIndex.parameterIndexType}, 
+	            		CAST(#{itemIndex.parameterIndexId} AS numeric(16,0)),
+	            		#{itemIndex.businessLogicId}
+	            	)
+    			</foreach>;
+    		</if>
+        </foreach>
+    </insert>
+    
+    <insert id="registerOneFormulaDefinition" parameterType="FormulaDefinition" >
+         <selectKey keyProperty="formulaDefinitionId" resultType="Long" order="BEFORE">
+            SELECT NEXTVAL('formula_definition_seq'::REGCLASS)
+        </selectKey>
+		INSERT INTO formula_definition
+        (
+            formula_definition_id, 
+            formula_definition_content, 
+            project_id
+        )
+        VALUES
+        (
+            #{formulaDefinitionId},
+            #{formulaDefinitionContent},
+            #{projectId}
+        );
+    </insert>
+    
+    <delete id="deleteFormulaDefinitionByBusinessLogicId">
+        DELETE 
+        FROM formula_method_input f1
+        WHERE EXISTS
+        (
+	        SELECT 
+	            t1.formula_detail_id
+	        FROM formula_detail t1
+	        WHERE 
+	            (
+                EXISTS ( 
+                    SELECT a.subject_formula_id
+                    FROM email_component a
+                    WHERE EXISTS
+                        (
+                         SELECT b.sequence_logic_id
+                         FROM sequence_logic b
+                         WHERE b.business_logic_id = #{businessLogicId}
+                                 AND component_type = 20
+                                 AND b.sequence_logic_id = a.sequence_logic_id )
+                                 AND a.subject_formula_id = t1.formula_definition_id 
+                         )
+                OR
+                EXISTS ( 
+                    SELECT a.recipient_formula_id
+                    FROM email_recipient a
+                    WHERE EXISTS
+                        (SELECT b.email_component_id
+                        FROM email_component b
+                        INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+                                                     AND c.component_type = 20)
+                        WHERE c.business_logic_id =  #{businessLogicId}
+                        AND b.email_component_id = a.email_component_id)
+                        AND a.recipient_formula_id = t1.formula_definition_id
+                        )
+                OR
+                EXISTS ( 
+                    SELECT a.message_formula_id
+                    FROM log_component a
+                    WHERE EXISTS
+                        (
+                         SELECT b.sequence_logic_id
+                         FROM sequence_logic b
+                         WHERE b.business_logic_id = #{businessLogicId}
+                                 AND component_type = 21
+                                 AND b.sequence_logic_id = a.sequence_logic_id )
+                                 AND a.message_formula_id = t1.formula_definition_id 
+                         )
+                OR
+                EXISTS ( 
+                    SELECT a.file_name_formula_id
+                    FROM download_file_component a
+                    WHERE EXISTS
+                        (
+                         SELECT b.sequence_logic_id
+                         FROM sequence_logic b
+                         WHERE b.business_logic_id = #{businessLogicId}
+                                 AND component_type = 23
+                                 AND b.sequence_logic_id = a.sequence_logic_id )
+                                 AND a.file_name_formula_id = t1.formula_definition_id 
+                         )
+                OR
+	            EXISTS ( 
+	                SELECT a.formula_definition_id
+	                FROM loop_component a
+	                WHERE EXISTS
+	                    (
+	                     SELECT b.sequence_logic_id
+	                     FROM sequence_logic b
+	                     WHERE b.business_logic_id = #{businessLogicId}
+	                             AND component_type = 10
+	                             AND b.sequence_logic_id = a.sequence_logic_id )
+	                             AND a.formula_definition_id = t1.formula_definition_id 
+	                     )
+	             OR
+	             EXISTS ( 
+	                SELECT a.formula_definition_id
+	                FROM if_condition_detail a
+	                WHERE EXISTS
+	                    (SELECT b.if_component_id
+	                    FROM if_component b
+	                    INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+	                                                 AND c.component_type = 9)
+	                    WHERE c.business_logic_id =  #{businessLogicId}
+	                    AND b.if_component_id = a.if_component_id)
+	                    AND a.formula_definition_id = t1.formula_definition_id
+	                    )
+	             OR
+	             EXISTS (
+	                SELECT a.formula_definition_id
+	                FROM business_check_detail a
+	                WHERE EXISTS
+	                    (SELECT b.business_check_component_id
+	                    FROM  business_check_component b
+	                    INNER JOIN sequence_logic c
+	                    on (c.sequence_logic_id = b.sequence_logic_id)
+	                    WHERE c.business_logic_id = #{businessLogicId}
+	                    AND c.component_type = 4
+	                    AND b.business_check_component_id = a.business_check_component_id)
+	                    AND a.formula_definition_id = t1.formula_definition_id
+	             )
+	             OR
+	             EXISTS (
+	                SELECT a.formula_definition_id
+	                FROM assign_detail a
+	                WHERE EXISTS
+	                    (
+	                        SELECT b.assign_component_id
+	                        FROM assign_component b
+	                        INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+	                                                 AND c.component_type = 8)
+	                        WHERE c.business_logic_id = #{businessLogicId}
+	                        AND b.assign_component_id = a.assign_component_id
+	                     )
+	                    AND a.formula_definition_id = t1.formula_definition_id
+	             )
+	            )
+	            AND t1.formula_detail_id = f1.formula_detail_id
+            );
+        DELETE 
+        FROM formula_method_output f1
+        WHERE EXISTS
+        (
+            SELECT 
+                t1.formula_detail_id
+            FROM formula_detail t1
+            WHERE 
+                (
+                EXISTS ( 
+                    SELECT a.subject_formula_id
+                    FROM email_component a
+                    WHERE EXISTS
+                        (
+                         SELECT b.sequence_logic_id
+                         FROM sequence_logic b
+                         WHERE b.business_logic_id = #{businessLogicId}
+                                 AND component_type = 20
+                                 AND b.sequence_logic_id = a.sequence_logic_id )
+                                 AND a.subject_formula_id = t1.formula_definition_id 
+                         )
+                OR
+                EXISTS ( 
+                    SELECT a.recipient_formula_id
+                    FROM email_recipient a
+                    WHERE EXISTS
+                        (SELECT b.email_component_id
+                        FROM email_component b
+                        INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+                                                     AND c.component_type = 20)
+                        WHERE c.business_logic_id =  #{businessLogicId}
+                        AND b.email_component_id = a.email_component_id)
+                        AND a.recipient_formula_id = t1.formula_definition_id
+                        )
+                OR
+                EXISTS ( 
+                    SELECT a.message_formula_id
+                    FROM log_component a
+                    WHERE EXISTS
+                        (
+                         SELECT b.sequence_logic_id
+                         FROM sequence_logic b
+                         WHERE b.business_logic_id = #{businessLogicId}
+                                 AND component_type = 21
+                                 AND b.sequence_logic_id = a.sequence_logic_id )
+                                 AND a.message_formula_id = t1.formula_definition_id 
+                         )
+                OR
+                EXISTS ( 
+                    SELECT a.file_name_formula_id
+                    FROM download_file_component a
+                    WHERE EXISTS
+                        (
+                         SELECT b.sequence_logic_id
+                         FROM sequence_logic b
+                         WHERE b.business_logic_id = #{businessLogicId}
+                                 AND component_type = 23
+                                 AND b.sequence_logic_id = a.sequence_logic_id )
+                                 AND a.file_name_formula_id = t1.formula_definition_id 
+                         )
+                OR
+                EXISTS ( 
+                    SELECT a.formula_definition_id
+                    FROM loop_component a
+                    WHERE EXISTS
+                        (
+                         SELECT b.sequence_logic_id
+                         FROM sequence_logic b
+                         WHERE b.business_logic_id = #{businessLogicId}
+                                 AND component_type = 10
+                                 AND b.sequence_logic_id = a.sequence_logic_id )
+                                 AND a.formula_definition_id = t1.formula_definition_id 
+                         )
+                 OR
+                 EXISTS ( 
+                    SELECT a.formula_definition_id
+                    FROM if_condition_detail a
+                    WHERE EXISTS
+                        (SELECT b.if_component_id
+                        FROM if_component b
+                        INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+                                                     AND c.component_type = 9)
+                        WHERE c.business_logic_id =  #{businessLogicId}
+                        AND b.if_component_id = a.if_component_id)
+                        AND a.formula_definition_id = t1.formula_definition_id
+                        )
+                 OR
+                 EXISTS (
+                    SELECT a.formula_definition_id
+                    FROM business_check_detail a
+                    WHERE EXISTS
+                        (SELECT b.business_check_component_id
+                        FROM  business_check_component b
+                        INNER JOIN sequence_logic c
+                        on (c.sequence_logic_id = b.sequence_logic_id)
+                        WHERE c.business_logic_id = #{businessLogicId}
+                        AND c.component_type = 4
+                        AND b.business_check_component_id = a.business_check_component_id)
+                        AND a.formula_definition_id = t1.formula_definition_id
+                 )
+                 OR
+                 EXISTS (
+                    SELECT a.formula_definition_id
+                    FROM assign_detail a
+                    WHERE EXISTS
+                        (
+                            SELECT b.assign_component_id
+                            FROM assign_component b
+                            INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+                                                     AND c.component_type = 8)
+                            WHERE c.business_logic_id = #{businessLogicId}
+                            AND b.assign_component_id = a.assign_component_id
+                         )
+                        AND a.formula_definition_id = t1.formula_definition_id
+                 )
+                )
+                AND t1.formula_detail_id = f1.formula_detail_id
+            );
+        DELETE
+        FROM formula_detail t1
+        WHERE 
+            (
+            EXISTS ( 
+                SELECT a.subject_formula_id
+                FROM email_component a
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b
+                     WHERE b.business_logic_id = #{businessLogicId}
+                             AND component_type = 20
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND a.subject_formula_id = t1.formula_definition_id 
+                     )
+            OR
+            EXISTS ( 
+                SELECT a.recipient_formula_id
+                FROM email_recipient a
+                WHERE EXISTS
+                    (SELECT b.email_component_id
+                    FROM email_component b
+                    INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+                                                 AND c.component_type = 20)
+                    WHERE c.business_logic_id =  #{businessLogicId}
+                    AND b.email_component_id = a.email_component_id)
+                    AND a.recipient_formula_id = t1.formula_definition_id
+                    )
+            OR
+            EXISTS ( 
+                SELECT a.message_formula_id
+                FROM log_component a
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b
+                     WHERE b.business_logic_id = #{businessLogicId}
+                             AND component_type = 21
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND a.message_formula_id = t1.formula_definition_id 
+                     )
+            OR
+            EXISTS ( 
+                SELECT a.file_name_formula_id
+                FROM download_file_component a
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b
+                     WHERE b.business_logic_id = #{businessLogicId}
+                             AND component_type = 23
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND a.file_name_formula_id = t1.formula_definition_id 
+                     )
+            OR
+            EXISTS ( 
+            SELECT a.formula_definition_id
+            FROM loop_component a
+            WHERE EXISTS
+                (
+                 SELECT b.sequence_logic_id
+                 FROM sequence_logic b
+                 WHERE b.business_logic_id = #{businessLogicId}
+                         AND component_type = 10
+                         AND b.sequence_logic_id = a.sequence_logic_id )
+                         AND a.formula_definition_id = t1.formula_definition_id 
+                 )
+             OR
+             EXISTS ( 
+                SELECT a.formula_definition_id
+                FROM if_condition_detail a
+                WHERE EXISTS
+                    (SELECT b.if_component_id
+                    FROM if_component b
+                    INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+                                                 AND c.component_type = 9)
+                    WHERE c.business_logic_id =  #{businessLogicId}
+                    AND b.if_component_id = a.if_component_id)
+                    AND a.formula_definition_id = t1.formula_definition_id
+                    )
+             OR
+             EXISTS (
+                SELECT a.formula_definition_id
+                FROM business_check_detail a
+                WHERE EXISTS
+                    (SELECT b.business_check_component_id
+                    FROM  business_check_component b
+                    INNER JOIN sequence_logic c
+                    on (c.sequence_logic_id = b.sequence_logic_id)
+                    WHERE c.business_logic_id = #{businessLogicId}
+                    AND c.component_type = 4
+                    AND b.business_check_component_id = a.business_check_component_id)
+                    AND a.formula_definition_id = t1.formula_definition_id
+             )
+             OR
+             EXISTS (
+                SELECT a.formula_definition_id
+                FROM assign_detail a
+                WHERE EXISTS
+                    (
+                        SELECT b.assign_component_id
+                        FROM assign_component b
+                        INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+                                                 AND c.component_type = 8)
+                        WHERE c.business_logic_id = #{businessLogicId}
+                        AND b.assign_component_id = a.assign_component_id
+                     )
+                    AND a.formula_definition_id = t1.formula_definition_id
+             )
+            );
+        DELETE
+        FROM formula_definition t1
+        WHERE 
+            (
+            EXISTS ( 
+                SELECT a.subject_formula_id
+                FROM email_component a
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b
+                     WHERE b.business_logic_id = #{businessLogicId}
+                             AND component_type = 20
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND a.subject_formula_id = t1.formula_definition_id 
+                     )
+            OR
+            EXISTS ( 
+                SELECT a.recipient_formula_id
+                FROM email_recipient a
+                WHERE EXISTS
+                    (SELECT b.email_component_id
+                    FROM email_component b
+                    INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+                                                 AND c.component_type = 20)
+                    WHERE c.business_logic_id =  #{businessLogicId}
+                    AND b.email_component_id = a.email_component_id)
+                    AND a.recipient_formula_id = t1.formula_definition_id
+                    )
+            OR
+            EXISTS ( 
+                SELECT a.message_formula_id
+                FROM log_component a
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b
+                     WHERE b.business_logic_id = #{businessLogicId}
+                             AND component_type = 21
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND a.message_formula_id = t1.formula_definition_id 
+                     )
+            OR
+            EXISTS ( 
+                SELECT a.file_name_formula_id
+                FROM download_file_component a
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b
+                     WHERE b.business_logic_id = #{businessLogicId}
+                             AND component_type = 23
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND a.file_name_formula_id = t1.formula_definition_id 
+                     )
+            OR
+            EXISTS ( 
+                SELECT a.formula_definition_id
+                FROM loop_component a
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b
+                     WHERE b.business_logic_id = #{businessLogicId}
+                             AND component_type = 10
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND a.formula_definition_id = t1.formula_definition_id 
+                     )
+             OR
+             EXISTS ( 
+                SELECT a.formula_definition_id
+                FROM if_condition_detail a
+                WHERE EXISTS
+                    (SELECT b.if_component_id
+                    FROM if_component b
+                    INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+                                                 AND c.component_type = 9)
+                    WHERE c.business_logic_id =  #{businessLogicId}
+                    AND b.if_component_id = a.if_component_id)
+                    AND a.formula_definition_id = t1.formula_definition_id
+                    )
+             OR
+             EXISTS (
+                SELECT a.formula_definition_id
+                FROM business_check_detail a
+                WHERE EXISTS
+                    (SELECT b.business_check_component_id
+                    FROM  business_check_component b
+                    INNER JOIN sequence_logic c
+                    on (c.sequence_logic_id = b.sequence_logic_id)
+                    WHERE c.business_logic_id = #{businessLogicId}
+                    AND c.component_type = 4
+                    AND b.business_check_component_id = a.business_check_component_id)
+                    AND a.formula_definition_id = t1.formula_definition_id
+             )
+             OR
+             EXISTS (
+                SELECT a.formula_definition_id
+                FROM assign_detail a
+                WHERE EXISTS
+                    (
+                        SELECT b.assign_component_id
+                        FROM assign_component b
+                        INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+                                                 AND c.component_type = 8)
+                        WHERE c.business_logic_id = #{businessLogicId}
+                        AND b.assign_component_id = a.assign_component_id
+                     )
+                    AND a.formula_definition_id = t1.formula_definition_id
+             )
+            );
+    </delete>
+    
+    <select id="findFormulaDetailsByListDecisionItemId" parameterType="org.terasoluna.qp.domain.model.DecisionTableConditionItem" resultMap="formulaDetailResultMap">
+       SELECT 
+            t1.formula_detail_id, 
+            t1.item_sequence_no, 
+            t1.type, 
+            t1.value, 
+            t1.parameter_id, 
+            t1.formula_definition_id,
+            t1.function_method_id
+        FROM formula_detail t1
+        WHERE 
+            (
+            EXISTS ( 
+                SELECT a.formula_definition_id
+                FROM decision_condition_item a
+				WHERE 
+				<if test="conditionItem == null">
+					a.condition_item_id IN (0)
+				</if>
+				<if test="conditionItem != null and conditionItem.size() > 0 ">
+					a.condition_item_id IN 
+					<foreach item="item" index="index" collection="conditionItem" open="(" separator="," close=")">
+                         CAST(#{item.conditionItemId} AS numeric(16,0))
+                     </foreach>
+				</if>
+				AND t1.formula_definition_id = a.formula_definition_id
+			        )
+            )
+    </select>
+    
+    <select id="findFormulaMethodInputsByListDecisionItemId" parameterType="org.terasoluna.qp.domain.model.DecisionTableConditionItem" resultMap="formulaMethodInputResultMap">
+       SELECT 
+            t1.formula_method_input_id, 
+            t1.method_input_id, 
+            t1.parameter_scope, 
+            t1.parameter_type, 
+            t1.parameter_id, 
+            t1.parameter_value, 
+            t1.formula_detail_id,
+            t2.formula_definition_id
+        FROM formula_method_input t1
+        LEFT JOIN formula_detail t2
+            on (t2.formula_detail_id= t1.formula_detail_id)
+        WHERE 
+            (
+            EXISTS ( 
+                SELECT a.formula_definition_id 
+                FROM decision_condition_item a
+				WHERE 
+				<if test="conditionItem == null">
+					a.condition_item_id IN (0)
+				</if>
+				<if test="conditionItem != null and conditionItem.size() > 0 ">
+					a.condition_item_id IN 
+					<foreach item="item" index="index" collection="conditionItem" open="(" separator="," close=")">
+                         CAST(#{item.conditionItemId} AS numeric(16,0))
+                     </foreach>
+				</if>
+				AND a.formula_definition_id = t2.formula_definition_id
+			        )
+            )
+    </select>
+    
+    <select id="findFormulaMethodOutputsByListDecisionItemId" parameterType="org.terasoluna.qp.domain.model.DecisionTableConditionItem" resultMap="formulaMethodOutputResultMap">
+        SELECT 
+            t1.formula_method_output_id, 
+            t1.formula_detail_id, 
+            t1.method_output_id,
+            t2.formula_definition_id
+        FROM formula_method_output t1
+        LEFT JOIN formula_detail t2
+            on (t2.formula_detail_id= t1.formula_detail_id)
+        WHERE 
+            (
+            EXISTS ( 
+                SELECT a.formula_definition_id
+                FROM decision_condition_item a
+				WHERE 
+				<if test="conditionItem == null">
+					a.condition_item_id IN (0)
+				</if>
+				<if test="conditionItem != null and conditionItem.size() > 0 ">
+					a.condition_item_id IN 
+					<foreach item="item" index="index" collection="conditionItem" open="(" separator="," close=")">
+                         CAST(#{item.conditionItemId} AS numeric(16,0))
+                     </foreach>
+				</if>
+				AND a.formula_definition_id = t2.formula_definition_id
+			        )
+            )
+    </select>
+
+    <delete id="deleteFormulaDefinitionByDecisionTableId">
+        DELETE 
+        FROM formula_method_input f1
+        WHERE 
+            f1.formula_method_input_id IN
+	        (
+		        SELECT 
+		            t1.formula_method_input_id 
+		        FROM formula_method_input t1
+		        LEFT JOIN formula_detail t2
+		            on (t2.formula_detail_id= t1.formula_detail_id)
+		        WHERE 
+		            (
+		            EXISTS ( 
+		                SELECT a.formula_definition_id
+		                FROM decision_condition_item a
+						WHERE 
+						<if test="conditionItem == null">
+							a.condition_item_id IN (0)
+						</if>
+						<if test="conditionItem != null and conditionItem.size() > 0 ">
+							a.condition_item_id IN 
+							<foreach item="item" index="index" collection="conditionItem" open="(" separator="," close=")">
+		                         CAST(#{item.conditionItemId} AS numeric(16,0))
+		                     </foreach>
+						</if>
+						AND a.formula_definition_id = t2.formula_definition_id
+					        )
+		            )
+	        );
+        DELETE 
+        FROM formula_method_output f2
+        WHERE 
+        	f2.formula_method_output_id IN 
+        	(
+        		SELECT 
+		            t1.formula_method_output_id 
+		        FROM formula_method_output t1
+		        LEFT JOIN formula_detail t2
+		            on (t2.formula_detail_id= t1.formula_detail_id)
+		        WHERE 
+		            (
+		            EXISTS ( 
+		                SELECT a.formula_definition_id
+		                FROM decision_condition_item a
+						WHERE 
+						<if test="conditionItem == null">
+							a.condition_item_id IN (0)
+						</if>
+						<if test="conditionItem != null and conditionItem.size() > 0 ">
+							a.condition_item_id IN 
+							<foreach item="item" index="index" collection="conditionItem" open="(" separator="," close=")">
+		                         CAST(#{item.conditionItemId} AS numeric(16,0))
+		                     </foreach>
+						</if>
+						AND a.formula_definition_id = t2.formula_definition_id
+					        )
+		            )
+        	);
+        DELETE
+        FROM formula_detail td1
+        WHERE 
+        	td1.formula_detail_id IN 
+        (
+        	SELECT 
+	            t1.formula_detail_id 
+	        FROM formula_detail t1
+	        WHERE 
+	            (
+	            EXISTS ( 
+	                SELECT a.formula_definition_id
+	                FROM decision_condition_item a
+					WHERE 
+					<if test="conditionItem == null">
+						a.condition_item_id IN (0)
+					</if>
+					<if test="conditionItem != null and conditionItem.size() > 0 ">
+						a.condition_item_id IN 
+						<foreach item="item" index="index" collection="conditionItem" open="(" separator="," close=")">
+	                         CAST(#{item.conditionItemId} AS numeric(16,0))
+	                     </foreach>
+					</if>
+					AND t1.formula_definition_id = a.formula_definition_id
+				        )
+	            )
+        );
+        DELETE
+        FROM formula_definition fd1
+        WHERE
+        	fd1.formula_definition_id IN 
+        		(
+        			SELECT a.formula_definition_id
+	                FROM decision_condition_item a
+					WHERE 
+					<if test="conditionItem == null">
+						a.condition_item_id IN (0)
+					</if>
+					<if test="conditionItem != null and conditionItem.size() > 0 ">
+						a.condition_item_id IN 
+						<foreach item="item" index="index" collection="conditionItem" open="(" separator="," close=")">
+	                         CAST(#{item.conditionItemId} AS numeric(16,0))
+	                     </foreach>
+	                     AND a.formula_definition_id IS NOT NULL
+					</if>
+        		);
+    </delete>
+    
+    <select id="findFormulaDefinitionForNodeByModule" resultMap="formulaDefinitionResultMap">
+        SELECT t1.formula_definition_id,
+		       t1.formula_definition_content,
+		       t1.project_id
+		FROM formula_definition t1
+		WHERE EXISTS
+		    ( SELECT a.formula_definition_id
+		      FROM loop_component a
+		      WHERE EXISTS
+		         (
+		          SELECT b.sequence_logic_id
+		          FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          WHERE bl.module_id = #{moduleId}
+		                  AND component_type = 10
+		                  AND b.sequence_logic_id = a.sequence_logic_id )
+		                  AND a.formula_definition_id = t1.formula_definition_id 
+		          )
+    </select>
+    
+    <select id="findFormulaDefinitionForNodeByProject" resultMap="formulaDefinitionResultMap">
+        SELECT t1.formula_definition_id,
+		       t1.formula_definition_content,
+		       t1.project_id
+		FROM formula_definition t1
+		WHERE EXISTS
+		    ( SELECT a.formula_definition_id
+		      FROM loop_component a
+		      WHERE EXISTS
+		         (
+		          SELECT b.sequence_logic_id
+		          FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          WHERE bl.project_id = #{projectId}
+		                  AND component_type = 10
+		                  AND b.sequence_logic_id = a.sequence_logic_id )
+		                  AND a.formula_definition_id = t1.formula_definition_id 
+		          )
+    </select>
+    
+    <select id="findFormulaDetailsForNodeByModule" resultMap="formulaDetailResultMap">
+       SELECT 
+            t1.formula_detail_id, 
+            t1.item_sequence_no, 
+            t1.type, 
+            t1.value, 
+            t1.parameter_id, 
+            t1.formula_definition_id,
+            t1.function_method_id
+        FROM formula_detail t1
+        WHERE 
+            (
+            EXISTS ( 
+                SELECT a.formula_definition_id
+                FROM loop_component a
+                WHERE EXISTS
+	                (
+	                 SELECT b.sequence_logic_id
+	                 FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          	 WHERE bl.module_id = #{moduleId}
+	                         AND component_type = 10
+	                         AND b.sequence_logic_id = a.sequence_logic_id )
+	                         AND a.formula_definition_id = t1.formula_definition_id 
+	                 )
+            )
+    </select>
+    
+    <select id="findFormulaDetailsForNodeByProject" resultMap="formulaDetailResultMap">
+       SELECT 
+            t1.formula_detail_id, 
+            t1.item_sequence_no, 
+            t1.type, 
+            t1.value, 
+            t1.parameter_id, 
+            t1.formula_definition_id,
+            t1.function_method_id
+        FROM formula_detail t1
+        WHERE 
+            (
+            EXISTS ( 
+                SELECT a.formula_definition_id
+                FROM loop_component a
+                WHERE EXISTS
+	                (
+	                 SELECT b.sequence_logic_id
+	                 FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          	 WHERE bl.project_id = #{projectId}
+	                     AND component_type = 10
+	                     AND b.sequence_logic_id = a.sequence_logic_id )
+	                     AND a.formula_definition_id = t1.formula_definition_id 
+	                 )
+            )
+    </select>
+    
+    <select id="findFormulaMethodInputsForNodeByModule" resultMap="formulaMethodInputResultMap">
+       SELECT 
+            t1.formula_method_input_id, 
+            t1.method_input_id, 
+            t1.parameter_scope, 
+            t1.parameter_id, 
+            t1.parameter_value, 
+            t1.formula_detail_id,
+            t2.formula_definition_id
+        FROM formula_method_input t1
+        LEFT JOIN formula_detail t2
+            on (t2.formula_detail_id= t1.formula_detail_id)
+        WHERE 
+            (
+            EXISTS ( 
+                SELECT a.formula_definition_id
+                FROM loop_component a
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          	 WHERE bl.module_id = #{moduleId}
+                             AND component_type = 10
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND a.formula_definition_id = t2.formula_definition_id 
+                     )
+            )
+    </select>
+    
+    <select id="findFormulaMethodInputsForNodeByProject" resultMap="formulaMethodInputResultMap">
+       SELECT 
+            t1.formula_method_input_id, 
+            t1.method_input_id, 
+            t1.parameter_scope, 
+            t1.parameter_id, 
+            t1.parameter_value, 
+            t1.formula_detail_id,
+            t2.formula_definition_id
+        FROM formula_method_input t1
+        LEFT JOIN formula_detail t2
+            on (t2.formula_detail_id= t1.formula_detail_id)
+        WHERE 
+            (
+            EXISTS ( 
+                SELECT a.formula_definition_id
+                FROM loop_component a
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          	 WHERE bl.project_id = #{projectId}
+                             AND component_type = 10
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND a.formula_definition_id = t2.formula_definition_id 
+                     )
+            )
+    </select>
+    
+    <select id="findFormulaMethodOutputsForNodeByModule" resultMap="formulaMethodOutputResultMap">
+        SELECT 
+            t1.formula_method_output_id, 
+            t1.formula_detail_id, 
+            t1.method_output_id,
+            t2.formula_definition_id,
+            fmo.method_output_code
+        FROM formula_method_output t1
+        LEFT JOIN formula_detail t2
+            on (t2.formula_detail_id= t1.formula_detail_id)
+        LEFT JOIN function_method_output fmo ON t1.method_output_id = fmo.method_output_id
+        WHERE 
+            (
+            EXISTS ( 
+                SELECT a.formula_definition_id
+                FROM loop_component a
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          	 WHERE bl.module_id = #{moduleId}
+                             AND component_type = 10
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND a.formula_definition_id = t2.formula_definition_id 
+                     )
+            )
+    </select>
+    
+    <select id="findFormulaMethodOutputsForNodeByProject" resultMap="formulaMethodOutputResultMap">
+        SELECT 
+            t1.formula_method_output_id, 
+            t1.formula_detail_id, 
+            t1.method_output_id,
+            t2.formula_definition_id,
+            fmo.method_output_code
+        FROM formula_method_output t1
+        LEFT JOIN formula_detail t2
+            on (t2.formula_detail_id= t1.formula_detail_id)
+        LEFT JOIN function_method_output fmo ON t1.method_output_id = fmo.method_output_id
+        WHERE 
+            (
+            EXISTS ( 
+                SELECT a.formula_definition_id
+                FROM loop_component a
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          	 WHERE bl.project_id = #{projectId}
+                             AND component_type = 10
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND a.formula_definition_id = t2.formula_definition_id 
+                     )
+            )
+    </select>
+    
+    <select id="findFormulaDefinitionAssignNodeByModule" resultMap="formulaDefinitionResultMap">
+        SELECT t1.formula_definition_id,
+		       t1.formula_definition_content,
+		       t1.project_id
+		FROM formula_definition t1
+		WHERE EXISTS
+		    ( SELECT if.formula_definition_id
+		      FROM assign_detail if INNER JOIN assign_component a ON if.assign_component_id = a.assign_component_id
+		      WHERE EXISTS
+		         (
+		          SELECT b.sequence_logic_id
+		          FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          WHERE bl.module_id = #{moduleId}
+		                  AND component_type = 8
+		                  AND b.sequence_logic_id = a.sequence_logic_id )
+		                  AND if.formula_definition_id = t1.formula_definition_id 
+		          )
+    </select>
+    
+    <select id="findFormulaDefinitionAssignNodeByProject" resultMap="formulaDefinitionResultMap">
+        SELECT t1.formula_definition_id,
+		       t1.formula_definition_content,
+		       t1.project_id
+		FROM formula_definition t1
+		WHERE EXISTS
+		    ( SELECT if.formula_definition_id
+		      FROM assign_detail if INNER JOIN assign_component a ON if.assign_component_id = a.assign_component_id
+		      WHERE EXISTS
+		         (
+		          SELECT b.sequence_logic_id
+		          FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          WHERE bl.project_id = #{projectId}
+		                  AND component_type = 8
+		                  AND b.sequence_logic_id = a.sequence_logic_id )
+		                  AND if.formula_definition_id = t1.formula_definition_id 
+		          )
+    </select>
+    
+    <select id="findFormulaDetailsAssignNodeByModule" resultMap="formulaDetailResultMap">
+       SELECT 
+            t1.formula_detail_id, 
+            t1.item_sequence_no, 
+            t1.type, 
+            t1.value, 
+            t1.parameter_id, 
+            t1.formula_definition_id,
+            t1.function_method_id
+        FROM formula_detail t1
+        WHERE 
+            (
+            EXISTS ( 
+                SELECT if.formula_definition_id
+                FROM assign_detail if INNER JOIN assign_component a ON if.assign_component_id = a.assign_component_id
+                WHERE EXISTS
+	                (
+	                 SELECT b.sequence_logic_id
+	                 FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          	 WHERE bl.module_id = #{moduleId}
+	                         AND component_type = 8
+	                         AND b.sequence_logic_id = a.sequence_logic_id )
+	                         AND if.formula_definition_id = t1.formula_definition_id 
+	                 )
+            )
+    </select>
+    
+    <select id="findFormulaDetailsAssignNodeByProject" resultMap="formulaDetailResultMap">
+       SELECT 
+            t1.formula_detail_id, 
+            t1.item_sequence_no, 
+            t1.type, 
+            t1.value, 
+            t1.parameter_id, 
+            t1.formula_definition_id,
+            t1.function_method_id
+        FROM formula_detail t1
+        WHERE 
+            (
+            EXISTS ( 
+                SELECT if.formula_definition_id
+                FROM assign_detail if INNER JOIN assign_component a ON if.assign_component_id = a.assign_component_id
+                WHERE EXISTS
+	                (
+	                 SELECT b.sequence_logic_id
+	                 FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          	 WHERE bl.project_id = #{projectId}
+	                         AND component_type = 8
+	                         AND b.sequence_logic_id = a.sequence_logic_id )
+	                         AND if.formula_definition_id = t1.formula_definition_id 
+	                 )
+            )
+    </select>
+    
+    <select id="findFormulaMethodInputsAssignNodeByModule" resultMap="formulaMethodInputResultMap">
+       SELECT 
+            t1.formula_method_input_id, 
+            t1.method_input_id, 
+            t1.parameter_scope, 
+            t1.parameter_id, 
+            t1.parameter_value, 
+            t1.formula_detail_id,
+            t2.formula_definition_id
+        FROM formula_method_input t1
+        LEFT JOIN formula_detail t2
+            on (t2.formula_detail_id= t1.formula_detail_id)
+        WHERE 
+            (
+            EXISTS ( 
+                SELECT if.formula_definition_id
+                FROM assign_detail if INNER JOIN assign_component a ON if.assign_component_id = a.assign_component_id
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          	 WHERE bl.module_id = #{moduleId}
+                             AND component_type = 8
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND if.formula_definition_id = t2.formula_definition_id 
+                     )
+            )
+    </select>
+
+    <select id="findFormulaMethodInputsAssignNodeByProject" resultMap="formulaMethodInputResultMap">
+       SELECT 
+            t1.formula_method_input_id, 
+            t1.method_input_id, 
+            t1.parameter_scope, 
+            t1.parameter_id, 
+            t1.parameter_value, 
+            t1.formula_detail_id,
+            t2.formula_definition_id
+        FROM formula_method_input t1
+        LEFT JOIN formula_detail t2
+            on (t2.formula_detail_id= t1.formula_detail_id)
+        WHERE 
+            (
+            EXISTS ( 
+                SELECT if.formula_definition_id
+                FROM assign_detail if INNER JOIN assign_component a ON if.assign_component_id = a.assign_component_id
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          	 WHERE bl.project_id = #{projectId}
+                             AND component_type = 8
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND if.formula_definition_id = t2.formula_definition_id 
+                     )
+            )
+    </select>
+    
+    <select id="findFormulaMethodOutputsAssignNodeByModule" resultMap="formulaMethodOutputResultMap">
+        SELECT 
+            t1.formula_method_output_id, 
+            t1.formula_detail_id, 
+            t1.method_output_id,
+            t2.formula_definition_id,
+            fmo.method_output_code
+        FROM formula_method_output t1
+        LEFT JOIN formula_detail t2
+            on (t2.formula_detail_id= t1.formula_detail_id)
+        LEFT JOIN function_method_output fmo ON t1.method_output_id = fmo.method_output_id
+        WHERE 
+            (
+            EXISTS ( 
+                SELECT if.formula_definition_id
+                FROM assign_detail if INNER JOIN assign_component a ON if.assign_component_id = a.assign_component_id
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          	 WHERE bl.module_id = #{moduleId}
+                             AND component_type = 8
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND if.formula_definition_id = t2.formula_definition_id 
+                     )
+            )
+    </select>
+
+    <select id="findFormulaMethodOutputsAssignNodeByProject" resultMap="formulaMethodOutputResultMap">
+        SELECT 
+            t1.formula_method_output_id, 
+            t1.formula_detail_id, 
+            t1.method_output_id,
+            t2.formula_definition_id,
+            fmo.method_output_code
+        FROM formula_method_output t1
+        LEFT JOIN formula_detail t2
+            on (t2.formula_detail_id= t1.formula_detail_id)
+        LEFT JOIN function_method_output fmo ON t1.method_output_id = fmo.method_output_id
+        WHERE 
+            (
+            EXISTS ( 
+                SELECT if.formula_definition_id
+                FROM assign_detail if INNER JOIN assign_component a ON if.assign_component_id = a.assign_component_id
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          	 WHERE bl.project_id = #{projectId}
+                             AND component_type = 8
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND if.formula_definition_id = t2.formula_definition_id 
+                     )
+            )
+    </select>
+
+    <!-- //TungHT -->
+    <insert id="registerScreenItemStatus" parameterType="FormulaDefinition">
+		INSERT INTO 
+			formula_definition (
+				formula_definition_id,
+				formula_definition_content,
+				project_id,
+				formula_type,
+				screen_form_id
+			) 
+		VALUES
+			<foreach item="item" collection="formulaDefinitions" separator=",">
+				(
+					#{item.formulaDefinitionId},
+					#{item.formulaDefinitionContent},
+					#{item.projectId},
+					#{item.formulaType},
+					#{item.screenFormId}
+				)
+			</foreach>;
+    </insert>
+    
+    <!-- //TungHT -->
+    <select id="getAllFormulaDefinition" resultMap="formulaDefinitionResultMap">
+    	SELECT
+    		formula_definition_id
+    	FROM
+    		formula_definition
+    	WHERE
+    		project_id = #{projectId}
+    </select>
+    
+    <!-- TungHT -->
+    <select id="getFormulaDefinitionByScreenFormId" resultMap="formulaDefinitionResultMap">
+    	SELECT
+    		formula_definition_id,
+    		formula_definition_content,
+    		screen_form_id,
+    		formula_name
+    	FROM
+    		formula_definition
+    	WHERE 
+    	<if test="lstScreenForm != null and lstScreenForm.size() > 0">
+    		screen_form_id IN
+    		<foreach collection="lstScreenForm" item="item" separator="," open="(" close=")">
+    			 #{item.screenFormId}
+    		</foreach>
+    	</if>
+    	<if test="lstScreenForm == null or lstScreenForm.size() == 0">
+    		FALSE
+    	</if>
+    </select>
+    
+    <!-- //TungHT -->
+    <delete id="deleteFormulaDetailsByFormulaDefinitionId" parameterType="FormulaDefinition">
+    	DELETE FROM 
+    		formula_detail
+    	WHERE 
+			<if test="lstFormulaDefinition != null and lstFormulaDefinition.size() > 0">
+			formula_definition_id IN
+				<foreach collection="lstFormulaDefinition" item="item" separator="," open="(" close=")">
+					#{item.formulaDefinitionId}
+				</foreach>
+			</if>
+			<if test="lstFormulaDefinition == null or lstFormulaDefinition.size() == 0">
+				FALSE
+			</if>
+    		
+    </delete>
+    
+    <!-- TungHT -->
+    <delete id="deleteFormulaDefinitionByScreenFormId" parameterType="ScreenForm">
+    	DELETE FROM 
+    		formula_definition
+    	WHERE 
+			<if test="lstScreenForm != null and lstScreenForm.size() > 0">
+			screen_form_id IN
+				<foreach collection="lstScreenForm" item="item" separator="," open="(" close=")">
+					#{item.screenFormId}
+				</foreach>
+			</if>
+			<if test="lstScreenForm == null or lstScreenForm.size() == 0">
+				FALSE
+			</if>
+    </delete>
+    
+    <!-- TungHT -->
+    <select id="getFormulaDetailByFormulaDefinition" resultMap="formulaDetailResultMap">
+    	SELECT
+    		formula_detail_id
+    	FROM
+    		formula_detail
+    	WHERE 
+    		<if test="lstFormulaDefinition != null and lstFormulaDefinition.size() > 0">
+    		formula_definition_id IN
+    			<foreach collection="lstFormulaDefinition" item="item" separator="," open="(" close=")">
+    				 #{item.formulaDefinitionId}
+    			</foreach>
+    		</if>
+    		<if test="lstFormulaDefinition == null or lstFormulaDefinition.size() == 0">
+    			FALSE
+    		</if>
+    </select>
+    
+    <!-- TungHT -->
+    <delete id="deleleFormulaMethodInputByFormulaDetailId" parameterType="FormulaDetail">
+    	DELETE FROM 
+    		formula_method_input
+    	WHERE 
+			<if test="lstFormulaDetail != null and lstFormulaDetail.size() > 0">
+			formula_detail_id IN
+				<foreach collection="lstFormulaDetail" item="item" separator="," open="(" close=")">
+					#{item.formulaDetailId}
+				</foreach>
+			</if>
+			<if test="lstFormulaDetail == null or lstFormulaDetail.size() == 0">
+				FALSE
+			</if>
+    </delete>
+    
+    <!-- TungHT -->
+    <delete id="deleleFormulaMethodOutputByFormulaDetailId" parameterType="FormulaDetail">
+    	DELETE FROM 
+    		formula_method_output
+    	WHERE 
+			<if test="lstFormulaDetail != null and lstFormulaDetail.size() > 0">
+			formula_detail_id IN
+				<foreach collection="lstFormulaDetail" item="item" separator="," open="(" close=")">
+					#{item.formulaDetailId}
+				</foreach>
+			</if>
+			<if test="lstFormulaDetail == null or lstFormulaDetail.size() == 0">
+				FALSE
+			</if>
+    </delete>
+    <select id="findFormulaDefinitionIfNodeByModule" resultMap="formulaDefinitionResultMap">
+        SELECT t1.formula_definition_id,
+		       t1.formula_definition_content,
+		       t1.project_id
+		FROM formula_definition t1
+		WHERE EXISTS
+		    ( SELECT if.formula_definition_id
+		      FROM if_condition_detail if INNER JOIN if_component a ON if.if_component_id = a.if_component_id
+		      WHERE EXISTS
+		         (
+		          SELECT b.sequence_logic_id
+		          FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          WHERE bl.module_id = #{moduleId}
+		                  AND component_type = 9
+		                  AND b.sequence_logic_id = a.sequence_logic_id )
+		                  AND if.formula_definition_id = t1.formula_definition_id 
+		          )
+    </select>
+    
+    <select id="findFormulaDefinitionIfNodeByProject" resultMap="formulaDefinitionResultMap">
+        SELECT t1.formula_definition_id,
+		       t1.formula_definition_content,
+		       t1.project_id
+		FROM formula_definition t1
+		WHERE EXISTS
+		    ( SELECT if.formula_definition_id
+		      FROM if_condition_detail if INNER JOIN if_component a ON if.if_component_id = a.if_component_id
+		      WHERE EXISTS
+		         (
+		          SELECT b.sequence_logic_id
+		          FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          WHERE bl.project_id = #{projectId}
+		                  AND component_type = 9
+		                  AND b.sequence_logic_id = a.sequence_logic_id )
+		                  AND if.formula_definition_id = t1.formula_definition_id 
+		          )
+    </select>
+    
+    <select id="findFormulaDetailsIfNodeByModule" resultMap="formulaDetailResultMap">
+       SELECT 
+            t1.formula_detail_id, 
+            t1.item_sequence_no, 
+            t1.type, 
+            t1.value, 
+            t1.parameter_id, 
+            t1.formula_definition_id,
+            t1.function_method_id
+        FROM formula_detail t1
+        WHERE 
+            (
+            EXISTS ( 
+                SELECT if.formula_definition_id
+                FROM if_condition_detail if INNER JOIN if_component a ON if.if_component_id = a.if_component_id
+                WHERE EXISTS
+	                (
+	                 SELECT b.sequence_logic_id
+	                 FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          	 WHERE bl.module_id = #{moduleId}
+	                         AND component_type = 9
+	                         AND b.sequence_logic_id = a.sequence_logic_id )
+	                         AND if.formula_definition_id = t1.formula_definition_id 
+	                 )
+            )
+    </select>
+    
+    <select id="findFormulaDetailsIfNodeByProject" resultMap="formulaDetailResultMap">
+       SELECT 
+            t1.formula_detail_id, 
+            t1.item_sequence_no, 
+            t1.type, 
+            t1.value, 
+            t1.parameter_id, 
+            t1.formula_definition_id,
+            t1.function_method_id
+        FROM formula_detail t1
+        WHERE 
+            (
+            EXISTS ( 
+                SELECT if.formula_definition_id
+                FROM if_condition_detail if INNER JOIN if_component a ON if.if_component_id = a.if_component_id
+                WHERE EXISTS
+	                (
+	                 SELECT b.sequence_logic_id
+	                 FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          	 WHERE bl.project_id = #{projectId}
+	                         AND component_type = 9
+	                         AND b.sequence_logic_id = a.sequence_logic_id )
+	                         AND if.formula_definition_id = t1.formula_definition_id 
+	                 )
+            )
+    </select>
+    
+    <select id="findFormulaMethodInputsIfNodeByModule" resultMap="formulaMethodInputResultMap">
+       SELECT 
+            t1.formula_method_input_id, 
+            t1.method_input_id, 
+            t1.parameter_scope, 
+            t1.parameter_id, 
+            t1.parameter_value, 
+            t1.formula_detail_id,
+            t2.formula_definition_id
+        FROM formula_method_input t1
+        LEFT JOIN formula_detail t2
+            on (t2.formula_detail_id= t1.formula_detail_id)
+        WHERE 
+            (
+            EXISTS ( 
+                SELECT if.formula_definition_id
+                FROM if_condition_detail if INNER JOIN if_component a ON if.if_component_id = a.if_component_id
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          	 WHERE bl.module_id = #{moduleId}
+                             AND component_type = 9
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND if.formula_definition_id = t2.formula_definition_id 
+                     )
+            )
+    </select>
+    
+    <select id="findFormulaMethodInputsIfNodeByProject" resultMap="formulaMethodInputResultMap">
+       SELECT 
+            t1.formula_method_input_id, 
+            t1.method_input_id, 
+            t1.parameter_scope, 
+            t1.parameter_id, 
+            t1.parameter_value, 
+            t1.formula_detail_id,
+            t2.formula_definition_id
+        FROM formula_method_input t1
+        LEFT JOIN formula_detail t2
+            on (t2.formula_detail_id= t1.formula_detail_id)
+        WHERE 
+            (
+            EXISTS ( 
+                SELECT if.formula_definition_id
+                FROM if_condition_detail if INNER JOIN if_component a ON if.if_component_id = a.if_component_id
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          	 WHERE bl.project_id = #{projectId}
+                             AND component_type = 9
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND if.formula_definition_id = t2.formula_definition_id 
+                     )
+            )
+    </select>
+    
+    <select id="findFormulaMethodOutputsIfNodeByModule" resultMap="formulaMethodOutputResultMap">
+        SELECT 
+            t1.formula_method_output_id, 
+            t1.formula_detail_id, 
+            t1.method_output_id,
+            t2.formula_definition_id,
+            fmo.method_output_code
+        FROM formula_method_output t1
+        LEFT JOIN formula_detail t2
+            on (t2.formula_detail_id= t1.formula_detail_id)
+        LEFT JOIN function_method_output fmo ON t1.method_output_id = fmo.method_output_id
+        WHERE 
+            (
+            EXISTS ( 
+                SELECT if.formula_definition_id
+                FROM if_condition_detail if INNER JOIN if_component a ON if.if_component_id = a.if_component_id
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          	 WHERE bl.module_id = #{moduleId}
+                             AND component_type = 9
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND if.formula_definition_id = t2.formula_definition_id 
+                     )
+            )
+    </select>
+
+    <select id="findFormulaMethodOutputsIfNodeByProject" resultMap="formulaMethodOutputResultMap">
+        SELECT 
+            t1.formula_method_output_id, 
+            t1.formula_detail_id, 
+            t1.method_output_id,
+            t2.formula_definition_id,
+            fmo.method_output_code
+        FROM formula_method_output t1
+        LEFT JOIN formula_detail t2
+            on (t2.formula_detail_id= t1.formula_detail_id)
+        LEFT JOIN function_method_output fmo ON t1.method_output_id = fmo.method_output_id
+        WHERE 
+            (
+            EXISTS ( 
+                SELECT if.formula_definition_id
+                FROM if_condition_detail if INNER JOIN if_component a ON if.if_component_id = a.if_component_id
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          	 WHERE bl.project_id = #{projectId}
+                             AND component_type = 9
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND if.formula_definition_id = t2.formula_definition_id 
+                     )
+            )
+    </select>
+    
+    <!-- TungHT -->
+    <select id="findFormulaDetailsByListScreenForms" resultMap="formulaDetailResultMap">
+    	SELECT 
+   		  	a.formula_detail_id, 
+            a.item_sequence_no, 
+            a.type, 
+            a.value, 
+            a.parameter_id, 
+            a.formula_definition_id,
+            a.function_method_id
+    	FROM
+    		formula_detail a
+    	LEFT JOIN
+    		formula_definition b ON a.formula_definition_id = b.formula_definition_id
+    	WHERE 
+    		<if test="screenForms != null and screenForms.size > 0">
+    			screen_form_id IN
+    			<foreach collection="screenForms" item="item" separator="," open="(" close=")">
+    				#{item.screenFormId}
+    			</foreach>
+    		</if>
+    		<if test="screenForms == null or screenForms.size == 0">
+    			FALSE
+    		</if>
+    		
+    </select>
+    
+    <!-- Business Check -->
+    <select id="findFormulaDefinitionBusinessCheckNodeByModule" resultMap="formulaDefinitionResultMap">
+        SELECT t1.formula_definition_id,
+		       t1.formula_definition_content,
+		       t1.project_id
+		FROM formula_definition t1
+		WHERE EXISTS
+		    ( SELECT bc.formula_definition_id
+		      FROM business_check_detail bc INNER JOIN business_check_component a ON bc.business_check_component_id = a.business_check_component_id
+		      WHERE EXISTS
+		         (
+		          SELECT b.sequence_logic_id
+		          FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          WHERE bl.module_id = #{moduleId}
+		                  AND component_type = 4
+		                  AND b.sequence_logic_id = a.sequence_logic_id )
+		                  AND bc.formula_definition_id = t1.formula_definition_id 
+		          )
+    </select>
+    
+    <select id="findFormulaDefinitionBusinessCheckNodeByProject" resultMap="formulaDefinitionResultMap">
+        SELECT t1.formula_definition_id,
+		       t1.formula_definition_content,
+		       t1.project_id
+		FROM formula_definition t1
+		WHERE EXISTS
+		    ( SELECT bc.formula_definition_id
+		      FROM business_check_detail bc INNER JOIN business_check_component a ON bc.business_check_component_id = a.business_check_component_id
+		      WHERE EXISTS
+		         (
+		          SELECT b.sequence_logic_id
+		          FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          WHERE bl.project_id = #{projectId}
+		                  AND component_type = 4
+		                  AND b.sequence_logic_id = a.sequence_logic_id )
+		                  AND bc.formula_definition_id = t1.formula_definition_id 
+		          )
+    </select>
+    
+    <select id="findFormulaDetailsBusinessCheckNodeByModule" resultMap="formulaDetailResultMap">
+       SELECT 
+            t1.formula_detail_id, 
+            t1.item_sequence_no, 
+            t1.type, 
+            t1.value, 
+            t1.parameter_id, 
+            t1.formula_definition_id,
+            t1.function_method_id
+        FROM formula_detail t1
+        WHERE 
+            (
+            EXISTS ( 
+                SELECT bc.formula_definition_id
+                FROM business_check_detail bc INNER JOIN business_check_component a ON bc.business_check_component_id = a.business_check_component_id
+                WHERE EXISTS
+	                (
+	                 SELECT b.sequence_logic_id
+	                 FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          	 WHERE bl.module_id = #{moduleId}
+	                         AND component_type = 4
+	                         AND b.sequence_logic_id = a.sequence_logic_id )
+	                         AND bc.formula_definition_id = t1.formula_definition_id 
+	                 )
+            )
+    </select>
+    
+    <select id="findFormulaDetailsBusinessCheckNodeByProject" resultMap="formulaDetailResultMap">
+       SELECT 
+            t1.formula_detail_id, 
+            t1.item_sequence_no, 
+            t1.type, 
+            t1.value, 
+            t1.parameter_id, 
+            t1.formula_definition_id,
+            t1.function_method_id
+        FROM formula_detail t1
+        WHERE 
+            (
+            EXISTS ( 
+                SELECT bc.formula_definition_id
+                FROM business_check_detail bc INNER JOIN business_check_component a ON bc.business_check_component_id = a.business_check_component_id
+                WHERE EXISTS
+	                (
+	                 SELECT b.sequence_logic_id
+	                 FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          	 WHERE bl.project_id = #{projectId}
+	                         AND component_type = 4
+	                         AND b.sequence_logic_id = a.sequence_logic_id )
+	                         AND bc.formula_definition_id = t1.formula_definition_id 
+	                 )
+            )
+    </select>
+    
+    <select id="findFormulaMethodInputsBusinessCheckNodeByModule" resultMap="formulaMethodInputResultMap">
+       SELECT 
+            t1.formula_method_input_id, 
+            t1.method_input_id, 
+            t1.parameter_scope, 
+            t1.parameter_id, 
+            t1.parameter_value, 
+            t1.formula_detail_id,
+            t2.formula_definition_id
+        FROM formula_method_input t1
+        LEFT JOIN formula_detail t2
+            on (t2.formula_detail_id= t1.formula_detail_id)
+        WHERE 
+            (
+            EXISTS ( 
+                SELECT bc.formula_definition_id
+                FROM business_check_detail bc INNER JOIN business_check_component a ON bc.business_check_component_id = a.business_check_component_id
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          	 WHERE bl.module_id = #{moduleId}
+                             AND component_type = 4
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND bc.formula_definition_id = t2.formula_definition_id 
+                     )
+            )
+    </select>
+    
+    <select id="findFormulaMethodInputsBusinessCheckNodeByProject" resultMap="formulaMethodInputResultMap">
+       SELECT 
+            t1.formula_method_input_id, 
+            t1.method_input_id, 
+            t1.parameter_scope, 
+            t1.parameter_id, 
+            t1.parameter_value, 
+            t1.formula_detail_id,
+            t2.formula_definition_id
+        FROM formula_method_input t1
+        LEFT JOIN formula_detail t2
+            on (t2.formula_detail_id= t1.formula_detail_id)
+        WHERE 
+            (
+            EXISTS ( 
+                SELECT bc.formula_definition_id
+                FROM business_check_detail bc INNER JOIN business_check_component a ON bc.business_check_component_id = a.business_check_component_id
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          	 WHERE bl.project_id = #{projectId}
+                             AND component_type = 4
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND bc.formula_definition_id = t2.formula_definition_id 
+                     )
+            )
+    </select>
+    
+    <select id="findFormulaMethodOutputsBusinessCheckNodeByModule" resultMap="formulaMethodOutputResultMap">
+        SELECT 
+            t1.formula_method_output_id, 
+            t1.formula_detail_id, 
+            t1.method_output_id,
+            t2.formula_definition_id,
+            fmo.method_output_code
+        FROM formula_method_output t1
+        LEFT JOIN formula_detail t2
+            on (t2.formula_detail_id= t1.formula_detail_id)
+        LEFT JOIN function_method_output fmo ON t1.method_output_id = fmo.method_output_id
+        WHERE 
+            (
+            EXISTS ( 
+                SELECT bc.formula_definition_id
+                FROM business_check_detail bc INNER JOIN business_check_component a ON bc.business_check_component_id = a.business_check_component_id
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          	 WHERE bl.module_id = #{moduleId}
+                             AND component_type = 4
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND bc.formula_definition_id = t2.formula_definition_id 
+                     )
+            )
+    </select>
+    
+    <select id="findFormulaMethodOutputsBusinessCheckNodeByProject" resultMap="formulaMethodOutputResultMap">
+        SELECT 
+            t1.formula_method_output_id, 
+            t1.formula_detail_id, 
+            t1.method_output_id,
+            t2.formula_definition_id,
+            fmo.method_output_code
+        FROM formula_method_output t1
+        LEFT JOIN formula_detail t2
+            on (t2.formula_detail_id= t1.formula_detail_id)
+        LEFT JOIN function_method_output fmo ON t1.method_output_id = fmo.method_output_id
+        WHERE 
+            (
+            EXISTS ( 
+                SELECT bc.formula_definition_id
+                FROM business_check_detail bc INNER JOIN business_check_component a ON bc.business_check_component_id = a.business_check_component_id
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          	 WHERE bl.project_id = #{projectId}
+                             AND component_type = 4
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND bc.formula_definition_id = t2.formula_definition_id 
+                     )
+            )
+    </select>
+    
+    <!-- //TungHT -->
+    <select id="findFormulaMethodInputsByFormulaDetails" resultMap="formulaMethodInputResultMap">
+    	SELECT 
+    		t1.formula_method_input_id, 
+            t1.method_input_id, 
+            t1.parameter_scope, 
+            t1.parameter_type, 
+            t1.parameter_id, 
+            t1.parameter_value, 
+            t1.formula_detail_id,
+            t2.formula_definition_id, 
+            t1.data_type, 
+            t1.array_flg
+		FROM 
+			formula_method_input t1
+		LEFT JOIN formula_detail t2 ON t1.formula_detail_id = t2.formula_detail_id
+		
+		WHERE
+			<if test="lstFormulaDetails != null and lstFormulaDetails.size > 0">
+				t1.formula_detail_id  IN
+				<foreach collection="lstFormulaDetails" item="item" open="(" close=")" separator=",">
+					#{item.formulaDetailId}
+				</foreach>
+			</if>
+			<if test="lstFormulaDetails == null or lstFormulaDetails.size == 0">
+				FALSE
+			</if>
+		ORDER BY t1.formula_method_input_id
+    </select>
+    
+    <select id="findFormulaMethodOutputsByFormulaDetails" resultMap="formulaMethodOutputResultMap">
+    	SELECT 
+    		t1.formula_method_output_id, 
+            t1.formula_detail_id, 
+            t1.method_output_id,
+            t2.formula_definition_id, 
+            t1.data_type, 
+            t1.array_flg
+		FROM 
+			formula_method_output t1
+		LEFT JOIN formula_detail t2 ON t1.formula_detail_id = t2.formula_detail_id
+		
+		WHERE
+			<if test="lstFormulaDetails != null and lstFormulaDetails.size > 0">
+				t1.formula_detail_id  IN
+				<foreach collection="lstFormulaDetails" item="item" open="(" close=")" separator=",">
+					#{item.formulaDetailId}
+				</foreach>
+			</if>
+			<if test="lstFormulaDetails == null or lstFormulaDetails.size == 0">
+				FALSE
+			</if>
+		ORDER BY t1.formula_method_output_id
+    </select>
+    
+    <select id="findFormulaDetailsFileOperationNodeByModule" resultMap="formulaDetailResultMap">
+       SELECT 
+            t1.formula_detail_id, 
+            t1.item_sequence_no, 
+            t1.type, 
+            t1.value, 
+            t1.parameter_id, 
+            t1.formula_definition_id,
+            t1.function_method_id
+        FROM formula_detail t1
+        WHERE
+			(
+            EXISTS ( 
+                SELECT 1
+                FROM fileoperation_component fo
+                WHERE EXISTS
+	                (
+	                 SELECT b.sequence_logic_id
+	                 FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          	 WHERE bl.module_id = #{moduleId}
+	                         AND component_type = 15
+	                         AND b.sequence_logic_id = fo.sequence_logic_id 
+	                )
+	                AND ( fo.source_path_formula_id = t1.formula_definition_id OR fo.destination_path_formula_id = t1.formula_definition_id
+	                         OR fo.new_filename_formula_id = t1.formula_definition_id )
+	            UNION
+		           
+	            SELECT 1
+                FROM fileoperation_component fo
+                INNER JOIN merge_file_detail mfd ON mfd.fileoperation_component_id = fo.fileoperation_component_id
+                WHERE mfd.source_path_formula_id = t1.formula_definition_id
+            )                  
+		)
+    </select>
+    
+    <select id="findFormulaDefinitionFileOperationNodeByModule" resultMap="formulaDefinitionResultMap">
+        SELECT t1.formula_definition_id,
+		       t1.formula_definition_content,
+		       t1.project_id
+		FROM formula_definition t1
+		WHERE
+			(
+            EXISTS ( 
+                SELECT 1
+                FROM fileoperation_component fo
+                WHERE EXISTS
+	                (
+	                 SELECT b.sequence_logic_id
+	                 FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          	 WHERE bl.module_id = #{moduleId}
+	                         AND component_type = 15
+	                         AND b.sequence_logic_id = fo.sequence_logic_id 
+	                )
+	                AND ( fo.source_path_formula_id = t1.formula_definition_id OR fo.destination_path_formula_id = t1.formula_definition_id
+	                         OR fo.new_filename_formula_id = t1.formula_definition_id )
+	            UNION
+		           
+	            SELECT 1
+                FROM fileoperation_component fo
+                INNER JOIN merge_file_detail mfd ON mfd.fileoperation_component_id = fo.fileoperation_component_id
+                WHERE mfd.source_path_formula_id = t1.formula_definition_id
+            )                  
+		)
+    </select>
+    
+    <select id="findFormulaDetailsImportFileNodeByModule" resultMap="formulaDetailResultMap">
+       SELECT 
+            t1.formula_detail_id, 
+            t1.item_sequence_no, 
+            t1.type, 
+            t1.value, 
+            t1.parameter_id, 
+            t1.formula_definition_id,
+            t1.function_method_id
+        FROM formula_detail t1
+        WHERE
+			(
+            EXISTS ( 
+                SELECT 1
+                FROM import_file_component t2
+                WHERE EXISTS
+	                (
+	                 SELECT b.sequence_logic_id
+	                 FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          	 WHERE bl.module_id = #{moduleId}
+	                         AND component_type = 16
+	                         AND b.sequence_logic_id = t2.sequence_logic_id 
+	                )
+	                AND ( t2.source_path_formula_id = t1.formula_definition_id )
+            )                  
+		)
+    </select>
+    
+    <select id="findFormulaDefinitionImportFileNodeByModule" resultMap="formulaDefinitionResultMap">
+        SELECT t1.formula_definition_id,
+		       t1.formula_definition_content,
+		       t1.project_id
+		FROM formula_definition t1
+		WHERE
+			(
+            EXISTS ( 
+                SELECT 1
+                FROM import_file_component t2
+                WHERE EXISTS
+	                (
+	                 SELECT b.sequence_logic_id
+	                 FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          	 WHERE bl.module_id = #{moduleId}
+	                         AND component_type = 16
+	                         AND b.sequence_logic_id = t2.sequence_logic_id 
+	                )
+	                AND ( t2.source_path_formula_id = t1.formula_definition_id )
+            )                  
+		)
+    </select>
+    
+    <select id="findFormulaDetailsExportFileNodeByModule" resultMap="formulaDetailResultMap">
+       SELECT 
+            t1.formula_detail_id, 
+            t1.item_sequence_no, 
+            t1.type, 
+            t1.value, 
+            t1.parameter_id, 
+            t1.formula_definition_id,
+            t1.function_method_id
+        FROM formula_detail t1
+        WHERE
+			(
+            EXISTS ( 
+                SELECT 1
+                FROM export_file_component t2
+                WHERE EXISTS
+	                (
+	                 SELECT b.sequence_logic_id
+	                 FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          	 WHERE bl.module_id = #{moduleId}
+	                         AND component_type = 17
+	                         AND b.sequence_logic_id = t2.sequence_logic_id 
+	                )
+	                AND ( t2.destination_path_formula_id = t1.formula_definition_id )
+            )                  
+		)
+    </select>
+    
+    <select id="findFormulaDefinitionExportFileNodeByModule" resultMap="formulaDefinitionResultMap">
+        SELECT t1.formula_definition_id,
+		       t1.formula_definition_content,
+		       t1.project_id
+		FROM formula_definition t1
+		WHERE
+			(
+            EXISTS ( 
+                SELECT 1
+                FROM export_file_component t2
+                WHERE EXISTS
+	                (
+	                 SELECT b.sequence_logic_id
+	                 FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          	 WHERE bl.module_id = #{moduleId}
+	                         AND component_type = 17
+	                         AND b.sequence_logic_id = t2.sequence_logic_id 
+	                )
+	                AND ( t2.destination_path_formula_id = t1.formula_definition_id )
+            )                  
+		)
+    </select>
+    
+    <select id="findFormulaDetailsLogNodeByModule" resultMap="formulaDetailResultMap">
+       SELECT 
+            t1.formula_detail_id, 
+            t1.item_sequence_no, 
+            t1.type, 
+            t1.value, 
+            t1.parameter_id, 
+            t1.formula_definition_id,
+            t1.function_method_id
+        FROM formula_detail t1
+        WHERE
+			(
+            EXISTS ( 
+                SELECT 1
+                FROM log_component t2
+                WHERE EXISTS
+	                (
+	                 SELECT b.sequence_logic_id
+	                 FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          	 WHERE bl.module_id = #{moduleId}
+	                         AND component_type = 21
+	                         AND b.sequence_logic_id = t2.sequence_logic_id 
+	                )
+	                AND ( t2.message_formula_id = t1.formula_definition_id )
+            )                  
+		)
+    </select>
+    
+    <select id="findFormulaDefinitionLogNodeByModule" resultMap="formulaDefinitionResultMap">
+        SELECT t1.formula_definition_id,
+		       t1.formula_definition_content,
+		       t1.project_id
+		FROM formula_definition t1
+		WHERE
+			(
+            EXISTS ( 
+                SELECT 1
+                FROM log_component t2
+                WHERE EXISTS
+	                (
+	                 SELECT b.sequence_logic_id
+	                 FROM sequence_logic b inner join business_logic bl on b.business_logic_id = bl.business_logic_id
+		          	 WHERE bl.module_id = #{moduleId}
+	                         AND component_type = 21
+	                         AND b.sequence_logic_id = t2.sequence_logic_id 
+	                )
+	                AND ( t2.message_formula_id = t1.formula_definition_id )
+            )                  
+		)
+    </select>
+    
+    <!-- QuangVD -->
+    <select id="findFormulaDetailsByModule" resultMap="formulaDetailResultMap">
+       SELECT 
+            t1.formula_detail_id, 
+            t1.item_sequence_no, 
+            t1.type, 
+            t1.value, 
+            t1.parameter_id, 
+            t1.formula_definition_id,
+            t1.function_method_id
+        FROM formula_detail t1
+        WHERE 
+            (
+            EXISTS ( 
+                SELECT a.subject_formula_id
+                FROM email_component a
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b
+                     LEFT JOIN business_logic c on (c.business_logic_id = b.business_logic_id)
+                     WHERE c.module_id = #{moduleId}
+                             AND component_type = 20
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND a.subject_formula_id = t1.formula_definition_id 
+                     )
+             OR
+             EXISTS ( 
+                SELECT a.recipient_formula_id
+                FROM email_recipient a
+                WHERE EXISTS
+                    (SELECT b.email_component_id
+                    FROM email_component b
+                    INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+                                                 AND c.component_type = 20)
+                    LEFT JOIN business_logic d on (d.business_logic_id = c.business_logic_id)
+                    WHERE d.module_id = #{moduleId}
+                        AND b.email_component_id = a.email_component_id)
+                        AND a.recipient_formula_id = t1.formula_definition_id
+                    )
+             OR
+            EXISTS ( 
+                SELECT a.message_formula_id
+                FROM log_component a
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b
+                     LEFT JOIN business_logic c on (c.business_logic_id = b.business_logic_id)
+                     WHERE c.module_id = #{moduleId}
+                             AND component_type = 21
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND a.message_formula_id = t1.formula_definition_id 
+                     )
+             OR
+            EXISTS ( 
+                SELECT a.file_name_formula_id
+                FROM download_file_component a
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b
+                     LEFT JOIN business_logic c on (c.business_logic_id = b.business_logic_id)
+                     WHERE c.module_id = #{moduleId}
+                             AND component_type = 23
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND a.file_name_formula_id = t1.formula_definition_id 
+                     )
+             OR
+            EXISTS ( 
+                SELECT a.formula_definition_id
+                FROM loop_component a
+                WHERE EXISTS
+	                (
+	                 SELECT b.sequence_logic_id
+	                 FROM sequence_logic b
+	                 LEFT JOIN business_logic c on (c.business_logic_id = b.business_logic_id)
+	                 WHERE c.module_id = #{moduleId}
+	                         AND component_type = 10
+	                         AND b.sequence_logic_id = a.sequence_logic_id )
+	                         AND a.formula_definition_id = t1.formula_definition_id 
+	                 )
+	         OR
+             EXISTS ( 
+                SELECT a.formula_definition_id
+                FROM if_condition_detail a
+                WHERE EXISTS
+                    (SELECT b.if_component_id
+                    FROM if_component b
+                    INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+                                                 AND c.component_type = 9)
+                    LEFT JOIN business_logic d on (d.business_logic_id = c.business_logic_id)
+	                WHERE d.module_id = #{moduleId}
+                    	AND b.if_component_id = a.if_component_id)
+                    	AND a.formula_definition_id = t1.formula_definition_id
+                    )
+             OR
+             EXISTS (
+                SELECT a.formula_definition_id
+                FROM business_check_detail a
+                WHERE EXISTS
+                    (SELECT b.business_check_component_id
+                    FROM  business_check_component b
+                    INNER JOIN sequence_logic c
+                    on (c.sequence_logic_id = b.sequence_logic_id)
+                    LEFT JOIN business_logic d on (d.business_logic_id = c.business_logic_id)
+	                WHERE d.module_id = #{moduleId}
+                    	AND c.component_type = 4
+                    	AND b.business_check_component_id = a.business_check_component_id)
+                    	AND a.formula_definition_id = t1.formula_definition_id
+             )
+             OR
+             EXISTS (
+                SELECT a.formula_definition_id
+                FROM assign_detail a
+                WHERE EXISTS
+                    (
+                        SELECT b.assign_component_id
+                        FROM assign_component b
+                        INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+                                                 AND c.component_type = 8)
+                        LEFT JOIN business_logic d on (d.business_logic_id = c.business_logic_id)
+	               		WHERE d.module_id = #{moduleId}
+                        	AND b.assign_component_id = a.assign_component_id
+                     )
+                    AND a.formula_definition_id = t1.formula_definition_id
+             )
+             OR
+             EXISTS (
+                SELECT 
+                	a.source_path_formula_id,
+                	a.destination_path_formula_id,
+                	a.new_filename_formula_id
+                FROM fileoperation_component a
+              	INNER JOIN sequence_logic c ON (c.sequence_logic_id = a.sequence_logic_id AND c.component_type = 15)
+               	LEFT JOIN business_logic d on (d.business_logic_id = c.business_logic_id)
+	           	WHERE d.module_id = #{moduleId}
+                    AND 
+                    (a.source_path_formula_id = t1.formula_definition_id or a.destination_path_formula_id = t1.formula_definition_id or a.new_filename_formula_id = t1.formula_definition_id)
+             )
+             OR
+             EXISTS (
+                SELECT a.source_path_formula_id
+                FROM merge_file_detail a
+                INNER JOIN fileoperation_component b ON (b.fileoperation_component_id = a.fileoperation_component_id)
+                INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+                                         AND c.component_type = 15)
+                LEFT JOIN business_logic d on (d.business_logic_id = c.business_logic_id)
+	           	WHERE d.module_id = #{moduleId}
+                	AND a.source_path_formula_id = t1.formula_definition_id
+             )
+             OR
+             EXISTS (
+                SELECT a.source_path_formula_id
+                FROM import_file_component a
+                INNER JOIN sequence_logic c ON (c.sequence_logic_id = c.sequence_logic_id
+                                         AND c.component_type = 16)
+                LEFT JOIN business_logic d on (d.business_logic_id = c.business_logic_id)
+	           	WHERE d.module_id = #{moduleId}
+                AND a.source_path_formula_id = t1.formula_definition_id
+             )
+             OR
+             EXISTS (
+                SELECT a.destination_path_formula_id
+                FROM export_file_component a
+                INNER JOIN sequence_logic c ON (c.sequence_logic_id = c.sequence_logic_id
+                                         AND c.component_type = 17)
+               	LEFT JOIN business_logic d on (d.business_logic_id = c.business_logic_id)
+	           	WHERE d.module_id = #{moduleId}
+                	AND a.destination_path_formula_id = t1.formula_definition_id
+             )
+            )
+        ORDER BY t1.item_sequence_no
+    </select>
+    
+    <!-- generate source code of commmon blogic -->
+    <select id="findFormulaDetailsByModuleCommon" resultMap="formulaDetailResultMap">
+       SELECT 
+            t1.formula_detail_id, 
+            t1.item_sequence_no, 
+            t1.type, 
+            t1.value, 
+            t1.parameter_id, 
+            t1.formula_definition_id,
+            t1.function_method_id
+        FROM formula_detail t1
+        WHERE 
+            (
+            EXISTS ( 
+                SELECT a.subject_formula_id
+                FROM email_component a
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b
+                     LEFT JOIN business_logic c on (c.business_logic_id = b.business_logic_id)
+                     WHERE  c.project_id = #{projectId} AND c.module_id is null and c.blogic_type = 1   
+                             AND component_type = 20
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND a.subject_formula_id = t1.formula_definition_id 
+                     )
+             OR
+             EXISTS ( 
+                SELECT a.recipient_formula_id
+                FROM email_recipient a
+                WHERE EXISTS
+                    (SELECT b.email_component_id
+                    FROM email_component b
+                    INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+                                                 AND c.component_type = 20)
+                    LEFT JOIN business_logic d on (d.business_logic_id = c.business_logic_id)
+                    WHERE d.project_id = #{projectId} AND d.module_id is null and d.blogic_type = 1 
+                        AND b.email_component_id = a.email_component_id)
+                        AND a.recipient_formula_id = t1.formula_definition_id
+                    )
+             OR
+            EXISTS ( 
+                SELECT a.message_formula_id
+                FROM log_component a
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b
+                     LEFT JOIN business_logic c on (c.business_logic_id = b.business_logic_id)
+                     WHERE  c.project_id = #{projectId} AND c.module_id is null and c.blogic_type = 1   
+                             AND component_type = 21
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND a.message_formula_id = t1.formula_definition_id 
+                     )
+             OR
+            EXISTS ( 
+                SELECT a.file_name_formula_id
+                FROM download_file_component a
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b
+                     LEFT JOIN business_logic c on (c.business_logic_id = b.business_logic_id)
+                     WHERE  c.project_id = #{projectId} AND c.module_id is null and c.blogic_type = 1   
+                             AND component_type = 23
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND a.file_name_formula_id = t1.formula_definition_id 
+                     )
+             OR
+            EXISTS ( 
+                SELECT a.formula_definition_id
+                FROM loop_component a
+                WHERE EXISTS
+                    (
+                     SELECT b.sequence_logic_id
+                     FROM sequence_logic b
+                     LEFT JOIN business_logic c on (c.business_logic_id = b.business_logic_id)
+                     WHERE  c.project_id = #{projectId} AND c.module_id is null and c.blogic_type = 1   
+                             AND component_type = 10
+                             AND b.sequence_logic_id = a.sequence_logic_id )
+                             AND a.formula_definition_id = t1.formula_definition_id 
+                     )
+             OR
+             EXISTS ( 
+                SELECT a.formula_definition_id
+                FROM if_condition_detail a
+                WHERE EXISTS
+                    (SELECT b.if_component_id
+                    FROM if_component b
+                    INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+                                                 AND c.component_type = 9)
+                    LEFT JOIN business_logic d on (d.business_logic_id = c.business_logic_id)
+                    WHERE d.project_id = #{projectId} AND d.module_id is null and d.blogic_type = 1 
+                        AND b.if_component_id = a.if_component_id)
+                        AND a.formula_definition_id = t1.formula_definition_id
+                    )
+             OR
+             EXISTS (
+                SELECT a.formula_definition_id
+                FROM business_check_detail a
+                WHERE EXISTS
+                    (SELECT b.business_check_component_id
+                    FROM  business_check_component b
+                    INNER JOIN sequence_logic c
+                    on (c.sequence_logic_id = b.sequence_logic_id)
+                    LEFT JOIN business_logic d on (d.business_logic_id = c.business_logic_id)
+                    WHERE d.project_id = #{projectId} AND d.module_id is null and d.blogic_type = 1
+                        AND c.component_type = 4
+                        AND b.business_check_component_id = a.business_check_component_id)
+                        AND a.formula_definition_id = t1.formula_definition_id
+             )
+             OR
+             EXISTS (
+                SELECT a.formula_definition_id
+                FROM assign_detail a
+                WHERE EXISTS
+                    (
+                        SELECT b.assign_component_id
+                        FROM assign_component b
+                        INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+                                                 AND c.component_type = 8)
+                        LEFT JOIN business_logic d on (d.business_logic_id = c.business_logic_id)
+                        WHERE d.project_id = #{projectId} AND d.module_id is null and d.blogic_type = 1 
+                            AND b.assign_component_id = a.assign_component_id
+                     )
+                    AND a.formula_definition_id = t1.formula_definition_id
+             )
+             OR
+             EXISTS (
+                SELECT 
+                    a.source_path_formula_id,
+                    a.destination_path_formula_id,
+                    a.new_filename_formula_id
+                FROM fileoperation_component a
+                INNER JOIN sequence_logic c ON (c.sequence_logic_id = a.sequence_logic_id AND c.component_type = 15)
+                LEFT JOIN business_logic d on (d.business_logic_id = c.business_logic_id)
+                WHERE d.project_id = #{projectId} AND d.module_id is null and d.blogic_type = 1 
+                    AND 
+                    (a.source_path_formula_id = t1.formula_definition_id or a.destination_path_formula_id = t1.formula_definition_id or a.new_filename_formula_id = t1.formula_definition_id)
+             )
+             OR
+             EXISTS (
+                SELECT a.source_path_formula_id
+                FROM merge_file_detail a
+                INNER JOIN fileoperation_component b ON (b.fileoperation_component_id = a.fileoperation_component_id)
+                INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id
+                                         AND c.component_type = 15)
+                LEFT JOIN business_logic d on (d.business_logic_id = c.business_logic_id)
+                WHERE d.project_id = #{projectId} AND d.module_id is null and d.blogic_type = 1 
+                    AND a.source_path_formula_id = t1.formula_definition_id
+             )
+             OR
+             EXISTS (
+                SELECT a.source_path_formula_id
+                FROM import_file_component a
+                INNER JOIN sequence_logic c ON (c.sequence_logic_id = c.sequence_logic_id
+                                         AND c.component_type = 16)
+                LEFT JOIN business_logic d on (d.business_logic_id = c.business_logic_id)
+                WHERE d.project_id = #{projectId} AND d.module_id is null and d.blogic_type = 1 
+                AND a.source_path_formula_id = t1.formula_definition_id
+             )
+             OR
+             EXISTS (
+                SELECT a.destination_path_formula_id
+                FROM export_file_component a
+                INNER JOIN sequence_logic c ON (c.sequence_logic_id = c.sequence_logic_id
+                                         AND c.component_type = 17)
+                LEFT JOIN business_logic d on (d.business_logic_id = c.business_logic_id)
+                WHERE d.project_id = #{projectId} AND d.module_id is null and d.blogic_type = 1
+                    AND a.destination_path_formula_id = t1.formula_definition_id
+             )
+            )
+        ORDER BY t1.item_sequence_no
+    </select>
+    
+    <delete id="updateImpactChangeWhenDeletedInput" >
+		Delete from formula_method_input
+		WHERE
+			<if test="lstMethodInputIds != null and lstMethodInputIds.size > 0">
+				method_input_id IN
+				<foreach collection="lstMethodInputIds" item="input" open="(" close=")" separator=",">
+					CAST(#{input.methodInputId} as numeric)
+				</foreach>
+			</if>
+			<if test="lstMethodInputIds == null or lstMethodInputIds.size == 0">
+				FALSE
+			</if>
+    </delete>
+</mapper>

@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="org.terasoluna.qp.domain.repository.tabledesign.UserDefineCodelistRepository">
+
+	<resultMap id="resultMap" type="UserDefineCodelistDetails">
+		<result property="codelistId" column="codelist_id" />
+		<result property="itemSeqNo" column="item_seq_no" />
+		<result property="codelistName" column="codelist_name" />
+		<result property="codelistValue" column="codelist_value" />
+		<result property="defaultFlg" column="default_flg" />
+		<result property="supportOptionFlg" column="support_option_flag" />
+		<result property="otherName" column="screen_code" />
+	</resultMap>
+
+	<delete id="deleteUserDefineCodelist" parameterType="long">
+		<![CDATA[
+			DELETE FROM
+				user_define_codelist_detail
+			WHERE 
+				codelist_id = #{codelistId};
+				
+			DELETE FROM
+				user_define_codelist
+			WHERE 
+				codelist_id = #{codelistId}
+		]]>
+	</delete>
+	
+	<select id="getAllByCodeList" resultMap="resultMap">
+		<![CDATA[
+			SELECT 
+				ud.codelist_id,
+				ud.support_option_flag,
+				udd.codelist_name,
+				udd.codelist_value,
+				udd.default_flg,
+				udd.item_seq_no
+			FROM 
+				user_define_codelist ud INNER JOIN user_define_codelist_detail udd
+			ON 
+				ud.codelist_id = udd.codelist_id
+			WHERE 
+				ud.codelist_id = #{codelistId}
+			ORDER BY
+				udd.item_seq_no
+		]]>
+	</select>
+	
+	<select id="getAllUserDefineCodeListDetails" resultMap="resultMap">
+		<![CDATA[
+			SELECT 
+				ud.codelist_id,
+				ud.support_option_flag,
+				udd.codelist_name,
+				udd.codelist_value,
+				udd.default_flg,
+				udd.item_seq_no
+			FROM 
+				user_define_codelist ud INNER JOIN user_define_codelist_detail udd
+			ON
+				ud.codelist_id = udd.codelist_id
+			ORDER BY
+				udd.item_seq_no
+		]]>
+	</select>
+	
+	<select id="getAllByDomainDesign" parameterType="DomainDesign" resultMap="resultMap">
+		<![CDATA[
+			SELECT 
+				ud.codelist_id,
+				ud.support_option_flag,
+				udd.codelist_name,
+				udd.codelist_value,
+				udd.default_flg,
+				udd.item_seq_no
+			FROM 
+				user_define_codelist ud INNER JOIN user_define_codelist_detail udd
+			ON
+				ud.codelist_id = udd.codelist_id
+			WHERE 
+				ud.codelist_id = #{datasourceId}
+			ORDER BY
+				udd.item_seq_no
+		]]>
+	</select>
+	
+	<select id="getByTableDesign" parameterType="long" resultMap="resultMap">
+		<![CDATA[
+			WITH table_design_temp AS
+				(
+					SELECT 
+						datasource_id
+					FROM 
+						table_design_details
+					WHERE 
+						tbl_design_id = #{tableDesignId}
+						AND constrains_type = 2
+						AND datasource_type = 0
+						AND data_type_flg = 0
+					UNION ALL
+				
+					SELECT 
+						b.datasource_id 
+					FROM 
+						table_design_details AS a 
+					INNER JOIN domain_design b 
+						ON  (a.tbl_design_id = #{tableDesignId} AND a.data_type_flg = 1 AND a.data_type = b.domain_id)
+					WHERE 
+				  		b.constrains_type = 2
+						AND b.datasource_type = 0
+				)
+			SELECT 
+				ud.codelist_id,
+				ud.support_option_flag,
+				udd.codelist_name,
+				udd.codelist_value,
+				udd.default_flg,
+				udd.item_seq_no
+			FROM 
+				user_define_codelist ud INNER JOIN user_define_codelist_detail udd ON ud.codelist_id = udd.codelist_id
+			WHERE
+				EXISTS 
+					(
+						SELECT
+							1
+						FROM 
+							table_design_temp temp
+						WHERE 
+							ud.codelist_id = temp.datasource_id
+					)
+			ORDER BY
+				udd.item_seq_no
+		]]>
+	</select>
+	
+	<select id="getScreenUserDefineCodelistByProject" parameterType="long" resultMap="resultMap">
+		SELECT DISTINCT
+			COALESCE(e.codelist_name, e.codelist_value) AS codelist_name,
+			e.codelist_value, 
+			e.codelist_id,
+			s.screen_code
+		FROM  
+			screen_item b
+		INNER JOIN screen_design s ON s.screen_id = b.screen_id	
+		INNER JOIN user_define_codelist_detail e ON e.codelist_id = b.user_define_codelist_id
+		INNER JOIN screen_design c ON b.screen_id = c.screen_id 
+		INNER JOIN module d ON d.module_id = c.module_id
+		WHERE d.project_id = #{projectId}
+		ORDER BY e.codelist_id
+	</select>
+	
+	<select id="getTableCodelistByProject" parameterType="long" resultMap="resultMap">
+		<![CDATA[
+			WITH table_design_temp AS
+				(
+					SELECT 
+						b.datasource_id
+					FROM 
+						table_design a
+					INNER JOIN
+						table_design_details b ON a.tbl_design_id = b.tbl_design_id AND a.project_id = #{projectId}
+					WHERE 
+						 b.constrains_type = 2
+						AND b.datasource_type = 0
+						AND b.data_type_flg = 0
+
+					UNION
+					SELECT 
+						datasource_id
+					FROM
+						domain_design
+					WHERE 
+						project_id = #{projectId}
+						AND constrains_type = 2
+						AND datasource_type = 0
+				)
+			SELECT 
+				ud.codelist_id,
+				ud.support_option_flag,
+				COALESCE(udd.codelist_name, udd.codelist_value) AS codelist_name,
+				udd.codelist_value,
+				udd.default_flg,
+				udd.item_seq_no
+			FROM 
+				user_define_codelist ud INNER JOIN user_define_codelist_detail udd ON ud.codelist_id = udd.codelist_id
+			WHERE
+				EXISTS 
+					(
+						SELECT
+							1
+						FROM 
+							table_design_temp temp
+						WHERE 
+							ud.codelist_id = temp.datasource_id
+					)
+			ORDER BY
+				udd.codelist_id
+		]]>
+	</select>
+	
+	<insert id="createUserDefineCodelist" parameterType="UserDefineCodelist">
+		<selectKey keyProperty="codelistId" resultType="long" order="BEFORE">
+			SELECT nextval('user_define_codelist_seq') AS codelistId
+		</selectKey>
+		<![CDATA[
+			INSERT INTO
+				user_define_codelist
+			(
+				codelist_id,
+				support_option_flag
+			)
+			VALUES
+			(
+				#{codelistId},
+				#{supportOptionFlg}
+			)
+		]]>
+	</insert>
+	
+	<insert id="createUserDefineCodelistDetails">
+		INSERT INTO
+				user_define_codelist_detail
+			(
+				codelist_id, 
+				codelist_name, 
+				codelist_value,
+				default_flg,
+				item_seq_no
+			)
+			VALUES
+		<foreach item="item" collection="userDefineCodelistDetails" separator=",">
+		(
+			#{item.codelistId},
+			#{item.codelistName},
+			#{item.codelistValue},
+			#{item.defaultFlg},
+			#{item.itemSeqNo}
+		)
+		</foreach>
+	</insert>
+	
+	<delete id="multiDeleteUserDefineCodelist">
+		<foreach item="codelistId" collection="listOfId">
+			DELETE FROM
+				user_define_codelist_detail
+			WHERE
+				codelist_id = #{codelistId};
+	
+			DELETE FROM
+				user_define_codelist
+			WHERE
+				codelist_id = #{codelistId};
+		</foreach>
+	</delete>
+	<select id="getUserDefineCodeListDetailsByListIds" resultMap="resultMap">
+		SELECT 
+			ud.codelist_id,
+			ud.support_option_flag,
+			udd.codelist_name,
+			udd.codelist_value,
+			udd.default_flg,
+			udd.item_seq_no
+		FROM 
+			user_define_codelist ud INNER JOIN user_define_codelist_detail udd
+		ON
+			ud.codelist_id = udd.codelist_id
+		<where>
+			<if test="listOfId != null and listOfId.size > 0">
+				<foreach item="codelistId" collection="listOfId" open=" ud.codelist_id IN (" separator="," close=")">
+					#{codelistId}
+				</foreach>
+			</if>
+			<if test="listOfId == null or listOfId.size == 0">
+				FALSE
+			</if>
+		</where>
+		ORDER BY
+			udd.item_seq_no
+	</select>
+</mapper>

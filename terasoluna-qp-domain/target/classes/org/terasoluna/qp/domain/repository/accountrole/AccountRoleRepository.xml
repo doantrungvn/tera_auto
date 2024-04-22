@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="org.terasoluna.qp.domain.repository.accountrole.AccountRoleRepository">
+
+	<resultMap id="resultMap" type="AccountRole">
+		<result property="roleId" column="role_id" />
+		<result property="accountId" column="account_id" />
+		<result property="updatedDate" column="updated_date" />
+	</resultMap>
+
+	<delete id="deleteByAccountId" parameterType="Long">
+        DELETE 
+        FROM account_role
+        WHERE 
+        account_id = #{accountId}
+    </delete>
+    
+    <insert id="createAccountRole" >
+    	<if test="roleItems != null and  roleItems.size() > 0 ">
+			INSERT INTO 
+				account_role
+			(
+	           	account_id,
+	           	role_id,
+	           	updated_date
+	        )
+	    	SELECT  #{accountId}, role_id, updated_date  FROM role where role_id in 
+	    	<foreach item="item" collection="roleItems" separator="," open="(" close=")">
+	    		#{item.roleId}
+			</foreach>;
+		</if>
+    </insert>
+</mapper>

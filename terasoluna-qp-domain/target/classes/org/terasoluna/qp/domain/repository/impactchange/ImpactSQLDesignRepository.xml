@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.impactchange.ImpactSQLDesignRepository">
+	<resultMap id="executionComponentResultMap" type="ExecutionComponent">
+		<id property="executionComponentId" column="execution_component_id" />
+		<result property="label" column="label" />
+		<result property="sqlDesignId" column="sql_design_id" />
+		<result property="sqlDesignIdAutocomplete" column="sql_design_name" />
+		<result property="sqlDesignCode" column="sql_design_code" />
+		<result property="sqlDesignIdRefer" column="sql_design_id_refer" />
+		<result property="sqlDesignNameRefer" column="sql_design_name_refer" />
+		<result property="sqlDesignCodeRefer" column="sql_design_code_refer" />
+		<result property="sqlPattern" column="sql_pattern" />
+		<result property="remark" column="remark" />
+		<result property="sequenceLogicId" column="sequence_logic_id" />
+		<result property="concurrencyFlg" column="concurrency_flg" />
+		<result property="moduleId" column="module_id" />
+		<result property="moduleIdAutocomplete" column="module_name" />
+		<result property="moduleCode" column="module_code" />
+		<result property="returnType" column="return_type" />
+		<result property="pageable" column="pageable" />
+		<result property="businessLogicId" column="business_logic_id" />
+	</resultMap>
+
+    <resultMap id="businessDesignResultMap" type="BusinessDesign">
+        <id property="businessLogicId" column="business_logic_id" />
+        <result property="businessLogicCode" column="business_logic_code" />
+        <result property="businessLogicName" column="business_logic_name" />
+        <result property="returnType" column="return_type" />
+        <result property="moduleName" column="module_name" />
+        <result property="blogicType" column="blogic_type" />
+    </resultMap>
+    
+    
+    <resultMap type="org.terasoluna.qp.domain.model.DomainDesign" id="domainResultMap">
+		<id property="domainId" column="domain_id" />
+		<result property="domainName" column="domain_name" />
+		<result property="domainCode" column="domain_code" />
+		<result property="maxLength" column="maxlength" />
+		<result property="mandatoryflg" column="mandatory_flg" />
+		<result property="minVal" column="min_val" />
+		<result property="maxVal" column="max_val" />
+		<result property="precision" column="decimal_part" />
+		<result property="defaultValue" column="default_value" />
+		<result property="defaultType" column="default_type" />
+		<result property="baseType" column="base_type" />
+		<result property="groupBasetypeId" column="group_base_type_id" />
+		<result property="fmtCode" column="fmt_code" />
+		<result property="remark" column="remark" />
+		<result property="createdBy" column="created_by" />
+		<result property="createdDate" column="created_date" />
+		<result property="updatedBy" column="update_by" />
+		<result property="updatedDate" column="updated_date" />
+		<result property="projectId" column="project_id" />
+		<result property="tableName" column="table_name" />
+		<result property="projectIdAutocomplete" column="project_name" />
+		<result property="baseTypeAutocomplete" column="base_type_name" />
+		<result property="majorClassification" column="major_classification" />
+		<result property="subClassification" column="sub_classification" />
+		<result property="minorClassification" column="minor_classification" />
+		<result property="optionLabel" column="option_label" />
+		<result property="optionValue" column="option_value" />
+		<result property="optionLabelAutocomplete" column="option_label_autocomplete" />
+		<result property="optionValueAutocomplete" column="option_value_autocomplete" />
+	</resultMap>
+	
+	<resultMap id="tableResultMap" type="org.terasoluna.qp.domain.model.TableDesign">
+		<result property="tableDesignId" column="tbl_design_id" />
+		<result property="tableName" column="tbl_design_name" />
+		<result property="tableCode" column="tbl_design_code" />
+	</resultMap>
+	
+	<resultMap id="tableDetailResultMap" type="org.terasoluna.qp.domain.model.TableDesignDetails">
+		<result property="columnId" column="column_id" />
+		<result property="code" column="column_code" />
+		<result property="tableDesignId" column="tbl_design_id" />
+	</resultMap>
+	
+	<resultMap id="executionInputValueResultMap" type="ExecutionInputValue">
+        <id property="executionInputValueId" column="execution_input_value_id" />
+        <result property="executionComponentId" column="execution_component_id" />
+        <result property="sqlDesignInputId" column="sql_design_input_id" />
+        <result property="sqlDesignInputCode" column="sql_design_input_code" />
+        <result property="sqlDesignInputName" column="sql_design_input_name" />
+        <result property="dataType" column="data_type" />
+        <result property="arrayFlg" column="array_flg" />
+        <result property="parameterScope" column="parameter_scope" />
+        <result property="parameterId" column="parameter_id" />
+        <result property="itemSequenceNo" column="item_sequence_no" />
+    </resultMap>
+    
+    <resultMap id="executionOutputValueResultMap" type="ExecutionOutputValue">
+        <id property="executionOutputValueId" column="execution_output_value_id" />
+        <result property="executionComponentId" column="execution_component_id" />
+        <result property="sqlDesignOutputId" column="sql_design_output_id" />
+        <result property="sqlDesignOutputCode" column="sql_design_output_code" />
+        <result property="sqlDesignOutputName" column="sql_design_output_name" />
+        <result property="dataType" column="data_type" />
+        <result property="arrayFlg" column="array_flg" />
+        <result property="targetScope" column="target_scope" />
+        <result property="targetId" column="target_id" />
+        <result property="itemSequenceNo" column="item_sequence_no" />
+    </resultMap>
+    
+	<select id="findExecutionComponentBySqlDesignId" resultMap="executionComponentResultMap">
+		SELECT 
+			a.execution_component_id, 
+			a.label, 
+			a.remark, 
+			a.sql_design_id, 
+			a.sequence_logic_id, 
+       		a.concurrency_flg, 
+       		a.sql_design_code,
+       		a.sql_design_name,
+       		b.business_logic_id
+  		FROM execution_component a
+  		LEFT JOIN sequence_logic b on (b.sequence_logic_id = a.sequence_logic_id)
+  		WHERE a.sql_design_id = #{sqlDesignId}
+	</select>
+	
+	<delete id="deleteExecutionInputValueByExecutionComponent">
+		DELETE FROM execution_input_value
+		WHERE
+		<if test="lstComponents != null and lstComponents.size > 0">
+			execution_component_id IN
+			<foreach collection="lstComponents" item="item" open="(" close=")" separator=",">
+				Cast(#{item.executionComponentId} as numeric)
+			</foreach>
+		</if>
+		<if test="lstComponents == null or lstComponents.size == 0">
+			FALSE
+		</if>
+    </delete>
+    
+    <delete id="deleteExecutionOutputValueByExecutionComponent">
+		DELETE FROM execution_output_value
+		WHERE
+		<if test="lstComponents != null and lstComponents.size > 0">
+			execution_component_id IN
+			<foreach collection="lstComponents" item="item" open="(" close=")" separator=",">
+				Cast(#{item.executionComponentId} as numeric)
+			</foreach>
+		</if>
+		<if test="lstComponents == null or lstComponents.size == 0">
+			FALSE
+		</if>
+    </delete>
+    
+    <!-- List of business logic -->
+    <select id="findAllBussinessLogicBySqlDesignId" parameterType="_long" resultMap="businessDesignResultMap">
+		SELECT
+		    DISTINCT a.business_logic_id,
+		    a.business_logic_code,
+		    a.business_logic_name,
+		    a.return_type,
+		    a.module_id,
+		    a.blogic_type,
+		    d.module_name as module_name,
+		    a.project_id
+		FROM business_logic a
+		LEFT JOIN module d ON d.module_id = a.module_id
+		WHERE exists
+		(
+			SELECT b.business_logic_id 
+			FROM sequence_logic b
+		    LEFT JOIN execution_component c ON c.sequence_logic_id = b.sequence_logic_id
+		    WHERE 
+			    c.sql_design_id = #{sqlDesignId}
+			    AND  b.business_logic_id = a.business_logic_id
+		)
+    </select>
+    
+    <select id="findAllDomainDesignsBySqlDesignId" parameterType="Long" resultMap="domainResultMap">
+		<![CDATA[
+			SELECT
+				domain_id,
+				domain_name,
+				domain_code,
+				maxlength,
+				mandatory_flg,
+				min_val,
+				max_val,
+				decimal_part,
+				default_value,
+				base_type,
+				fmt_code,
+				remark,
+				group_base_type_id
+			FROM
+				domain_design
+			WHERE
+				datasource_type = 3 AND datasource_id = #{sqlDesignId}
+		]]>
+	</select>
+	
+	<select id="findAllTableDesignsBySqlDesignId" resultMap="tableResultMap">
+    	SELECT
+			A.tbl_design_id,
+			A.tbl_design_name,
+			A.tbl_design_code
+		FROM 
+			table_design A
+		WHERE EXISTS(
+			SELECT column_id
+			FROM table_design_details B
+			WHERE B.tbl_design_id = A.tbl_design_id 
+				AND B.constrains_type = 2 
+				AND B.datasource_type = 3 
+				AND B.datasource_id = #{sqlDesignId}
+		)
+    </select>
+    
+    <select id="findAllTableDesignDetailsBySqlDesignId" resultMap="tableDetailResultMap">
+    	SELECT 
+    		a.column_id,
+    		a.tbl_design_id,
+    		a.column_code
+		FROM table_design_details a
+		WHERE a.constrains_type = 2 
+			AND a.datasource_type = 3 
+			AND a.datasource_id = #{sqlDesignId}
+    </select>
+    
+    <select id="findExecutionInputValueBySqlDesignId" resultMap="executionInputValueResultMap">
+    	SELECT 
+    		a.execution_input_value_id, 
+    		a.execution_component_id, 
+    		a.sql_design_input_id, 
+       		a.sql_design_input_code, 
+       		a.sql_design_input_name, 
+       		a.data_type, 
+       		a.array_flg, 
+       		a.parameter_scope, 
+       		a.parameter_id, 
+       		a.item_sequence_no
+  		FROM execution_input_value a
+  		LEFT JOIN execution_component b on (b.execution_component_id = a.execution_component_id)
+  		WHERE b.sql_design_id = #{sqlDesignId}
+    </select>
+    
+    <select id="findExecutionOutputValueBySqlDesignId" resultMap="executionOutputValueResultMap">
+    	SELECT 
+    		a.execution_output_value_id, 
+    		a.execution_component_id, 
+    		a.sql_design_output_id, 
+       		a.sql_design_output_code, 
+       		a.sql_design_output_name, 
+       		a.data_type, 
+       		a.array_flg, 
+       		a.target_scope, 
+       		a.target_id, 
+       		a.item_sequence_no
+  		FROM execution_output_value a
+  		LEFT JOIN execution_component b on (b.execution_component_id = a.execution_component_id)
+  		WHERE b.sql_design_id = #{sqlDesignId}
+    </select>
+    
+    <select id="findAllDomainDesignsBySqlDesignIdAndNotReferOutput" parameterType="Long" resultMap="domainResultMap">
+		SELECT
+			a.domain_id,
+			a.domain_name,
+			a.domain_code,
+			a.maxlength,
+			a.mandatory_flg,
+			a.min_val,
+			a.max_val,
+			a.decimal_part,
+			a.default_value,
+			a.base_type,
+			a.fmt_code,
+			a.remark,
+			a.group_base_type_id
+		FROM
+			domain_design a
+		WHERE
+			a.datasource_type = 3 AND a.datasource_id = #{sqlDesignId}
+			AND (
+					<if test="lstSqlDesignOutputs == null or lstSqlDesignOutputs.size == 0">
+						TRUE
+					</if>
+					<if test="lstSqlDesignOutputs != null and lstSqlDesignOutputs.size > 0">
+						a.option_label NOT IN
+						<foreach collection="lstSqlDesignOutputs" item="item" open="(" close=")" separator=",">
+							#{item.sqlDesignOutputId}
+						</foreach>
+					</if>
+				or
+					<if test="lstSqlDesignOutputs == null or lstSqlDesignOutputs.size == 0">
+						TRUE
+					</if>
+					<if test="lstSqlDesignOutputs != null and lstSqlDesignOutputs.size > 0">
+						a.option_value NOT IN
+						<foreach collection="lstSqlDesignOutputs" item="item" open="(" close=")" separator=",">
+							#{item.sqlDesignOutputId}
+						</foreach>
+					</if>
+			)
+	</select>
+    
+    <select id="findAllTableDesignDetailsBySqlDesignIdAndNotReferOutput" resultMap="tableDetailResultMap">
+    	SELECT 
+    		a.column_id,
+    		a.tbl_design_id,
+    		a.column_code
+		FROM table_design_details a
+		WHERE a.constrains_type = 2 
+			AND a.datasource_type = 3 
+			AND a.datasource_id = #{sqlDesignId}
+			AND (
+					<if test="lstSqlDesignOutputs == null or lstSqlDesignOutputs.size == 0">
+						TRUE
+					</if>
+					<if test="lstSqlDesignOutputs != null and lstSqlDesignOutputs.size > 0">
+						a.option_label NOT IN
+						<foreach collection="lstSqlDesignOutputs" item="item" open="(" close=")" separator=",">
+							#{item.sqlDesignOutputId}
+						</foreach>
+					</if>
+				or
+					<if test="lstSqlDesignOutputs == null or lstSqlDesignOutputs.size == 0">
+						TRUE
+					</if>
+					<if test="lstSqlDesignOutputs != null and lstSqlDesignOutputs.size > 0">
+						a.option_value NOT IN
+						<foreach collection="lstSqlDesignOutputs" item="item" open="(" close=")" separator=",">
+							#{item.sqlDesignOutputId}
+						</foreach>
+					</if>
+			)
+    </select>
+</mapper>

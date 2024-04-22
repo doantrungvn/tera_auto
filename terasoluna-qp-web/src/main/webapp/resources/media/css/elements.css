@@ -1,0 +1,351 @@
+.qp-separator-from-to{
+	width: 6%;
+	float: left;
+	padding-right: 2px;
+	padding-left: 2px;
+	text-align: center;
+}
+/* com-input */
+.qp-input-text{}
+.qp-input-integer{}
+.qp-input-bigint{}
+.qp-input-serial{}
+.qp-input-bigserial{}
+.qp-input-smallint{}
+.qp-input-currency{}
+.qp-input-float{}
+.qp-input-from-text{
+	width: 47%;
+}
+.qp-input-to-text{
+	width: 47%;
+}
+.qp-input-from-integer{
+	width: 47%;
+}
+.qp-input-to-integer{
+	width: 47%;
+}
+.qp-input-from-bigint{
+	width: 47%;
+}
+.qp-input-to-bigint{
+	width: 47%;
+}
+.qp-input-from-serial{
+	width: 47%;
+}
+.qp-input-to-serial{
+	width: 47%;
+}
+.qp-input-from-bigserial{
+	width: 47%;
+}
+.qp-input-to-bigserial{
+	width: 47%;
+}
+.qp-input-from-smallint{
+	width: 47%;
+}
+.qp-input-to-smallint{
+	width: 47%;
+}
+.qp-input-from-currency{
+	width: 47%;
+}
+.qp-input-to-currency{
+	width: 47%;
+}
+.qp-input-from-float{
+    width: 47%;
+}
+.qp-input-to-float{
+    width: 47%;
+}
+.qp-input-percentage{}
+.qp-input-from-percentage{
+	width: 47%;
+}
+.qp-input-to-percentage{
+	width: 47%;
+}
+.qp-input-from-percentage{
+	width: 47%;
+}
+.qp-input-to-percentage{
+	width: 47%;
+}
+.qp-input-select{
+	text-align: left;
+	word-wrap: normal;
+}
+.qp-input-datepicker{}
+.qp-input-from-datepicker{
+	width: 47%;
+}
+.qp-input-to-datepicker{
+	width: 47%;
+}
+.qp-input-timepicker{}
+.qp-input-from-timepicker{
+	width: 47%;
+}
+.qp-input-to-timepicker{
+	width: 47%;
+}
+.qp-input-from-datetimepicker{
+	width: 47%;
+}
+.qp-input-to-datetimepicker{
+	width: 47%;
+}
+.qp-input-autocomplete {
+	text-align: left;
+	width: 75%;
+/* 	background-image: url(images/auto-complete-arrow-normal.gif); */
+	background-color: #FFFFFF;
+	background-repeat: no-repeat;
+	background-position: right 4px;
+	display:inline-block;
+}
+.qp-input-datetimepicker{}
+.qp-input-textarea{}
+.qp-input-radio{
+}
+input[type="radio"].qp-input-radio-margin{
+	margin-left: 7px;
+	margin-right: 2px;
+}
+input[type="checkbox"].qp-input-checkbox-margin{
+	margin-left: 7px;
+	margin-right: 2px;
+}
+.qp-input-checkbox{}
+.qp-input-address{}
+.qp-input-file{
+	height: 20px;
+	padding: 0px 0px;
+	text-align:center;
+	min-width:70px;
+}
+.qp-input-textarea {
+	
+}
+body.modal-open .datepicker {
+    z-index: 1200 !important;
+}
+/*button*/
+.qp-button-search{}
+.qp-button-save{}
+.qp-button-cancel{}
+.qp-button-import{}
+.qp-button-export{}
+.qp-button-register{}
+.qp-button-create{}
+.qp-button-edit{}
+
+/* com-input-detail */
+.qp-input-text-detail{text-align:left;width:95%;}
+.qp-input-integer-detail{text-align:right;width:95%;}
+.qp-input-currency-detail{text-align:right;width:95%;}
+.qp-input-float-detail{text-align:right;width:95%;}
+.qp-input-percentage-detail{text-align:right;width:95%;}
+.qp-input-select-detail{text-align:left;width:95%;}
+.qp-input-datepicker-detail
+{
+    text-align:left;
+    background: url(images/ue-icons_000000.png);
+	background-repeat: no-repeat;
+	background-position: right -13px;
+	width:95%;
+	background-color: #FFFFFF;
+}
+.qp-input-timepicker-detail{text-align:right;width:95%;}
+.qp-input-autocomplete-detail {
+	text-align: left;
+	width: 95%;
+	background-image: url(images/auto-complete-arrow-normal.gif);
+	background-color: #FFFFFF;
+	background-repeat: no-repeat;
+	background-position: right 4px;
+	display:inline-block;
+}
+.qp-input-datetimepicker-detail{
+	text-align:left;
+    background: url(images/ue-icons_000000.png);
+	background-repeat: no-repeat;
+	background-position: right -13px;
+	width:100%;
+	background-color: #FFFFFF;
+	
+}
+.qp-input-from-datetimepicker-detail{
+	text-align:left;
+    background: url(images/ue-icons_000000.png);
+	background-repeat: no-repeat;
+	background-position: right -13px;
+	width: 47%;
+	background-color: #FFFFFF;
+	
+}
+.qp-input-to-datetimepicker-detail{
+	text-align:left;
+    background: url(images/ue-icons_000000.png);
+	background-repeat: no-repeat;
+	background-position: right -13px;
+	width: 47%;
+	background-color: #FFFFFF;
+	
+}
+.qp-input-textarea-detail{text-align:left; height:50px; width:95%;}
+.qp-input-radio-detail{text-align:left}
+.qp-input-checkbox-detail{text-align:center;}
+.qp-input-address-detail{text-align:left;width:95%;}
+
+/* com-output */
+.qp-output-fixlength{text-align:center;}
+.qp-output-text{
+	text-align:left;
+	font-weight: normal;	
+}
+.qp-output-integer{text-align:right;}
+.qp-output-float{text-align:right;}
+.qp-output-percentage{text-align:right;}
+.qp-output-date{text-align:center;}
+.qp-output-datetime{text-align:center;}
+.qp-output-currency{text-align:right;}
+
+
+.qp-dialog{}
+.qp-dialog-confirm{}
+.qp-input-percentage-decimal{
+	
+}
+.qp-input-from-percentage-decimal{
+	width: 47%;	
+}
+.qp-input-to-percentage-decimal{
+	width: 47%;		
+}
+.qp-error {
+	margin-bottom: 10px;
+	background-image: linear-gradient(to bottom, #f2dede 0%, #e7c3c3 100%);
+ 	background-repeat: repeat-x;
+  	border-color: #dca7a7;
+    color: #a94442;
+    background-color: #f2dede;
+}
+.qp-autocomplete-menu {
+	width: 100%;
+}
+.qp-numeric-up-down{}
+.qp-add-left{text-align: left;}
+.qp-add-center{text-align: center;}
+.qp-add-right{text-align: right;}
+.qp-inline{
+	width: 100%;
+	float: left;
+}
+.qp-inline div{
+	float:left;
+	max-width: 30%;
+	margin-right: 4px;
+	vertical-align: middle;
+}
+.qp-inline select{
+	float:left;
+	max-width: 30%;
+	margin-right: 4px;
+	vertical-align: middle;
+}
+.qp-inline-1{
+	max-width: 10%;
+	margin-right: 4px;
+	vertical-align: middle;		
+}
+.qp-inline-2{
+	max-width: 20%;
+	margin-right: 4px;
+	vertical-align: middle;		
+}
+.qp-inline-3{
+	max-width: 30%;
+	margin-right: 4px;
+	vertical-align: middle;		
+}
+.qp-inline-4{
+	max-width: 40%;
+	margin-right: 4px;
+	vertical-align: middle;		
+}
+.qp-inline-5{
+	max-width: 50%;
+	margin-right: 4px;
+	vertical-align: middle;		
+}
+.qp-inline-6{
+	max-width: 60%;
+	margin-right: 4px;
+	vertical-align: middle;		
+}
+.qp-inline-7{
+	max-width: 70%;
+	margin-right: 4px;
+	vertical-align: middle;		
+}
+.qp-inline-8{
+	max-width: 80%;
+	margin-right: 4px;
+	vertical-align: middle;		
+}
+.qp-inline-9{
+	max-width: 90%;
+	margin-right: 4px;
+	vertical-align: middle;		
+}
+.qp-inline-10{
+	max-width: 100%;
+	margin-right: 4px;
+	vertical-align: middle;		
+}
+
+.qp-button-dialog{
+	
+}
+.qp-input-decimal{}
+.qp-input-from-decimal{
+	width: 47%;
+}
+.qp-input-to-decimal{
+	width: 47%;
+}
+.qp-icon-sort{
+	float: right;
+	font-size: 13px; 
+	top: 0px;
+}
+.qp-button-client {
+	color: #fff;
+	background-color: #32B0AC;
+ 	border-color: #2D9A96;
+ }
+ 
+.qp-button-client:hover, .qp-button-client:focus {
+  color: #fff;
+}
+.btn:hover, .btn:focus, .btn.focus {
+    color: #333;
+    text-decoration: none;
+}
+.qp-bd-input-autocomplete{
+	text-align: left;
+	width: 100%;
+	background-image: url(images/auto-complete-arrow-normal.gif);
+	background-color: #FFFFFF;
+	background-repeat: no-repeat;
+	background-position: right 4px;
+	display:inline-block;
+}
+.qp-check-required{}
+
+

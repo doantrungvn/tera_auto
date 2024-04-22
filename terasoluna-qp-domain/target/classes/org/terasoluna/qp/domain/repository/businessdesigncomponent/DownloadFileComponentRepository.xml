@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.businessdesigncomponent.DownloadFileComponentRepository">
+
+    <resultMap id="downloadFileComponentResultMap" type="DownloadFileComponent">
+        <id property="downloadFileComponentId" column="download_file_component_id" />
+        <result property="label" column="label" />
+        <result property="remark" column="remark" />
+        <result property="parameterScope" column="parameter_scope" />
+        <result property="parameterId" column="parameter_id" />
+        <result property="fileNameType" column="file_name_type" />
+        <result property="fileNameContent" column="file_name_content" />
+        <result property="fileNameFormulaId" column="file_name_formula_id" />
+        <result property="sequenceLogicId" column="sequence_logic_id" />
+        <result property="outputBean.outputBeanId" column="output_bean_id" />
+        <result property="outputBean.outputBeanCode" column="output_bean_code" />
+        <result property="outputBean.arrayFlg" column="array_flg" />
+        <result property="outputBean.dataType" column="data_type" />
+    </resultMap>
+    <select id="getSequencesDownloadFileComponent" resultType="Long">
+    	select SETVAL('download_file_component_seq'::regclass, NEXTVAL('download_file_component_seq'::regclass) + #{size})
+    </select>
+    <insert id="registerDownloadFileComponent" >
+		<foreach item="item" collection="downloadFileComponentItems">
+			INSERT INTO download_file_component
+				(
+            		download_file_component_id, 
+            		label, 
+            		remark, 
+            		sequence_logic_id,
+                    parameter_scope,
+                    parameter_id, 
+            		file_name_type, 
+            		file_name_content, 
+            		file_name_formula_id
+            	)
+	    		VALUES 
+	    		(
+					#{item.downloadFileComponentId},
+					#{item.label},
+	            	#{item.remark},
+	            	#{item.sequenceLogicId},
+                    #{item.parameterScope},
+                    CAST(#{item.parameterId} AS numeric(16,0)),
+					#{item.fileNameType},
+					#{item.fileNameContent},
+					#{item.fileNameFormulaId}
+	            );
+		</foreach>
+    </insert>
+    
+    <select id="findDownloadFileComponentByBusinessLogic" resultMap="downloadFileComponentResultMap">
+    	SELECT 
+    		a.download_file_component_id, 
+    		a.label, 
+    		a.remark, 
+    		a.sequence_logic_id,
+            a.parameter_scope,
+            a.parameter_id, 
+    		a.file_name_type, 
+    		a.file_name_content, 
+    		a.file_name_formula_id
+  		FROM download_file_component a
+  		WHERE EXISTS
+		    (
+			    SELECT sl.sequence_logic_id
+			    FROM sequence_logic sl
+			    WHERE sl.business_logic_id = #{businessLogicId}
+			       	AND component_type = 23
+			       	AND sl.sequence_logic_id = a.sequence_logic_id 
+		     )
+		ORDER BY a.download_file_component_id
+    </select>
+    
+    <select id="findAllDownloadFileComponentByModule" resultMap="downloadFileComponentResultMap">
+    	SELECT 
+    		a.download_file_component_id, 
+    		a.label, 
+    		a.remark, 
+    		a.sequence_logic_id,
+            a.parameter_scope,
+            a.parameter_id, 
+    		a.file_name_type, 
+    		a.file_name_content, 
+    		a.file_name_formula_id,
+            b.output_bean_id,
+            b.output_bean_code,
+            b.array_flg,
+            b.data_type
+  		FROM download_file_component a
+        LEFT JOIN output_bean b ON b.output_bean_id = a.parameter_id
+  		WHERE EXISTS
+		    (
+			    SELECT sl.sequence_logic_id
+			    FROM sequence_logic sl
+			    INNER JOIN business_logic bl ON bl.business_logic_id = sl.business_logic_id
+			    WHERE bl.module_id = #{moduleId}
+			       	AND component_type = 23
+			       	AND sl.sequence_logic_id = a.sequence_logic_id 
+		     )
+		ORDER BY a.download_file_component_id
+    </select>
+    
+    <!-- generate source code of commmon blogic -->
+    <select id="findAllDownloadFileComponentByModuleCommon" resultMap="downloadFileComponentResultMap">
+        SELECT 
+            a.download_file_component_id, 
+            a.label, 
+            a.remark, 
+            a.sequence_logic_id,
+            a.parameter_scope,
+            a.parameter_id, 
+            a.file_name_type, 
+            a.file_name_content, 
+            a.file_name_formula_id,
+            b.output_bean_id,
+            b.output_bean_code,
+            b.array_flg,
+            b.data_type
+        FROM download_file_component a
+        LEFT JOIN output_bean b ON b.output_bean_id = a.parameter_id
+        WHERE EXISTS
+            (
+                SELECT sl.sequence_logic_id
+                FROM sequence_logic sl
+                INNER JOIN business_logic bl ON bl.business_logic_id = sl.business_logic_id
+                WHERE bl.project_id = #{projectId} AND bl.module_id is null and bl.blogic_type = 1   
+                    AND component_type = 23
+                    AND sl.sequence_logic_id = a.sequence_logic_id 
+             )
+        ORDER BY a.download_file_component_id
+    </select>
+</mapper>

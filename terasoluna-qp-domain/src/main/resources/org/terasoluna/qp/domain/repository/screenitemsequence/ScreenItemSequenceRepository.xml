@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="org.terasoluna.qp.domain.repository.screenitemsequence.ScreenItemSequenceRepository">
+
+	<resultMap id="screenItemSequenceResultMap" type="ScreenItemSequence">
+		<id property="itemSeqNo" column="item_seq_no" />
+		<result property="itemGroupType" column="item_group_type" />
+		<result property="screenAreaId" column="screen_area_id" />
+		<result property="createdBy" column="created_by" />
+        <result property="createdDate" column="created_date" />
+        <result property="updatedBy" column="updated_by" />
+        <result property="updatedDate" column="updated_date" />
+	</resultMap>
+	<insert id="insertScreenItemSequence" parameterType="ScreenItemSequence">
+		INSERT INTO
+		screen_item_sequence
+		(
+			item_seq_no,
+			item_group_type,
+			screen_area_id,
+			created_by,
+	        created_date,
+	        updated_by,
+	        updated_date
+		)
+		VALUES
+		(
+			#{itemSeqNo},
+			#{itemGroupType},
+			#{screenAreaId},
+			#{createdBy},
+	        #{createdDate},
+	        #{updatedBy},
+	        #{updatedDate}
+		)
+	</insert>
+	
+	<select id="getScreenItemSequenceByScreenAreaId" parameterType="Long"
+		resultMap="screenItemSequenceResultMap">
+		SELECT
+			c.item_seq_no AS itemSeqNo,
+			c.screen_area_id AS screenAreaId,
+			c.item_group_type AS itemGroupType
+		FROM
+			screen_item_sequence c
+		WHERE
+			c.screen_area_id = #{screenAreaId}
+		ORDER BY
+			c.item_seq_no ASC
+	</select>
+	
+	<insert id="multiInsertScreenItemSequence">
+		<if test="listOfItem != null and listOfItem.size() > 0 ">
+		INSERT INTO
+		screen_item_sequence
+		(
+			item_seq_no,
+			item_group_type,
+			screen_area_id,
+			created_by,
+			created_date,
+			updated_by,
+			updated_date
+		)
+		VALUES
+			<foreach item="item" collection="listOfItem" separator=",">
+			(
+				#{item.itemSeqNo},
+				#{item.itemGroupType},
+				#{item.screenAreaId},
+				#{item.createdBy},
+				#{item.createdDate},
+				#{item.updatedBy},
+				#{item.updatedDate}
+			)
+			</foreach>
+		</if>
+	</insert>
+	
+</mapper>

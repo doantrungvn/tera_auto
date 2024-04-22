@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="org.terasoluna.qp.domain.repository.loggingmanagement.LogPatternDetailRepository">
+		
+	<resultMap id="resultMapConversionPattern" type="org.terasoluna.qp.domain.model.ConversionPattern">
+		<result property="logDetailId" column="log_detail_id" />
+		<result property="patternId" column="pattern_id" />
+		<result property="patternCode" column="pattern_code" />
+		<result property="patternName" column="pattern_name" />
+		<result property="remark" column="remark" />
+		<result property="itemSequence" column="item_sequence_no" />
+	</resultMap>
+	
+	<!-- Finds all conversion pattern by log detailId -->
+	<select id="findAllConversionPatternByLogDetailId" resultMap="resultMapConversionPattern" parameterType="long">
+		<![CDATA[
+		SELECT * from conversion_pattern a
+		JOIN log_pattern_detail  b 
+		ON a.pattern_id = b.pattern_id 	
+		WHERE b.log_detail_id = #{logDetailId}	
+		ORDER BY b.item_sequence_no
+		]]>		
+	</select>
+	
+	<!-- Finds all conversion pattern -->
+	<select id="findAllConversionPattern" resultMap="resultMapConversionPattern">
+		<![CDATA[
+		SELECT * from conversion_pattern
+		]]>		
+	</select>
+	
+	<delete id="deleteAllConversionPatternByLogDetailId" parameterType="long">
+	<![CDATA[
+		DELETE FROM
+			log_pattern_detail
+		WHERE
+			log_detail_id = #{logDetailId}
+	]]>
+	</delete>
+	
+	<insert id="registerConversionPatternDetail">
+		INSERT INTO log_pattern_detail(
+            log_detail_id, 
+            pattern_id, 
+            item_sequence_no)
+		VALUES
+	 	<foreach item="item" collection="listConversionPattern" separator=",">
+		(
+			#{item.logDetailId}, 
+			#{item.patternId},
+			#{item.itemSequence}
+		)	
+		</foreach>;
+
+	</insert>
+</mapper>

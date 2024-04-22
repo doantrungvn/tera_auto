@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.sqldesign.SqlDesignGroupByRepository">
+
+    <resultMap id="resultMap" type="SqlDesignGroupBy">
+        <result property="groupById" column="group_by_id" />
+        <result property="sqlDesignId" column="sql_design_id" />
+        <result property="tableId" column="tbl_design_id" />
+        <result property="tableName" column="tbl_design_name" />
+        <result property="columnId" column="column_id" />
+        <result property="columnName" column="column_name" />
+        <result property="itemSeqNo" column="item_seq_no" />
+    </resultMap>
+
+ 	<select id="findAllBySqlDesignId" parameterType="Long" resultMap="resultMap">
+        SELECT A.group_by_id,
+				A.sql_design_id,
+				A.tbl_design_id,
+				B.tbl_design_name,
+				A.column_id,
+				C.column_name,
+				A.item_seq_no
+		FROM sql_design_group_by A 
+			LEFT JOIN 
+				table_design B 
+			ON 
+				A.tbl_design_id = B.tbl_design_id 
+			LEFT JOIN 
+				table_design_details C 
+			ON 
+				A.column_id = C.column_id 
+		WHERE A.sql_design_id = #{sqlDesignId}
+		ORDER BY 
+			item_seq_no
+    </select>
+    
+    <select id="findById" parameterType="Long" resultMap="resultMap">
+        SELECT group_by_id,
+				sql_design_id,
+				tbl_design_id,
+				column_id,
+				item_seq_no
+		FROM sql_design_group_by
+		WHERE group_by_id = #{groupById}
+
+    </select>
+    
+    <insert id="register" parameterType="SqlDesignGroupBy">
+        <selectKey keyProperty="groupById" resultType="long" order="BEFORE">
+            SELECT nextval('sql_design_group_by_seq') AS groupById
+        </selectKey>
+        INSERT INTO
+            sql_design_group_by
+        (
+        	group_by_id,
+			sql_design_id,
+			tbl_design_id,
+			column_id,
+			item_seq_no
+        )
+        VALUES
+        (
+        	#{groupById},
+            #{sqlDesignId},
+            #{tableId},
+            #{columnId},
+            #{itemSeqNo}
+        )
+    </insert>
+    
+    <insert id="registerAll">
+        INSERT INTO
+            sql_design_group_by
+        (
+			sql_design_id,
+			tbl_design_id,
+			column_id,
+			item_seq_no
+        )
+        VALUES
+        <foreach collection="sqlDesignGroupBys" item="item" separator=",">
+        (
+            #{item.sqlDesignId},
+            #{item.tableId},
+            #{item.columnId},
+            #{item.itemSeqNo}
+        )
+        </foreach>
+    </insert>
+	
+	<update id="modify" parameterType="SqlDesignGroupBy">
+		UPDATE sql_design_group_by
+        SET sql_design_id =  #{sqlDesignId},
+            tbl_design_id =  #{tableId},
+            column_id = #{columnId},
+            item_seq_no = #{itemSeqNo} 
+        WHERE group_by_id = #{groupById}
+	</update>
+	
+	<update id="modifyAll">
+		<foreach collection="sqlDesignGroupBys" item="item" separator=";">
+			UPDATE sql_design_group_by
+	        SET sql_design_id =  #{item.sqlDesignId},
+	            tbl_design_id =  #{item.tableId},
+	            column_id = #{item.columnId},
+	            item_seq_no = #{item.itemSeqNo} 
+	        WHERE group_by_id = #{item.groupById}
+		</foreach>
+	</update>
+	
+	<delete id="delete" parameterType="SqlDesignGroupBy">
+		DELETE FROM sql_design_group_by
+        WHERE group_by_id = #{groupById}
+	</delete>
+	
+	<delete id="deleteByExceptionalGroup">
+		DELETE FROM 
+			sql_design_group_by
+        <where>
+        	sql_design_id = #{sqlDesignId}
+         
+         	<if test="exceptionGroup !=null and exceptionGroup.size() &gt; 0">
+        		AND group_by_id NOT IN
+	        	<foreach collection="exceptionGroup" separator="," open="(" close=")" item="id">
+	        		#{id}
+	        	</foreach>
+        	</if>
+        	<if test="exceptionGroup ==null or exceptionGroup.size() &lt;= 0">
+        		AND TRUE
+        	</if>
+        
+        </where>
+	</delete>
+	
+	<delete id="deleteBySqlDesignId">
+		DELETE FROM 
+			sql_design_group_by
+        WHERE
+        	sql_design_id = #{sqlDesignId}
+	</delete>
+</mapper>

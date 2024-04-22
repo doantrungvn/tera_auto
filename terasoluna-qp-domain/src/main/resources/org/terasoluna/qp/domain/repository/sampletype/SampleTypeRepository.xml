@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="org.terasoluna.qp.domain.repository.sampletype.SampleTypeRepository">
+	<resultMap id="autocomplete" type="Autocomplete">
+		<result property="optionValue" column="optionValue" />
+		<result property="optionLabel" column="optionLabel" />		
+		<result property="output01" column="output01" />
+		<result property="output02" column="output02" />
+		<result property="output03" column="output03" />
+		<result property="output04" column="output04" />
+		<result property="output05" column="output05" />		
+	</resultMap>
+	<resultMap type="SampleType" id="sampleType">
+		<result property="id" column="id"/>
+		<result property="nameType" column="name_type"/>
+	</resultMap>
+	<select id="getAllType" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocomplete">
+		SELECT 
+			id AS optionValue,
+			name_type AS optionLabel		
+		FROM
+			sample_type
+		<where>
+			<if test="autocompleteTerm != null and autocompleteTerm != ''">
+				name_type LIKE '%' || #{autocompleteTerm} || '%'
+			</if>
+		</where>
+	</select>
+	<select id="getSampleTypes" resultMap="sampleType">
+		SELECT 
+			id,
+			name_type		
+		FROM
+			sample_type
+	</select>	
+</mapper>

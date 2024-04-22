@@ -1,0 +1,245 @@
+<!-- appendHeaderHere -->
+
+
+			<div class="qp-link-header pull-right">
+				<span class="qp-link-header-icon glyphicon glyphicon-plus"></span>
+			
+						<a onmouseover="this.setAttribute('style', 'null')" onmouseout="this.setAttribute('style', 'null')" href="registerForm.html">Register account rule definition</a>&nbsp;
+		</div>
+			
+		<div class="qp-breadcrumb">
+				<ul class="breadcrumb" style="float:left;color:#337ab7;font-size:14px;">
+					<li><a href="#{homePage}"><i class="qp-link-header-icon glyphicon glyphicon-home"></i></a></li>
+					<li><span>Account rule definition</span></li>
+					<li><span>Search account rule definition</span></li>
+				</ul>
+		</div>
+			
+			<!-- End toolbar-->
+			
+			<!-- Start message -->
+			<div class="qp-message">
+				</div>
+			<!-- End message -->
+			<!-- Start content -->
+			<div class="qp-body">
+<form id="accountRuleDefinitionSearchForm" action="searchForm.html" method="post"><div class="panel panel-default qp-div-search-condition">
+				<div class="panel-heading">
+					<span class="glyphicon  qp-heading-icon" aria-hidden="true">&nbsp;</span>
+					<span class="qp-heading-text">Search condition</span>
+				</div>
+				<div class="panel-body">
+					<table class="table table-bordered qp-table-form">
+						<colgroup>
+							<col width="20%">
+							<col width="30%">
+							<col width="20%">
+							<col width="30%">
+						</colgroup>
+						<tbody><tr>
+							<th><label for="accountRuleDefinitionName">Account rule definition name</label></th>
+							<td><input id="accountRuleDefinitionName" name="accountRuleDefinitionName" class="form-control qp-input-text" autofocus="true" type="text" value=""></td>
+							<th><label for="accountRuleDefinitionCode">Account rule definition code</label></th>
+							<td><input id="accountRuleDefinitionCode" name="accountRuleDefinitionCode" class="form-control qp-input-text" autofocus="true" type="text" value=""></td>
+						</tr>
+					</tbody></table>
+				</div>
+			</div>
+			<div class="qp-div-action">
+				<button type="submit" class="btn qp-button">Search</button>
+			</div>
+		<div>
+<input type="hidden" name="_csrf" value="6e22c002-28d3-4e24-95c7-75e956cd53c5">
+</div></form><div class="panel panel-default qp-div-search-result">
+			<div class="panel-heading">
+				
+
+
+
+
+
+
+
+<script type="text/javascript">
+	var actionPath = '/accountruledefinition/search';
+	var form = "#"+'accountRuleDefinitionSearchForm';
+	var href = CONTEXT_PATH + "/PageSize/setPageSize?r="+Math.random();
+	function calSavePageSize() {
+		if($(form).length >0){
+			var size = $( "#fcomPageSizeSelect" ).val();
+			var param =  {
+					action : actionPath,
+					size : size
+				};
+			$.ajax({
+				method : "GET",
+				url : href,
+				data : {data:JSON.stringify(param)}
+			}).done(function(msg) {
+				if(msg.status == '1'){
+					$(form).submit();
+				}
+				else{
+					// Error when save information of pagesize
+					alert("");
+				}
+			});
+		}else{
+			// This form is not exist.
+			alert("");
+		}
+		
+	}
+</script>
+
+ 
+
+	
+		
+		<span class="glyphicon qp-heading-icon" style="width: 24px;" aria-hidden="true">&nbsp;</span>
+		<span class="qp-heading-text">
+			Search results
+			&nbsp;
+			<span class="badge">&nbsp;1&nbsp;</span>
+		</span>
+		<div class="form-inline qp-item-per-page">
+			<label>
+				<select id="fcomPageSizeSelect" style="margin-top: -3px;" name="size" aria-controls="dataTables-example" class="form-control qp-input-select" onchange="calSavePageSize()">
+					
+						
+		    				<option value="10" selected="selected">10</option>
+		    			
+		    			
+		  			
+						
+		    			
+		    				<option value="20">20</option>
+		    			
+		  			
+						
+		    			
+		    				<option value="30">30</option>
+		    			
+		  			
+						
+		    			
+		    				<option value="50">50</option>
+		    			
+		  			
+						
+		    			
+		    				<option value="100">100</option>
+		    			
+		  			
+				</select>
+			</label>
+		</div>
+	
+	
+
+</div>
+			<div class="panel-body">
+				<div class="table-responsive">
+					<table class="table table-bordered qp-table-list">
+							<colgroup>
+								<col>
+								<col width="60%">
+								<col width="30%">
+								<col>
+							</colgroup>
+							<thead>
+								<tr>
+									<th>No.</th>
+									<th>
+
+
+
+
+
+
+
+
+<div class="form-inline" onclick="$.qp.sortDataByColumn(&#39;accountRuleDefinitionSearchForm&#39;,&#39;account_rule_definition_name&#39;)" style="cursor: pointer;">
+	<label style="margin-bottom: 0px;cursor: pointer;">Account rule definition name</label>
+	
+	
+		<input type="hidden" value="account_rule_definition_name,DESC" id="fcomHeaderSortaccount_rule_definition_name">
+	
+</div></th>
+									<th>
+
+
+
+
+
+
+
+
+<div class="form-inline" onclick="$.qp.sortDataByColumn(&#39;accountRuleDefinitionSearchForm&#39;,&#39;account_rule_definition_code&#39;)" style="cursor: pointer;">
+	<label style="margin-bottom: 0px;cursor: pointer;">Account rule definition code</label>
+	
+	
+		<input type="hidden" value="account_rule_definition_code,DESC" id="fcomHeaderSortaccount_rule_definition_code">
+	
+</div></th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+										<td>1</td>
+										<td class="qp-output-text">
+											
+
+
+
+
+
+
+
+
+
+
+
+
+	<a class="qp-link-popup" href="viewForm.html">
+
+
+
+<span style="white-space:pre">test01</span>
+</a>
+											
+
+
+</td>
+										<td class="qp-output-text">test01</td>
+										<td>
+											
+
+
+
+
+
+
+
+
+
+
+
+
+	<a class="btn qp-button glyphicon glyphicon-pencil qp-link-button qp-link-action" href="modifyForm.html"> </a>
+											
+
+
+</td>
+									</tr>
+								
+								</tbody>
+						</table>
+						<div class="qp-div-action">
+							<ul class="pagination pagination-md"><li class="disabled"><a href="javascript:void(0)">&lt;&lt;</a></li><li class="disabled"><a href="javascript:void(0)">&lt;</a></li><li class="active"><a href="javascript:void(0)">1</a></li><li class="disabled"><a href="javascript:void(0)">&gt;</a></li><li class="disabled"><a href="javascript:void(0)">&gt;&gt;</a></li></ul></div>
+					</div>
+			</div>
+		</div></div>
+
+			<!-- appendFooterHere -->

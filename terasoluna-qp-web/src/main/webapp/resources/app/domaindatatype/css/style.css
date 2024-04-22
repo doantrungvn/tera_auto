@@ -1,0 +1,110 @@
+
+.dialog-with-date {
+	height: 450px;
+}
+
+.trRemove {
+	background: none repeat scroll 0 0 #dbafaf;
+}
+
+.trAppend {
+	background: none repeat scroll 0 0 #a4bece;
+}
+
+.trChange {
+	background: none repeat scroll 0 0 #fcd209;
+}
+.trDisable {
+	background: none repeat scroll 0 0 #808080;
+}
+
+
+.td-word-wrap {
+	word-wrap: break-word;
+}
+
+.td-with-primery-key {
+	width: 80%;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.td-with-setting {
+	width: 85%;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.td-with-label {
+	width: 42%;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.icon-open-dialog-hidden {
+	cursor: pointer;
+	margin-top: 4px;
+	display: none;
+	padding-left: 3px;
+}
+
+.input-hidden {
+	display: none;
+}
+
+.icon-open-dialog-show {
+	cursor: pointer;
+	margin-top: 4px;
+	padding-left: 3px;
+}
+
+.ui-sortable-helper {
+	border: 2px dashed red;
+	background-color: #f1f1e7;
+	padding: 0px;
+	margin: 0px;
+}
+
+.state-droppable {
+	background-color: #96fe9e;
+}
+
+.ui-widget-overlay {
+	z-index: 2;
+}
+
+.ui-dialog {
+	z-index: 3;
+}
+
+.ui-state-default, .ui-widget-content .ui-state-default,
+	.ui-widget-header .ui-state-default {
+	border: none;
+	background: transparent 50% 50% repeat-x;
+	font-weight: lighter;;
+	color: #ffffff;
+}
+
+.ui-state-default, .ui-widget-content .ui-state-default,
+	.ui-widget-header .ui-state-default {
+	border: none;
+	background: transparent 50% 50% repeat-x;
+	font-weight: lighter;;
+	color: #ffffff;
+}
+
+.ui-state-dark {
+	border: none;
+	background: transparent 50% 50% repeat-x;
+	font-weight: lighter;;
+	color: #264c73;
+}
+
+.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover,
+	.ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus
+	{
+	border: 1px solid #ffffff;
+	background: #FC883E 50% 50% repeat-x;
+	font-weight: bold;
+	color: #ffffff;
+}

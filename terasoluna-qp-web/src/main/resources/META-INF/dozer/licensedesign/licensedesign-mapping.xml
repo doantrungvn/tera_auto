@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozer.sourceforge.net" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://dozer.sourceforge.net http://dozer.sourceforge.net/schema/beanmapping.xsd">
+	<mapping>
+		<class-a>org.terasoluna.qp.app.licensedesign.LicenseDesignSearchForm</class-a>
+		<class-b>org.terasoluna.qp.domain.repository.licensedesign.LicenseDesignCriteria</class-b>
+		<field>
+			<a>fromStartDate</a>
+			<b>fromStartDate</b>
+		</field>
+		<field>
+			<a>toStartDate</a>
+			<b>toStartDate</b>
+		</field>
+		<field>
+			<a>fromExpiredDate</a>
+			<b>fromExpiredDate</b>
+		</field>
+		<field>
+			<a>toExpiredDate</a>
+			<b>toExpiredDate</b>
+		</field>
+	</mapping>
+</mappings> 

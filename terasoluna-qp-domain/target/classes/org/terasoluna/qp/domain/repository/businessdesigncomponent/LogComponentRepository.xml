@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.businessdesigncomponent.LogComponentRepository">
+
+    <resultMap id="LogComponentResultMap" type="LogComponent">
+        <id property="logComponentId" column="log_component_id" />
+        <result property="label" column="label" />
+        <result property="remark" column="remark" />
+        <result property="level" column="level" />
+        <result property="messageType" column="message_type" />
+        <result property="messageContent" column="message_content" />
+        <result property="messageFormulaId" column="message_formula_id" />
+        <result property="sequenceLogicId" column="sequence_logic_id" />
+    </resultMap>
+    <select id="getSequencesLogComponent" resultType="Long">
+    	select SETVAL('log_component_seq'::regclass, NEXTVAL('log_component_seq'::regclass) + #{size})
+    </select>
+    <insert id="registerLogComponent" >
+		<foreach item="item" collection="LogComponentItems">
+			INSERT INTO log_component
+				(
+            		log_component_id, 
+            		label, 
+            		remark, 
+                    level, 
+            		sequence_logic_id,
+            		message_type, 
+            		message_content, 
+            		message_formula_id
+            	)
+	    		VALUES 
+	    		(
+					#{item.logComponentId},
+					#{item.label},
+	            	#{item.remark},
+                    #{item.level},
+	            	#{item.sequenceLogicId},
+					#{item.messageType},
+					#{item.messageContent},
+					#{item.messageFormulaId}
+	            );
+		</foreach>
+    </insert>
+    
+    <select id="findLogComponentByBusinessLogic" resultMap="LogComponentResultMap">
+    	SELECT 
+    		a.log_component_id, 
+    		a.label, 
+    		a.remark, 
+            a.level, 
+    		a.sequence_logic_id,
+    		a.message_type, 
+    		a.message_content, 
+    		a.message_formula_id
+  		FROM log_component a
+  		WHERE EXISTS
+		    (
+			    SELECT sl.sequence_logic_id
+			    FROM sequence_logic sl
+			    WHERE sl.business_logic_id = #{businessLogicId}
+			       	AND component_type = 21
+			       	AND sl.sequence_logic_id = a.sequence_logic_id 
+		     )
+		ORDER BY a.log_component_id
+    </select>
+    
+    <select id="findAllLogComponentByModule" resultMap="LogComponentResultMap">
+    	SELECT 
+    		a.log_component_id, 
+    		a.label, 
+    		a.remark, 
+            a.level, 
+    		a.sequence_logic_id,
+    		a.message_type, 
+    		a.message_content, 
+    		a.message_formula_id    		
+  		FROM log_component a
+  		WHERE EXISTS
+		    (
+			    SELECT sl.sequence_logic_id
+			    FROM sequence_logic sl
+			    INNER JOIN business_logic bl ON bl.business_logic_id = sl.business_logic_id
+			    WHERE bl.module_id = #{moduleId}
+			       	AND component_type = 21
+			       	AND sl.sequence_logic_id = a.sequence_logic_id 
+		     )
+		ORDER BY a.log_component_id
+    </select>
+    
+    <select id="findAllLogComponentByModuleCommon" resultMap="LogComponentResultMap">
+        SELECT 
+            a.log_component_id, 
+            a.label, 
+            a.remark, 
+            a.level, 
+            a.sequence_logic_id,
+            a.message_type, 
+            a.message_content, 
+            a.message_formula_id            
+        FROM log_component a
+        WHERE EXISTS
+            (
+                SELECT sl.sequence_logic_id
+                FROM sequence_logic sl
+                INNER JOIN business_logic bl ON bl.business_logic_id = sl.business_logic_id
+                WHERE bl.project_id = #{projectId} AND bl.module_id is null and bl.blogic_type = 1   
+                    AND component_type = 21
+                    AND sl.sequence_logic_id = a.sequence_logic_id 
+             )
+        ORDER BY a.log_component_id
+    </select>
+    
+</mapper>

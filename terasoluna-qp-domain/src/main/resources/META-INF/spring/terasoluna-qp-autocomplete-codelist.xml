@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+		<bean id="CL_AUTOCOMPLETE_ARGUMENTS" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+			<property name="map">
+				<util:map>
+					<entry key="arg01" value="arg01" />
+					<entry key="arg02" value="arg02" />
+					<entry key="arg03" value="arg03" />
+					<entry key="arg04" value="arg04" />
+					<entry key="arg05" value="arg05" />
+					<entry key="arg06" value="arg06" />
+					<entry key="arg07" value="arg07" />
+					<entry key="arg08" value="arg08" />
+					<entry key="arg09" value="arg09" />
+					<entry key="arg10" value="arg10" />
+					<entry key="arg11" value="arg11" />
+					<entry key="arg12" value="arg12" />
+					<entry key="arg13" value="arg13" />
+					<entry key="arg14" value="arg14" />
+					<entry key="arg15" value="arg15" />
+					<entry key="arg16" value="arg16" />
+					<entry key="arg17" value="arg17" />
+					<entry key="arg18" value="arg18" />
+					<entry key="arg19" value="arg19" />
+					<entry key="arg20" value="arg20" />
+				</util:map>
+			</property>
+		</bean>
+</beans>

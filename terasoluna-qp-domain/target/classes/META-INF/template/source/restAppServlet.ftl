@@ -1,0 +1,27 @@
+<servlet>
+	<servlet-name>restAppServlet</servlet-name>
+	<servlet-class>org.springframework.web.servlet.DispatcherServlet
+	</servlet-class>
+	<init-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath*:META-INF/spring/spring-mvc-rest.xml
+		</param-value>
+	</init-param>
+	<init-param>
+		<param-name>dispatchOptionsRequest</param-name>
+		<param-value>true</param-value>
+	</init-param>
+	<init-param>
+        <param-name>throwExceptionIfNoHandlerFound</param-name>
+        <param-value>true</param-value>
+    </init-param>
+	<load-on-startup>2</load-on-startup>
+</servlet>
+<servlet-mapping>
+	<servlet-name>restAppServlet</servlet-name>
+	<url-pattern>/${url-pattern/authen}/*</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+	<servlet-name>restAppServlet</servlet-name>
+	<url-pattern>/${url-pattern/notauthen}/*</url-pattern>
+</servlet-mapping>

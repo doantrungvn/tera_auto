@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.accountprofile.AccountProfileRepository">
+
+	<resultMap id="resultMap" type="AccountProfile">
+		<id property="accountId" column="account_id" />
+		<result property="integerFormat" column="integer_format" />
+		<result property="floatFormat" column="float_format" />
+		<result property="currencyFormat" column="currency_format" />
+		<result property="currencyCode" column="currency_code" />
+		<result property="dateFormat" column="date_format" />
+		<result property="dateTimeFormat" column="datetime_format" />
+		<result property="timeFormat" column="time_format" />
+		<result property="pagesizeValue" column="pagesize_value" />
+		<result property="defaultLanguage" column="default_language" />
+		<result property="createdBy" column="created_by" />
+		<result property="createdDate" column="created_date" />
+		<result property="updatedBy" column="updated_by" />
+		<result property="updatedDate" column="updated_date" />
+		<result property="sessionTimeOut" column="session_timeout" />
+		<result property="intervalReload" column="interval_reload" />
+		<result property="bingClientId" column="bing_client_id" />
+		<result property="proxyHost" column="proxy_host" />
+		<result property="proxyPort" column="proxy_port" />
+		<result property="proxyUser" column="proxy_user" />
+		<result property="proxyPass" column="proxy_password" />
+		<result property="proxyLevel" column="proxy_level" />
+		<result property="bingClientSecret" column="bing_client_secret" />
+		<result property="connectionFlg" column="connection_flg" />
+		<result property="currencyCodePosition" column="currency_code_position" />
+	</resultMap>
+	
+	<resultMap id="changePasswordResultMap" type="ChangePassword">
+		<result property="userName" column="username" />
+		<result property="currentPassword" column="current_password" />
+		<result property="newPassword" column="new_password" />
+		<result property="confirmNewPassword" column="confirm_new_password" />
+		<result property="accountId" column="account_id" />
+		<result property="accountRuleDefinitionId" column="account_rule_definition_id" />
+	</resultMap>
+	
+	<select id="findOne" parameterType="Long" resultMap="resultMap">
+		SELECT
+			account_id,
+			current_project_id,
+			integer_format,
+			float_format,
+			currency_format,
+			currency_code,
+			currency_code_position,
+			date_format,
+			datetime_format,
+			time_format,
+			pagesize_value,
+			default_language,
+			session_timeout,
+		    proxy_host,
+			proxy_port,
+			proxy_user,
+			proxy_password,
+			proxy_level,
+			bing_client_id,
+			bing_client_secret,
+			interval_reload,
+			connection_flg,
+			created_by,
+			created_date,
+			updated_by,
+			updated_date
+		FROM
+			account_profile
+		WHERE
+			account_id = #{accountId}
+	</select>
+	
+	<update id="update" parameterType="AccountProfile">
+		UPDATE 
+			account_profile
+		SET 
+			integer_format = #{integerFormat},
+			float_format = #{floatFormat},
+			currency_format = #{currencyFormat},
+			currency_code = #{currencyCode},
+			currency_code_position = #{currencyCodePosition},
+			date_format = #{dateFormat},
+			datetime_format = #{dateTimeFormat},
+			time_format = #{timeFormat},
+			pagesize_value = #{pagesizeValue},
+			default_language = #{defaultLanguage},
+			session_timeout = #{sessionTimeOut},
+		    proxy_host = #{proxyHost},
+			proxy_port = #{proxyPort},
+			proxy_user = #{proxyUser},
+			proxy_level = #{proxyLevel},
+			proxy_password = #{proxyPass},
+			bing_client_id = #{bingClientId},
+			bing_client_secret = #{bingClientSecret},
+			interval_reload = #{intervalReload},
+			connection_flg = #{connectionFlg},
+			updated_by  = #{updatedBy},
+			updated_date = #{updatedDate}
+		WHERE  
+			account_id = #{accountId}
+	</update>
+	
+	<insert id="create" parameterType="AccountProfile">
+		INSERT INTO 
+			account_profile
+		(
+			account_id,
+			integer_format,
+			float_format,
+			currency_format,
+			currency_code,
+			currency_code_position,
+			date_format,
+			datetime_format,
+			time_format,
+			pagesize_value,
+			default_language,
+			session_timeout,
+			proxy_host,
+			proxy_port,
+			proxy_user,
+			proxy_password,
+			proxy_level,
+			bing_client_id,
+			bing_client_secret,
+			interval_reload,
+			connection_flg,
+			created_by,
+			created_date
+		)
+		VALUES
+		(
+			#{accountId},
+			#{integerFormat},
+			#{floatFormat},
+			#{currencyFormat},
+			#{currencyCode},
+			#{currencyCodePosition},
+			#{dateFormat},
+			#{dateTimeFormat},
+			#{timeFormat},
+			#{pagesizeValue},
+			#{defaultLanguage},
+			#{sessionTimeOut},
+			#{proxyHost},
+			#{proxyPort},
+			#{proxyUser},
+			#{proxyPass},
+			#{proxyLevel},
+			#{bingClientId},
+			#{bingClientSecret},
+			#{intervalReload},
+			#{connectionFlg},
+			#{createdBy},
+			#{createdDate}
+		 )
+	</insert>
+	
+	<select id="getDefaultProfile" resultType="HashMap" >
+		SELECT 
+			resource_cd, value1
+		FROM 
+			resources
+		WHERE 
+			category_cd = 'systemSettings'
+	</select>
+	<delete id="deleteByAccountId" parameterType="Long">
+		DELETE 
+		FROM account_profile
+		where 
+		account_id = #{accountId}
+	</delete>
+	
+	<update id="updatecurrentproject" parameterType="AccountProfile">
+		UPDATE 
+			account_profile
+		SET 
+			current_project_id = #{currentProjectId}
+		WHERE
+			account_id = #{accountId}
+	</update>
+	
+	<update id="updateSystemSetting" parameterType="AccountProfile">
+		UPDATE resources set value1 = #{sessionTimeOut} WHERE category_cd = 'systemSettings' and resource_cd = 'sessionTimeOut';
+		UPDATE resources set value1 = #{intervalReload} WHERE category_cd = 'systemSettings' and resource_cd = 'intervalReload';
+		UPDATE resources set value1 = #{proxyHost} WHERE category_cd = 'systemSettings' and resource_cd = 'proxyHost';
+		UPDATE resources set value1 = #{proxyPort} WHERE category_cd = 'systemSettings' and resource_cd = 'proxyPort';
+		UPDATE resources set value1 = #{proxyUser} WHERE category_cd = 'systemSettings' and resource_cd = 'proxyUser';
+		UPDATE resources set value1 = #{proxyPass} WHERE category_cd = 'systemSettings' and resource_cd = 'proxyPass';
+		UPDATE resources set value1 = #{bingClientId} WHERE category_cd = 'systemSettings' and resource_cd = 'bingClientId';
+		UPDATE resources set value1 = #{bingClientSecret} WHERE category_cd = 'systemSettings' and resource_cd = 'bingClientSecret';
+		UPDATE resources set value1 = #{urlScreenCapture} WHERE category_cd = 'systemSettings' and resource_cd = 'urlScreenCapture';
+		UPDATE resources set value1 = #{batchJobPath} WHERE category_cd = 'systemSettings' and resource_cd = 'batchJobPath';
+		UPDATE resources set value1 = #{maxJobNumber} WHERE category_cd = 'systemSettings' and resource_cd = 'maxJobNumber';
+		UPDATE resources set value1 = #{maxSizeUpload} WHERE category_cd = 'systemSettings' and resource_cd = 'maxSizeUpload';
+		UPDATE resources set value1 = #{urlTestProxy} WHERE category_cd = 'systemSettings' and resource_cd = 'urlTestProxy';
+	</update>
+	
+	<select id="getInformationForPasswordForm" parameterType="long" resultMap="changePasswordResultMap">
+		SELECT
+			username,
+			account_id,
+			account_rule_definition_id
+		FROM
+			account
+		WHERE
+			account_id = #{accountId}
+	</select>
+	
+	<select id="getBatchSetting" resultType="HashMap" >
+		SELECT 
+			resource_cd, value1
+		FROM 
+			resources
+		WHERE 
+			category_cd = 'batchSettings'
+	</select>
+</mapper>

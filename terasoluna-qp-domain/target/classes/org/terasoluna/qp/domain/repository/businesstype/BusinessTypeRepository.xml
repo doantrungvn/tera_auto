@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.businesstype.BusinessTypeRepository">
+    <resultMap id="resultMap" type="BusinessType">
+       <result property="businessTypeId" column="business_type_id" />
+        <result property="businessTypeCode" column="business_type_code" />
+        <result property="businessTypeName" column="business_type_name" />
+        <result property="remark" column="remark" />
+        <result property="path" column="path" />
+        <result property="level" column="level" />
+        <result property="parentBusinessTypeId" column="parent_business_type_id" />
+        <result property="parentBusinessTypeName" column="parent_business_type_name" />
+        <result property="createdBy" column="created_by" />
+        <result property="createdDate" column="created_date" />
+        <result property="updatedBy" column="updated_by" />
+        <result property="updatedDate" column="updated_date" />
+        <result property="projectId" column="project_id" />
+    </resultMap>
+    
+    <!-- Finds all business type for tree -->
+    <select id="findAllBusinessTypeTree" resultMap="resultMap" resultType="ArrayList">
+        WITH RECURSIVE 
+            business_type_tree(business_type_id, parent_business_type_id, business_type_code, level, business_type_name, path) AS (
+                SELECT 
+                    business_type_id, 
+                    parent_business_type_id,
+                    business_type_code, 
+                    1 AS level, 
+                    business_type_name, 
+                    business_type_code || '' AS path 
+                FROM 
+                    business_type 
+                WHERE 
+                    parent_business_type_id IS NULL
+                AND
+                	project_id = #{projectId}
+                UNION ALL
+                
+                SELECT 
+                    t.business_type_id, 
+                    t.parent_business_type_id,
+                    t.business_type_code, 
+                    ft.level + 1 AS level, 
+                    t.business_type_name, 
+                    ft.path || '/' || t.business_type_code AS path
+                FROM 
+                    business_type t, 
+                    business_type_tree ft 
+                WHERE 
+                    t.parent_business_type_id = ft.business_type_id
+                AND
+                	t.project_id = #{projectId}
+            )
+        SELECT * FROM business_type_tree ORDER BY path
+    </select>
+    
+    <!-- Finds all business type for tree -->
+    <select id="findAllBusinessTypeTreeNotThis" resultMap="resultMap" resultType="ArrayList" parameterType="_long">
+        WITH RECURSIVE 
+            business_type_tree(business_type_id, parent_business_type_id, business_type_code, level, business_type_name, path) AS (
+                SELECT 
+                    business_type_id, 
+                    parent_business_type_id,
+                    business_type_code, 
+                    1 AS level, 
+                    business_type_name, 
+                    business_type_code || '' AS path 
+                FROM 
+                    business_type 
+                WHERE 
+                    parent_business_type_id IS NULL
+                AND
+                	project_id = #{projectId}
+                AND 
+                    business_type_id  != #{businessTypeId}
+                UNION ALL
+                SELECT 
+                    t.business_type_id, 
+                    t.parent_business_type_id,
+                    t.business_type_code, 
+                    ft.level + 1 AS level, 
+                    t.business_type_name, 
+                    ft.path || '/' || t.business_type_code AS path
+                FROM 
+                    business_type t, 
+                    business_type_tree ft 
+                WHERE 
+                    t.parent_business_type_id = ft.business_type_id
+                AND 
+                    t.business_type_id != #{businessTypeId} 
+                AND 
+                    t.parent_business_type_id != #{businessTypeId}
+                AND
+                	t.project_id = #{projectId}
+                )
+        SELECT * FROM business_type_tree ORDER BY path
+    </select>
+    
+    <!-- Finds all business types -->
+ 	<select id="findAll" resultMap="resultMap" parameterType="Long">
+        SELECT 
+            b.business_type_id,
+			b.business_type_code,
+			b.business_type_name,
+			b.parent_business_type_id,
+			(
+				SELECT
+					business_type_name
+				FROM business_type
+				WHERE 
+				business_type_id = b.parent_business_type_id
+			) parent_business_type_name,
+			b.remark,
+            b.created_by,
+            b.created_date,
+            b.updated_by,
+            b.updated_date,
+            b.project_id
+		FROM 
+            business_type b
+		WHERE
+			b.project_id = #{projectId}
+    </select>
+
+    <!-- Count business type rows by search condition -->
+    <select id="countBySearchCriteria" resultType="_long" parameterType="org.terasoluna.qp.domain.repository.businesstype.BusinessTypeCriteria">
+		SELECT 
+		   COUNT(DISTINCT(A.business_type_id)) AS totalCount
+        FROM 
+            business_type AS A
+        LEFT JOIN
+            module B
+        ON
+            A.business_type_id = B.business_type_id
+        LEFT JOIN
+            business_type AS C
+        ON
+            A.parent_business_type_id = C.business_type_id    
+        <include refid="findBySearchCriteriaWhere" />
+	</select>
+    
+    <!-- Finds all business types by search condition -->
+    <select id="findBySearchCriteria" resultMap="resultMap" parameterType="org.terasoluna.qp.domain.repository.businesstype.BusinessTypeCriteria">
+	    <![CDATA[
+	        SELECT
+	            DISTINCT 
+	            A.business_type_id,
+	            A.business_type_code,
+	            A.business_type_name,
+	            A.parent_business_type_id,
+	            C.business_type_name AS parent_business_type_name,
+	            A.remark,
+	            A.updated_date,
+	            A.project_id
+	        FROM 
+	            business_type AS A
+	        LEFT JOIN
+	            module B
+	        ON
+	            A.business_type_id = B.business_type_id
+	        LEFT JOIN
+	            business_type AS C
+	        ON
+	            A.parent_business_type_id = C.business_type_id
+	    ]]>
+		<include refid="findBySearchCriteriaWhere" />
+        <if test="pageable.sort != null">
+            ORDER BY
+            <foreach collection="pageable.sort" item="order" separator=",">
+                ${order.property} ${order.direction}
+            </foreach>
+        </if>
+        <if test="pageable.sort == null">
+            ORDER BY
+                A.updated_date DESC
+        </if>
+        <![CDATA[
+             LIMIT
+                 #{pageable.pageSize}
+             OFFSET
+                 #{pageable.offset}
+        ]]>
+    </select>
+    
+    <!-- Search condition -->
+    <sql id="findBySearchCriteriaWhere">
+        <where>
+    		<if test="criteria.businessTypeName !=null and criteria.businessTypeName !=''">
+                <bind name="businessTypeName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.businessTypeName)" />
+                <![CDATA[
+				    A.business_type_name ILIKE #{businessTypeName} ESCAPE '~'
+				]]>
+			</if>
+			<if test="criteria.businessTypeCode !=null and criteria.businessTypeCode!=''">
+                <bind name="businessTypeCode" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.businessTypeCode)" />
+                <![CDATA[
+                    AND A.business_type_code ILIKE #{businessTypeCode} ESCAPE '~'
+                ]]>
+			</if>
+			<if test="criteria.parentBusinessTypeId !=null">
+                <![CDATA[
+                    AND A.parent_business_type_id = #{criteria.parentBusinessTypeId}
+				]]>
+			</if>
+            <if test="criteria.moduleId !=null">
+                <![CDATA[
+                    AND B.module_id = #{criteria.moduleId}
+                ]]>
+            </if>
+            <if test="criteria.projectId !=null">
+                <![CDATA[
+                    AND A.project_id = #{criteria.projectId}
+                ]]>
+            </if>
+        </where>
+    </sql>
+    
+    <!-- Finds business types by identify -->   
+    <select id="findByCode" parameterType="BusinessType" resultMap="resultMap">
+        SELECT 
+            A.business_type_id,
+            A.business_type_code,
+            A.business_type_name,
+            A.parent_business_type_id,
+            B.business_type_name AS parent_business_type_name,
+            A.remark,
+            A.created_by,
+            A.created_date,
+            A.updated_by,
+            A.updated_date,
+            A.project_id
+        FROM 
+            business_type AS A
+        LEFT JOIN
+            business_type AS B
+        ON
+            A.parent_business_type_id = B.business_type_id
+        <where>
+            <if test="businessTypeCode != null and businessTypeCode != ''">
+                A.business_type_code = #{businessTypeCode}
+            </if>
+            <if test="businessTypeId != null">
+                AND A.business_type_id != #{businessTypeId}
+            </if>
+            <if test="(businessTypeCode == null or businessTypeCode == '') and businessTypeId == null">
+               AND FALSE
+            </if>
+        </where>    
+        LIMIT 1;
+    </select>
+
+    <select id="findById" parameterType="_long" resultMap="resultMap">
+        SELECT 
+            A.business_type_id,
+            A.business_type_code,
+            A.business_type_name,
+            A.parent_business_type_id,
+            B.business_type_name AS parent_business_type_name,
+            A.remark,
+            A.created_by,
+            A.created_date,
+            A.updated_by,
+            A.updated_date,
+            A.project_id
+        FROM 
+            business_type AS A
+        LEFT JOIN
+            business_type AS B
+        ON
+            A.parent_business_type_id = B.business_type_id
+        WHERE 
+            A.business_type_id = #{businessTypeId}
+    </select>
+
+    
+    <!-- Register business type information -->
+    <insert id="register" parameterType="BusinessType">
+        <selectKey keyProperty="businessTypeId" resultType="_long" order="BEFORE">
+            SELECT NEXTVAL('business_type_seq') AS businessTypeId
+        </selectKey>
+        INSERT INTO
+            business_type (
+        	business_type_id,
+            business_type_name,
+            business_type_code,
+            parent_business_type_id,
+            remark,
+            created_by,
+            created_date,
+            updated_by,
+            updated_date,
+            project_id
+        ) VALUES (
+        	#{businessTypeId},
+            #{businessTypeName},
+            #{businessTypeCode},
+            #{parentBusinessTypeId},
+            #{remark},
+            #{createdBy},
+            #{createdDate},
+            #{updatedBy},
+            #{updatedDate},
+            #{projectId}
+        )
+    </insert>
+	
+	<!-- Modify business type information -->
+	<update id="modify" parameterType="BusinessType">
+        UPDATE 
+            business_type
+        SET 
+            business_type_code = #{businessTypeCode},
+            business_type_name = #{businessTypeName},
+            parent_business_type_id = #{parentBusinessTypeId},
+            remark = #{remark},
+            updated_by = #{updatedBy},
+            updated_date = #{sysDatetime}
+            <!--, project_id = #{projectId} -->
+        WHERE 
+            business_type_id = #{businessTypeId}
+        AND
+            updated_date = #{updatedDate}
+	</update>
+	
+	<!-- Delete business type information by identify -->
+	<update id="delete" parameterType="BusinessType">
+		DELETE FROM 
+            business_type
+        WHERE 
+            business_type_id = #{businessTypeId}
+	</update>
+
+    <!-- Counts business types by identify -->   
+    <select id="countNameCodeByBusinessTypeId" parameterType="BusinessType" resultType="Long">
+        SELECT 
+            SUM(rowVal) AS totalCount 
+        FROM (
+                (SELECT 
+                        1 AS rowVal 
+                 FROM 
+                        business_type 
+                 <where>
+                        <if test="businessTypeName != null and businessTypeName != ''">
+			                <![CDATA[
+			                   UPPER(business_type_name) = UPPER(#{businessTypeName})
+			                ]]>
+                        </if> 
+                        <if test="businessTypeName == null and businessTypeName == ''">AND FALSE</if>
+                        <if test="businessTypeId != null">AND business_type_id != #{businessTypeId}</if>
+                        AND 
+                        project_id = #{projectId}
+                 </where>
+                 LIMIT 1
+                 )
+                 UNION
+                (SELECT 
+                        2 AS rowVal 
+                 FROM 
+                        business_type
+                 <where>
+                        <if test="businessTypeCode != null and businessTypeCode != ''">
+                            <![CDATA[
+                                UPPER(business_type_code) = UPPER(#{businessTypeCode})
+                            ]]>
+                        </if> 
+                        <if test="businessTypeCode == null and businessTypeCode == ''">AND FALSE</if>
+                        <if test="businessTypeId != null">AND business_type_id != #{businessTypeId}</if>
+                        AND 
+                        project_id = #{projectId}
+                 </where>
+                 LIMIT 1
+                 )
+             ) AS foo
+    </select>
+    <select id="selectFirstBusinessType" resultMap="resultMap">
+        SELECT
+            business_type_id,
+            business_type_code,
+            business_type_name,
+            parent_business_type_id,
+            remark,
+            created_by,
+            created_date,
+            updated_by,
+            updated_date,
+            project_id
+        FROM 
+            business_type
+        ORDER BY business_type_id
+        LIMIT 1
+    </select>    
+</mapper>

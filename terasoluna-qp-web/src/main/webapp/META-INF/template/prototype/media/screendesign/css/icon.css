@@ -1,0 +1,7 @@
+.ui-border { border: 1px solid #dddddd; background: #f6f6f6 50% 50% repeat-x; font-weight: bold; }
+
+.ui-icon-arrow-4 { width: 16px; height: 16px; background-image: url(../images/ui-icons_666666_256x240.png); background-position: 0 -80px;}
+.ui-icon-plus { width: 16px; height: 16px; background-image: url(../images/ui-icons_666666_256x240.png);  background-position: -16.4px -130px; }
+.ui-icon-minus { width: 16px; height: 16px; background-image: url(../images/ui-icons_666666_256x240.png);  background-position: -49px -130px; }
+.ui-icon-carat-2-n-s { width: 16px; height: 16px; background-image: url(../images/ui-icons_666666_256x240.png); background-position: -128px 0 !important; }
+.ui-icon-carat-2-e-w { width: 16px; height: 16px; background-image: url(../images/ui-icons_666666_256x240.png); background-position: -144px 0; }

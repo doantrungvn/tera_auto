@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.businessdesigncomponent.IfComponentRepository">
+
+    <resultMap id="ifComponentResultMap" type="IfComponent">
+        <id property="ifComponentId" column="if_component_id" />
+        <result property="label" column="label" />
+        <result property="remark" column="remark" />
+        <result property="sequenceLogicId" column="sequence_logic_id" />
+    </resultMap>
+    <!-- if component -->
+     <select id="getSequencesIfComponent" resultType="Long">
+    	select SETVAL('if_component_seq'::regclass, NEXTVAL('if_component_seq'::regclass) + #{size})
+    </select>
+    
+    <insert id="registerIfComponent" >
+    	<if test="ifComponentItems != null and  ifComponentItems.size() > 0 ">
+			INSERT INTO if_component
+				(
+            		if_component_id, 
+            		label, 
+            		remark, 
+            		sequence_logic_id
+            	)
+	    		VALUES 
+	    		<foreach item="item" collection="ifComponentItems" separator=",">
+				(
+					#{item.ifComponentId},
+					#{item.label},
+					#{item.remark},
+	            	#{item.sequenceLogicId}
+	            )
+				</foreach>;
+		</if>
+    </insert>
+    <select id="findIfComponentByBusinessLogic" resultMap="ifComponentResultMap">
+		SELECT 	ic.if_component_id,
+       			ic.label,
+       			ic.remark,
+       			ic.sequence_logic_id
+		FROM if_component ic
+		WHERE EXISTS
+		    (
+			    SELECT sl.sequence_logic_id
+			    FROM sequence_logic sl
+			    WHERE sl.business_logic_id = #{businessLogicId}
+			       	AND component_type = 9
+			       	AND sl.sequence_logic_id = ic.sequence_logic_id 
+		     )
+    </select>
+    
+    <select id="findIfComponentByModuleId" resultMap="ifComponentResultMap">
+		SELECT 
+			if_component_id, 
+			label, 
+			remark,
+			sequence_logic_id
+  		FROM if_component a
+		WHERE 
+			EXISTS
+	    		( 
+		    		SELECT b.sequence_logic_id
+		     		FROM sequence_logic b
+		     		INNER JOIN business_logic d ON b.business_logic_id = d.business_logic_id
+		     		WHERE b.component_type = 9
+					AND b.sequence_logic_id = a.sequence_logic_id
+		 			AND d.module_id = #{moduleId}
+	 			)
+    </select>
+
+    <select id="findIfComponentByProject" resultMap="ifComponentResultMap">
+		SELECT 
+			if_component_id, 
+			label, 
+			remark,
+			sequence_logic_id
+  		FROM if_component a
+		WHERE 
+			EXISTS
+	    		( 
+		    		SELECT b.sequence_logic_id
+		     		FROM sequence_logic b
+		     		INNER JOIN business_logic d ON b.business_logic_id = d.business_logic_id
+		     		WHERE b.component_type = 9
+					AND b.sequence_logic_id = a.sequence_logic_id
+		 			AND d.project_id = #{projectId}
+	 			)
+    </select>
+    
+    <!-- generate source code of commmon blogic -->
+    <select id="findIfComponentByModuleCommon" resultMap="ifComponentResultMap">
+		SELECT 
+			if_component_id, 
+			label, 
+			remark,
+			sequence_logic_id
+  		FROM if_component a
+		WHERE 
+			EXISTS
+	    		( 
+		    		SELECT b.sequence_logic_id
+		     		FROM sequence_logic b
+		     		INNER JOIN business_logic d ON b.business_logic_id = d.business_logic_id
+		     		WHERE b.component_type = 9
+		 			AND d.project_id = #{projectId} AND d.module_id is null and d.blogic_type = 1
+					AND b.sequence_logic_id = a.sequence_logic_id
+	 			)
+    </select>
+</mapper>

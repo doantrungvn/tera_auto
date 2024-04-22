@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="org.terasoluna.qp.domain.repository.accounttheme.AccountThemeRepository">
+
+	<resultMap id="resultMap" type="org.terasoluna.qp.domain.model.AccountTheme">
+		<id property="accountThemeId" column="account_theme_id" />
+		<result property="accountId" column="account_id" />
+		<result property="code" column="code" />
+		<result property="value" column="value" />
+	</resultMap>
+	<select id="getThemeSetting" parameterType="Long" resultMap="resultMap">
+		<!-- <select id="getThemeSetting" parameterType="Long" resultMap="hashMapResult"> -->
+		SELECT code,
+		value
+		FROM account_theme
+		where account_id = #{accountId}
+	</select>
+	<insert id="addSetting" parameterType="org.terasoluna.qp.domain.model.AccountTheme">
+		INSERT INTO account_theme(
+            account_id, 
+            code, 
+            value, 
+            created_by,
+            updated_by)
+    	VALUES (#{accountId}, #{code}, #{value}, #{accountId}, #{accountId});
+	</insert>
+	<delete id="deleteByAccountId" parameterType="Long">
+		DELETE 
+		FROM account_theme
+		where 
+		account_id = #{accountId}
+	</delete>
+</mapper>

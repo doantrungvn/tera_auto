@@ -1,0 +1,50 @@
+/* body background color */
+html, body {
+    background: ${CL_THEME_COLOR.get("body-bg-color")};
+}
+/* menu bg*/
+.navbar-default {
+    background-image: linear-gradient(to bottom, ${CL_THEME_COLOR.get("menu-bg-color")} 0%, ${CL_THEME_COLOR.get("menu-bg-color")} 100%);
+}
+/* menu brand */
+.navbar-default .navbar-brand  {
+    color: ${CL_THEME_COLOR.get("menu-brand-color")} ;
+    font-size: ${CL_THEME_COLOR.get("menu-brand-size")} ;
+}
+/* menu text color*/
+.navbar-default .navbar-nav > li > a {
+    color: ${CL_THEME_COLOR.get("menu-text-color")} ;
+}
+/* header */
+.qp-header-main-text{
+    font-size: ${CL_THEME_COLOR.get("header-title-size")} ;
+    color: ${CL_THEME_COLOR.get("header-title-color")} ;
+}
+.qp-link-header{
+    text-align: ${CL_THEME_COLOR.get("header-link-position")} ;
+    color:  ${CL_THEME_COLOR.get("header-link-color")} ;
+}
+/* panel */
+.panel-default>.panel-heading {
+  color: ${CL_THEME_COLOR.get("panel-header-text-color")} ;
+  background-color:  ${CL_THEME_COLOR.get("panel-header-bg-color")} ;
+  border-color: ${CL_THEME_COLOR.get("panel-border")} ;
+  font-size: ${CL_THEME_COLOR.get("panel-header-text-size")} ;
+}
+.panel-body {
+  padding: ${CL_THEME_COLOR.get("panel-body-padding")} ;
+  background:  ${CL_THEME_COLOR.get("panel-body-bg-color")} ;
+}
+/* panel table form */
+.qp-table-form tr th{
+    border: ${CL_THEME_COLOR.get("panel-table-form-border")} ;
+    background-color: ${CL_THEME_COLOR.get("panel-table-form-th-bg-color")} ;
+} 
+/* panel table list */
+.qp-table-list thead th {
+    border: ${CL_THEME_COLOR.get("panel-table-list-border")} ;
+    background-color: ${CL_THEME_COLOR.get("panel-table-list-th-bg-color")} ;
+}
+.qp-footer {
+  border-top: ${CL_THEME_COLOR.get("footer-border")} ;
+}

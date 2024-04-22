@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.sqldesign.SqlDesignConditionRepository">
+
+	<resultMap id="resultMap" type="SqlDesignCondition">
+		<result property="conditionsId" column="conditions_id" />
+		<result property="sqlDesignId" column="sql_design_id" />
+		<result property="logicCode" column="logic_code" />
+		<result property="leftTableId" column="left_tbl_id" />
+		<result property="leftTableName" column="left_tbl_name" />
+		<result property="leftTableCode" column="left_tbl_code" />
+		<result property="leftTableMissingFlag" column="left_tbl_missing_flg" />
+		<result property="leftColumnId" column="left_column_id" />
+		<result property="leftColumnName" column="left_column_name" />
+		<result property="leftColumnCode" column="left_column_code" />
+		<result property="leftColumnMissingFlag" column="left_column_missing_flg" />
+		<result property="operatorCode" column="operator_code" />
+		<result property="value" column="value" />
+		<result property="rightTableId" column="right_tbl_id" />
+		<result property="rightTableName" column="right_tbl_Name" />
+		<result property="rightTableCode" column="right_tbl_Code" />
+		<result property="rightTableMissingFlag" column="right_tbl_missing_flg" />
+		<result property="rightColumnId" column="right_column_id" />
+		<result property="rightColumnName" column="right_column_name" />
+		<result property="rightColumnCode" column="right_column_code" />
+		<result property="rightColumnMissingFlag" column="right_column_missing_flg" />
+		<result property="groupType" column="group_type" />
+		<result property="itemSeqNo" column="item_seq_no" />
+		<result property="conditionType" column="condition_type" />
+		<result property="sqlDesignParameterId" column="sql_design_parameter_id" />
+		<result property="functionCode" column="function_code" />
+		<result property="dataType" column="data_type" />
+		<result property="patternFormat" column="pattern_format" />
+	</resultMap>
+
+	<select id="findAllBySqlDesignId" parameterType="Long" resultMap="resultMap">
+		SELECT A.conditions_id,
+				A.sql_design_id,
+				A.logic_code,
+				A.function_code,
+				A.left_tbl_id,
+				COALESCE(B.tbl_design_name,A.left_tbl_name) as left_tbl_name,
+				COALESCE(B.tbl_design_code,A.left_tbl_code) as left_tbl_code,
+				CASE WHEN B.tbl_design_name IS NULL THEN '1'
+					ELSE '0'
+				END left_tbl_missing_flg,
+				A.left_column_id,
+				COALESCE(D.column_name,A.left_column_name) as left_column_name,
+				COALESCE(D.column_code,A.left_column_code) as left_column_code,
+				CASE WHEN D.column_name IS NULL THEN '1'
+					ELSE '0'
+				END left_column_missing_flg,
+				A.operator_code,
+				A.value,
+				A.right_tbl_id,
+				COALESCE(C.tbl_design_name,A.right_tbl_name) as right_tbl_name,
+				COALESCE(C.tbl_design_code,A.right_tbl_code) as right_tbl_code,
+				CASE WHEN C.tbl_design_name IS NULL THEN '1'
+					ELSE '0'
+				END right_tbl_missing_flg,
+				A.right_column_id,
+				COALESCE(E.column_name,A.right_column_name) as right_column_name,
+				COALESCE(E.column_code,A.right_column_code) as right_column_code,
+				CASE WHEN E.column_name IS NULL THEN '1'
+					ELSE '0'
+				END right_column_missing_flg,
+				A.group_type,
+				A.item_seq_no,
+				A.condition_type,
+				A.sql_design_parameter_id, 
+				A.data_type,
+				A.pattern_format
+		FROM 
+			sql_design_conditions A 
+			LEFT JOIN 
+				table_design B 
+			ON 
+				A.left_tbl_id = B.tbl_design_id 
+			LEFT JOIN 
+				table_design C
+			ON
+				A.right_tbl_id = C.tbl_design_id 
+			LEFT JOIN 
+				table_design_details D 
+			ON 
+				A.left_column_id = D.column_id
+			LEFT JOIN 
+				table_design_details E
+			ON
+				A.right_column_id = E.column_id 
+		WHERE A.sql_design_id = #{sqlDesignId}
+		ORDER BY 
+			item_seq_no
+	</select>
+	
+	<select id="findById" parameterType="Long" resultMap="resultMap">
+		SELECT conditions_id,
+				sql_design_id,
+				logic_code,
+				function_code,
+				left_tbl_id,
+				left_tbl_name,
+				left_column_id,
+				left_column_name,
+				operator_code,
+				value,
+				right_tbl_id,
+				right_tbl_name,
+				right_column_id,
+				right_column_name,
+				group_type,
+				item_seq_no,
+				condition_type,
+				sql_design_parameter_id,
+				pattern_format
+		FROM sql_design_conditions
+		WHERE conditions_id = #{conditionsId}
+
+	</select>
+	
+	<insert id="register" parameterType="SqlDesignCondition">
+		<selectKey keyProperty="conditionsId" resultType="long" order="BEFORE">
+			SELECT nextval('sql_design_conditions_seq') AS conditionsId
+		</selectKey>
+		INSERT INTO
+			sql_design_conditions
+		(
+			conditions_id,
+			sql_design_id,
+			logic_code,
+			function_code,
+			left_tbl_id,
+			left_tbl_name,
+			left_column_id,
+			left_column_name,
+			operator_code,
+			value,
+			right_tbl_id,
+			right_tbl_name,
+			right_column_id,
+			right_column_name,
+			group_type,
+			item_seq_no,
+			condition_type,
+			sql_design_parameter_id,
+			left_tbl_code,
+			right_tbl_code,
+			left_column_code,
+			right_column_code,
+			pattern_format
+		)
+		VALUES
+		(
+			#{conditionsId},
+			#{sqlDesignId},
+			#{logicCode},
+			#{functionCode},
+			#{leftTableId},
+			#{leftTableName},
+			#{leftColumnId},
+			#{leftColumnName},
+			#{operatorCode},
+			#{value},
+			#{rightTableId},
+			#{rightTableName},
+			#{rightColumnId},
+			#{rightColumnName},
+			#{groupType},
+			#{itemSeqNo},
+			#{conditionType},
+			#{sqlDesignParameterId},
+			(SELECT tbl_design_code FROM table_design WHERE tbl_design_id = #{leftTableId}),
+            (SELECT tbl_design_code FROM table_design WHERE tbl_design_id = #{rightTableId}),
+            (SELECT column_code FROM table_design_details WHERE column_id = #{leftColumnId}),
+            (SELECT column_code FROM table_design_details WHERE tbl_design_id = #{rightColumnId}),
+            #{patternFormat}
+		)
+	</insert>
+	
+	<insert id="registerAll">
+		INSERT INTO
+			sql_design_conditions
+		(
+			sql_design_id,
+			logic_code,
+			function_code,
+			left_tbl_id,
+			left_tbl_name,
+			left_column_id,
+			left_column_name,
+			operator_code,
+			value,
+			right_tbl_id,
+			right_tbl_name,
+			right_column_id,
+			right_column_name,
+			group_type,
+			item_seq_no,
+			condition_type,
+			sql_design_parameter_id , 
+			data_type,
+			left_tbl_code,
+			right_tbl_code,
+			left_column_code,
+			right_column_code,
+			pattern_format
+		)
+		VALUES
+		<foreach collection="sqlDesignConditions" item="item" separator=",">
+		(
+			#{item.sqlDesignId},
+			#{item.logicCode},
+			#{item.functionCode},
+			#{item.leftTableId},
+			#{item.leftTableName},
+			#{item.leftColumnId},
+			#{item.leftColumnName},
+			#{item.operatorCode},
+			#{item.value},
+			#{item.rightTableId},
+			#{item.rightTableName},
+			#{item.rightColumnId},
+			#{item.rightColumnName},
+			#{item.groupType},
+			#{item.itemSeqNo},
+			#{item.conditionType},
+			#{item.sqlDesignParameterId}, 
+			#{item.dataType},
+			(SELECT tbl_design_code FROM table_design WHERE tbl_design_id = #{item.leftTableId}),
+            (SELECT tbl_design_code FROM table_design WHERE tbl_design_id = #{item.rightTableId}),
+            (SELECT column_code FROM table_design_details WHERE column_id = #{item.leftColumnId}),
+            (SELECT column_code FROM table_design_details WHERE tbl_design_id = #{item.rightColumnId}),
+            #{item.patternFormat} 
+		)
+		</foreach>
+	</insert>
+	<update id="modify" parameterType="SqlDesignCondition">
+		UPDATE sql_design_conditions
+		SET	 sql_design_id=#{sqlDesignId},
+				logic_code=#{logicCode},
+				function_code=#{functionCode},
+				left_tbl_id=#{leftTableId},
+				left_table_name=#{leftTableName},
+				left_column_id=#{leftColumnId},
+				left_column_name=#{leftColumnName},
+				operator_code=#{operatorCode},
+				value=#{value},
+				right_tbl_id=#{rightTableId},
+				right_tbl_name=#{rightTableName},
+				right_column_id=#{rightColumnId},
+				right_column_name=#{rightColumnName},
+				group_type=#{groupType},
+				item_seq_no=#{itemSeqNo},
+				condition_type=#{conditionType},
+				sql_design_parameter_id=#{sqlDesignParameterId},
+				left_tbl_code =	COALESCE((SELECT tbl_design_code FROM table_design WHERE tbl_design_id = #{leftTableId}),left_tbl_code),
+            	right_tbl_code = COALESCE((SELECT tbl_design_code FROM table_design WHERE tbl_design_id = #{rightTableId}),right_tbl_code),
+            	left_column_code = COALESCE((SELECT column_code FROM table_design_details WHERE column_id = #{leftColumnId}),left_column_code),
+            	right_column_code = COALESCE((SELECT column_code FROM table_design_details WHERE column_id = #{rightColumnId}),right_column_code),
+            	pattern_format = #{patternFormat}
+		WHERE conditions_id = #{conditionsId}
+	</update>
+	
+	<update id="updateNameAffect">
+		<foreach collection="tableDesigns" item="tableDesign" separator=";">
+			UPDATE
+				sql_design_conditions
+			SET
+				left_tbl_name = #{tableDesign.tableName}
+			WHERE 
+				left_tbl_id = #{tableDesign.tableDesignId};
+				
+			UPDATE
+				sql_design_conditions
+			SET
+				right_tbl_name = #{tableDesign.tableName}
+			WHERE 
+				right_tbl_id = #{tableDesign.tableDesignId};
+			
+			<foreach collection="tableDesign.listTableDesignDetails" item="detail" separator=";">
+				UPDATE
+					sql_design_conditions
+				SET
+					left_column_name = #{detail.name}
+				WHERE 
+					left_column_id = #{detail.columnId};
+				
+				UPDATE
+					sql_design_conditions
+				SET
+					right_column_name = #{detail.name}
+				WHERE 
+					right_column_id = #{detail.columnId}
+			</foreach>
+		</foreach>
+	</update>
+	
+	<update id="modifyAll">
+		<foreach collection="sqlDesignConditions" item="item" separator=";">
+			UPDATE sql_design_conditions
+			SET	 sql_design_id=#{item.sqlDesignId},
+					logic_code=#{item.logicCode},
+					function_code=#{item.functionCode},
+					left_tbl_id=#{item.leftTableId},
+					left_tbl_name=#{item.leftTableName},
+					left_column_id=#{item.leftColumnId},
+					left_column_name=#{item.leftColumnName},
+					operator_code=#{item.operatorCode},
+					value=#{item.value},
+					right_tbl_id=#{item.rightTableId},
+					right_tbl_name=#{item.rightTableName},
+					right_column_id=#{item.rightColumnId},
+					right_column_name=#{item.rightColumnName},
+					group_type=#{item.groupType},
+					item_seq_no=#{item.itemSeqNo},
+					condition_type=#{item.conditionType},
+					sql_design_parameter_id=#{item.sqlDesignParameterId},
+					data_type=#{item.dataType},
+					left_tbl_code =	COALESCE((SELECT tbl_design_code FROM table_design WHERE tbl_design_id = #{item.leftTableId}),left_tbl_code),
+	            	right_tbl_code = COALESCE((SELECT tbl_design_code FROM table_design WHERE tbl_design_id = #{item.rightTableId}),right_tbl_code),
+	            	left_column_code = COALESCE((SELECT column_code FROM table_design_details WHERE column_id = #{item.leftColumnId}),left_column_code),
+	            	right_column_code = COALESCE((SELECT column_code FROM table_design_details WHERE column_id = #{item.rightColumnId}),right_column_code),
+	            	pattern_format = #{item.patternFormat} 
+			WHERE conditions_id = #{item.conditionsId}
+		</foreach>
+	</update>
+	
+	<delete id="delete" parameterType="SqlDesignCondition">
+		DELETE FROM sql_design_conditions
+		WHERE conditions_id = #{conditionsId}
+	</delete>
+	
+	<delete id="deleteByExceptionalGroup">
+		DELETE FROM 
+			sql_design_conditions
+        <where>
+        	sql_design_id = #{sqlDesignId}
+         	
+         	<if test="exceptionGroup !=null and exceptionGroup.size() &gt; 0">
+        		AND conditions_id NOT IN
+	        	<foreach collection="exceptionGroup" separator="," open="(" close=")" item="id">
+	        		#{id}
+	        	</foreach>
+        	</if>
+        	<if test="exceptionGroup ==null or exceptionGroup.size() &lt;= 0">
+        		AND TRUE
+        	</if>
+        
+        </where>
+	</delete>
+	
+	<delete id="deleteBySqlDesignId">
+		DELETE FROM 
+			sql_design_conditions
+        WHERE
+        	sql_design_id = #{sqlDesignId}
+	</delete>
+</mapper>

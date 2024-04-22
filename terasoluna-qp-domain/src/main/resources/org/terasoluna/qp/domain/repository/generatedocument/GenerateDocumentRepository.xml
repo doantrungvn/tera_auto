@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.generatedocument.GenerateDocumentRepository">
+
+	<resultMap id="BusinessDesignResultMap" type="BusinessDesign">
+        <id property="businessLogicId" column="business_logic_id" />
+        <result property="businessLogicName" column="business_logic_name" />
+    </resultMap>
+
+	<resultMap id="FunctionDesignResultMap" type="FunctionDesign">
+        <id property="functionId" column="decision_table_id" />
+        <result property="functionName" column="decision_table_id" />
+        <result property="functionType" column="function_type" />
+        <result property="remark" column="decision_table_name" />
+        <result property="businessLogicId" column="created_by" />
+    </resultMap>
+    
+    <resultMap type="org.terasoluna.qp.domain.model.GenerateDocumentDomainDesign" id="domainResultMap">
+		<id property="domainId" column="domain_id" />
+		<result property="domainName" column="domain_name" />
+		<result property="domainCode" column="domain_code" />
+		<result property="maxLength" column="maxlength" />
+		<result property="mandatoryflg" column="mandatory_flg" />
+		<result property="minVal" column="min_val" />
+		<result property="maxVal" column="max_val" />
+		<result property="precision" column="decimal_part" />
+		<result property="defaultValue" column="default_value" />
+		<result property="defaultType" column="default_type" />
+		<result property="baseType" column="base_type" />
+		<result property="baseTypeName" column="base_type_name" />
+		<result property="groupBasetypeId" column="group_base_type_id" />
+		<result property="fmtCode" column="fmt_code" />
+		<result property="remark" column="remark" />
+		<result property="createdBy" column="created_by" />
+		<result property="createdDate" column="created_date" />
+		<result property="updatedBy" column="update_by" />
+		<result property="updatedDate" column="updated_date" />
+		<result property="projectId" column="project_id" />
+		<result property="tableName" column="table_name" />
+		<result property="projectIdAutocomplete" column="project_name" />
+		<result property="baseTypeAutocomplete" column="base_type_name" />
+		<result property="majorClassification" column="major_classification" />
+		<result property="subClassification" column="sub_classification" />
+		<result property="minorClassification" column="minor_classification" />
+		<result property="descriptionFormat" column="description_format" />
+		<result property="datasourceId" column="datasource_id" />
+		<result property="datasourceType" column="datasource_type" />
+	</resultMap>
+    
+    <!-- Process for get all data for export to file -->    
+    <select id="findAllFunctionDesignByProjectId" resultMap="BusinessDesignResultMap">
+		Select 
+		   DISTINCT 
+		   bl.business_logic_id,
+		   bl.business_logic_name
+		From 
+		   business_logic bl 
+		 WHERE 
+		   bl.project_id = 162
+		   AND bl.function_id IS NOT NULL
+    </select>
+    
+    <select id="findAllBusinessTypeByProjectId" resultMap="FunctionDesignResultMap">
+		Select 
+		   bl.business_logic_id,
+		   fd.function_id,
+		   fd.function_name,
+		   fd.function_type,
+		   fd.remark
+		From 
+		   business_logic bl 
+		   LEFT JOIN function_design fd ON fd.function_id= bl.function_id
+		 WHERE 
+		   bl.project_id = #{projectId}
+		   AND bl.function_id IS NOT NULL
+    </select>
+    
+    <select id="findAllDomainByProjectId" parameterType="Long" resultMap="domainResultMap">
+		<![CDATA[
+			SELECT
+				d.domain_id,
+				d.domain_name,
+				d.domain_code,
+				d.maxlength,
+				d.mandatory_flg,
+				d.min_val,
+				d.max_val,
+				d.decimal_part,
+				d.default_value,
+				d.base_type,
+				(
+					SELECT 
+						value1
+					FROM
+						resources
+					WHERE
+						category_cd='clBasetype' AND CAST (value2 AS numeric) = base_type
+				) base_type_name,
+				d.fmt_code,
+				d.remark,
+				d.group_base_type_id,
+				d.major_classification,
+				d.sub_classification,
+				d.minor_classification,
+				d.datasource_id, 
+				d.datasource_type, 
+				(
+					SELECT 
+						remark
+					FROM
+						validation_rule
+					WHERE
+						validation_rule_code= d.fmt_code 
+				) description_format
+			FROM
+				domain_design d
+			WHERE
+				project_id=#{projectId}
+			ORDER BY
+				group_base_type_id
+		]]>
+	</select>
+</mapper>

@@ -1,0 +1,4565 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.screendesign.ScreenDesignRepository">
+
+	<resultMap id="screenDesignResult" type="ScreenDesign">
+		 <id property="screenId" column="screen_id" />
+		 <result property="screenCode" column="screen_code" />
+		 <result property="projectId" column="project_id" />
+		 <result property="moduleId" column="module_id" />
+		 <result property="moduleName" column="module_name" />
+		 <result property="moduleCode" column="module_code" />
+		 <result property="screenUrlCode" column="screen_url_code" />
+		 <result property="screenPatternType" column="screen_pattern_type" />
+		 <result property="templateType" column="template_type" />
+		 <result property="messageDesign.messageString" column="message_string" />
+		 <result property="messageDesign.messageCode" column="message_code" />
+		 <result property="remark" column="remark" />
+		 <result property="xCoordinate" column="x_coordinates" />
+		 <result property="yCoordinate" column="y_coordinates" />
+		 <result property="createdBy" column="created_by" />
+		 <result property="createdDate" column="created_date" />
+		 <result property="updatedBy" column="updated_by" />
+		 <result property="updatedDate" column="updated_date" />
+		 <result property="languageId" column="language_id" />
+		 <result property="designMode" column="design_mode" />
+		 <result property="designStatus" column="design_status" />
+		 <result property="functionDesignId" column="function_id" />
+         <result property="functionDesignType" column="function_type" />
+		 <result property="confirmationType" column="confirmation_type" />
+		 <result property="completionType" column="completion_type" />
+		 <result property="functionDesignId" column="function_id" />
+		 <result property="functionDesignName" column="function_name" />
+		 <result property="businessTypeName" column="business_type_name" />
+		  <result property="enableHomePage" column="enable_home_page" />
+		  <result property="businessLogicCode" column="business_logic_code" />
+	</resultMap>
+	
+	<resultMap id="autocompleteResultMap" type="Autocomplete">
+		<result property="optionValue" column="optionValue" />
+		<result property="optionLabel" column="optionLabel" />		
+		<result property="output01" column="output01" />
+		<result property="output02" column="output02" />
+		<result property="output03" column="output03" />
+		<result property="output04" column="output04" />
+		<result property="output05" column="output05" />		
+	</resultMap>
+	
+	<resultMap id="screenDesignOutput" type="org.terasoluna.qp.domain.service.screendesign.ScreenDesignOutput">
+		<result property="label" column="label" />
+		<result property="datatype" column="datatype" />		
+		<result property="physicaldatatype" column="physicaldatatype" />
+		<result property="columnname" column="columnname" />
+		<result property="rowspan" column="rowspan" />
+		<result property="colspan" column="colspan" />
+		<result property="datasource" column="datasource" />
+		<result property="minvalue" column="minvalue" />
+		<result property="maxvalue" column="maxvalue" />
+		<result property="formatcode" column="formatcode" />
+		<result property="tablename" column="tablename" />
+		<result property="tablecode" column="tablecode" />
+		<result property="tablecolumnname" column="tablecolumnname" />
+		<result property="tablecolumncode" column="tablecolumncode" />
+		<result property="connectionmsg" column="connectionmsg" />
+		<result property="transitiontype" column="transitiontype" />
+		<result property="actiontype" column="actiontype" />
+		<result property="parameters" column="parameters" />
+		<result property="screenactionid" column="screenactionid" />
+		<result property="linklabel" column="linklabel" />
+		<result property="toscreenid" column="toscreenid" />
+		<result property="maxlength" column="maxlength" />
+		<result property="physicalmaxlength" column="physicalmaxlength" />
+		<result property="msglabel" column="msglabel" />
+		<result property="msgvalue" column="msgvalue" />
+		<result property="require" column="require" />
+		<result property="elementtype" column="elementtype" />
+		<result property="datatypecode" column="datatypecode" />
+		<result property="labelText" column="labelText" />
+		
+		<result property="datasourcetype" column="datasource_type" />
+		<result property="dataSourceId" column="datasource_id" />
+		<result property="mandatory" column="mandatory_flg" />
+		<result property="dialogAutocompleteCode" column="autocomplete_id" />
+		<result property="columnId" column="column_id" />
+		<result property="itemType" column="itemType" />
+		
+		<result property="isDomainType" column="is_domain_type" />
+		<result property="datatypeIdDomainType" column="data_type_id_domain_type" />
+		<result property="isUsedOnScreen" column="is_used_on_screen" />
+		<result property="defaultvalue" column="default_value" />
+		
+		
+		
+	</resultMap>
+
+	<resultMap id="screenFormResult" type="ScreenForm">
+		<result property="screenFormId" column="screen_form_id" />
+		<result property="formCode" column="form_code" />
+		<result property="enctypeType" column="enctype_type" />
+		<result property="methodType" column="method_type" />
+		<result property="formSeqNo" column="form_seq_no" />
+		<result property="formCoverageFlg" column="form_coverage_flg" />
+		<result property="screenId" column="screen_id" />
+		<result property="createdBy" column="created_by" />
+		<result property="createdDate" column="created_date" />
+		<result property="updatedBy" column="updated_by" />
+		<result property="updatedDate" column="updated_date" />
+		<result property="formActionName" column="message_string" />
+		<result property="businessDesign.businessLogicName" column="business_logic_name" />
+	</resultMap>
+	<resultMap id="screenParameterResult" type="ScreenParameter">
+		<result property="screenParamId" column="screen_param_id" />
+		<result property="screenId" column="screen_id" />		
+		<result property="domainTblMappingId" column="domain_tbl_mapping_id" />
+		<result property="domainTblMappingItemId" column="domain_tbl_mapping_item_id" />
+		<result property="screenParamCode" column="screen_param_code" />
+		<result property="screenParamName" column="screen_param_name" />
+		<result property="dataType" column="data_type" />
+		<result property="arrayFlg" column="array_flg" />			
+		<result property="paramSeqNo" column="param_seq_no" />
+		<result property="parentScreenParamId" column="parent_screen_param_id" />
+		<result property="createdBy" column="created_by" />
+		<result property="createdDate" column="created_date" />
+		<result property="updatedBy" column="updated_by" />
+		<result property="updatedDate" column="updated_date" />
+		<result property="domainColumnName" column="domain_column_name" />
+		<result property="domainTblMappingName" column="domain_tbl_mapping_name" />
+		<result property="screenParamIdStore" column="screenParamIdStore" />
+	</resultMap>
+	<resultMap id="screenAreaResult" type="ScreenArea">
+		<result property="screenAreaId" column="screen_area_id" />
+		<result property="areaSeqNo" column="area_seq_no" />		
+		<result property="areaCode" column="area_code" />
+		<result property="areaLocalName" column="area_local_name" />
+		<result property="colWidthUnit" column="col_width_unit" />
+		<result property="totalCol" column="total_col" />
+		<result property="totalElement" column="total_element" />
+		<result property="areaType" column="area_type" />
+		<result property="tblWidthUnit" column="tbl_width_unit" />
+		<result property="tblHeaderRow" column="tbl_header_row" />
+		<result property="alignPositionType" column="align_position_type" />
+		<result property="areaPatternType" column="area_pattern_type" />
+		<result property="screenFormId" column="screen_form_id" />
+		<result property="messageDesign.messageDesignId" column="message_design_id" />
+		 <result property="messageDesign.messageString" column="message_string" />
+		 <result property="messageDesign.messageCode" column="message_code" />
+		<result property="createdBy" column="created_by" />
+		<result property="createdDate" column="created_date" />
+		<result property="updatedBy" column="updated_by" />
+		<result property="updatedDate" column="updated_date" />
+		<result property="elementDipslayType" column="element_dipslay_type" />
+		<result property="elementPositionType" column="element_position_type" />
+		<result property="tblComponentRow" column="tbl_component_row" />	
+		<result property="screenForm.formCode" column="form_code" />
+		<result property="areaCustomType" column="area_custom_type" />
+		<result property="fixedRow" column="fixed_row" />
+		<result property="areaTypeAction" column="area_type_action" />
+		<result property="areaIcon" column="area_icon" />
+		<result property="objectMappingId" column="object_mapping_id" />
+		<result property="objectMappingType" column="object_mapping_type" />
+		<result property="customSectionContent" column="custom_section_content" />
+		<result property="displayPageable" column="display_pageable" />
+		
+		<result property="sqlColumnId" column="sql_column_id" />
+		<result property="sqlColumnCode" column="sql_column_code" />
+		<result property="enableSort" column="enable_sort" />
+	</resultMap>
+	<resultMap id="screenGroupItemResult" type="ScreenGroupItem">
+		<result property="groupItemId" column="group_item_id" />
+		<result property="screenAreaId" column="screen_area_id" />
+		<result property="itemSeqNo" column="item_seq_no" />
+		<result property="groupSeqNo" column="group_seq_no" />
+		<result property="groupName" column="group_name" />
+		<result property="groupType" column="group_type" />
+		<result property="screenArea.screenAreaId" column="screen_area_id" />
+		<result property="screenArea.totalCol" column="total_col" />
+		<result property="screenArea.totalElement" column="total_element" />
+		<result property="createdBy" column="created_by" />
+		<result property="createdDate" column="created_date" />
+		<result property="updatedBy" column="updated_by" />
+		<result property="updatedDate" column="updated_date" />		
+	</resultMap>
+	<resultMap id="screenItemResult" type="ScreenItem">
+		<result property="screenItemId" column="screen_item_id" />
+		<result property="groupItemId" column="group_item_id" />
+		<result property="screenAreaId" column="screen_area_id" />
+		<result property="screenId" column="screen_id" />
+		<result property="screenPatternType" column="screen_pattern_type" />
+		<result property="itemCode" column="item_code" />
+		<result property="itemCodeH" column="item_code" />
+		<result property="messageDesign.messageDesignId" column="message_design_id" />	
+		<result property="messageDesign.messageString" column="message_string" />
+		<result property="messageDesign.messageCode" column="message_code" />
+		<result property="messageDesign.messageLevel" column="message_level" />	
+		<result property="logicalDataType" column="logical_data_type" />
+		<result property="physicalDataType" column="physical_data_type" />
+		<result property="dataSourceType" column="data_source_type" />
+		<result property="domainTblMappingId" column="domain_tbl_mapping_id" />
+		<result property="domainTblMappingItemId" column="domain_tbl_mapping_item_id" />		
+		<result property="colSpan" column="col_span" />
+		<result property="rowSpan" column="row_span" />
+		<result property="itemWidthUnit" column="item_width_unit" />		
+		<result property="codelistId" column="codelist_id" />		
+		<result property="codelistType" column="codelist_type" />
+		<result property="itemType" column="item_type" />
+		<result property="autocompleteId" column="autocomplete_id" />
+		<result property="arrayFlg" column="array_flg" />		
+		<result property="screenActionId" column="screen_action_id" />
+		<result property="createdBy" column="created_by" />
+		<result property="createdDate" column="created_date" />
+		<result property="updatedBy" column="updated_by" />
+		<result property="updatedDate" column="updated_date" />
+		<result property="defaultValue" column="default_value" />
+		<result property="defaultValueTo" column="default_value_to" />
+		<result property="tabIndex" column="tab_index" />
+		<result property="itemSeqNo" column="item_seq_no" />		
+		<result property="itemGroupType" column="item_group_type" />
+		
+		<result property="autocompleteDesign.autocompleteId" column="autocomplete_id" />
+		<result property="autocompleteDesign.autocompleteName" column="autocomplete_name" />
+		<result property="autocompleteDesign.autocompleteCode" column="autocomplete_code" />
+		<result property="codelistText" column="codelist_name" />
+		
+		<result property="screenArea.screenAreaId" column="screen_area_id" />
+		<result property="screenArea.totalCol" column="total_col" />
+		<result property="screenArea.totalElement" column="total_element" />
+		<result property="screenArea.messageDesign.messageString" column="area_message_string" />
+		<result property="screenArea.areaCode" column="area_code" />
+		<result property="screenArea.areaType" column="area_type" />
+		<result property="screenArea.tblHeaderRow" column="tbl_header_row" />
+		
+		<result property="screenItemValidation.maxlength" column="maxlength" />
+		<result property="screenItemValidation.mandatoryFlg" column="mandatory_flg" />
+		<result property="screenItemValidation.minVal" column="min_val" />
+		<result property="screenItemValidation.maxVal" column="max_val" />
+		<result property="screenItemValidation.fmtCode" column="fmt_code" />
+		
+		<result property="domainColumnName" column="domain_column_name" />
+		<result property="domainTblMappingName" column="domain_tbl_mapping_name" />
+		<result property="domainCodelistType" column="domain_codelist_type" />
+		<result property="domainCodelistId" column="domain_codelist_id" />
+		
+		<result property="screenForms.formCode" column="form_name" />
+		
+		<result property="sqlDesign.sqlDesignId" column="sql_design_id" />
+		<result property="sqlDesign.sqlDesignName" column="sql_design_name" />
+		<result property="dataSourceType" column="data_source_type" />
+		<result property="optionLabel.resultId" column="option_label" />
+		<result property="optionValue.resultId" column="option_value" />
+		<result property="optionLabel.columnName" column="option_label_text" />
+		<result property="optionValue.columnName" column="option_value_text" />
+		
+		<result property="tblDesignId" column="tbl_design_id" />
+		<result property="columnId" column="column_id" />
+		<result property="style" column="style" />
+		<result property="hoverStyle" column="hover_style" />
+		
+		<result property="icon" column="icon" />
+		<result property="showLabel" column="show_label" />
+		<result property="enablePassword" column="enable_password" />
+		<result property="allowAnyInput" column="allow_any_input" />
+		<result property="buttonType" column="button_type" />
+		<result property="displayFromTo" column="from_to" />
+		
+		<result property="enableConfirm" column="enable_confirm" />
+		<result property="messageConfirm.messageCode" column="message_confirm" />
+		<result property="messageConfirm.messageString" column="message_confirm_text" />
+		<result property="showBlankItem" column="show_blank_item" />
+		<result property="customItemContent" column="custom_content" />
+		
+		<result property="screenItemIdCodeListId" column="screen_item_id_codelist_id" />
+		<result property="screenDesignIdCodeListId" column="screen_design_id_codelist_id" />
+		<result property="screenDesignCodeCodeListId" column="screen_design_code_codelist_id" />
+		
+		<result property="screenItemTextCodeListId" column="screen_item_text_codelist_id" />
+		<result property="screenDesignTextCodeListId" column="screen_design_text_codelist_id" />
+		<result property="screenTransitionId" column="screen_transition_id" />
+		<result property="ScreenTransitionName" column="transition_name" />	
+	</resultMap>
+	<resultMap id="screenItemCodelistResult" type="ScreenItemCodelist">
+		<result property="screenItemId" column="screen_item_id" />
+		<result property="codelistSeqNo" column="codelist_seq_no" />		
+		<result property="codelistName" column="codelist_name" />
+		<result property="codelistVal" column="codelist_val" />
+		<result property="supportOptionValFlg" column="support_option_val_flg" />
+	</resultMap>
+	<resultMap id="tableDesignDetailsResult" type="TableDesignDetails">
+		<result property="columnId" column="column_id" />
+		<result property="tblDesignId" column="tbl_design_id" />		
+		<result property="columnName" column="column_name" />
+		<result property="columnCode" column="column_code" />
+		<result property="maxlength" column="maxlength" />
+		<result property="requiredFlg" column="required_flg" />
+		<result property="keyType" column="key_type" />		
+		<result property="baseType" column="base_type" />
+		<result property="remark" column="remark" />
+		<result property="defaultValue" column="default_value" />
+		<result property="defaultType" column="default_type" />
+		<result property="itemSeqNo" column="item_seq_no" />		
+		<result property="autoincrementFlg" column="autoincrement_flg" />
+		<result property="decimalPart" column="decimal_part" />
+		<result property="dataType" column="data_type" />
+		<result property="constrainsType" column="constrains_type" />
+		<result property="datasourceType" column="datasource_type" />		
+		<result property="datasourceId" column="datasource_id" />
+		<result property="data_typeFlg" column="data_type_flg" />
+		<result property="itemType" column="item_type" />
+		<result property="displayType" column="display_type" />
+		<result property="minVal" column="min_val" />		
+		<result property="maxVal" column="max_val" />
+		<result property="operatorCode" column="operator_code" />
+		<result property="fmtCode" column="fmt_code" />
+	</resultMap>
+	<resultMap id="screenItemEventResult" type="ScreenItemEvent">
+		<result property="screenItemEventId" column="screen_item_event_id" />
+		<result property="screenItemId" column="screen_item_id" />		
+		<result property="eventType" column="event_type" />
+		<result property="effectAreaType" column="effect_area_type" />
+		<result property="effectArea" column="effect_area" />
+		<result property="blogicId" column="blogic_id" />
+		<result property="businessLogic.businessLogicName" column="blogic_name" />
+		<result property="businessLogic.businessLogicCode" column="blogic_code" />
+	</resultMap>
+	<resultMap id="screenItemEventMappingResult" type="ScreenItemEventMapping">
+		<result property="screenItemEventMappingId" column="screen_item_event_mapping_id" />
+		<result property="screenItemEventId" column="screen_item_event_id" />		
+		<result property="beanId" column="bean_id" />
+		<result property="itemCode" column="item_code" />
+		<result property="beanType" column="bean_type" />
+		<result property="outBeanCode" column="out_bean_code" />
+		<result property="inputBeanCode" column="input_bean_code" />
+		<result property="parentCodeOutput" column="parent_code_output" />
+		<result property="parentCodeInput" column="parent_code_input" />
+	</resultMap>
+	<resultMap type="ScreenAreaEvent" id="screenAreaEventResult">
+		<result property="screenAreaEventId" column="screen_area_event_id" />
+		<result property="ifRequire" column="if_require" />
+		<result property="thenMustRequire" column="then_must_require" />
+		<result property="screenAreaId" column="screen_area_id" />
+	</resultMap>
+	<resultMap type="ScreenFormTabs" id="screenFormTabsResult">
+		<result property="screenFormTabId" column="screen_form_tab_id" />
+		<result property="tabTitle" column="tab_title" />
+		<result property="areas" column="areas" />
+		<result property="screenFormId" column="screen_form_id" />
+		
+		<result property="tabDirection" column="tab_direction" />
+		<result property="tabCode" column="tab_code" />
+	</resultMap>
+	<resultMap id="codeListDetailResultMap" type="CodeListDetail">
+		<id property="clDeatailId" column="codelist_detail_id" />
+		<result property="codeListId" column="codelist_id" />
+		<result property="name" column="key" />
+		<result property="value" column="value" />
+		<result property="value1" column="value1" />
+		<result property="value2" column="value2" />
+		<result property="value3" column="value3" />
+		<result property="value4" column="value4" />
+		<result property="value5" column="value5" />
+		<result property="isDefault" column="default_flg" />
+		<result property="createdBy" column="created_by" />
+		<result property="createdDate" column="created_date" />
+		<result property="updatedBy" column="updated_by" />
+		<result property="updatedDate" column="updated_date" />
+		<result property="codelistName" column="codelist_name" />
+	</resultMap>
+	<resultMap id="outputBeanResultMap" type="org.terasoluna.qp.domain.repository.screendesign.ScreenDesignOutputBeanForSetting">
+		<id property="value" column="value" />
+		<result property="label" column="label" />
+		<result property="type" column="type" />
+		<result property="shortLabel" column="short_label" />
+	</resultMap>
+	
+	<resultMap id="outputBeanMap" type="OutputBean">
+		<id property="outputBeanId" column="output_bean_id" />
+		<result property="outputBeanName" column="output_bean_name" />
+		<result property="outputBeanCode" column="output_bean_code" />
+		<result property="parentOutputBeanId" column="parent_output_bean_id" />
+		<result property="parentOutputBeanName" column="parent_output_bean_name" />
+		<result property="parentOutputBeanCode" column="parent_output_bean_code" />
+		<result property="parentOutputBeanArrayFlag" column="parent_output_bean_array_flag" />
+		<result property="grandParentOutputBeanId" column="grand_parent_output_bean_id" />
+		<result property="grandParentOutputBeanName" column="grand_parent_output_bean_name" />
+		<result property="grandParentOutputBeanCode" column="grand_parent_output_bean_code" />
+		<result property="grandParentOutputBeanArrayFlag" column="grand_parent_output_bean_array_flag" />
+		<result property="arrayFlg" column="array_flg" />
+	</resultMap>
+	<resultMap id="screenItemAutocompleteInputMap" type="ScreenItemAutocompleteInput">
+		<id property="screenAutocompleteInputId" column="screen_autocomplete_input_id" />
+		<result property="screenItemId" column="screen_item_id" />
+		<result property="inputId" column="input_id" />
+		<result property="screenItemCode" column="screen_item_code" />
+	</resultMap>
+	
+	<resultMap type="ScreenAreaSortMapping" id="screenAreaSortMappingResultMap">
+		<id property="screenAreaSortMappingId" column="screen_area_sort_mapping_id" />
+		<result property="screenAreaCode" column="screen_area_code" />
+		<result property="screenItemCode" column="screen_item_code" />
+		<result property="sqlColumnCode" column="sql_column_code" />
+		<result property="screenAreaId" column="screen_area_id" />
+	</resultMap>
+	
+	<resultMap id="businessDesignResultMap" type="BusinessDesign">
+		<id property="businessLogicId" column="business_logic_id" />
+		<result property="businessLogicCode" column="business_logic_code" />
+		<result property="businessLogicName" column="business_logic_name" />
+		<result property="returnType" column="return_type" />
+		<result property="screenId" column="screen_id" />
+		<result property="moduleId" column="module_id" />
+		<result property="moduleName" column="module_name" />
+		<result property="moduleStatus" column="module_status" />
+		<result property="moduleIdAutocomplete" column="module_name" />
+		<result property="projectId" column="project_id" />
+		<result property="customizeFlg" column="customize_flg" />
+		<result property="uploadFileId" column="upload_file_id" />
+		<result property="createdBy" column="created_by" />
+		<result property="createdDate" column="created_date" />
+		<result property="updatedBy" column="updated_by" />
+		<result property="updatedDate" column="updated_date" />
+		<result property="fileName" column="file_name" />
+		<result property="file" column="content" />
+		<result property="designStatus" column="design_status" />
+		<result property="packageName" column="package_name" />
+		<result property="screenIdAutocomplete" column="screen_name" />
+		<result property="screenCode" column="screen_name_code" />
+		<result property="screenDesignCode" column="screen_design_code" />
+		<result property="messageString" column="message_string" />
+		<result property="patternType" column="pattern_type" />
+		<result property="confirmFlg" column="confirm_flg" />
+		<result property="completeFlg" column="complete_flg" />
+		<result property="remark" column="remark" />
+		<result property="functionDesignId" column="function_id" />
+		<result property="functionDesignIdAutocomplete" column="function_name" />
+		<result property="moduleType" column="module_type" />
+		<result property="screenFormId" column="screen_form_id" />
+		<result property="batchType" column="batch_type" />
+		<result property="blogicType" column="blogic_type" />
+		<result property="requestMethod" column="request_method" />
+		<result property="authenticatedFlg" column="authenticated_flg" />
+		<result property="screenFormIdAutocomplete" column="screen_form_id_autocomplete" />
+        <result property="moduleCode" column="module_code" />
+        <result property="screenTemplateType" column="screen_template_type" />
+        
+	</resultMap>
+	
+	<select id="findAutocompleteInputByScreenId" resultMap="screenItemAutocompleteInputMap">
+		SELECT 
+			sia.screen_autocomplete_input_id,
+			sia.screen_item_id,
+			sia.input_id,
+			sia.screen_item_code
+  		FROM 
+  			screen_item_autocomplete_input sia 
+  		INNER JOIN 
+  			screen_item si ON sia.screen_item_id = si.screen_item_id
+  		WHERE 
+  			si.screen_id=#{screenId};
+	</select>
+	
+	<select id="findScreenFormTabsByScreenId" resultMap="screenFormTabsResult">
+		SELECT 
+			sft.screen_form_tab_id,
+			sft.tab_title,
+			sft.areas,
+			sft.screen_form_id,
+			sft.tab_code,
+			sft.tab_direction
+  		FROM 
+  			screen_form_tabs sft INNER JOIN screen_form sf ON sft.screen_form_id = sf.screen_form_id
+  		WHERE sf.screen_id=#{screenId};
+	</select>
+	
+<!-- 	start prototype Screen list item by truonglv -->
+	<!-- by business, delete item in this table is update 2 columns logical_data_type and physical_data_type -->
+	<delete id="deleteScreenItemByScreenItemId">
+		DELETE FROM screen_item_event
+			WHERE screen_item_id 
+			IN
+			<foreach item="item" collection="listScreenItemId" open="(" separator="," close=")">
+				<![CDATA[
+					 #{item.screenItemId}	
+ 				 ]]>	
+			 </foreach>;
+		 DELETE FROM screen_item_validation
+			WHERE screen_item_id 
+			IN
+			<foreach item="item" collection="listScreenItemId" open="(" separator="," close=")">
+				<![CDATA[
+ 				 #{item.screenItemId}	
+ 				 ]]>	
+			 </foreach>;
+		DELETE FROM screen_item_codelist
+			WHERE screen_item_id 
+			IN
+			<foreach item="item" collection="listScreenItemId" open="(" separator="," close=")">
+				<![CDATA[
+					 #{item.screenItemId}	
+			]]>	
+			 </foreach>;
+		<foreach item="item" collection="listScreenItemId" separator=";">
+			UPDATE screen_item
+			SET
+				item_code = #{item.itemCode},
+				item_width_unit = #{item.itemWidthUnit},
+				screen_item_text_codelist_id = #{item.screenItemTextCodeListId},
+				custom_content = #{item.customItemContent},
+				icon = #{item.icon},
+				hover_style = #{item.hoverStyle},
+				style = #{item.style},
+				default_value = #{item.defaultValue},
+				message_code = #{item.messageCode},
+				logical_data_type = null,
+				physical_data_type = null,
+				updated_date = #{item.sysDatetime}
+			WHERE 
+				screen_item_id = #{item.screenItemId}
+			 AND
+				(updated_date IS NULL OR updated_date = #{item.updatedDate})
+		</foreach>
+	</delete>
+<!-- 	start update screen_item -->
+	<update id="updateScreenItem">
+		<if test="listScreenItem !=null and listScreenItem.size > 0">
+			<foreach item="item" collection="listScreenItem" separator=";">
+				UPDATE
+					screen_item
+			 		SET
+			 			item_code = #{item.itemCode},
+			 			updated_by = #{item.updatedBy},
+			 			updated_date = #{item.sysDatetime},
+			 			message_code = #{item.messageDesign.messageCode},
+			 			tab_index = #{item.tabIndex},
+			 			default_value = #{item.defaultValue},
+			 			default_value_to = #{item.defaultValueTo}
+		 		WHERE
+		 			screen_item_id = #{item.screenItemId}
+		 		AND
+					updated_date = #{item.updatedDate}
+			</foreach>;
+			<foreach item="item" collection="listScreenItem" separator=";">
+				UPDATE
+					screen_item_validation
+			 		SET
+			 			maxlength = #{item.screenItemValidation.maxlength},
+			 			mandatory_flg = #{item.screenItemValidation.mandatoryFlg},
+			 			min_val = #{item.screenItemValidation.minVal},
+			 			max_val = #{item.screenItemValidation.maxVal},
+			 			updated_by = #{item.screenItemValidation.updatedBy},
+			 			updated_date = #{item.sysDatetime}
+		 		WHERE
+		 			screen_item_id = #{item.screenItemId}
+			</foreach>
+		</if>
+	</update>
+<!-- 	end update screen_item -->	
+	
+	<select id="getAllItemsByScreenId" parameterType="Long" resultMap="screenItemResult" >
+		 SELECT DISTINCT	
+		 	md.message_string,
+			md.message_code,
+			md.message_level,
+			a.screen_item_id,
+			a.item_seq_no,
+			a.group_item_id,
+			a.screen_area_id,
+			a.screen_id,
+			a.item_code,
+			a.logical_data_type,
+			a.physical_data_type,
+			a.domain_tbl_mapping_id,
+			a.domain_tbl_mapping_item_id,
+			a.col_span,
+			a.row_span,
+			a.item_width_unit,
+			a.codelist_id,
+			a.codelist_type,
+			a.item_type,
+			a.autocomplete_id,
+			a.data_source_type,
+			a.array_flg,
+			a.message_code,
+			a.screen_action_id,
+			a.created_by as created_by,
+			a.created_date as created_date,
+			a.updated_by as updated_by,
+			a.updated_date as updated_date,
+			a.tab_index,
+			a.default_value,
+			a.default_value_to,
+			av.maxlength,
+			av.mandatory_flg,
+			av.min_val,
+			av.max_val,
+			mda.message_string as area_message_string,
+			sf.form_code as form_name
+		FROM
+			screen_item a LEFT JOIN screen_item_validation av 
+		ON a.screen_item_id = av.screen_item_id LEFT JOIN message_design md 
+		ON (a.message_code = md.message_code and md.language_id = #{language.languageId}) LEFT JOIN screen_area sa
+		ON a.screen_area_id = sa.screen_area_id LEFT JOIN message_design mda
+		ON (sa.message_code = mda.message_code and mda.language_id = #{language.languageId}) JOIN screen_form sf
+		ON sf.screen_form_id = sa.screen_form_id
+		WHERE
+			a.screen_id=#{screenId} and a.logical_data_type not in (11,13)
+		ORDER BY a.screen_area_id,a.item_seq_no
+	</select>
+	
+<!-- 	end prototype Screen list item by truonglv -->
+	
+<!-- 	start update ticket 65 by truonglv -->
+	<update id="deleteScreenActionParamByScreenActionId">
+		DELETE FROM
+			screen_action_param sap
+ 		WHERE
+ 			sap.screen_action_id=
+ 				(SELECT screen_action_id FROM screen_action WHERE from_screen_id = #{screenFromId} AND screen_action_id 
+ 			NOT IN 
+ 			<foreach item="item" collection="listScreenTransition" open="(" separator="," close=")">
+				<![CDATA[
+				 #{item.screenActionIdSecond}
+				 ]]>
+			 </foreach>
+			 )
+	</update>
+	
+	<select id="findScreenFormByScreenId" parameterType="Long" resultMap="screenFormResult">
+		 SELECT	a.screen_form_id,
+		 		a.screen_id
+		 FROM
+			screen_form a 
+		 WHERE
+		 	a.screen_id = #{screenId}
+		 ORDER BY a.screen_form_id DESC
+		 LIMIT 1
+	</select>
+	
+	<update id="updateConnect">
+		<if test="listScreenTransition !=null and listScreenTransition.size > 0">
+			<foreach item="item" collection="listScreenTransition" separator=";">
+				UPDATE
+					screen_action
+			 		SET
+			 			to_screen_id = cast(#{item.connectorDest} as numeric),
+			 			connection_msg = #{item.connectionMsg},
+			 			submit_method_type = #{item.submitMethodType},
+			 			navigate_to_blogic_id = #{item.navigateToBlogicId}
+		 		WHERE
+		 			from_screen_id= cast(#{item.connectorSource} as numeric)
+		 			AND
+		 			screen_action_id = #{item.screenActionIdSecond}
+			</foreach>
+		</if>
+	</update>
+	
+	<update id="updateScreenActionIdByScreenActionIdNotIn" parameterType="ScreenTransition">
+		UPDATE
+			screen_item
+	 		SET
+	 			screen_action_id = null
+ 		WHERE
+ 			screen_item.screen_id=#{screenFromId}
+ 			<if test="listScreenTransition !=null and listScreenTransition.size > 0">
+ 			AND screen_item.screen_action_id NOT IN 
+			 <foreach item="item" collection="listScreenTransition" open="(" separator="," close=")">
+				<![CDATA[
+				 #{item.screenActionIdSecond}
+				 ]]>
+			 </foreach>
+			 </if>
+	</update>
+	
+	<delete id="deleteScreenActionByScreenActionIdNotIn" parameterType="ScreenTransition">
+		DELETE from screen_action
+		WHERE 
+			screen_action.from_screen_id = #{screenFromId}
+			<if test="listScreenTransition !=null and listScreenTransition.size > 0">
+ 			AND screen_action.screen_action_id NOT IN 
+			 <foreach item="item" collection="listScreenTransition" open="(" separator="," close=")">
+				<![CDATA[
+				 #{item.screenActionIdSecond}
+				 ]]>
+			 </foreach>
+			 </if>
+	</delete>
+<!-- 	end update ticket 65 by truonglv -->
+	
+	<select id="getAll" resultMap="screenDesignResult">
+	<![CDATA[
+			SELECT screen_id, screen_code, module_id, screen_url_code,screen_pattern_type,template_type
+		FROM screen_design
+	]]>
+	</select>
+	<select id="countNameCodeByProjectId" resultType="Long" parameterType="Map">
+		 SELECT 
+					rowVal AS totalCount 
+				 FROM (
+					 (SELECT 
+							1 AS rowVal 
+						FROM 
+							screen_design	a
+				INNER JOIN message_design b ON (a.message_code = b.message_code and b.language_id = #{languageId})						<!-- and b.language_code = #{languageCode} and b.country_code = #{countryCode} -->
+				INNER JOIN module c ON (a.module_id = c.module_id and c.project_id = #{projectId})
+						<where>
+							<if test="screenName != null and screenName != ''">
+							UPPER(b.message_string) = UPPER(#{screenName})
+							</if> 
+							<if test="screenId != null">AND a.screen_id != #{screenId}</if>
+							<if test="screenName == null and screenName == ''">AND FALSE</if>
+						</where>
+						LIMIT 1
+						) 
+						UNION
+					 (SELECT 
+							2 AS rowVal
+						FROM 
+							screen_design a
+				INNER JOIN module c ON (a.module_id = c.module_id and c.project_id = #{projectId})
+						<where>
+							<if test="screenCode != null and screenCode != ''">
+								 UPPER(a.screen_code) = UPPER(#{screenCode})
+							</if> 
+							<if test="screenId != null">AND a.screen_id != #{screenId}</if>
+							<if test="screenCode == null and screenCode == ''">AND FALSE</if>
+						</where>
+						LIMIT 1
+						)
+					 ) AS table_temp LIMIT 1 
+	</select>
+	<select id="countScreenDesignByScreenCode" resultType="Integer" parameterType="Map">
+	<![CDATA[
+			SELECT COUNT(screen_id)
+		FROM screen_design a INNER JOIN module b ON a.module_id = b.module_id
+		WHERE a.screen_code = #{screenCode} AND b.project_id = #{projectId}
+	]]>
+	</select>
+	
+	
+	<select id="findEnableHomePageByProjectId" parameterType="Long" resultMap="screenDesignResult">
+		SELECT distinct
+			a.screen_id AS screenId,
+			a.screen_code AS screenCode,
+			a.module_id AS moduleId,
+			a.screen_url_code AS screenUrlCode,
+			a.screen_pattern_type AS screenPatternType,
+			a.template_type AS templateType,
+			a.updated_date,
+			m.module_name,
+			m.module_code,
+			a.remark,
+			a.design_status,
+			a.design_mode,
+			a.enable_home_page,
+			b.business_logic_code
+		FROM
+			screen_design a 
+		JOIN    module m on m.module_id = a.module_id
+		JOIN    business_logic b on b.screen_id = a.screen_id AND b.return_type = 0	
+		WHERE		
+			m.project_id = #{projectId} AND a.enable_home_page = true
+		
+	</select>
+	
+	<select id="countScreenDesignByScreenName" resultType="Integer" parameterType="Map">
+	<![CDATA[
+			SELECT COUNT(a.screen_id)
+		FROM screen_design a INNER JOIN message_design b ON a.message_code = b.message_code
+		INNER JOIN module c ON a.module_id = c.module_id
+		WHERE b.message_string = #{screenName} AND c.project_id = #{projectId}
+	]]>
+	</select>
+	<!-- <select id="getScreenById" parameterType="int" resultMap="screenResultMap"> 
+		SELECT screen_cd, system_module_id, screen_desc_cd FROM m_screen WHERE system_module_id= 
+		#{system_module_id} </select> -->
+
+	<!-- Process for display and search -->
+	 <sql id="findPageByCriteriaWhere">
+		 <where>
+		 <!-- 1=1
+		 	<if test="criteria.languageId != null and criteria.languageId != ''">
+				<![CDATA[
+					AND	d.language_id = #{criteria.languageId}
+					AND	d.project_id = #{criteria.projectId}
+				]]>
+			</if> -->
+			<if test="criteria.functionDesignId != null and criteria.functionDesignId != ''">
+				<![CDATA[
+					AND	a.function_id = #{criteria.functionDesignId}
+				]]>
+			</if>
+			 <if test="criteria.projectId != null and criteria.projectId != ''">
+			 <![CDATA[
+				AND b.project_id = #{criteria.projectId}
+			 ]]>
+			</if>
+			 <if test="criteria.moduleId != null and criteria.moduleId != ''">
+				<![CDATA[
+					AND b.module_id = #{criteria.moduleId}
+				]]>
+			</if>
+			<if test="criteria.templateTypes != null and criteria.templateTypes.length > 0">
+			 AND a.template_type IN
+			 <foreach item="item" index="index" collection="criteria.templateTypes" open="(" separator="," close=")">
+					<![CDATA[
+						 #{item}
+					]]>
+			 </foreach>
+			</if>
+			<if test="criteria.screenName != null and criteria.screenName != ''">
+			 <bind name="screenName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.screenName)" />
+			 <![CDATA[
+				AND d.message_string iLIKE #{screenName} ESCAPE '~'
+			 ]]>
+			</if>
+			<if test="criteria.screenCode != null and criteria.screenCode != ''">
+			 <bind name="screenCode" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.screenCode)" />
+			 <![CDATA[
+				AND a.screen_code iLIKE #{screenCode} ESCAPE '~'
+			 ]]>
+			</if>
+			<if test="criteria.designMode != null and criteria.designMode.length > 0">
+			 AND a.design_mode IN
+			 <foreach item="item" index="index" collection="criteria.designMode" open="(" separator="," close=")">
+				<![CDATA[
+					#{item}
+				]]>
+			 </foreach>
+			</if>
+			<if test="criteria.designStatus != null and criteria.designStatus.length > 0">
+			 AND a.design_status IN
+			 <foreach item="item" index="index" collection="criteria.designStatus" open="(" separator="," close=")">
+				<![CDATA[
+					#{item}
+				]]>
+			 </foreach>
+			</if>
+			<if test="criteria.screenParternTypes != null and criteria.screenParternTypes.length > 0">
+			 AND a.screen_pattern_type IN
+			 <foreach item="item" index="index" collection="criteria.screenParternTypes" open="(" separator="," close=")">
+				<![CDATA[
+					#{item}
+				]]>
+			 </foreach>
+			</if>
+		 </where>
+	</sql>
+	
+	<select id="findPageBySearchCriteria" parameterType="org.terasoluna.qp.domain.repository.screendesign.ScreenDesignSearchCriteria" resultMap="screenDesignResult">
+		SELECT a.screen_id,
+			a.screen_code,
+			a.screen_url_code,
+			a.screen_pattern_type,
+			a.template_type,
+			a.x_coordinates,
+			a.y_coordinates,
+			a.created_by,
+			a.created_date,
+			a.updated_by,
+			a.updated_date,
+			b.module_id,
+			b.project_id,
+			d.message_string,
+			d.message_code,
+			a.design_mode,
+			a.design_status,
+			a.confirmation_type,
+			a.completion_type,
+			a.function_id
+		FROM
+			screen_design a
+		INNER JOIN module b ON a.module_id = b.module_id
+		LEFT JOIN message_design d ON (a.message_code = d.message_code AND d.language_id = #{criteria.languageId} AND d.project_id = #{criteria.projectId} )
+		<include refid="findPageByCriteriaWhere" />
+		<if test="pageable != null">
+			ORDER BY
+			<if test="pageable.sort != null">
+				<foreach collection="pageable.sort" item="screendesign"
+					separator=",">
+					${screendesign.property} ${screendesign.direction}
+				</foreach>
+			</if>
+			<if test="pageable.sort == null">
+				a.updated_date DESC
+			</if>
+			<![CDATA[
+				LIMIT
+					#{pageable.pageSize}
+				OFFSET
+					#{pageable.offset}
+			]]>
+		</if>
+	</select>
+	
+	<select id="countBySearchCriteria" parameterType="org.terasoluna.qp.domain.repository.screendesign.ScreenDesignSearchCriteria" resultType="_long">
+		<![CDATA[
+			SELECT 
+				COUNT(*)
+			FROM
+				screen_design a 
+			INNER JOIN module b ON a.module_id = b.module_id 
+			LEFT JOIN message_design d ON (a.message_code = d.message_code AND	d.language_id = #{criteria.languageId} AND	d.project_id = #{criteria.projectId} )
+			]]>
+		<include refid="findPageByCriteriaWhere" />
+	</select>
+	
+	<!-- Get all screen information by module id -->
+	<select id="getAllScreenInfoByModuleId" parameterType="map" resultMap="screenDesignResult">
+		 SELECT	a.screen_id, 
+			 d.message_string, 
+			 a.screen_code, 
+			 a.screen_url_code, 
+			 a.screen_pattern_type, 
+			 a.template_type, 
+			 a.x_coordinates, 
+			 a.y_coordinates,
+			 a.confirmation_type,
+			 a.completion_type,
+			 b.module_id, 
+			 b.project_id,
+			 b.module_name,
+			 b.module_code,
+			 fd.function_id,
+		   	 fd.function_type
+		 FROM
+			screen_design a 
+			LEFT JOIN module b ON a.module_id = b.module_id 
+			LEFT JOIN message_design d ON a.message_code = d.message_code
+			LEFT JOIN function_design fd ON a.function_id = fd.function_id
+		 WHERE
+		 <![CDATA[ b.module_id = #{moduleId} ]]>
+		 <if test="languageId != null and languageId != ''">
+		 AND 
+		 <![CDATA[ d.language_id = #{languageId} ]]>
+		 </if>
+		 ORDER BY a.screen_code
+	</select>
+	
+	<!-- Update position by screen id	-->
+	<update id="updatePositionByScreenId" parameterType="ScreenDesign">
+	 <foreach collection="scrDesigns" item="el" separator=";">
+		<![CDATA[
+			 UPDATE
+				 screen_design
+			 SET
+				 x_coordinates=#{el.xCoordinate},
+				 y_coordinates=#{el.yCoordinate}
+			 WHERE
+				 screen_id=#{el.screenId}
+		]]>
+	 </foreach>
+	</update>
+	
+	<!-- Update all screen is disable home page by project id	-->
+	<update id="updateAllScreenIsDisableHomePageByProjectId" parameterType="Long">	
+		<![CDATA[
+			 UPDATE
+				 screen_design
+			 SET
+				 enable_home_page = false
+			WHERE module_id in (select module_id from module where project_id = #{projectId})				
+		]]>
+	</update>
+	
+	 <select id="findAllModules" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT module_name AS outputName, 	
+				module_id AS outputId,
+				module_code AS outputCd
+		FROM 
+			module 
+	</select>
+	<select id="autocompleteGetCodeList" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT 
+			codelist_id AS optionValue,
+			codelist_name AS optionLabel
+		FROM
+			codelist c
+		WHERE (c.module_id IS NULL OR c.module_id = CAST(#{arg03} AS NUMERIC))
+		<if test="arg01 != null and arg01 != ''">
+			<![CDATA[ AND c.project_id = CAST(#{arg01} AS NUMERIC) ]]>
+		</if>
+		
+		<if test="searchKey != null and searchKey != ''">
+		 <![CDATA[ AND codelist_name iLIKE '%' || #{searchKey} || '%' ]]>
+		</if>
+		LIMIT 20
+	</select>
+	<select id="autocompleteGetAutocompleteCodeList" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		 SELECT 
+			autocomplete_id AS optionValue,
+			autocomplete_code AS optionLabel,
+			autocomplete_name output01,
+			display_col output02,
+			submit_col output03,
+			(
+			 SELECT
+				string_agg( distinct (t.tbl_design_code), ', ')
+			 FROM 
+				table_design t INNER JOIN sql_design_table s
+			 ON
+				s.sql_design_id = a.sql_design_id AND ( t.tbl_design_id = s.tbl_design_id OR t.tbl_design_id = s.join_tbl_design_id)
+			) output04
+		 FROM
+			autocomplete_design a INNER JOIN module m
+		 ON
+			a.module_id = m.module_id
+		 <where>
+			<if test="searchKey != null and searchKey != ''">
+			 <![CDATA[ AND autocomplete_code iLIKE '%' || #{searchKey} || '%' ]]>
+			</if>
+			<if test="arg01 != null and arg01 != ''">
+			 <![CDATA[ AND m.project_id = CAST(#{arg01} AS NUMERIC) ]]>
+			</if>
+			<if test="arg03 != null and arg03 != ''">
+			 <![CDATA[ AND autocomplete_id = CAST(#{arg03} AS NUMERIC) ]]>
+			</if>
+		 </where>
+		 <if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+	</select>	
+	<select id="getScreenInfoByModuleId" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT 
+			a.screen_id AS optionValue,
+			COALESCE (c.message_string, a.message_code) AS optionLabel,
+			a.screen_pattern_type AS output01
+		FROM
+			screen_design a LEFT JOIN message_design c ON 
+			(
+				<![CDATA[a.message_code = c.message_code AND c.project_id = CAST(#{arg01} AS NUMERIC) AND c.language_id = #{languageId} ]]>
+			)
+		<where>
+			<if test="searchKey != null and searchKey != ''">
+				<bind name="searchKey" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(searchKey)" />
+				<![CDATA[ AND c.message_string iLIKE #{searchKey} ESCAPE '~' ]]>
+			</if>
+			<if test="arg04 != null and arg04 != ''">
+				<![CDATA[ AND a.module_id = CAST(#{arg04} AS NUMERIC) ]]>
+			</if>
+			<if test="arg03 != null and arg03 != ''">
+				<if test="arg03 == 1">
+					AND a.screen_pattern_type = 1
+				</if>
+				<if test="arg03 == 2">
+					AND a.screen_pattern_type = ANY (VALUES (2),(4))
+				</if>
+				<if test="arg03 == 3">
+					AND a.screen_pattern_type = ANY (VALUES (2),(3),(4))
+				</if>
+				<if test="arg03 == 4">
+					AND a.screen_pattern_type = ANY (VALUES (2),(4))
+				</if>
+			</if>
+			<if test="arg04 == null or arg04 == '' or arg03 == null or arg03 == ''">
+				<![CDATA[
+				AND EXISTS 
+				( 
+					SELECT 1 FROM MODULE m WHERE m.module_id = a.module_id AND m.project_id = CAST(#{arg01} AS NUMERIC)
+				)]]>
+			</if>
+		</where>
+
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+		<if test="arg02 == null or arg02 == ''">
+			LIMIT 20
+		</if>
+	</select>	
+	
+	<select id="getScreenInfoById" parameterType="Long" resultMap="screenDesignResult">
+		SELECT DISTINCT
+			a.screen_id AS screenId,
+			a.screen_code AS screenCode,
+			a.module_id AS moduleId,
+			a.screen_url_code AS screenUrlCode,
+			a.screen_pattern_type AS screenPatternType,
+			a.template_type AS templateType,
+			c.message_string,
+			b.module_name as moduleName,
+			b.module_code
+		FROM
+			screen_design a LEFT JOIN module b ON a.module_id = b.module_id
+			LEFT JOIN message_design c ON a.message_code = c.message_code
+		WHERE
+			a.screen_id = #{screenId}
+        LIMIT 1
+	</select>	
+	
+	<select id="findById" parameterType="Long" resultMap="screenDesignResult">
+		SELECT distinct
+			a.screen_id AS screenId,
+			a.screen_code AS screenCode,
+			a.module_id AS moduleId,
+			a.screen_url_code AS screenUrlCode,
+			a.screen_pattern_type AS screenPatternType,
+			a.template_type AS templateType,
+			a.updated_date,
+			m.module_name,
+			a.remark,
+			md.message_string,
+			a.design_status,
+			a.design_mode,
+			m.module_code AS module_code
+		FROM
+			screen_design a 
+		JOIN
+			module m on m.module_id = a.module_id
+		LEFT JOIN message_design md on md.message_code= a.message_code AND md.language_id = #{languageId} AND md.project_id = #{projectId}
+		WHERE
+			a.screen_id = #{screenId}
+		
+	</select>	
+	
+	<select id="findAllScreenDessingByLstBusiness" parameterType="Long" resultMap="screenDesignResult">
+		SELECT distinct
+			a.screen_id AS screenId,
+			a.screen_code AS screenCode
+		FROM
+			screen_design a 
+			<if test="businessDesignLst != null and  businessDesignLst.size() > 0 ">
+				WHERE a.screen_id in
+				<foreach item="item" index="index" collection="businessDesignLst" open="(" separator="," close=")">
+					#{item.screenId}
+				</foreach>
+			</if>
+			<if test="businessDesignLst == null or businessDesignLst.size() == 0 ">
+				WHERE a.screen_id in (0)
+			</if>
+	</select>
+	
+	<select id="autocompleteGetScreenList" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT 
+			a.screen_id AS optionValue,
+			m.message_string AS optionLabel
+		FROM screen_design a INNER JOIN message_design m ON a.message_code = m.message_code
+		<where>
+			<if test="arg01 != null and arg01 != ''">
+			 AND a.module_id = CAST(#{arg01} AS NUMERIC)
+			</if>
+			<if test="searchKey != null and searchKey != ''">
+				AND m.message_string LIKE '%' || #{searchKey} || '%'
+			</if>
+			<if test="arg03 != null and arg03 != ''">
+			 AND m.language_id = CAST(#{arg03} AS NUMERIC)
+			</if>
+			<if test="arg03 == null || arg03 == '' || arg01 == null || arg01 == ''">
+			 AND false
+			</if>
+		</where>
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+	</select> 
+
+	<select id="autocompleteGetBlogicList" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT 
+			b.business_logic_id AS optionValue,
+			b.business_logic_name AS optionLabel
+		FROM business_logic b
+		<where>
+			(return_type = 1 OR return_type = 3) 
+			<if test="arg01 != null and arg01 != ''">
+			 AND b.module_id = CAST(#{arg01} AS NUMERIC)
+			</if>
+			<if test="searchKey != null and searchKey != ''">
+				AND b.business_logic_name LIKE '%' || #{searchKey} || '%'
+			</if>
+			<if test="arg01 == null || arg01 == ''">
+			 AND false
+			</if>
+		</where>
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+	</select> 
+	
+	<select id="autocompleteGetTableItem" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+			column_id AS optionValue,			
+			column_name AS optionLabel							
+			FROM 
+				table_design_details tdd INNER JOIN table_design td
+			ON tdd.tbl_design_id = td.tbl_design_id					
+		<where>
+			<if test="searchKey != null and searchKey != ''">
+				AND column_name ILIKE '%' || #{searchKey} || '%'
+			</if>
+			 AND td.tbl_design_id = CAST(#{arg01} AS NUMERIC)
+			 AND
+			  	tdd.display_type = 1
+		</where>
+		LIMIT
+		<if test="arg02 != null and arg02 != ''">
+				CAST(#{arg02} AS NUMERIC)
+		</if>
+		<if test="arg02 == null or arg02 == ''">20</if>
+
+	</select>
+	<!-- register -->
+	<insert id="insertScreenDesign" parameterType="ScreenDesign">
+		 INSERT INTO
+				screen_design
+			 (
+			 	screen_id,
+				screen_code,
+				module_id,
+				screen_url_code,
+				screen_pattern_type,
+				template_type,
+				message_code,
+				remark,
+				x_coordinates,
+				y_coordinates,
+				created_by,
+				created_date,
+				updated_by,
+				updated_date,
+				design_mode,
+				design_status,
+				confirmation_type,
+				completion_type,
+				function_id
+			 )	
+			 VALUES
+			 <foreach item="item" collection="listScreenDesgin" separator=",">
+			 (
+			 	#{item.screenId},
+				#{item.screenCode},
+				#{item.moduleId},
+				#{item.screenUrlCode},
+				#{item.screenPatternType},
+				#{item.templateType},
+				#{item.messageDesign.messageCode},
+				#{item.remark},
+				#{item.xCoordinate},
+				#{item.yCoordinate},
+				#{item.createdBy},
+				#{item.createdDate},
+				#{item.updatedBy},
+				#{item.updatedDate},
+				#{item.designMode},
+				#{item.designStatus},
+				#{item.confirmationType},
+				#{item.completionType},
+				#{item.functionDesignId}
+			 )
+		</foreach>
+	</insert>
+	
+	<!-- DungNN modify 20150617 - only get table has column -->
+	<select id="autocompleteGetTable" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+			td.tbl_design_id AS optionValue,
+			td.tbl_design_name AS optionLabel
+		FROM 
+			table_design td
+		<where>
+			<if test="searchKey != null and searchKey != ''">
+				AND td.tbl_design_name iLIKE '%' || #{searchKey} || '%'
+			</if>
+			<if test="arg01 != null and arg01 != ''">
+				AND td.project_id = CAST(#{arg01} AS NUMERIC)
+			</if>
+		</where>
+		ORDER BY tbl_design_id ASC
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+		<if test="arg02 == null or arg02 == ''">
+			LIMIT 20
+		</if>
+	</select>
+
+	<select id="getColumnsByTableId" resultMap="screenDesignOutput" >
+		SELECT 
+			td.tbl_design_id,
+			td.tbl_design_code AS tablecode,
+			td.tbl_design_name AS tablename,
+			tdd.tbl_design_id as tablecolumncode,
+			tdd.column_name as columndisplay,
+			tdd.column_code as columnname,
+			(
+				CASE
+					WHEN substring(key_type from 5 for 5) = '1' AND tdd.display_type = 0 THEN 2
+					ELSE 1  
+				END
+			) AS itemType,
+			tdd.item_type AS datatype, 
+			tdd.maxlength AS maxlength,
+			tdd.group_base_type_id AS physicaldatatype,	
+			tdd.min_val AS minvalue,
+			tdd.max_val AS maxvalue,
+			tdd.datasource_id AS datasource_id,
+			tdd.datasource_type AS datasourcetype,
+			'' AS "label",
+			tdd.column_name AS labelText,
+			tdd.data_type_flg AS is_domain_type,
+			tdd.data_type AS data_type_id_domain_type,
+			tdd.display_type AS is_used_on_screen,
+			tdd.default_value AS default_value,
+			CASE WHEN tdd.mandatory_flg=1 THEN 'true'
+				ELSE 'false'
+			END AS mandatory_flg,
+			CASE WHEN tdd.datasource_type=2 THEN tdd.datasource_id	|| ''
+				ELSE ''
+			END AS autocomplete_id,
+			tdd.column_id
+		FROM
+			table_design td LEFT JOIN table_design_details tdd 
+		ON td.tbl_design_id = 	tdd.tbl_design_id
+		WHERE 
+			td.tbl_design_id = #{tableId}
+			<if test="columnId != null and columnId > 0">
+				AND 
+					tdd.column_id = #{columnId}
+			</if> 
+		ORDER BY tdd.item_seq_no
+	</select>
+	<insert id="screenDesignInsert" parameterType="ScreenDesign" useGeneratedKeys="true" keyProperty="screenDesign.screenId" keyColumn="screenId">
+		<selectKey keyProperty="screenId" resultType="Long"
+			order="BEFORE">
+			SELECT NEXTVAL('screen_design_seq'::regclass)
+		</selectKey>
+		INSERT INTO
+			screen_design
+		(
+			screen_id,
+			screen_code,
+			message_code,
+			module_id,
+			screen_url_code, 
+			screen_pattern_type,
+			template_type,
+			created_by,
+			created_date, 
+			updated_by,
+			updated_date
+		 )
+		VALUES 
+		(
+			#{screenId},
+			#{screenCode},
+			#{messageDesign.messageCode},
+			#{moduleId},
+			#{screenUrlCode},
+			#{screenPatternType}, 
+			#{templateType},
+			#{createdBy},
+			#{createdDate},
+			#{updatedBy}, 
+			#{updatedDate}			
+		)
+	</insert>
+	<insert id="screenFormInsert" parameterType="ScreenForm" useGeneratedKeys="true" keyProperty="screenForm.screenFormId" keyColumn="screenFormId">
+		<selectKey keyProperty="screenFormId" resultType="Long"
+			order="BEFORE">
+			SELECT NEXTVAL('screen_form_seq'::regclass)
+		</selectKey>
+		INSERT INTO
+			screen_form
+		(
+			screen_form_id,
+			enctype_type,
+			method_type, 
+			form_seq_no,
+			form_coverage_flg,
+			screen_id,
+			created_by,
+			created_date, 
+			updated_by,
+			updated_date,
+			form_code
+		 )
+		VALUES 
+		(
+			#{screenFormId},
+			#{enctypeType},
+			#{methodType}, 
+			#{formSeqNo},
+			#{formCoverageFlg},
+			#{screenId},
+			#{createdBy},
+			#{createdDate},
+			#{updatedBy}, 
+			#{updatedDate},
+			#{formCode}
+		);
+		<if test="screenFormTabs != null and screenFormTabs.length > 0">
+			INSERT INTO 
+				screen_form_tabs(
+            		tab_title,
+            		areas,
+            		screen_form_id,
+            		tab_direction,
+            		tab_code)
+    		VALUES
+    		<foreach item="item" collection="screenFormTabs" separator=",">
+    			(
+    				#{item.tabTitle},
+    				#{item.areas},
+    				#{screenFormId},
+    				#{item.tabDirection},
+    				#{item.tabCode}
+    			)
+    		</foreach>;			
+		</if>
+		UPDATE
+			formula_definition
+		SET
+			screen_form_id = #{screenFormId}
+		WHERE
+			screen_form_id = #{screenFormIdStore}		
+	</insert>
+	<insert id="screenParameterInsert" parameterType="ScreenParameter" useGeneratedKeys="true" keyProperty="screenParameter.screenParamId" keyColumn="screenParamId">
+		<selectKey keyProperty="screenParamId" resultType="Long"
+			order="BEFORE">
+			SELECT NEXTVAL('screen_param_seq'::regclass)
+		</selectKey>
+		INSERT INTO 
+			screen_param
+		(
+			screen_param_id, 
+			screen_id, 
+			domain_tbl_mapping_id, 
+			domain_tbl_mapping_item_id, 
+			screen_param_code, 
+			screen_param_name, 
+			data_type, 
+			array_flg, 
+			param_seq_no, 
+			parent_screen_param_id, 
+			created_by, 
+			created_date, 
+			updated_by, 
+			updated_date)
+		VALUES 
+		(
+			#{screenParamId},
+			#{screenId},
+			#{domainTblMappingId},
+			#{domainTblMappingItemId}, 
+			#{screenParamCode},
+			#{screenParamName},
+			#{dataType},
+			#{arrayFlg},
+			#{paramSeqNo},
+			#{parentScreenParamId},
+			#{createdBy},
+			#{createdDate},
+			#{updatedBy}, 
+			#{updatedDate} 
+		)
+	</insert>
+	<insert id="screenAreaInsert" parameterType="ScreenArea" useGeneratedKeys="true" keyProperty="screenArea.screenAreaId" keyColumn="screenAreaId">
+		<selectKey keyProperty="screenAreaId" resultType="Long"
+			order="BEFORE">
+			SELECT NEXTVAL('screen_area_seq'::regclass)
+		</selectKey>
+		INSERT INTO 
+			screen_area
+		(
+			screen_area_id,
+			area_seq_no,
+			area_code,
+			area_local_name,
+			col_width_unit, 
+			total_col,
+			total_element,
+			area_type,
+			tbl_width_unit,
+			tbl_header_row, 
+			align_position_type,
+			area_pattern_type,
+			screen_form_id,
+			message_code, 
+			created_by,
+			created_date,
+			updated_by,
+			updated_date,
+			screen_id,
+			element_dipslay_type,
+			element_position_type,
+			tbl_component_row,
+			panel_style,
+			header_style,
+			row_style,
+			input_style,
+			alternate_row_style,
+			area_custom_type,
+			fixed_row,
+			area_type_action,
+			area_icon,
+			object_mapping_id,
+			object_mapping_type,
+			custom_section_content,
+			enable_sort,
+			sql_column_id
+		)
+		VALUES
+		(
+			#{screenAreaId},
+			#{areaSeqNo},
+			#{areaCode},
+			#{areaLocalName},
+			#{colWidthUnit}, 
+			#{totalCol},
+			#{totalElement},
+			#{areaType},
+			#{tblWidthUnit},
+			#{tblHeaderRow}, 
+			#{alignPositionType},
+			#{areaPatternType},
+			#{screenFormId},
+			#{messageDesign.messageCode}, 
+			#{createdBy},
+			#{createdDate},
+			#{updatedBy}, 
+			#{updatedDate},
+			#{screenId},
+			#{elementDipslayType},
+			#{elementPositionType},
+			#{tblComponentRow},
+			#{panelStyle},
+			#{headerStyle},
+			#{rowStyle},
+			#{inputStyle},
+			#{alternateRowStyle},
+			#{areaCustomType},
+			#{fixedRow},
+			#{areaTypeAction},
+			#{areaIcon},
+			#{objectMappingId},
+			#{objectMappingType},
+			#{customSectionContent},
+			#{enableSort},
+			#{sqlColumnId}
+		);
+		UPDATE
+			screen_item_status
+		SET
+			screen_item_id = #{screenAreaId}
+		WHERE
+			screen_item_id = #{screenAreaIdStore} AND type = 2;
+		UPDATE 
+					outputbean_screenitem_mapping
+				SET 
+					screen_item_id = #{screenAreaId}
+				WHERE 
+					screen_item_id = #{screenAreaIdStore} AND mapping_type = 6;	
+	</insert>
+	<insert id="screenGroupItemInsert" parameterType="ScreenGroupItem" useGeneratedKeys="true" keyProperty="screenGroupItem.groupItemId" keyColumn="groupItemId">
+		<selectKey keyProperty="groupItemId" resultType="Long"
+			order="BEFORE">
+			SELECT NEXTVAL('screen_group_item_seq'::regclass)
+		</selectKey>
+		INSERT INTO
+			screen_group_item
+		(
+			group_item_id,
+			screen_area_id,
+			item_seq_no,
+			group_seq_no,
+			group_name, 
+			group_type,
+			created_by,
+			created_date,
+			updated_by,
+			updated_date
+		)
+	VALUES 
+	 		(
+			#{groupItemId},
+			#{screenAreaId},
+			#{itemSeqNo},
+			#{groupSeqNo},
+			#{groupName}, 
+			#{groupType},
+			#{createdBy},
+			#{createdDate},
+			#{updatedBy}, 
+			#{updatedDate} 
+		 )
+
+			
+	</insert>	
+	<insert id="screenItemInsert" parameterType="ScreenItem" useGeneratedKeys="true" keyProperty="screenItem.screenItemId" keyColumn="screenItemId">
+		<selectKey keyProperty="screenItemId" resultType="Long"
+			order="BEFORE">
+			SELECT NEXTVAL('screen_item_seq'::regclass)
+		</selectKey>
+		<![CDATA[
+		INSERT INTO
+			screen_item
+		(
+				screen_item_id,
+				item_seq_no,
+				group_item_id,
+				screen_area_id,
+				screen_id, 
+				item_code,
+				message_design_id,
+				logical_data_type,
+				physical_data_type, 
+				domain_tbl_mapping_id,
+				domain_tbl_mapping_item_id,
+				col_span, 
+				row_span,
+				item_width_unit,
+				codelist_id,
+				codelist_type,
+				item_type, 
+				autocomplete_id,
+				array_flg,
+				screen_action_id,
+				created_by,
+				created_date, 
+				updated_by,
+				updated_date,
+				tab_index,
+				sql_design_id,
+				data_source_type,
+				option_label,
+				option_value,
+				default_value,
+				style,
+				hover_style
+		)
+		VALUES
+		(
+			#{screenItemId},
+			#{itemSeqNo},
+			#{groupItemId},
+			#{screenAreaId},
+			#{screenId}, 
+			#{itemCode},
+			#{messageDesign.messageDesignId},
+			#{logicalDataType},
+			#{physicalDataType}, 
+			#{domainTblMappingId},
+			#{domainTblMappingItemId},
+			#{colSpan}, 
+			#{rowSpan},
+			#{itemWidthUnit},
+			#{codelistId},
+			#{codelistType},
+			#{itemType}, 
+			#{autocompleteId},
+			#{arrayFlg},
+			#{screenActionId},
+			#{createdBy},
+			#{createdDate},
+			#{updatedBy}, 
+			#{updatedDate},
+			#{tabIndex},
+			#{sqlDesign.sqlDesignId},
+			#{dataSourceType},
+			#{optionLabel.resultId},
+			#{optionValue.resultId} ,
+			#{defaultValue},
+			#{style},
+			#{hoverStyle}
+		)
+ 
+		INSERT INTO 
+			screen_item_validation
+		(
+			screen_item_id,
+			maxlength,
+			mandatory_flg,
+			min_val,
+			max_val,
+			fmt_code,
+			created_by,
+			created_date,
+			updated_by,
+			updated_date)
+		VALUES
+		(
+			#{screenItemId},
+			#{screenItemValidation.maxlength},
+			#{screenItemValidation.mandatoryFlg},
+			#{screenItemValidation.minVal},
+			#{screenItemValidation.maxVal},
+			#{screenItemValidation.fmtCode},
+			#{createdBy},
+			#{createdDate},
+			#{updatedBy},
+			#{updatedDate}
+		);
+		]]>
+	</insert>	
+	<insert id="screenItemSequenceInsert" parameterType="ScreenItemSequence">
+		INSERT INTO 
+			screen_item_sequence
+		(
+		 	screen_area_id,
+		 	item_seq_no,
+		 	item_group_type,
+		 	created_by,
+		 	created_date, 
+		 	updated_by,
+		 	updated_date
+		 )
+		VALUES 
+		(
+			#{screenAreaId},
+			#{itemSeqNo},
+			#{itemGroupType},
+			#{createdBy},
+			#{createdDate},
+			#{updatedBy}, 
+			#{updatedDate} 
+		)
+ 
+	</insert>	
+	<delete id="deleteItemByScreenId" parameterType="Long">
+		<!-- DungNN - 20150612 - add delete message design -->
+DELETE FROM
+			message_design m
+		WHERE
+		(
+			EXISTS
+			(
+				SELECT
+					1
+				FROM
+					screen_item si
+				WHERE
+					m.message_code = si.message_code AND m.message_level != 1 AND m.message_level != 0
+					and si.screen_id = #{screenId}  AND m.project_id = #{projectId}
+			) 
+			AND 
+			(
+				SELECT
+					COUNT(*)
+				FROM
+					screen_item si
+				WHERE
+					m.message_code = si.message_code
+					and si.screen_id != #{screenId}  AND m.project_id = #{projectId}
+			) = 0
+			AND 
+			(
+				SELECT
+					COUNT(*)
+				FROM
+					screen_design sd
+				WHERE
+					m.message_code = sd.message_code
+					AND m.project_id = #{projectId}
+			) = 0
+			AND 
+			(
+				SELECT
+					COUNT(*)
+				FROM
+					input_bean input
+				INNER JOIN business_logic b ON input.business_logic_id = b.business_logic_id
+				WHERE
+					m.message_code = input.input_bean_name
+					AND m.project_id = #{projectId}
+			) = 0
+		)
+		OR
+		(
+			EXISTS
+			(
+				SELECT
+					1
+				FROM
+					screen_item si
+				WHERE
+					m.message_code = si.message_confirm AND m.message_level != 1 AND m.message_level != 0
+					and si.screen_id = #{screenId}  AND m.project_id = #{projectId}
+			) 
+			AND 
+			(
+				SELECT
+					COUNT(*)
+				FROM
+					screen_item si
+				WHERE
+					m.message_code = si.message_confirm
+					and si.screen_id != #{screenId}  AND m.project_id = #{projectId}
+			) = 0
+			AND 
+			(
+				SELECT
+					COUNT(*)
+				FROM
+					screen_design sd
+				WHERE
+					m.message_code = sd.message_code
+					AND m.project_id = #{projectId}
+			) = 0
+			AND 
+			(
+				SELECT
+					COUNT(*)
+				FROM
+					input_bean input
+				INNER JOIN business_logic b ON input.business_logic_id = b.business_logic_id
+				WHERE
+					m.message_code = input.input_bean_name
+					AND m.project_id = #{projectId}
+			) = 0
+		)
+		OR
+		(
+			EXISTS 
+			(
+				SELECT
+					1
+				FROM
+					screen_area sa
+				WHERE
+					m.message_code = sa.message_code AND m.message_level != 1 AND m.message_level != 0
+					and sa.screen_id = #{screenId}  AND m.project_id = #{projectId}
+			)
+			AND 
+			(
+				SELECT
+					COUNT(*)
+				FROM
+					screen_area sa
+				WHERE
+					m.message_code = sa.message_code
+						and sa.screen_id != #{screenId}  AND m.project_id = #{projectId}
+			) = 0
+			AND 
+			(
+				SELECT
+					COUNT(*)
+				FROM
+					screen_design sd
+				WHERE
+					m.message_code = sd.message_code
+					AND m.project_id = #{projectId}
+			) = 0
+			AND 
+			(
+				SELECT
+					COUNT(*)
+				FROM
+					input_bean input
+				INNER JOIN business_logic b ON input.business_logic_id = b.business_logic_id
+				WHERE
+					m.message_code = input.input_bean_name
+					AND m.project_id = #{projectId}
+			) = 0
+		);
+		<!-- End DungNN -->
+		DELETE 
+		FROM
+			screen_area_sort_mapping sasp
+		WHERE 
+			(screen_id = #{screenId}); 
+			
+		DELETE
+		FROM 
+			screen_item_autocomplete_input sia
+		WHERE 
+		(
+			SELECT
+				COUNT(*)
+			FROM
+				screen_item si
+			WHERE
+				 sia.screen_item_id = si.screen_item_id AND screen_id=#{screenId}
+		) > 0;
+
+		DELETE
+		FROM 
+			screen_item_validation siv
+		WHERE 
+		(
+			SELECT
+				COUNT(*)
+			FROM
+				screen_item si
+			WHERE
+				 siv.screen_item_id = si.screen_item_id AND screen_id=#{screenId}
+		) > 0;
+		
+		DELETE
+		FROM
+			screen_item_codelist sic
+		WHERE 
+		(
+			SELECT
+				COUNT(*)
+			FROM
+				screen_item si
+			WHERE
+				sic.screen_item_id = si.screen_item_id AND screen_id=#{screenId}
+		) > 0;
+		
+		DELETE
+		FROM 
+			screen_item_event sie
+		WHERE 
+		(
+			SELECT
+				COUNT(*)
+			FROM
+				screen_item si
+			WHERE
+				sie.screen_item_id = si.screen_item_id AND screen_id=#{screenId}
+		) > 0;
+	
+			
+		DELETE 
+		FROM screen_item_event_mapping siem
+		WHERE 
+			siem.screen_item_event_id in 
+		(
+			SELECT
+				sie.screen_item_event_id
+			FROM
+				screen_item_event sie
+			WHERE
+			(
+				SELECT
+					COUNT(*)
+				FROM
+					screen_item si
+				WHERE
+					sie.screen_item_id = si.screen_item_id AND screen_id=#{screenId}
+			) > 0	
+		);
+		
+		DELETE
+		FROM
+			screen_item
+		WHERE
+			screen_id=#{screenId};
+		
+		DELETE
+		FROM
+			screen_group_item 
+		WHERE
+			screen_area_id IN 			
+		(
+			SELECT
+				screen_area_id 
+			FROM
+				screen_area sa
+			WHERE
+			(
+				SELECT
+					COUNT(*)
+				FROM
+					screen_form sf
+				WHERE
+					sa.screen_form_id = sf.screen_form_id AND sf.screen_id =#{screenId}
+			) > 0
+		);
+		
+		DELETE
+		FROM
+			screen_item_sequence 
+		WHERE
+			screen_area_id IN 
+		(
+			SELECT
+				screen_area_id 
+			FROM
+				screen_area sa
+			WHERE
+			(
+				SELECT
+					COUNT(*)
+				FROM
+					screen_form sf
+				WHERE
+					sa.screen_form_id = sf.screen_form_id AND sf.screen_id =#{screenId}
+			) > 0
+		);
+		
+		DELETE 
+		FROM screen_area_event sae
+		WHERE 
+			sae.screen_area_id IN 
+			(
+				SELECT sa.screen_area_id
+				FROM screen_area sa
+				WHERE sa.screen_id = #{screenId}
+			);
+		
+		DELETE
+		FROM
+			screen_area sa
+		WHERE 
+		(
+			SELECT
+				COUNT(*)
+			FROM
+				screen_form sf
+			WHERE
+				sa.screen_form_id = sf.screen_form_id AND sf.screen_id =#{screenId}				
+		) > 0;
+		
+		DELETE 
+		FROM
+			screen_form_tabs sft
+		WHERE 
+			(
+				SELECT COUNT(*)
+				FROM screen_form sf
+				WHERE sf.screen_form_id = sft.screen_form_id AND sf.screen_id=#{screenId} 
+			) > 0;
+		
+		DELETE
+		FROM
+			screen_form
+		WHERE
+			screen_id=#{screenId};
+			
+		DELETE
+		FROM
+			screen_action_param s 
+		WHERE
+		(
+			screen_action_id in (select screen_action_id from screen_action WHERE from_screen_id=#{screenId})
+		);
+		
+		DELETE
+		FROM
+			screen_action
+		WHERE
+			from_screen_id=#{screenId};
+			
+			
+		DELETE
+		FROM
+			screen_param
+		WHERE
+			screen_id=#{screenId};
+			
+		<!-- DELETE
+		FROM
+			screen_design
+		WHERE
+			screen_id=#{screenId}; -->
+	</delete>
+	
+	<select id="getAllScreenByScreenNameAndModuleIdForAutocomplete" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap" >
+		SELECT
+			A.screen_id AS optionValue,
+			B.message_string AS optionLabel
+		FROM 
+			screen_design AS A
+		INNER JOIN
+			message_design AS B
+		ON
+			(A.message_code = B.message_code  AND B.language_id = #{languageId} AND B.project_id =  CAST(#{arg03} AS numeric(16,0)))
+
+			<!-- AND A.module_id = B.module_id -->
+		<where>
+			<if test="searchKey != null and searchKey != ''" >
+				<![CDATA[
+					AND B.message_string ILIKE '%' || #{searchKey} || '%'
+				]]>
+			</if>
+			<if test="arg01 != null and arg01 != ''">
+				<![CDATA[
+					AND A.module_id = CAST(#{arg01} AS numeric(16,0))
+				]]>
+			</if>
+		</where>
+
+		ORDER BY 
+			B.message_string
+		<if test="arg02 != null and arg02 != ''">
+			<![CDATA[
+				LIMIT CAST(#{arg02} AS numeric(16,0))
+			]]>
+		</if>
+		<if test="arg02 == null or arg02 == ''">
+			LIMIT 20;
+		</if>
+		
+		
+	</select>
+	<select id="getScreenDesignById" resultMap="screenDesignResult" >
+		SELECT
+			sd.screen_id,
+			sd.screen_code,
+			sd.module_id,
+			sd.screen_url_code, 
+				sd.screen_pattern_type,
+				sd.template_type,
+				sd.remark,
+				sd.created_by,
+				sd.created_date, 
+				sd.updated_by,
+				sd.updated_date,
+				md.message_string,
+			sd.message_code,
+			sd.design_mode,
+			sd.design_status,
+			sd.function_id,
+			f.function_name,
+			sd.confirmation_type,
+			sd.completion_type,
+			sd.enable_home_page
+		FROM
+			screen_design sd 
+		LEFT JOIN message_design md 
+		ON 
+		(
+				sd.message_code = md.message_code and md.language_id = #{language.languageId} and md.project_id=#{projectId}	<!--and md.language_code = #{language.languageCode} and md.country_code = #{language.countryCode} -->
+		)
+		LEFT JOIN function_design f ON sd.function_id = f.function_id
+		WHERE
+			sd.screen_id=#{screenId}
+		LIMIT	1
+	</select>
+	<select id="getScreenFormByScreenId" parameterType="Long" resultMap="screenFormResult" >
+		SELECT  
+		   sf.screen_form_id,
+		   sf.enctype_type,
+		   sf.method_type, 
+		   sf.form_seq_no,
+		   sf.form_coverage_flg,
+		   sf.screen_id,
+		   sf.created_by,
+		   sf.created_date, 
+		   sf.updated_by,
+		   sf.updated_date,
+		   sf.form_code,
+		   (
+		    SELECT business_logic_name 
+		    FROM  business_logic bl 
+		    WHERE (sf.screen_form_id = bl.screen_form_id AND bl.return_type = 1)
+		    LIMIT 1
+		   ) as business_logic_name
+		  FROM
+		   screen_form sf
+		  WHERE
+		   sf.screen_id=#{screenId}
+		  ORDER BY sf.form_seq_no
+	</select>
+	<select id="getScreenParameterByScreenId" parameterType="Long" resultMap="screenParameterResult" >
+		SELECT 
+			screen_param_id, 
+			screen_id, 
+			a.domain_tbl_mapping_id, 
+			a.domain_tbl_mapping_item_id, 
+				screen_param_code, 
+				screen_param_name, 
+				data_type, 
+				array_flg, 
+				param_seq_no, 
+				parent_screen_param_id, 
+				a.created_by, 
+				a.created_date, 
+				a.updated_by, 
+				a.updated_date,
+				a.screen_param_id as screenParamIdStore
+			FROM screen_param a
+		WHERE
+			a.screen_id=#{screenId}
+		ORDER BY param_seq_no
+	</select>
+	<select id="getScreenAreaByScreenId" resultMap="screenAreaResult" >
+		SELECT
+			sa.screen_area_id,
+			sa.area_type,
+			sa.area_seq_no,
+			sa.area_code,
+			sa.area_local_name,
+			sa.col_width_unit, 
+				sa.total_col,
+				sa.total_element,
+				sa.area_type,
+				sa.tbl_width_unit,
+				sa.tbl_header_row, 
+				sa.align_position_type,
+				sa.area_pattern_type,
+				sa.screen_form_id,
+				sa.created_by,
+				sa.created_date,
+				sa.updated_by,
+				sa.updated_date,
+				sa.element_dipslay_type,
+				sa.element_position_type,
+				md.message_string,
+			sa.message_code,
+			sa.tbl_component_row,
+			sa.panel_style,
+			sa.header_style,
+			sa.row_style,
+			sa.input_style,
+			sa.alternate_row_style,
+			sf.form_code,
+			sa.area_custom_type,
+			sa.fixed_row,
+			sa.area_type_action,
+			sa.area_icon,
+			sa.object_mapping_id,
+			sa.object_mapping_type,
+			sa.enable_sort,
+			sa.sql_column_id,
+			sd.sql_design_code AS sql_column_code
+		FROM
+			screen_area sa LEFT JOIN message_design md 
+		ON 
+		(
+				sa.message_code = md.message_code and md.language_id = #{language.languageId} and md.project_id=#{projectId}<!--[truonglv:and md.language_id = #{languageId}] and md.language_code = #{language.languageCode} and md.country_code = #{language.countryCode}	-->
+		) 
+		LEFT JOIN 
+			screen_form sf ON sa.screen_form_id = sf.screen_form_id
+		LEFT JOIN 
+			sql_design sd ON sd.sql_design_id = sa.sql_column_id 
+		WHERE sa.screen_id = #{screenId}
+		ORDER BY sa.area_seq_no
+	</select>
+	<select id="getScreenGroupItemByScreenId" parameterType="Long" resultMap="screenGroupItemResult" >
+		SELECT
+			group_item_id,
+			sgi.screen_area_id,
+			sgi.item_seq_no,
+			group_seq_no,
+			group_name,
+			group_type,
+			sgi.created_by,
+			sgi.created_date,
+			sgi.updated_by,
+			sgi.updated_date,
+			area.total_col,
+			area.total_element
+		FROM
+			screen_group_item sgi LEFT JOIN	screen_area area 
+		ON sgi.screen_area_id = area.screen_area_id
+		WHERE
+			area.screen_area_id IN 			
+		(
+			SELECT
+				screen_area_id 
+			FROM
+				screen_area sa
+			WHERE
+			(
+				SELECT
+					COUNT(*)
+				FROM
+					screen_form sf
+				WHERE
+					sa.screen_form_id = sf.screen_form_id AND sf.screen_id =#{screenId}
+			) > 0
+		)
+		ORDER BY
+			group_seq_no
+	</select>
+	<select id="getScreenItemByScreenId" resultMap="screenItemResult" >
+		SELECT
+			si.screen_item_id,
+			si.item_seq_no,
+			si.group_item_id,
+			si.screen_area_id,
+			si.screen_id,
+			(SELECT sd.screen_pattern_type FROM screen_design sd WHERE sd.screen_id = #{screenId}) as screen_pattern_type,
+			si.item_code,
+			si.logical_data_type,
+			si.physical_data_type,
+			si.domain_tbl_mapping_id,
+			si.domain_tbl_mapping_item_id,
+			si.col_span,
+			si.row_span,
+			si.item_width_unit,
+			si.codelist_id,
+			si.codelist_type,
+			si.item_type,
+			si.autocomplete_id,
+			si.array_flg,
+			si.screen_action_id,
+			si.created_by as created_by,
+			si.created_date as created_date,
+			si.updated_by as updated_by,
+			si.updated_date as updated_date,
+			si.message_code,
+			sis.item_group_type,
+			sis.item_seq_no,
+			ad.autocomplete_id,
+			ad.autocomplete_name,
+			ad.autocomplete_code,
+			cl.codelist_name,
+			siv.maxlength,
+			siv.mandatory_flg,
+			siv.min_val,
+			siv.max_val,
+			siv.fmt_code,
+			<!-- dtmi.codelist_type as domain_codelist_type,
+			dtmi.codelist_id as domain_codelist_id, -->
+			sa.total_col,
+			sa.total_element,
+			sa.area_code,
+			sa.area_type,
+			sa.tbl_header_row,
+			si.output_bean_id,
+			si.tab_index,
+			si.sql_design_id,
+			si.data_source_type,
+			si.option_label,
+			si.option_value,
+			tdd.column_name as option_label_text,
+			tddr.column_name as option_value_text,
+			sd.sql_design_name,
+			si.default_value,
+			si.style,
+			si.hover_style,
+			sf.form_code as form_name,
+			si.icon,
+			si.show_label,
+			si.enable_password,
+			si.allow_any_input,
+			si.button_type,
+			si.from_to,
+			si.enable_confirm,
+			si.message_confirm,
+			si.show_blank_item,
+			si.screen_design_id_codelist_id,
+			scd.screen_code AS screen_design_code_codelist_id,
+			si.screen_item_id_codelist_id,
+			md1.message_string AS screen_design_text_codelist_id,
+			si.screen_item_text_codelist_id,
+			si.screen_transition_id,
+			st.transition_name,
+			md.message_level,
+			mdConfirm.message_string as message_confirm_text,
+			md.message_string
+		FROM
+			screen_item si 
+		INNER JOIN screen_item_sequence sis
+			ON si.item_seq_no = sis.item_seq_no		 AND	si.screen_area_id = sis.screen_area_id 
+		LEFT JOIN autocomplete_design ad
+			ON	si.autocomplete_id = ad.autocomplete_id
+		LEFT JOIN codelist cl
+			ON 	cl.codelist_id = si.codelist_id 
+		LEFT JOIN screen_item_validation siv 
+			ON 	si.screen_item_id = siv.screen_item_id 
+		<!-- LEFT JOIN domain_table_mapping_items dtmi 
+			ON si.domain_tbl_mapping_item_id = dtmi.domain_tbl_mapping_item_id	-->
+		LEFT JOIN message_design md 
+			ON 
+			(
+				si.message_code = md.message_code and md.language_id = #{language.languageId} and md.project_id=#{projectId} <!--[truonglv: and md.language_id = #{languageId}] and md.language_code = #{language.languageCode} and md.country_code = #{language.countryCode} -->
+			)
+		LEFT JOIN message_design mdConfirm 
+			ON 
+			(
+				si.message_confirm = mdConfirm.message_code and mdConfirm.language_id = #{language.languageId} and mdConfirm.project_id=#{projectId} <!--[truonglv: and md.language_id = #{languageId}] and md.language_code = #{language.languageCode} and md.country_code = #{language.countryCode} -->
+			)  
+		LEFT JOIN	screen_area sa ON si.screen_area_id = sa.screen_area_id 
+		LEFT JOIN screen_form sf ON sa.screen_form_id =  sf.screen_form_id
+		LEFT JOIN sql_design_results sdr ON si.option_label = sdr.result_id 
+		LEFT JOIN table_design_details tdd ON sdr.column_id = tdd.column_id
+		LEFT JOIN sql_design_results sdrr ON si.option_value = sdrr.result_id 
+		LEFT JOIN table_design_details tddr ON sdrr.column_id = tddr.column_id
+		LEFT JOIN sql_design sd ON si.sql_design_id = sd.sql_design_id
+		LEFT JOIN screen_design scd ON scd.screen_id = si.screen_design_id_codelist_id
+		LEFT JOIN screen_item sim ON sim.screen_item_id = si.screen_item_id_codelist_id
+		LEFT JOIN message_design md1 
+			ON 
+			(
+				scd.message_code = md1.message_code and md1.language_id = #{language.languageId} and md1.project_id=#{projectId}
+			)
+		LEFT JOIN message_design md2 
+			ON 
+			(
+				sim.message_code = md2.message_code and md2.language_id = #{language.languageId} and md2.project_id=#{projectId}
+			)  
+		LEFT JOIN screen_transition st on si.screen_transition_id = st.screen_transition_id
+		WHERE
+			si.screen_id=#{screenId} and si.item_type != 2
+		ORDER BY
+			sis.item_seq_no
+	</select>
+	<select id="getScreenHiddenItemByScreenId" resultMap="screenItemResult" >
+		SELECT
+			a.screen_item_id,
+			a.item_seq_no,
+			a.group_item_id,
+			a.screen_area_id,
+			a.screen_id,
+			a.item_code,
+			a.logical_data_type,
+			a.physical_data_type,
+			a.domain_tbl_mapping_id,
+			a.domain_tbl_mapping_item_id,
+			a.col_span,
+			a.row_span,
+			a.item_width_unit,
+			a.codelist_id,
+			a.codelist_type,
+			a.item_type,
+			a.autocomplete_id,
+			a.array_flg,
+			a.screen_action_id,
+			a.created_by as created_by,
+			a.created_date as created_date,
+			a.updated_by as updated_by,
+			a.updated_date as updated_date,
+			md.message_string,
+			a.message_code,
+			sa.area_type as area_type,
+			sa.screen_area_id
+		FROM
+			screen_item a 
+			
+		LEFT JOIN message_design md ON 
+			(
+				a.message_code = md.message_code and md.language_id = #{language.languageId} and md.project_id=#{projectId} 
+			)
+		LEFT JOIN 
+			screen_area sa ON sa.screen_area_id = a.screen_area_id
+		WHERE
+			a.screen_id=#{screenId} and a.item_type = 2
+		ORDER BY
+			a.item_seq_no DESC
+	</select>
+	
+	<update id="updateScreenItemIdInBlogic">
+		<if test="screenItems != null and	screenItems.size() > 0 ">
+			<foreach item="item" collection="screenItems">
+					UPDATE 
+						input_bean
+					SET 
+						screen_item_id = #{item.screenItemId}
+					WHERE 
+						screen_item_id = #{item.screenItemStoreId};
+						
+					UPDATE 
+						output_bean
+					SET 
+						screen_item_id = #{item.screenItemId}
+					WHERE 
+						screen_item_id = #{item.screenItemStoreId};
+			</foreach>;
+		</if>
+	</update>
+	
+	<insert id="screenItemsInsert">
+		<if test="screenItems != null and screenItems.size() > 0 ">
+			INSERT INTO 
+				screen_item_sequence
+			(
+				screen_area_id,
+				item_seq_no,
+				item_group_type,
+				created_by,
+				created_date, 
+				updated_by,
+				updated_date
+			)
+			VALUES 
+			<foreach item="item" collection="screenItems" separator=",">
+			(
+				#{item.screenAreaId},
+				#{item.itemSeqNo},
+				#{item.itemGroupType},
+				#{item.createdBy},
+				#{item.createdDate},
+				#{item.updatedBy}, 
+				#{item.updatedDate} 
+			)
+			</foreach>;
+		
+			INSERT INTO
+				screen_item
+			(
+					screen_item_id,
+					item_seq_no,
+					group_item_id,
+					screen_area_id,
+					screen_id, 
+					item_code,
+					message_code,
+					logical_data_type,
+					physical_data_type, 
+					domain_tbl_mapping_id,
+					domain_tbl_mapping_item_id,
+					col_span, 
+					row_span,
+					item_width_unit,
+					codelist_id,
+					codelist_type,
+					item_type, 
+					autocomplete_id,
+					array_flg,
+					screen_action_id,
+					created_by,
+					created_date, 
+					updated_by,
+					updated_date,
+					output_bean_id,
+					tab_index,
+				 	sql_design_id,
+					data_source_type,
+					option_label,
+					option_value,
+					default_value,
+					style,
+					hover_style,
+					icon,
+					show_label,
+					enable_password,
+					allow_any_input,
+					button_type,
+					from_to,
+					enable_confirm,
+					message_confirm,
+					screen_design_id_codelist_id,
+					screen_item_id_codelist_id,
+					screen_item_text_codelist_id,
+					show_blank_item,
+					screen_transition_id,
+					custom_content
+					
+			)
+			VALUES
+			<foreach item="item" collection="screenItems" separator=",">
+			(
+				#{item.screenItemId},
+				#{item.itemSeqNo},
+				#{item.groupItemId},
+				#{item.screenAreaId},
+				#{item.screenId}, 
+				#{item.itemCode},
+				#{item.messageDesign.messageCode},
+				#{item.logicalDataType},
+				#{item.physicalDataType}, 
+				#{item.domainTblMappingId},
+				#{item.domainTblMappingItemId},
+				#{item.colSpan}, 
+				#{item.rowSpan},
+				#{item.itemWidthUnit},
+				#{item.codelistId},
+				#{item.codelistType},
+				#{item.itemType}, 
+				#{item.autocompleteDesign.autocompleteId},
+				#{item.arrayFlg},
+				#{item.screenActionId},
+				#{item.createdBy},
+				#{item.createdDate},
+				#{item.updatedBy}, 
+				#{item.updatedDate},
+				#{item.outputBeanId},
+				#{item.tabIndex}, 
+				#{item.sqlDesign.sqlDesignId},
+				#{item.dataSourceType},
+				#{item.optionLabel.resultId},
+				#{item.optionValue.resultId},
+				#{item.defaultValue},
+				#{item.style},
+				#{item.hoverStyle},
+				#{item.icon},
+				#{item.showLabel},
+				#{item.enablePassword},
+				#{item.allowAnyInput},
+				#{item.buttonType},
+				#{item.displayFromTo},
+				#{item.enableConfirm},
+				#{item.messageConfirm.messageCode},
+				#{item.screenDesignIdCodeListId},
+				#{item.screenItemIdCodeListId},
+				#{item.screenItemTextCodeListId},
+				#{item.showBlankItem},
+				#{item.screenTransitionId}
+				
+				<if test="item.logicalDataType != null and item.logicalDataType != '' or (item.logicalDataType == 23  or item.logicalDataType == 24 ) ">
+					,
+					<if test="item.logicalDataType == 23">
+						#{item.customItemContent}
+					</if>
+					<if test="item.logicalDataType == 24">
+						#{item.customSectionContent}
+					</if>
+					<if test="item.logicalDataType != 23 and item.logicalDataType != 24">
+						#{item.customItemContent}
+					</if>
+				</if>
+				<if test="item.logicalDataType == null or item.logicalDataType == '' ">
+					,
+					#{item.customItemContent}
+				</if>
+				
+			)
+			</foreach>;
+			<foreach item="item" collection="screenItems" separator=";">
+				<if test="item.listScreenItemCodelists != null and item.listScreenItemCodelists.size() > 0">
+						INSERT INTO 
+						screen_item_codelist
+					(
+						screen_item_id,
+						codelist_seq_no,
+						codelist_name,
+						codelist_val, 
+						support_option_val_flg,
+						created_by,
+						created_date,
+						updated_by, 
+						updated_date
+					)
+					
+					VALUES 
+					<foreach item="codelist" collection="item.listScreenItemCodelists" separator=",">
+					(
+						#{item.screenItemId},
+						#{codelist.codelistSeqNo},
+						#{codelist.codelistName},
+						#{codelist.codelistVal}, 
+						#{codelist.supportOptionValFlg},
+						#{codelist.createdBy},
+						#{codelist.createdDate},
+						#{codelist.updatedBy}, 
+						#{codelist.updatedDate}
+					)
+					</foreach>;
+				</if>
+				<if test="item.screenItemAutocompleteInputs != null and item.screenItemAutocompleteInputs.size() > 0">
+					INSERT INTO 
+						screen_item_autocomplete_input
+					(
+						screen_item_id,
+						input_id,
+						screen_item_code
+					)
+					VALUES 
+					<foreach item="input" collection="item.screenItemAutocompleteInputs" separator=",">
+					(
+						#{item.screenItemId},
+						#{input.inputId},
+						#{input.screenItemCode}
+					)
+					</foreach>;
+				</if>
+			<!-- </foreach>
+			<foreach item="item" collection="screenItems" separator=","> -->
+				<if test="item.screenItemEvents != null and item.screenItemEvents.size() > 0">
+						INSERT INTO 
+						screen_item_event
+					(
+						screen_item_event_id,
+						item_event_seq_no,
+						screen_item_id,
+						event_type, 
+						effect_area_type,
+						effect_area,
+						blogic_id
+					)
+					
+					VALUES 
+					<foreach item="event" collection="item.screenItemEvents" separator=",">
+					(
+						#{event.screenItemEventId},
+						#{event.itemEventSeqNo},
+						#{item.screenItemId},
+						#{event.eventType},
+						#{event.effectAreaType}, 
+						#{event.effectArea},
+						#{event.blogicId}
+					)
+					</foreach>;
+				</if>
+			<!-- </foreach>
+			<foreach item="item" collection="screenItems" separator=","> -->
+				<if test="item.screenItemEvents != null and item.screenItemEvents.size() > 0">
+					<foreach item="event" collection="item.screenItemEvents">
+						<if test="event.screenItemEventMappings != null and event.screenItemEventMappings.size() > 0">
+							INSERT INTO
+								screen_item_event_mapping
+							(
+								screen_item_event_id,
+								bean_id, 
+								item_code,
+								bean_type
+							)
+						 	VALUES 
+							<foreach item="mapping" collection="event.screenItemEventMappings" separator=",">
+							(
+								#{event.screenItemEventId},
+								#{mapping.beanId},
+								#{mapping.itemCode},
+								#{mapping.beanType}
+							)
+							</foreach>;
+						</if>
+					</foreach>
+				</if>
+			
+			<!-- DungNN add for insert screen item validation -->
+			<if test="item.screenItemValidation != null">
+				INSERT INTO 
+					screen_item_validation
+				(
+					screen_item_id,
+					maxlength,
+					mandatory_flg,
+					min_val,
+					max_val,
+					fmt_code,
+					created_by,
+					created_date,
+					updated_by,
+					updated_date
+				)
+				VALUES
+				<!-- <foreach item="item" collection="screenItems.screenItemValidation" separator=","> -->
+				(
+					#{item.screenItemId},
+					#{item.screenItemValidation.maxlength},
+					#{item.screenItemValidation.mandatoryFlg},
+					#{item.screenItemValidation.minVal},
+					#{item.screenItemValidation.maxVal},
+					#{item.screenItemValidation.fmtCode},
+					#{item.createdBy},
+					#{item.createdDate},
+					#{item.updatedBy},
+					#{item.updatedDate}
+				)
+			<!-- </foreach> -->;
+			</if>
+		</foreach>;
+			<foreach item="item" collection="screenItems">
+				UPDATE 
+					input_bean
+				SET 
+					screen_item_id = #{item.screenItemId}
+				WHERE 
+					screen_item_id = #{item.screenItemStoreId};
+					
+				UPDATE 
+					outputbean_screenitem_mapping
+				SET 
+					screen_item_id = #{item.screenItemId}
+				WHERE 
+					screen_item_id = #{item.screenItemStoreId};
+					
+				UPDATE
+					screen_item_status
+				SET
+					screen_item_id = #{item.screenItemId}
+				WHERE
+					screen_item_id = #{item.screenItemStoreId} AND type = 3;
+			</foreach>;
+		</if>
+	</insert>
+	<insert id="screenHiddenItemsInsert">
+		<if test="screenItems != null and	screenItems.size() > 0 ">
+			INSERT INTO 
+				screen_item_sequence
+			(
+			 	screen_area_id,
+			 	item_seq_no,
+			 	item_group_type,
+			 	created_by,
+			 	created_date, 
+			 	updated_by,
+			 	updated_date
+			 )
+			VALUES 
+			<foreach item="item" collection="screenItems" separator=",">
+				
+			(
+				#{item.screenAreaId},
+				#{item.itemSeqNo},
+				#{item.itemGroupType},
+				#{item.createdBy},
+				#{item.createdDate},
+				#{item.updatedBy}, 
+				#{item.updatedDate} 
+			)
+			</foreach>;
+			INSERT INTO
+				screen_item
+			(
+					screen_item_id,
+					item_seq_no,
+					group_item_id,
+					screen_area_id,
+					screen_id, 
+					item_code,
+					message_code,
+					logical_data_type,
+					physical_data_type, 
+					domain_tbl_mapping_id,
+					domain_tbl_mapping_item_id,
+					col_span, 
+					row_span,
+					item_width_unit,
+					codelist_id,
+					codelist_type,
+					item_type, 
+					autocomplete_id,
+					array_flg,
+					screen_action_id,
+					created_by,
+					created_date, 
+					updated_by,
+					updated_date
+			)
+			VALUES
+			<foreach item="item" collection="screenItems" separator=",">
+			(
+				#{item.screenItemId},
+				#{item.itemSeqNo},
+				#{item.groupItemId},
+				#{item.screenAreaId},
+				#{item.screenId}, 
+				#{item.itemCode},
+				#{item.messageDesign.messageCode},
+				#{item.logicalDataType},
+				#{item.physicalDataType}, 
+				#{item.domainTblMappingId},
+				#{item.domainTblMappingItemId},
+				#{item.colSpan}, 
+				#{item.rowSpan},
+				#{item.itemWidthUnit},
+				#{item.codelistId},
+				#{item.codelistType},
+				#{item.itemType}, 
+				#{item.autocompleteDesign.autocompleteId},
+				#{item.arrayFlg},
+				#{item.screenActionId},
+				#{item.createdBy},
+				#{item.createdDate},
+				#{item.updatedBy}, 
+				#{item.updatedDate} 
+			)
+			</foreach>;
+			<foreach item="item" collection="screenItems">
+				UPDATE 
+					input_bean
+				SET 
+					screen_item_id = #{item.screenItemId}
+				WHERE 
+					screen_item_id = #{item.screenItemStoreId};
+					
+				UPDATE 
+					outputbean_screenitem_mapping
+				SET 
+					screen_item_id = #{item.screenItemId}
+				WHERE 
+					screen_item_id = #{item.screenItemStoreId};
+			</foreach>;
+		</if>
+	</insert>
+	<update id="screenDesignUpdate" parameterType="org.terasoluna.qp.domain.model.ScreenDesign">
+		
+		UPDATE
+			screen_design
+	 		SET
+	 			screen_code=#{screenCode},
+	 			message_code=#{messageDesign.messageCode},
+				screen_url_code=#{screenUrlCode},
+				remark=#{remark},
+				template_type=#{templateType},
+				updated_by=#{updatedBy},
+				updated_date=#{sysDatetime},
+				design_mode = #{designMode},
+				design_status = #{designStatus},
+				function_id = #{functionDesignId},
+				enable_home_page = #{enableHomePage}
+ 		WHERE
+ 			screen_id=#{screenId}
+ 			and updated_date=#{updatedDate}
+	</update>	
+	
+	<!-- Counts screen design information by moduleId -->
+	<select id="countByModuleId" parameterType="Module" resultType="_int">
+		 SELECT
+		 COUNT(*) AS rowCount
+		 FROM
+			screen_design
+		 <where>
+			<if test="module.moduleId != null">
+			 module_id = #{module.moduleId}
+			</if>
+			<if test="module.moduleId == null">
+			 FALSE
+			</if>
+		 </where>
+	</select>
+	
+	<select id="screenDesignGetSequences" resultType="Long">
+		select SETVAL('screen_design_seq'::regclass, NEXTVAL('screen_design_seq'::regclass) + #{size})
+	</select>
+	
+	<select id="screenItemGetSequences" resultType="Long">
+		select SETVAL('screen_item_seq'::regclass, NEXTVAL('screen_item_seq'::regclass) + #{size})
+	</select>
+	<select id="screenItemEventGetSequences" resultType="Long">
+		select SETVAL('screen_item_event_seq'::regclass, NEXTVAL('screen_item_event_seq'::regclass) + #{size})
+	</select>
+	
+	<select id="screenGroupItemGetSequences" resultType="Long">
+		select SETVAL('screen_group_item_seq'::regclass, NEXTVAL('screen_group_item_seq'::regclass) + #{size})
+	</select>
+	
+	<select id="getScreenItemCodelistByScreenId" resultMap="screenItemCodelistResult">
+ 		SELECT 
+ 			screen_item_id,
+ 			codelist_seq_no,
+ 			codelist_name,
+ 			codelist_val, 
+				support_option_val_flg,
+				created_by,
+				created_date,
+				updated_by, 
+				updated_date
+			FROM
+				screen_item_codelist sic
+			WHERE
+			(
+				SELECT
+						1
+				FROM screen_item si
+				WHERE 
+					sic.screen_item_id = si.screen_item_id
+				AND
+					si.screen_id = #{screenId}
+					
+			) > 0	
+			ORDER BY codelist_seq_no 	
+	</select>
+	<!--DaiPV	-->
+	<update id="updateInformationByBusinessLogicId">
+		UPDATE business_logic 
+		SET screen_id = null, screen_form_id = null
+		WHERE business_logic_id = #{businessLogicId}
+	</update>
+	<update id="updateInputBeanByBusinessLogicId">
+		UPDATE input_bean SET screen_item_id = null
+		WHERE business_logic_id = #{businessLogicId}
+	</update>
+	<delete id="deleteOutputBeanScreenItemMappingByScreenItemId">
+		DELETE FROM outputbean_screenitem_mapping WHERE screen_item_id = #{screenItemId}
+	</delete>
+	<delete id="deleteByScreenId">
+		DELETE FROM
+			message_design m
+		WHERE
+		(
+			EXISTS
+			(
+				SELECT
+					1
+				FROM
+					screen_item si
+				WHERE
+					m.message_code = si.message_code AND m.message_level != 1 AND m.message_level != 0
+					and si.screen_id = #{screenId}  AND m.project_id = #{projectId}
+			) 
+			AND 
+			(
+				SELECT
+					COUNT(*)
+				FROM
+					screen_item si
+				WHERE
+					m.message_code = si.message_code
+					and si.screen_id != #{screenId}  AND m.project_id = #{projectId}
+			) = 0
+			AND 
+			(
+				SELECT
+					COUNT(*)
+				FROM
+					screen_design sd
+				WHERE
+					m.message_code = sd.message_code
+					AND m.project_id = #{projectId}
+			) = 0
+			AND 
+			(
+				SELECT
+					COUNT(*)
+				FROM
+					input_bean input
+				INNER JOIN business_logic b ON input.business_logic_id = b.business_logic_id
+				WHERE
+					m.message_code = input.input_bean_name
+					AND m.project_id = #{projectId}
+			) = 0
+		)
+		OR
+		(
+			EXISTS
+			(
+				SELECT
+					1
+				FROM
+					screen_item si
+				WHERE
+					m.message_code = si.message_confirm AND m.message_level != 1 AND m.message_level != 0
+					and si.screen_id = #{screenId}  AND m.project_id = #{projectId}
+			) 
+			AND 
+			(
+				SELECT
+					COUNT(*)
+				FROM
+					screen_item si
+				WHERE
+					m.message_code = si.message_confirm
+					and si.screen_id != #{screenId}  AND m.project_id = #{projectId}
+			) = 0
+			AND 
+			(
+				SELECT
+					COUNT(*)
+				FROM
+					screen_design sd
+				WHERE
+					m.message_code = sd.message_code
+					AND m.project_id = #{projectId}
+			) = 0
+			AND 
+			(
+				SELECT
+					COUNT(*)
+				FROM
+					input_bean input
+				INNER JOIN business_logic b ON input.business_logic_id = b.business_logic_id
+				WHERE
+					m.message_code = input.input_bean_name
+					AND m.project_id = #{projectId}
+			) = 0
+		)
+		OR
+		(
+			EXISTS 
+			(
+				SELECT
+					1
+				FROM
+					screen_area sa
+				WHERE
+					m.message_code = sa.message_code AND m.message_level != 1 AND m.message_level != 0
+					and sa.screen_id = #{screenId}  AND m.project_id = #{projectId}
+			)
+			AND 
+			(
+				SELECT
+					COUNT(*)
+				FROM
+					screen_area sa
+				WHERE
+					m.message_code = sa.message_code
+						and sa.screen_id != #{screenId}  AND m.project_id = #{projectId}
+			) = 0
+			AND 
+			(
+				SELECT
+					COUNT(*)
+				FROM
+					screen_design sd
+				WHERE
+					m.message_code = sd.message_code
+					AND m.project_id = #{projectId}
+			) = 0
+			AND 
+			(
+				SELECT
+					COUNT(*)
+				FROM
+					input_bean input
+				INNER JOIN business_logic b ON input.business_logic_id = b.business_logic_id
+				WHERE
+					m.message_code = input.input_bean_name
+					AND m.project_id = #{projectId}
+			) = 0
+		);
+		<!-- End DungNN -->
+		DELETE 
+		FROM
+			screen_area_sort_mapping sasp
+		WHERE 
+			(screen_id = #{screenId});
+		
+		DELETE
+		FROM 
+			screen_item_autocomplete_input sia
+		WHERE 
+		(
+			SELECT
+				COUNT(*)
+			FROM
+				screen_item si
+			WHERE
+				 sia.screen_item_id = si.screen_item_id AND screen_id=#{screenId}
+		) > 0;
+
+		DELETE
+		FROM 
+			screen_item_validation siv
+		WHERE 
+		(
+			SELECT
+				COUNT(*)
+			FROM
+				screen_item si
+			WHERE
+				 siv.screen_item_id = si.screen_item_id AND screen_id=#{screenId}
+		) > 0;
+		
+		DELETE
+		FROM
+			screen_item_codelist sic
+		WHERE 
+		(
+			SELECT
+				COUNT(*)
+			FROM
+				screen_item si
+			WHERE
+				sic.screen_item_id = si.screen_item_id AND screen_id=#{screenId}
+		) > 0;
+		
+		DELETE
+		FROM 
+			screen_item_event sie
+		WHERE 
+		(
+			SELECT
+				COUNT(*)
+			FROM
+				screen_item si
+			WHERE
+				sie.screen_item_id = si.screen_item_id AND screen_id=#{screenId}
+		) > 0;
+	
+			
+		DELETE 
+		FROM screen_item_event_mapping siem
+		WHERE 
+			siem.screen_item_event_id in 
+		(
+			SELECT
+				sie.screen_item_event_id
+			FROM
+				screen_item_event sie
+			WHERE
+			(
+				SELECT
+					COUNT(*)
+				FROM
+					screen_item si
+				WHERE
+					sie.screen_item_id = si.screen_item_id AND screen_id=#{screenId}
+			) > 0	
+		);		
+		
+		DELETE
+		FROM
+			screen_item
+		WHERE
+			screen_id=#{screenId};
+		
+		DELETE
+		FROM
+			screen_group_item 
+		WHERE
+			screen_area_id IN 			
+		(
+			SELECT
+				screen_area_id 
+			FROM
+				screen_area sa
+			WHERE
+			(
+				SELECT
+					COUNT(*)
+				FROM
+					screen_form sf
+				WHERE
+					sa.screen_form_id = sf.screen_form_id AND sf.screen_id =#{screenId}
+			) > 0
+		);
+		
+		DELETE
+		FROM
+			screen_item_sequence 
+		WHERE
+			screen_area_id IN 
+		(
+			SELECT
+				screen_area_id 
+			FROM
+				screen_area sa
+			WHERE
+			(
+				SELECT
+					COUNT(*)
+				FROM
+					screen_form sf
+				WHERE
+					sa.screen_form_id = sf.screen_form_id AND sf.screen_id =#{screenId}
+			) > 0
+		);
+		DELETE 
+		FROM screen_area_event sae
+		WHERE 
+			sae.screen_area_id IN 
+			(
+				SELECT sa.screen_area_id
+				FROM screen_area sa
+				WHERE sa.screen_id = #{screenId}
+			);
+		
+		DELETE
+		FROM
+			screen_area sa
+		WHERE 
+		(
+			SELECT
+				COUNT(*)
+			FROM
+				screen_form sf
+			WHERE
+				sa.screen_form_id = sf.screen_form_id AND sf.screen_id =#{screenId}				
+		) > 0;
+		
+		DELETE 
+		FROM
+			screen_form_tabs sft
+		WHERE 
+			(
+				SELECT COUNT(*)
+				FROM screen_form sf
+				WHERE sf.screen_form_id = sft.screen_form_id AND sf.screen_id=#{screenId} 
+			) > 0;
+		
+		DELETE
+		FROM
+			screen_form
+		WHERE
+			screen_id=#{screenId};
+			
+		DELETE
+		FROM
+			screen_action_param s 
+		WHERE
+		(
+			screen_action_id in (select screen_action_id from screen_action WHERE from_screen_id=#{screenId})
+		);
+		
+		DELETE
+		FROM
+			screen_action
+		WHERE
+			from_screen_id=#{screenId};
+			
+			
+		DELETE
+		FROM
+			screen_param
+		WHERE
+			screen_id=#{screenId};
+		
+		UPDATE menu_design_item
+		SET screen_id=NULL
+		WHERE
+		screen_id=#{screenId};
+			
+		DELETE
+		FROM
+			screen_design
+		WHERE
+			screen_id=#{screenId};
+		
+	</delete>
+	<select id="findScreenItemEventByScreenId" resultMap="screenItemEventResult">
+		SELECT 
+			sie.screen_item_event_id,
+			sie.item_event_seq_no,
+			sie.screen_item_id,
+			sie.event_type, 
+			sie.effect_area_type,
+			sie.effect_area,
+			sie.blogic_id,
+			bl.business_logic_name as blogic_name,
+			bl.business_logic_code as blogic_code
+		FROM 
+			screen_item_event sie INNER JOIN screen_item si 
+		ON sie.screen_item_id = si.screen_item_id INNER JOIN screen_area sa
+		ON si.screen_area_id = sa.screen_area_id INNER JOIN screen_design sd
+		ON sa.screen_id = sd.screen_id LEFT JOIN business_logic bl 
+		ON sie.blogic_id = bl.business_logic_id
+		WHERE sd.screen_id = #{screenId};		
+	</select>
+	<select id="findScreenItemEventMappingByScreenId" resultMap="screenItemEventMappingResult">
+		SELECT 
+			siem.screen_item_event_mapping_id,
+			siem.screen_item_event_id,
+			siem.bean_id, 
+			siem.item_code,
+			siem.bean_type
+		FROM screen_item_event_mapping siem 
+		INNER JOIN screen_item_event sie ON siem.screen_item_event_id = sie.screen_item_event_id 
+		INNER JOIN screen_item si ON sie.screen_item_id = si.screen_item_id 
+		INNER JOIN screen_design sd ON si.screen_id = sd.screen_id 
+		WHERE sd.screen_id = #{screenId};
+	</select>
+	<select id="findScreenItemEventMappingPreviewByScreenId" resultMap="screenItemEventMappingResult">
+		SELECT 
+			siem.screen_item_event_mapping_id,
+			siem.screen_item_event_id,
+			siem.bean_id, 
+			siem.item_code,
+			siem.bean_type,
+			ob.output_bean_code as out_bean_code,
+			ib.input_bean_code as input_bean_code,
+			obp.output_bean_code as parent_code_output,
+			ibp.input_bean_code as parent_code_input
+		FROM screen_item_event_mapping siem 
+		INNER JOIN screen_item_event sie ON siem.screen_item_event_id = sie.screen_item_event_id 
+		INNER JOIN screen_item si ON sie.screen_item_id = si.screen_item_id 
+		INNER JOIN screen_design sd ON si.screen_id = sd.screen_id 
+		LEFT JOIN input_bean ib ON (siem.bean_id = ib.input_bean_id AND siem.bean_type = 1)
+		LEFT JOIN output_bean ob ON (siem.bean_id = ob.output_bean_id AND siem.bean_type = 0)
+		LEFT JOIN output_bean obp ON ob.parent_output_bean_id = obp.output_bean_id
+		LEFT JOIN input_bean ibp ON ib.parent_input_bean_id = ibp.input_bean_id
+		WHERE sd.screen_id = #{screenId};
+	</select>
+	<update id="screenDesignChangeDesignStatus" parameterType="org.terasoluna.qp.domain.model.ScreenDesign">
+		UPDATE
+			screen_design
+	 		SET
+				design_status = #{designStatus},
+				updated_by=#{updatedBy},
+				updated_date=#{sysDatetime}
+ 		WHERE
+ 			screen_id=#{screenId}
+	</update>
+	<insert id="screenAreaEventInsert">
+		<if test="screenAreaEvents != null and screenAreaEvents.size() > 0">
+			INSERT INTO 
+				screen_area_event
+			(
+				if_require,
+				then_must_require,
+				screen_area_id
+			)
+			VALUES 
+			<foreach item="item" collection="screenAreaEvents" separator=",">
+			(
+				#{item.ifRequire},
+				#{item.thenMustRequire},
+				#{item.screenAreaId}
+			)
+			</foreach>;
+		</if>
+	</insert>
+	<select id="findScreenAreaEventByScreenId" resultMap="screenAreaEventResult">
+		SELECT
+			sae.screen_area_event_id,
+			sae.if_require,
+			sae.then_must_require,
+			sae.screen_area_id
+		FROM
+			screen_area_event sae LEFT JOIN screen_area sa ON sae.screen_area_id = sa.screen_area_id
+		WHERE
+			sa.screen_id = #{screenId};
+	</select>
+	<select id="getAllSqlBuilderAutocomplete"
+		parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput"
+		resultMap="autocompleteResultMap">
+		SELECT
+			sql_design_id AS optionValue,
+			sql_design_name AS optionLabel,
+			sql_design_code AS output01,
+			design_type AS output02
+		FROM 
+			sql_design
+
+		<where>
+			project_id = ${arg01}
+			<if test="searchKey != null and searchKey != ''" >
+				<![CDATA[
+					AND sql_design_name ILIKE '%' || #{searchKey} || '%'
+				]]>
+			</if>
+			AND design_type IN (4,5)
+			AND sql_pattern = 0
+		</where>
+
+		ORDER BY 
+			sql_design_name DESC
+		<if test="arg02 != null and arg02 != ''">
+			<![CDATA[
+				LIMIT CAST(#{arg02} AS numeric(16,0))
+			]]>
+		</if>
+		<if test="arg02 == null or arg02 == ''">
+			LIMIT 20
+		</if>
+			
+	</select>
+	<!-- get autocomplete -->
+	<select id="getSqlBuilderAutocomplete"
+		parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput"
+		resultMap="autocompleteResultMap">
+		SELECT
+			autocomplete_id AS optionValue,
+			autocomplete_name AS optionLabel,
+			autocomplete_code AS output01
+		FROM 
+			autocomplete_design
+
+		<where>
+			project_id = ${arg01} AND (module_id IS NULL OR module_id = CAST(#{arg03} AS NUMERIC))
+			<if test="searchKey != null and searchKey != ''" >
+				<![CDATA[
+					AND autocomplete_name ILIKE '%' || #{searchKey} || '%'
+				]]>
+			</if>
+		</where>
+
+		ORDER BY 
+			autocomplete_name DESC
+		<if test="arg02 != null and arg02 != ''">
+			<![CDATA[
+				LIMIT CAST(#{arg02} AS numeric(16,0))
+			]]>
+		</if>
+		<if test="arg02 == null or arg02 == ''">
+			LIMIT 20
+		</if>
+			
+	</select>	
+	
+	<!-- DungNN - 20150822 - get all screen for generateDB -->
+	<select id="getAllRegistScreenInfoByModuleIdForGenerateDb" parameterType="map" resultMap="screenAreaResult">
+		SELECT 
+			screen_id,
+			screen_area_id,
+			area_code,
+			md.message_string as area_local_name,
+			total_element
+		FROM 
+			screen_area sa INNER JOIN message_design md ON (sa.message_code = md.message_code and md.language_id = #{languageId})
+		WHERE
+			area_type in (0,1,3) AND area_pattern_type = 1 
+		AND
+			EXISTS (
+				SELECT 1
+				FROM 
+					screen_design sd
+				WHERE
+					module_id = #{moduleId}
+				AND 
+					design_mode = 0 AND screen_pattern_type = 1
+				AND
+					sd.screen_id = sa.screen_id
+			)
+		ORDER BY total_element DESC
+		</select>
+		
+		<update id="updateDesignMode" parameterType="map">
+	 <foreach collection="listOfId" item="screenId" separator=";">
+		<![CDATA[
+			 UPDATE
+				 screen_design
+			 SET
+				 design_mode=#{designStatus}
+			 WHERE
+				 screen_id=#{screenId}
+		]]>
+	 </foreach>
+	</update>
+	<delete id="screenActionDelete">
+		<if test="screenActions != null and screenActions.size() > 0">
+			UPDATE
+				screen_item
+		 		SET
+		 			screen_action_id = null
+	 		WHERE
+	 			screen_action_id in 
+				<foreach item="item" collection="screenActions" separator="," close=")" open="(">
+					#{item.screenActionId}
+				</foreach>;
+			 
+			 DELETE 
+			 FROM 
+			 	screen_action_param
+			 WHERE
+			 	screen_action_id in
+				<foreach item="item" collection="screenActions" separator="," close=")" open="(">
+					#{item.screenActionId}
+				</foreach>;
+			
+			DELETE 
+			FROM screen_action
+			WHERE screen_action_id in
+			<foreach item="item" collection="screenActions" separator="," close=")" open="(">
+				#{item.screenActionId}
+			</foreach>;
+		</if>
+		
+	</delete>
+
+	<select id="getAllScreenInfoByProjectId" resultMap="screenDesignResult">
+		 SELECT	
+			 a.screen_id, 
+			 d.message_string, 
+			 a.screen_code, 
+			 a.screen_url_code, 
+			 a.screen_pattern_type, 
+			 a.template_type, 
+			 a.x_coordinates, 
+			 a.y_coordinates,
+			 a.module_id, 
+			 b.project_id,
+			 b.module_name,
+			 b.module_code,
+			 a.message_code
+		 FROM
+			screen_design a 
+			LEFT JOIN module b ON a.module_id = b.module_id 
+			LEFT JOIN message_design d ON a.message_code = d.message_code
+		 WHERE
+		 <![CDATA[ b.project_id = #{projectId} ]]>
+		 <if test="languageId != null and languageId != ''">
+		 AND 
+		 <![CDATA[ d.language_id = #{languageId} ]]>
+		 </if>
+		 ORDER BY a.module_id
+	</select>
+	
+	<select id="getAllScreenByScreenIds" resultMap="screenDesignResult">
+		SELECT
+			a.screen_id,
+			a.screen_code,
+			a.module_id,
+			a.screen_url_code,
+			a.screen_pattern_type,
+			a.template_type,
+			a.x_coordinates,
+			a.y_coordinates,
+			a.message_code,
+			a.remark,
+			a.design_mode,
+			a.design_status,
+			a.confirmation_type,
+			a.completion_type,
+			a.function_id,
+			b.message_string as message_string,
+			c.module_name as moduleName
+		FROM 
+			screen_design a
+			LEFT JOIN message_design b ON a.message_code = b.message_code AND b.language_id = #{languageId}
+			LEFT JOIN module c ON a.module_id = c.module_id
+		<if test="lstScreenId != null and lstScreenId.size() > 0">
+			WHERE a.screen_id IN
+			<foreach item="item" collection="lstScreenId" separator="," close=")" open="(">
+				#{item}
+			</foreach>;		
+		</if>
+	</select>
+	
+	<select id="getAllScreenActionChangeParameter" resultMap ="screenDesignResult">
+			
+			SELECT
+				a.screen_id,
+				a.screen_code,
+				a.design_status,
+			 d.message_string
+			FROM
+				screen_design a 
+			LEFT JOIN message_design d ON a.message_code = d.message_code
+			LEFT JOIN screen_action sa ON a.screen_id = sa.from_screen_id
+			WHERE
+				sa.to_screen_id =	 #{screenId}
+		 	<if test="languageId != null and languageId != ''">
+			 AND 
+			 <![CDATA[ d.language_id = #{languageId} ]]>
+			 </if> 
+			 
+			 GROUP BY a.screen_id,d.message_string
+	</select>
+	<select id="findAllScreenDesignsBySqlDesignId" resultMap="screenDesignResult">
+		SELECT
+			A.screen_id,
+			A.screen_code,
+			A.module_id,
+			C.module_name,
+			A.screen_url_code,
+			A.screen_pattern_type,
+			A.template_type,
+			A.x_coordinates,
+			A.y_coordinates,
+			A.message_code,
+			COALESCE(B.message_string,A.message_code) as message_string,
+			A.remark,
+			A.design_mode,
+			A.design_status,
+			A.confirmation_type,
+			A.completion_type
+		FROM 
+			screen_design A
+			LEFT JOIN 
+			message_design B 
+			ON
+			A.message_code = B.message_code AND B.language_id = #{languageId}
+			LEFT JOIN
+			module C
+			ON
+			A.module_id = C.module_id
+		WHERE EXISTS(
+			SELECT B.screen_item_id
+			FROM screen_item B
+			WHERE B.screen_id = A.screen_id
+			 		AND B.sql_design_id = #{sqlDesignId}
+			
+		)
+	</select>
+	<select id="findAllAffactedScreenDesignsByModuleId" resultMap="screenDesignResult">
+		SELECT
+			A.screen_id,
+			A.screen_code,
+			A.module_id,
+			C.module_name,
+			A.screen_url_code,
+			A.screen_pattern_type,
+			A.template_type,
+			A.x_coordinates,
+			A.y_coordinates,
+			A.message_code,
+			COALESCE(B.message_string,A.message_code) as message_string,
+			A.remark,
+			A.design_mode,
+			A.design_status,
+			A.confirmation_type,
+			A.completion_type
+		FROM 
+			screen_design A
+			LEFT JOIN 
+			message_design B 
+			ON
+			A.message_code = B.message_code AND B.language_id = #{languageId}
+			LEFT JOIN
+			module C
+			ON
+			A.module_id = C.module_id
+		WHERE A.module_id != #{moduleId} 
+			AND 
+			(
+				A.screen_id 
+				IN (
+					SELECT screen_id
+					FROM screen_item
+					WHERE codelist_id 
+						IN (
+							SELECT codelist_id
+							FROM codelist
+							WHERE module_id = #{moduleId}
+							)
+					)
+				OR
+				A.screen_id
+				IN (
+					SELECT screen_id
+					FROM screen_design A
+					WHERE EXISTS(
+						SELECT B.screen_item_id
+						FROM screen_item B
+						WHERE B.screen_id = A.screen_id
+						 		AND B.sql_design_id IN (
+						 								 SELECT sql_design_id
+						 								 FROM sql_design
+						 								 WHERE module_id = #{moduleId}
+						 								) 
+						
+					)
+				)
+			)
+	</select>
+	<select id="findAllScreenDesignsByAutocompleteId" resultMap="screenDesignResult">
+		SELECT
+			A.screen_id,
+			A.screen_code,
+			A.module_id,
+			C.module_name,
+			A.screen_url_code,
+			A.screen_pattern_type,
+			A.template_type,
+			A.x_coordinates,
+			A.y_coordinates,
+			A.message_code,
+			COALESCE(B.message_string,A.message_code) as message_string,
+			A.remark,
+			A.design_mode,
+			A.design_status,
+			A.confirmation_type,
+			A.completion_type
+		FROM 
+			screen_design A
+			LEFT JOIN 
+			message_design B 
+			ON
+			A.message_code = B.message_code AND B.language_id = #{languageId}
+			LEFT JOIN
+			module C
+			ON
+			A.module_id = C.module_id
+		WHERE EXISTS(
+			SELECT B.screen_item_id
+			FROM screen_item B
+			WHERE B.screen_id = A.screen_id
+			 		AND B.autocomplete_id = #{autocompleteId}
+			
+		)
+	</select>
+	
+	<!-- DungNN -->
+	<insert id="multiCreateScreenParameter">
+		<if test="screenParameters != null and screenParameters.size() > 0 ">
+			INSERT INTO 
+				screen_param
+			(
+				screen_id, 
+				domain_tbl_mapping_id, 
+				domain_tbl_mapping_item_id, 
+				screen_param_code, 
+				screen_param_name, 
+				data_type, 
+				array_flg, 
+				param_seq_no, 
+				parent_screen_param_id, 
+				created_by, 
+				created_date, 
+				updated_by, 
+				updated_date
+			)
+			VALUES 
+			<foreach item="item" collection="screenParameters" separator=",">
+			(
+				#{item.screenId},
+				#{item.domainTblMappingId},
+				#{item.domainTblMappingItemId}, 
+				#{item.screenParamCode},
+				#{item.screenParamName},
+				#{item.dataType},
+				#{item.arrayFlg},
+				#{item.paramSeqNo},
+				#{item.parentScreenParamId},
+				#{item.createdBy},
+				#{item.createdDate},
+				#{item.updatedBy}, 
+				#{item.updatedDate}
+			)
+			</foreach>;
+			
+		</if>
+	</insert>
+	
+	<!-- Get all screen information by related business logic id -->
+	<select id="findAllScreenDesignsByLinkedBusinessLogicId" parameterType="map" resultMap="screenDesignResult">
+		SELECT a.screen_id, 
+			c.message_string, 
+			a.screen_code, 
+			a.screen_url_code, 
+			a.screen_pattern_type, 
+			a.template_type, 
+			a.x_coordinates, 
+			a.y_coordinates,
+			b.module_id, 
+			b.project_id,
+			b.module_name,
+			b.module_code
+		FROM
+			screen_design a 
+			LEFT JOIN module b ON a.module_id = b.module_id 
+			LEFT JOIN message_design c ON (a.message_code = c.message_code and c.language_id = #{languageId} and c.project_id = #{projectId})
+		where EXISTS
+			(
+			SELECT a1.from_screen_id
+			FROM screen_action a1
+			WHERE a1.action_type = 1
+				and a1.to_screen_id = #{businessLogicId}
+				and a1.from_screen_id = a.screen_id
+			 )
+		 ORDER BY a.screen_id
+	</select>
+
+	<!--DungNN	-->
+	<insert id="multiInsertscreenItems">
+		<if test="screenItems != null and screenItems.size() > 0 ">
+			INSERT INTO
+				screen_item
+			(
+				screen_item_id,
+				item_seq_no,
+				group_item_id,
+				screen_area_id,
+				screen_id, 
+				item_code,
+				message_code,
+				logical_data_type,
+				physical_data_type, 
+				domain_tbl_mapping_id,
+				domain_tbl_mapping_item_id,
+				col_span, 
+				row_span,
+				item_width_unit,
+				codelist_id,
+				codelist_type,
+				item_type, 
+				autocomplete_id,
+				array_flg,
+				screen_action_id,
+				created_by,
+				created_date, 
+				updated_by,
+				updated_date,
+				output_bean_id,
+				tab_index,
+			 	sql_design_id,
+				data_source_type,
+				option_label,
+				option_value,
+				default_value,
+				tbl_design_id,
+				column_id,
+				icon,
+				show_label,
+				button_type,
+				from_to,
+				screen_design_id_codelist_id,
+				screen_item_text_codelist_id,
+				show_blank_item
+			)
+			VALUES
+			<foreach item="item" collection="screenItems" separator=",">
+			(
+				#{item.screenItemId},
+				#{item.itemSeqNo},
+				#{item.groupItemId},
+				#{item.screenAreaId},
+				#{item.screenId}, 
+				#{item.itemCode},
+				#{item.messageDesign.messageCode},
+				#{item.logicalDataType},
+				#{item.physicalDataType}, 
+				#{item.domainTblMappingId},
+				#{item.domainTblMappingItemId},
+				#{item.colSpan}, 
+				#{item.rowSpan},
+				#{item.itemWidthUnit},
+				#{item.codelistId},
+				#{item.codelistType},
+				#{item.itemType}, 
+				#{item.autocompleteId},
+				#{item.arrayFlg},
+				#{item.screenActionId},
+				#{item.createdBy},
+				#{item.createdDate},
+				#{item.updatedBy}, 
+				#{item.updatedDate},
+				#{item.outputBeanId},
+				#{item.tabIndex}, 
+				#{item.sqlDesignId},
+				#{item.dataSourceType},
+				#{item.optionLabel.resultId},
+				#{item.optionValue.resultId},
+				#{item.defaultValue},
+				#{item.tblDesignId},
+				#{item.columnId},
+				#{item.icon},
+				#{item.showLabel},
+				#{item.buttonType},
+				#{item.displayFromTo},
+				#{item.screenDesignIdCodeListId},
+				#{item.screenItemTextCodeListId},
+				#{item.showBlankItem}
+			)
+			</foreach>;
+			<foreach item="item" collection="screenItems" separator=";">
+				<if test="item.listScreenItemCodelists != null and item.listScreenItemCodelists.size() > 0">
+						INSERT INTO 
+						screen_item_codelist
+					(
+						screen_item_id,
+						codelist_seq_no,
+						codelist_name,
+						codelist_val, 
+						support_option_val_flg,
+						created_by,
+						created_date,
+						updated_by, 
+						updated_date
+					)
+					
+					VALUES 
+					<foreach item="codelist" collection="item.listScreenItemCodelists" separator=",">
+					(
+						#{item.screenItemId},
+						#{codelist.codelistSeqNo},
+						#{codelist.codelistName},
+						#{codelist.codelistVal}, 
+						#{codelist.supportOptionValFlg},
+						#{codelist.createdBy},
+						#{codelist.createdDate},
+						#{codelist.updatedBy}, 
+						#{codelist.updatedDate}
+					)
+					</foreach>;
+				</if>
+
+				<if test="item.screenItemEvents != null and item.screenItemEvents.size() > 0">
+						INSERT INTO 
+						screen_item_event
+					(
+						screen_item_event_id,
+						item_event_seq_no,
+						screen_item_id,
+						event_type, 
+						effect_area_type,
+						effect_area,
+						blogic_id
+					)
+					
+					VALUES 
+					<foreach item="event" collection="item.screenItemEvents" separator=",">
+					(
+						#{event.screenItemEventId},
+						#{event.itemEventSeqNo},
+						#{item.screenItemId},
+						#{event.eventType},
+						#{event.effectAreaType}, 
+						#{event.effectArea},
+						#{event.blogicId}
+					)
+					</foreach>;
+				</if>
+	 			<if test="item.screenItemEvents != null and item.screenItemEvents.size() > 0">
+					<foreach item="event" collection="item.screenItemEvents">
+						<if test="event.screenItemEventMappings != null and event.screenItemEventMappings.size() > 0">
+							INSERT INTO
+								screen_item_event_mapping
+							(
+								screen_item_event_id,
+								bean_id, 
+								item_code,
+								bean_type
+							)
+							VALUES 
+							<foreach item="mapping" collection="event.screenItemEventMappings" separator=",">
+							(
+								#{event.screenItemEventId},
+								#{mapping.beanId},
+								#{mapping.itemCode},
+								#{mapping.beanType}
+							)
+							</foreach>;
+						</if>
+					</foreach>;
+				</if>
+			<!-- add for insert screen item validation -->
+				<if test="item.screenItemValidation != null">
+					INSERT INTO 
+						screen_item_validation
+					(
+						screen_item_id,
+						maxlength,
+						mandatory_flg,
+						min_val,
+						max_val,
+						fmt_code,
+						created_by,
+						created_date,
+						updated_by,
+						updated_date
+					)
+					VALUES
+					(
+						#{item.screenItemId},
+						#{item.screenItemValidation.maxlength},
+						#{item.screenItemValidation.mandatoryFlg},
+						#{item.screenItemValidation.minVal},
+						#{item.screenItemValidation.maxVal},
+						#{item.screenItemValidation.fmtCode},
+						#{item.createdBy},
+						#{item.createdDate},
+						#{item.updatedBy},
+						#{item.updatedDate}
+					)
+				</if>
+			</foreach>;
+		</if>
+	</insert>
+	<select id="getCodeListDetailByCodeListId" parameterType="long" resultType="CodeListDetail"
+		resultMap="codeListDetailResultMap">
+		<![CDATA[
+		SELECT 
+			codelist_detail_id,
+			codelist_id,
+			key,
+			value,
+			value1,
+			value2,
+			value3,
+			value4,
+			value5,
+			default_flg
+		FROM 
+			codelist_detail 
+		WHERE
+			codelist_id = #{codeListId}
+		 ]]>
+	</select>
+	<select id="getScreenDesignByScreenId" parameterType="Long" resultMap="screenDesignResult">
+		SELECT 
+			t1.screen_id,
+			t1.screen_code,
+			t2.message_string,
+			t1.design_mode,
+			t3.function_name,
+			t5.business_type_name
+		FROM
+			screen_design t1 
+		LEFT JOIN 	
+			message_design t2 ON t2.message_code= t1.message_code AND t2.language_id = #{languageId}
+		LEFT JOIN
+			function_design t3 ON t3.function_id = t1.function_id
+		LEFT JOIN
+			module t4 ON t4.module_id = t1.module_id
+		LEFT JOIN
+			business_type t5 ON t5.business_type_id = t4.business_type_id		
+		WHERE
+			t1.screen_id = #{screenId}
+	</select>
+	<select id="getOutputBeanForSetting" parameterType="Long" resultMap="outputBeanResultMap">
+		SELECT 
+			('ou.' || t3.output_bean_code) AS label,
+			t3.output_bean_code AS short_label,
+			t3.output_bean_id AS value,
+			t1.logical_data_type AS type
+		FROM
+			screen_item t1
+		INNER JOIN
+			message_design t2 ON t1.message_code = t2.message_code AND t2.language_id = #{languageId}
+		INNER JOIN
+			output_bean t3 ON t1.screen_item_id = t3.screen_item_id
+		WHERE
+			t1.screen_id = #{screenId}
+	</select>
+	<select id="getScreenItemForSetting" parameterType="Long" resultMap="outputBeanResultMap">
+		SELECT 
+			('sc.' || t1.item_code) AS label,
+			t1.item_code AS short_label,
+			t1.screen_item_id AS value,
+			21 AS type
+		FROM
+			screen_item t1
+		INNER JOIN
+			message_design t2 ON t1.message_code = t2.message_code AND t2.language_id = #{languageId}		
+		WHERE
+			t1.screen_id = #{screenId}
+			AND t1.logical_data_type NOT IN (11, 13, 20, 21)
+	</select>
+	
+	<select id="getAllScreenByModules" resultMap="screenDesignResult">
+		SELECT
+			a.screen_id,
+			a.screen_code,
+			a.module_id,
+			a.screen_url_code,
+			a.screen_pattern_type,
+			a.template_type,
+			a.x_coordinates,
+			a.y_coordinates,
+			a.message_code,
+			a.remark,
+			a.design_mode,
+			a.design_status,
+			a.confirmation_type,
+			a.completion_type,
+			a.function_id,
+			b.message_string as message_string
+		FROM 
+			screen_design a
+		LEFT JOIN 
+			message_design b ON a.message_code = b.message_code AND b.language_id = #{languageId}
+		LEFT JOIN
+			module m ON m.module_id = a.module_id
+		<if test="listModules != null and listModules.size() > 0">
+			WHERE a.module_id IN
+			<foreach item="item" collection="listModules" separator="," close=")" open="(">
+				#{item.moduleId}
+			</foreach>;
+		</if>
+			
+	</select>
+	
+	<select id="getScreenDesignByScreenActionId" resultMap="screenDesignResult">
+		SELECT
+			a.screen_code,
+			a.screen_pattern_type
+		FROM 
+			screen_design a
+		INNER JOIN 
+			screen_action b ON a.screen_id = b.to_screen_id
+		INNER JOIN 
+			screen_item c ON c.screen_action_id = b.screen_action_id
+		WHERE
+			c.screen_action_id = #{screenActionId}
+	</select>
+	
+	<select id="getAllScreenOfProjectId" resultMap="screenDesignResult">
+		SELECT
+			b.screen_id,
+			md.module_name,
+			md.module_code,
+			b.business_logic_code AS screen_url_code,
+			b.remark,
+			business_logic_name AS message_string,
+			business_logic_code AS screen_code
+		FROM
+			business_logic b INNER JOIN module md ON b.module_id = md.module_id AND md.project_id = #{projectId} and md.module_type = 0
+		WHERE
+			b.project_id = #{projectId} and b.blogic_type = 0
+		ORDER BY md.module_id
+	</select>	
+	
+	 <select id="findScreenDesignByDestinationBlogic" resultMap="screenDesignResult">
+    	select DISTINCT sd.*
+				from screen_action sa inner join sequence_logic sl ON (sa.navigate_to_blogic_id = sl.business_logic_id)
+				 INNER JOIN navigator_component nc ON sl.sequence_logic_id = nc.sequence_logic_id
+				 INNER JOIN business_logic bl ON nc.navigator_to_id=bl.business_logic_id
+				 INNER JOIN screen_design sd ON sd.screen_id=bl.screen_id
+				where screen_action_id = #{screenActionId}
+		LIMIT 1
+    </select>
+    
+    <select id="findSDByDestinationBlogicTypeScreen" resultMap="screenDesignResult">
+    	SELECT DISTINCT sd.*
+		FROM 
+			screen_action sa inner join sequence_logic sl ON (sa.navigate_to_blogic_id = sl.business_logic_id)
+		INNER JOIN 
+			navigator_component nc ON sl.sequence_logic_id = nc.sequence_logic_id
+		INNER JOIN 
+			screen_design sd ON sd.screen_id = nc.navigator_to_id
+		WHERE
+			screen_action_id = #{screenActionId}
+		LIMIT 1
+    </select>
+    
+    
+    <select id="getAllScreenOfModule" resultMap="autocompleteResultMap">
+    	SELECT DISTINCT
+    		sd.screen_id AS optionValue,
+    		md.message_string AS optionLabel
+    	FROM 
+    		screen_design sd
+    	LEFT JOIN
+    		message_design md ON md.message_code = sd.message_code
+    	WHERE 
+    		sd.module_id = CAST(#{arg01} AS NUMERIC)
+    	<if test="searchKey != null and searchKey != ''">
+			<![CDATA[
+				AND md.message_string iLIKE '%' || #{searchKey} || '%'
+			]]>
+		</if>
+    </select>
+    
+    <select id="getAllItemCodeListScreenOfScreen" resultMap="autocompleteResultMap">
+    	SELECT DISTINCT
+    		sf.form_code || '.' || sa.area_code || '.' || si.item_code AS optionValue,
+    		md.message_string AS optionLabel,
+    		si.screen_id AS output02
+    	FROM 
+    		screen_item si
+    	LEFT JOIN
+    		message_design md ON si.message_code = md.message_code
+    	LEFT JOIN
+    		screen_area sa ON sa.screen_area_id = si.screen_area_id
+    	LEFT JOIN
+    		screen_form sf ON sf.screen_form_id = sa.screen_form_id
+    	WHERE 
+    			si.screen_id = CAST(#{arg01} AS NUMERIC)
+    		AND
+    			si.data_source_type = 2 
+    		AND 
+    			si.codelist_type = 3
+    		AND 
+    			(si.logical_data_type = 5 OR si.logical_data_type = 6 OR si.logical_data_type = 7) 
+    	<if test="searchKey != null and searchKey != ''">
+			<![CDATA[
+				AND md.message_string iLIKE '%' || #{searchKey} || '%'
+			]]>
+		</if>
+    </select>
+    
+    <select id="getScreenItemIdLoadCodelist" resultMap="screenItemResult">
+    	SELECT DISTINCT
+    		sf.form_code || '.' || sa.area_code || '.' || si.item_code AS screen_item_text_codelist_id,
+    		si.screen_id,
+    		si.screen_item_id
+    	FROM 
+    		screen_item si
+    	LEFT JOIN
+    		screen_area sa ON sa.screen_area_id = si.screen_area_id
+    	LEFT JOIN
+    		screen_form sf ON sf.screen_form_id = sa.screen_form_id
+		WHERE
+			sf.form_code || '.' || sa.area_code || '.' || si.item_code IN
+			<foreach collection="screenItemCodelist" item="item" open="(" close=")" separator=",">
+				#{item.screenItemTextCodeListId}
+			</foreach>
+    </select>
+    <select id="getTransitionAutocomplete" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+    	SELECT 
+			-1 AS "optionValue", 
+			'(New transition)' AS "optionLabel"	
+		UNION ALL 
+		SELECT 
+			screen_transition_id AS optionValue,
+			transition_name AS optionLabel
+		FROM
+			screen_transition st
+		WHERE 1=1
+		<if test="arg01 == null or arg01 == ''">
+			AND FALSE
+		</if>
+		<if test="arg03 == null or arg03 == ''">
+			AND FALSE
+		</if>
+		<if test="arg01 != null and arg01 != ''">
+			<![CDATA[ AND st.from_screen = CAST(#{arg01} AS NUMERIC) ]]>
+		</if>
+		<if test="arg03 != null and arg03 != ''">
+			<![CDATA[ AND st.to_screen = CAST(#{arg03} AS NUMERIC) ]]>
+		</if>
+		<if test="searchKey != null and searchKey != ''">
+			<![CDATA[
+				AND transition_name iLIKE '%' || #{searchKey} || '%'
+			]]>
+		</if>
+		<if test="arg04 != null and arg04 != ''">
+				AND NOT EXISTS
+			(
+				SELECT 1
+				FROM screen_item si
+				WHERE st.screen_transition_id = si.screen_transition_id
+				<if test="arg04 != null and arg04 != ''">
+					<![CDATA[ AND st.screen_transition_id != CAST(#{arg04} AS NUMERIC) ]]>
+				</if>
+			)
+		</if>
+		
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+	</select>
+    <update id="updateScreenDesignCoordinates">
+    	<if test="updateScreenDesignCoordinates !=null and updateScreenDesignCoordinates.size > 0">
+    		<foreach item="item" collection="updateScreenDesignCoordinates" separator=";">
+		    	UPDATE screen_design 
+					SET
+					 	x_coordinates = #{item.xCoordinate},
+						y_coordinates = #{item.yCoordinate}
+					WHERE screen_id = #{item.screenId}
+    		</foreach>
+    	</if>
+    </update>
+
+    <update id="updateAttributeScreenTransitionId">
+    	<if test="lstScreenItems !=null and lstScreenItems.size > 0">
+    		<foreach item="item" collection="lstScreenItems" separator=";">
+		    	UPDATE screen_item
+					SET
+						screen_transition_id = #{item.screenTransitionId}
+					WHERE screen_item_id = #{item.screenItemId}
+    		</foreach>
+    	</if>
+    </update>
+    <insert id="ScreenItemTransitionInsert" parameterType="ScreenTransition" useGeneratedKeys="true" keyProperty="screenTransition.screenTransitionId" keyColumn="screenTransitionId">
+		<selectKey keyProperty="screenTransitionId" resultType="String"
+			order="BEFORE">
+			SELECT nextval('screen_transition_seq'::regclass)
+		</selectKey>
+		INSERT INTO screen_transition
+		(
+            screen_transition_id,
+            transition_name,
+            transition_code,
+            from_screen, 
+            to_screen,
+            module_id,
+            type
+        )
+	    VALUES 
+	    (
+	    	cast(#{screenTransitionId} as numeric),
+	    	#{transitionName},
+	    	#{transitionCode},
+	    	cast(#{fromScreen} as numeric), 
+	        cast(#{toScreen} as numeric),
+	        #{moduleId},
+	        0
+		);
+	</insert>
+    <select id="findScreenAreaSortByScreenId" resultMap="screenAreaSortMappingResultMap">
+    	
+    	WITH temp_  as  (
+				SELECT sa.screen_area_id, sf.form_code, sa.area_code
+				FROM 
+					screen_area sa
+				LEFT JOIN 
+					screen_form sf ON sf.screen_form_id = sa.screen_form_id
+				WHERE
+					sa.screen_id = #{screenId}
+		)
+
+	 	SELECT
+    		sasp.screen_area_code,
+    		sasp.screen_item_code,
+    		sasp.sql_column_code,
+    		sasp.screen_id
+    	FROM
+    		screen_area_sort_mapping sasp 
+    	LEFT JOIN 
+    		temp_ on CONCAT(temp_.form_code,'.',temp_.area_code) = sasp.screen_area_code
+    	WHERE 
+    		screen_id = #{screenId}
+    	ORDER BY 
+    		sasp.screen_area_sort_mapping_id;
+    </select>
+    <select id="getNameScreenById" resultType="java.lang.String">
+    	<![CDATA[
+ 			SELECT 
+ 				md.message_string
+ 			FROM
+ 				screen_design s 
+ 			JOIN
+ 				message_design md ON s.message_code = md.message_code
+ 			WHERE
+ 				s.screen_id = #{screenId}
+ 			LIMIT 1	
+ 		]]>	
+    </select>
+    
+    <select id="getAllBlogicInitsDefaultByScreenId" resultMap="businessDesignResultMap">
+    	SELECT * FROM 
+    		business_logic
+    	WHERE
+    		screen_id = #{screenId} AND design_mode = 0 AND blogic_type = 0 AND return_type = 0
+    </select>
+    
+     <select id="getAllBlogicProcessesDefaultByScreenId" resultMap="businessDesignResultMap">
+    	SELECT
+			a.business_logic_id,
+			a.business_logic_code,
+			a.business_logic_name,
+			a.return_type,
+			a.screen_form_id
+		FROM
+			business_logic a
+		WHERE
+			<if test="screenForms != null and screenForms != ''">
+				screen_form_id IN
+				<foreach collection="screenForms" item="item" open="(" separator="," close=")">
+					#{item.screenFormId}
+				</foreach>
+				AND
+					screen_id = #{screenId}
+				AND 
+					a.design_mode = 0 
+				AND 
+					blogic_type = 0 
+				AND 
+					return_type = 1 
+				AND 
+					request_method = 4
+			</if>
+			<if test="screenForms == null or screenForms == ''">
+				FALSE
+			</if>	
+    </select>
+    
+    <select id="getScreenAreaByScreenIdForGenCode" resultMap="screenAreaResult" >
+		SELECT
+			sa.screen_area_id,
+			sa.area_type,
+			sa.area_seq_no,
+			sa.area_code,
+			sa.area_local_name,
+			sa.col_width_unit, 
+				sa.total_col,
+				sa.total_element,
+				sa.area_type,
+				sa.tbl_width_unit,
+				sa.tbl_header_row, 
+				sa.align_position_type,
+				sa.area_pattern_type,
+				sa.screen_form_id,
+				sa.created_by,
+				sa.created_date,
+				sa.updated_by,
+				sa.updated_date,
+				sa.element_dipslay_type,
+				sa.element_position_type,
+				md.message_string,
+			sa.message_code,
+			sa.tbl_component_row,
+			sa.panel_style,
+			sa.header_style,
+			sa.row_style,
+			sa.input_style,
+			sa.alternate_row_style,
+			sf.form_code,
+			sa.area_custom_type,
+			sa.fixed_row,
+			sa.area_type_action,
+			sa.area_icon,
+			sa.object_mapping_id,
+			sa.object_mapping_type,
+			sa.custom_section_content,
+			sa.enable_sort,
+			sa.sql_column_id,
+			sd.sql_design_code AS sql_column_code
+		FROM
+			screen_area sa LEFT JOIN message_design md 
+		ON 
+		(
+				sa.message_code = md.message_code and md.language_id = #{language.languageId} and md.project_id=#{projectId}<!--[truonglv:and md.language_id = #{languageId}] and md.language_code = #{language.languageCode} and md.country_code = #{language.countryCode}	-->
+		) 
+		LEFT JOIN 
+			screen_form sf ON sa.screen_form_id = sf.screen_form_id
+		LEFT JOIN 
+			sql_design sd ON sd.sql_design_id = sa.sql_column_id 
+		WHERE sa.screen_id = #{screenId}
+		ORDER BY sa.area_seq_no
+	</select>
+	
+	<select id="getScreenItemByScreenIdForGenCode" resultMap="screenItemResult" >
+		SELECT
+			si.screen_item_id,
+			si.item_seq_no,
+			si.group_item_id,
+			si.screen_area_id,
+			si.screen_id,
+			(SELECT sd.screen_pattern_type FROM screen_design sd WHERE sd.screen_id = #{screenId}) as screen_pattern_type,
+			si.item_code,
+			si.logical_data_type,
+			si.physical_data_type,
+			si.domain_tbl_mapping_id,
+			si.domain_tbl_mapping_item_id,
+			si.col_span,
+			si.row_span,
+			si.item_width_unit,
+			si.codelist_id,
+			si.codelist_type,
+			si.item_type,
+			si.autocomplete_id,
+			si.array_flg,
+			si.screen_action_id,
+			si.created_by as created_by,
+			si.created_date as created_date,
+			si.updated_by as updated_by,
+			si.updated_date as updated_date,
+			si.message_code,
+			sis.item_group_type,
+			sis.item_seq_no,
+			ad.autocomplete_id,
+			ad.autocomplete_name,
+			ad.autocomplete_code,
+			cl.codelist_name,
+			siv.maxlength,
+			siv.mandatory_flg,
+			siv.min_val,
+			siv.max_val,
+			siv.fmt_code,
+			<!-- dtmi.codelist_type as domain_codelist_type,
+			dtmi.codelist_id as domain_codelist_id, -->
+			sa.total_col,
+			sa.total_element,
+			sa.area_code,
+			sa.area_type,
+			sa.tbl_header_row,
+			si.output_bean_id,
+			si.tab_index,
+			si.sql_design_id,
+			si.data_source_type,
+			si.option_label,
+			si.option_value,
+			tdd.column_name as option_label_text,
+			tddr.column_name as option_value_text,
+			sd.sql_design_name,
+			si.default_value,
+			si.style,
+			si.hover_style,
+			sf.form_code as form_name,
+			si.icon,
+			si.show_label,
+			si.enable_password,
+			si.allow_any_input,
+			si.button_type,
+			si.from_to,
+			si.enable_confirm,
+			si.message_confirm,
+			si.show_blank_item,
+			si.custom_content,
+			si.screen_design_id_codelist_id,
+			scd.screen_code AS screen_design_code_codelist_id,
+			si.screen_item_id_codelist_id,
+			md1.message_string AS screen_design_text_codelist_id,
+			si.screen_item_text_codelist_id,
+			si.screen_transition_id,
+			st.transition_name,
+			md.message_level,
+			mdConfirm.message_string as message_confirm_text,
+			md.message_string
+		FROM
+			screen_item si 
+		INNER JOIN screen_item_sequence sis
+			ON si.item_seq_no = sis.item_seq_no		 AND	si.screen_area_id = sis.screen_area_id 
+		LEFT JOIN autocomplete_design ad
+			ON	si.autocomplete_id = ad.autocomplete_id
+		LEFT JOIN codelist cl
+			ON 	cl.codelist_id = si.codelist_id 
+		LEFT JOIN screen_item_validation siv 
+			ON 	si.screen_item_id = siv.screen_item_id 
+		<!-- LEFT JOIN domain_table_mapping_items dtmi 
+			ON si.domain_tbl_mapping_item_id = dtmi.domain_tbl_mapping_item_id	-->
+		LEFT JOIN message_design md 
+			ON 
+			(
+				si.message_code = md.message_code and md.language_id = #{language.languageId} and md.project_id=#{projectId} <!--[truonglv: and md.language_id = #{languageId}] and md.language_code = #{language.languageCode} and md.country_code = #{language.countryCode} -->
+			)
+		LEFT JOIN message_design mdConfirm 
+			ON 
+			(
+				si.message_confirm = mdConfirm.message_code and mdConfirm.language_id = #{language.languageId} and mdConfirm.project_id=#{projectId} <!--[truonglv: and md.language_id = #{languageId}] and md.language_code = #{language.languageCode} and md.country_code = #{language.countryCode} -->
+			)  
+		LEFT JOIN	screen_area sa ON si.screen_area_id = sa.screen_area_id 
+		LEFT JOIN screen_form sf ON sa.screen_form_id =  sf.screen_form_id
+		LEFT JOIN sql_design_results sdr ON si.option_label = sdr.result_id 
+		LEFT JOIN table_design_details tdd ON sdr.column_id = tdd.column_id
+		LEFT JOIN sql_design_results sdrr ON si.option_value = sdrr.result_id 
+		LEFT JOIN table_design_details tddr ON sdrr.column_id = tddr.column_id
+		LEFT JOIN sql_design sd ON si.sql_design_id = sd.sql_design_id
+		LEFT JOIN screen_design scd ON scd.screen_id = si.screen_design_id_codelist_id
+		LEFT JOIN screen_item sim ON sim.screen_item_id = si.screen_item_id_codelist_id
+		LEFT JOIN message_design md1 
+			ON 
+			(
+				scd.message_code = md1.message_code and md1.language_id = #{language.languageId} and md1.project_id=#{projectId}
+			)
+		LEFT JOIN message_design md2 
+			ON 
+			(
+				sim.message_code = md2.message_code and md2.language_id = #{language.languageId} and md2.project_id=#{projectId}
+			)  
+		LEFT JOIN screen_transition st on si.screen_transition_id = st.screen_transition_id
+		WHERE
+			si.screen_id=#{screenId} and si.item_type != 2
+		ORDER BY
+			sis.item_seq_no
+	</select>
+</mapper>

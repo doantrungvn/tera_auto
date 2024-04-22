@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.batch.jobcontrol.JobControlDao">
+
+    <select id="countCurrentJobContrl" resultType="long">
+        SELECT COUNT(*) FROM JOB_CONTROL
+    </select>
+    
+    <insert id="insertJobControl" parameterType="org.terasoluna.qp.batch.jobcontrol.JobControlParam"
+    	useGeneratedKeys="true" keyProperty="JobControlParam.jobSeqId" keyColumn="job_seq_id">
+    	<selectKey keyProperty="jobSeqId" resultType="long" order="BEFORE">
+			SELECT NEXTVAL('job_control_seq'::regclass)
+		</selectKey>
+    	INSERT INTO job_control (job_seq_id, job_app_cd, cur_app_status) VALUES ( #{jobSeqId}, 'Generate', '2');
+    </insert>
+
+</mapper>

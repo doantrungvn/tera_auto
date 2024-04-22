@@ -1,0 +1,2845 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.module.ModuleRepository">
+	<!-- Mapping for module result -->
+	<resultMap id="moduleResultMap" type="Module">
+		<id property="moduleId" column="module_id" />
+		<result property="projectId" column="project_id" />
+		<result property="projectName" column="project_name" />
+		<result property="moduleCode" column="module_code" />
+		<result property="moduleName" column="module_name" />
+		<result property="businessTypeId" column="business_type_id" />
+		<result property="businessTypeName" column="business_type_name" />
+		<result property="status" column="status" />
+		<result property="confirmationType" column="confirmation_type" />
+		<result property="completionType" column="completion_type" />
+		<result property="remark" column="remark" />
+		<result property="createdBy" column="created_by" />
+		<result property="createdDate" column="created_date" />
+		<result property="updatedBy" column="updated_by" />
+		<result property="updatedByName" column="username" />
+		<result property="updatedDate" column="updated_date" />
+		<result property="moduleType" column="module_type" />
+        <result property="author" column="username" />
+	</resultMap>
+	
+	<!-- Mapping for autocomplete result -->
+	<resultMap id="autocompleteResultMap" type="Autocomplete">
+		<result property="optionValue" column="optionValue" />
+		<result property="optionLabel" column="optionLabel" />
+	</resultMap>
+	
+		<!-- Finds all module by search condition -->
+	<select id="findPageByCriteria" parameterType="org.terasoluna.qp.domain.repository.module.ModuleCriteria" resultMap="moduleResultMap">
+		SELECT 
+			A.module_id,
+			A.module_code, 
+			A.module_name, 
+			A.business_type_id,
+			C.business_type_name,
+			A.status, 
+			A.confirmation_type, 
+			A.completion_type, 
+			A.updated_by, 
+			A.updated_date,
+			AC.username,
+			A.remark,
+			A.module_type
+		FROM 
+			module AS A LEFT JOIN business_type AS C ON A.business_type_id = C.business_type_id
+		INNER JOIN
+			account AS AC on AC.account_id = A.updated_by
+		<include refid="findModuleCriteria" />
+		<if test="pageable.sort != null">
+			ORDER BY
+			<foreach collection="pageable.sort" item="order" separator=",">
+				${order.property} ${order.direction}
+			</foreach>
+		</if>
+		<if test="pageable.sort == null">
+			ORDER BY
+				A.updated_date DESC
+		</if>
+		<![CDATA[
+			 LIMIT
+				 #{pageable.pageSize}
+			 OFFSET
+				 #{pageable.offset}
+		]]>
+	</select>
+	
+	<!-- Count module rows by search condition -->
+	<select id="countByCriteria" parameterType="org.terasoluna.qp.domain.repository.module.ModuleCriteria" resultType="_long">
+		<![CDATA[
+			SELECT 
+				COUNT(DISTINCT(A.module_id)) AS totalCount
+			FROM 
+				module AS A LEFT JOIN business_type AS C ON A.business_type_id = C.business_type_id
+			INNER JOIN
+				account AS AC on AC.account_id = A.updated_by
+		]]>
+		<include refid="findModuleCriteria" />
+	</select>
+
+	<!-- SQL conditions for Search -->
+	<sql id="findModuleCriteria">
+		<where>
+			<if test="criteria.moduleName != null and criteria.moduleName != ''">
+				<bind name="moduleName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.moduleName)" />
+				<![CDATA[
+					A.module_name ILIKE #{moduleName} ESCAPE '~'
+				]]>
+			</if>
+			<if test="criteria.moduleCode != null and criteria.moduleCode != ''">
+				<bind name="moduleCode" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.moduleCode)" />
+				<![CDATA[
+					AND A.module_code ILIKE #{moduleCode} ESCAPE '~'
+				]]>
+			</if>
+			<if test="criteria.projectId != null">
+				<![CDATA[
+					AND A.project_id = #{criteria.projectId}
+				]]>
+			</if>
+			<if test="criteria.businessTypeId != null">
+				<![CDATA[
+					AND C.business_type_id = #{criteria.businessTypeId}
+				]]>
+			</if>
+			<if test="criteria.confirmationTypes != null and criteria.confirmationTypes.length > 0">
+				 AND A.confirmation_type IN
+				 <foreach item="confirmationType" index="index" collection="criteria.confirmationTypes" open="(" separator="," close=")">
+					#{confirmationType}
+				 </foreach>
+			</if>
+			<if test="criteria.completionTypes != null and criteria.completionTypes.length > 0">
+				 AND A.completion_type IN
+				 <foreach item="completionType" index="index" collection="criteria.completionTypes" open="(" separator="," close=")">
+					#{completionType}
+				 </foreach>
+			</if>
+			<if test="criteria.statuses != null and criteria.statuses.length > 0">
+				 AND A.status IN
+				 <foreach item="status" index="index" collection="criteria.statuses" open="(" separator="," close=")">
+					#{status} 
+				 </foreach>
+			</if>
+
+			<if test="criteria.createdBy !=null and criteria.createdBy != ''">
+				AND A.created_by = ${criteria.createdBy}
+			</if>
+
+			<if test="criteria.fromCreatedDate !=null and criteria.fromCreatedDate != ''">
+				<![CDATA[AND A.created_date >= '${criteria.fromCreatedDate}']]>
+			</if>
+
+			<if test="criteria.toCreatedDate !=null and criteria.toCreatedDate != ''">
+				<![CDATA[AND A.created_date <= '${criteria.toCreatedDate}']]>
+			</if>
+
+			<if test="criteria.updatedBy !=null and criteria.updatedBy != ''">
+				AND A.updated_by = ${criteria.updatedBy}
+			</if>
+
+			<if test="criteria.fromUpdatedDate !=null and criteria.fromUpdatedDate != ''">
+				<![CDATA[AND A.updated_date >= '${criteria.fromUpdatedDate}']]>
+			</if>
+
+			<if test="criteria.toUpdatedDate !=null and criteria.toUpdatedDate != ''">
+				<![CDATA[AND A.updated_date <= '${criteria.toUpdatedDate}']]>
+			</if>
+			<if test="criteria.moduleTypes != null and criteria.moduleTypes.length > 0">
+				 AND A.module_type IN
+				 <foreach item="status" index="index" collection="criteria.moduleTypes" open="(" separator="," close=")">
+					#{status} 
+				 </foreach>
+			</if>
+		</where>
+	</sql>
+	
+	<!-- Register module information -->
+	<insert id="register" parameterType="Module">
+		<selectKey keyProperty="moduleId" resultType="Long" order="BEFORE">
+			SELECT NEXTVAL('module_seq'::REGCLASS)
+		</selectKey>
+		 INSERT INTO
+				module (
+				module_id,
+				project_id,
+				module_code,
+				module_name,
+				business_type_id,
+				status,
+				confirmation_type,
+				completion_type,
+				remark,
+				created_by,
+				created_date,
+				updated_by,
+				updated_date,
+				module_type
+			) VALUES (
+				#{moduleId},
+				#{projectId},
+				#{moduleCode},
+				#{moduleName},
+				#{businessTypeId},
+				#{status},
+				#{confirmationType},
+				#{completionType},
+				#{remark},
+				#{createdBy},
+				#{createdDate},
+				#{updatedBy},
+				#{updatedDate},
+				#{moduleType}
+			)
+	</insert>
+	
+	<!-- Modify module information -->
+	<update id="modify" parameterType="Module">
+		UPDATE 
+			module
+		SET 
+			business_type_id = #{businessTypeId},
+			module_name = #{moduleName},
+			module_code = #{moduleCode},
+			remark = #{remark},
+			updated_by = #{updatedBy},
+			updated_date = #{sysDatetime},
+			confirmation_type = #{confirmationType},
+			completion_type = #{completionType}
+		 WHERE 
+		 	module_id = #{moduleId}
+		 AND 
+			updated_date = #{updatedDate}
+	</update>
+	
+	 <!-- Delete module information by module identify-->
+	<delete id="delete" parameterType="Module">
+		<include refid="updateForMenu" />
+		<![CDATA[
+			DELETE FROM 
+				module 
+			WHERE
+				module_id = #{moduleId};
+			DELETE FROM 
+				module_table_mapping
+			WHERE 
+				module_id = #{moduleId}
+		]]>
+	</delete>
+
+	<!-- Finds a module by module identify -->
+	<select id="findById" parameterType="_long" resultMap="moduleResultMap">
+		<![CDATA[
+			SELECT
+				m.module_id,
+				m.project_id,
+				p.project_name,
+				m.module_code,
+				m.module_name,
+				m.business_type_id,
+				bt.business_type_name,
+				m.status,
+				m.confirmation_type,
+				m.completion_type,
+				m.remark,
+				m.created_by,
+				m.created_date,
+				m.updated_by,
+				m.updated_date,
+				m.module_type,
+                acc.username
+			FROM
+				module AS m 
+			LEFT JOIN 
+				business_type AS bt
+			ON 
+				m.business_type_id=bt.business_type_id
+			LEFT JOIN 
+				project AS p
+			ON
+				m.project_id=p.project_id
+            LEFT JOIN account acc ON (acc.account_id = m.created_by)
+			WHERE m.module_id=#{moduleId}
+			LIMIT 1;
+		]]>
+	</select> 
+	
+	<!-- Finds a module by module code -->
+	<select id="findByCode" parameterType="Module" resultMap="moduleResultMap">
+		<![CDATA[
+			SELECT
+				m.module_id,
+				m.project_id,
+				m.module_code,
+				m.module_name,
+				m.business_type_id,
+				m.status,
+				m.confirmation_type,
+				m.completion_type,
+				m.remark,
+				m.created_by,
+				m.created_date,
+				m.updated_by,
+				m.updated_date,
+                acc.username
+			FROM
+				module m
+            LEFT JOIN account acc ON (acc.account_id = m.created_by)
+		]]>
+		<where>
+			<if test="moduleCode != null and moduleCode != ''">
+				module_code = #{moduleCode}
+			</if>
+			<if test="moduleId != null">
+				AND module_id != #{moduleId}
+			</if>
+			<if test="(moduleCode == null or moduleCode == '') and moduleId == null">
+				FALSE
+			</if>
+		</where>	
+		LIMIT 1;
+	</select>
+
+	<!-- Finds all module information -->
+	<select id="findAll" resultMap="moduleResultMap">
+		<![CDATA[
+			SELECT
+				m.module_id,
+				m.project_id,
+				m.module_code,
+				m.module_name,
+				m.business_type_id,
+				m.status,
+				m.confirmation_type,
+				m.completion_type,
+				m.remark,
+				m.created_by,
+				m.created_date,
+				m.updated_by,
+				m.updated_date,
+                acc.username
+			FROM
+				module m
+            LEFT JOIN account acc ON (acc.account_id = m.created_by)
+		]]>
+	</select>	 
+
+	<select id="selectMaxId" resultType="Long">
+		<![CDATA[
+			SELECT NEXTVAL('module_seq'::REGCLASS)
+		]]>
+	</select>  
+	
+	<!-- Finds all module by permission for 2Q -->
+	<select id="findByAllPermission" resultMap="moduleResultMap">
+	<![CDATA[
+		SELECT  
+			module_id,
+			module_code, 
+			module_name, 
+			business_type_id, 
+			status, 
+			confirmation_type, 
+			completion_type, 
+			remark
+		FROM 
+			module
+		WHERE 
+			module_id IN (SELECT DISTINCT module_id FROM permission)
+	]]>
+	</select>
+	
+	<!-- Finds all module information by project identify -->
+	<select id="findAllModuleOfProject" parameterType="map" resultMap="moduleResultMap">
+		<![CDATA[
+			SELECT
+				m.module_id,
+				m.project_id,
+				m.module_code,
+				m.module_name,
+				m.business_type_id,
+				bt.business_type_name,
+				m.status,
+				m.confirmation_type,
+				m.completion_type,
+				m.remark,
+				m.created_by,
+				m.created_date,
+				m.updated_by,
+				m.updated_date,
+				m.module_type,
+                acc.username
+			FROM
+				module AS m 
+			LEFT JOIN 
+				business_type AS bt
+			ON 
+				m.business_type_id = bt.business_type_id
+            LEFT JOIN account acc ON (acc.account_id = m.created_by)
+		]]>
+		<where>
+			<if test="projectId == null">
+				FALSE
+			</if>
+			<if test="projectId != null">
+				m.project_id = #{projectId}
+			</if>
+			<if test="status != null">
+				AND m.status = #{status}
+			</if>
+		</where>
+		<![CDATA[
+			ORDER BY m.module_code
+		]]>
+	</select> 
+	
+	<select id="findAllModuleOfOnline" parameterType="map" resultMap="moduleResultMap">
+		<![CDATA[
+			SELECT
+				m.module_id,
+				m.project_id,
+				m.module_code,
+				m.module_name,
+				m.module_type,
+				m.business_type_id,
+				bt.business_type_name,
+				m.status,
+				m.confirmation_type,
+				m.completion_type,
+				m.remark,
+				m.created_by,
+				m.created_date,
+				m.updated_by,
+				m.updated_date,
+                acc.username
+			FROM
+				module AS m 
+			LEFT JOIN 
+				business_type AS bt
+			ON 
+				m.business_type_id = bt.business_type_id
+            LEFT JOIN account acc ON (acc.account_id = m.created_by)
+		]]>
+		<where>
+			<if test="projectId == null">
+				FALSE
+			</if>
+			<if test="projectId != null">
+				m.project_id = #{projectId}
+			</if>
+				AND m.module_type = #{moduleType}
+		</where>
+		ORDER BY
+           m.module_code
+	</select> 
+	
+	
+
+	<!-- DungNN1 - Finds all module used table mapping  -->
+	<select id="findAllModuleByTableMappingId" parameterType="_long" resultMap="moduleResultMap">
+		<![CDATA[
+			SELECT
+				m.module_id,
+				m.module_code,
+				m.module_name
+			FROM 
+				module AS m 
+			INNER JOIN 
+				module_table_mapping AS pmt
+			ON
+				m.module_id = pmt.module_id
+			WHERE 
+				tbl_design_id = #{tableMappingId}
+		]]>
+	</select> 
+	
+	<!-- Finds all module which has been used business type -->
+	<select id="findAllModuleByBusinessTypeId" parameterType="_long" resultMap="moduleResultMap">
+		SELECT 
+			A.module_id,
+			A.project_id,
+			C.project_name,
+			A.module_code,
+			A.module_name,
+			A.business_type_id,
+			B.business_type_name,
+			A.status,
+			A.confirmation_type,
+			A.completion_type,
+			A.remark,
+			A.created_by,
+			A.created_date,
+			A.updated_by,
+			A.updated_date,
+			acc.username
+		FROM 
+			module A
+		INNER JOIN
+			business_type B
+		ON
+			A.business_type_id = B.business_type_id
+		INNER JOIN
+			project C
+		ON
+			A.project_id = C.project_id
+		INNER JOIN account acc ON (acc.account_id = A.created_by)
+		<where>
+			<if test="businessTypeId != null">
+				A.business_type_id = #{businessTypeId}
+			</if>
+			<if test="businessTypeId == null">
+				FALSE
+			</if>
+		</where>
+	</select> 
+
+	<!--  Finds all module autocomplete by module name and project identify -->
+	<select id="getAllModuleByModuleNameAndProjectIdForAutocomplete" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+			module.module_id AS optionValue,
+			module_name AS optionLabel,
+			module_code AS output01,
+			confirmation_type AS output02,
+			completion_type AS output03
+		FROM 
+			module
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<if test="searchKey != null and searchKey != ''" >
+				<bind name="keyword" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(searchKey)" />
+				<![CDATA[ module_name ILIKE #{keyword} ESCAPE '~' ]]>
+			</if>
+			<if test="arg01 != null and arg01 != ''">
+				<![CDATA[
+					AND project_id = CAST(#{arg01} AS numeric(16,0))
+				]]>
+			</if>
+			<if test="arg01 == null or arg01 == ''">
+				FALSE
+			</if>
+			<if test="arg03 != null and arg03 != ''">
+				AND status = CAST(#{arg03} AS numeric(16,0))
+			</if>
+			<if test="arg04 != null and arg04 != ''">
+				AND module_type = CAST(#{arg04} AS numeric(16,0))
+			</if>
+			
+			
+		</trim>
+		ORDER BY 
+			module_name
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+		<if test="arg02 == null || arg02 == ''">
+			LIMIT 20
+		</if>
+		
+	</select>
+	
+	<select id="countReferenceByModuleId" parameterType="_long" resultType="hashmap">
+		 SELECT 
+			(SELECT COUNT(B.message_design_id) FROM message_design AS B WHERE B.module_id = A.module_id) AS message_ref_count,
+			(SELECT COUNT(C.screen_id) FROM screen_design AS C WHERE C.module_id = A.module_id) AS screen_ref_count,
+			(SELECT COUNT(D.autocomplete_id) FROM autocomplete_design AS D WHERE D.module_id = A.module_id) AS autocomplete_ref_count,
+			(SELECT COUNT(E.codelist_id) FROM codelist AS E WHERE E.module_id = A.module_id) AS codelist_ref_count,
+			(SELECT COUNT(F.module_table_mapping_id) FROM module_table_mapping AS F WHERE F.module_id = A.module_id) AS module_table_mapping_ref_count
+		FROM 
+			module AS A
+		WHERE 
+			A.module_id = #{moduleId};
+	</select>
+	
+	<update id="switchDesignStatusToUnderDesign">
+		UPDATE module
+		SET status = 1
+		WHERE
+			module_id IN 
+				<foreach item="item" index="index" collection="listModuleId" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+	</update>
+	
+	<select id="countNameCodeByModuleId" parameterType="Module" resultType="Long">
+		SELECT 
+			SUM(rowVal) AS totalCount 
+		FROM (
+				(SELECT 
+						1 AS rowVal 
+				 FROM 
+						module 
+				 <where>
+						<if test="moduleName != null and moduleName != ''">
+							UPPER(module_name) = UPPER(#{moduleName})
+						</if> 
+						<if test="moduleId != null">AND module_id != #{moduleId}</if>
+						<if test="projectId != null">AND project_id = #{projectId}</if>
+						<if test="moduleName == null and moduleName == ''">AND FALSE</if>
+				 </where>
+				 LIMIT 1
+				 ) 
+				 UNION
+				(SELECT 
+						2 AS rowVal 
+				 FROM 
+						module
+				 <where>
+						<if test="moduleCode != null and moduleCode != ''">
+							UPPER(module_code) = UPPER(#{moduleCode})
+						</if> 
+						<if test="moduleId != null">AND module_id != #{moduleId}</if>
+						<if test="projectId != null">AND project_id = #{projectId}</if>
+						<if test="moduleCode == null and moduleCode == ''">AND FALSE</if>
+				 </where>
+				 LIMIT 1
+				 )
+			  ) AS foo
+	</select>
+	
+	<sql id="deleteScreenTransitionByModule">
+		DELETE FROM screen_transition WHERE module_id = #{moduleId};
+		
+		DELETE 
+			FROM
+				screen_transition_branch_detail sbd
+					WHERE
+						EXISTS
+						(
+							SELECT 
+								1
+							FROM 
+								screen_transition_branch stb
+							WHERE
+								sbd.screen_transition_branch_id = stb.screen_transition_branch_id
+							AND
+								stb.module_id = #{moduleId}
+						);
+		DELETE
+			FROM
+				screen_transition_branch
+			WHERE
+				module_id = #{moduleId};
+	</sql>
+	
+	
+	
+	<sql id="deleteCommonExternalObject">
+		DELETE 
+			FROM
+				external_object_attribute eoa	
+					WHERE
+						EXISTS
+						(
+							SELECT
+								1
+							FROM
+								external_object_definition eod
+							WHERE 
+								eoa.external_object_definition_id = eod.external_object_definition_id
+							AND
+								eod.module_id = #{moduleId}
+						);
+		DELETE 
+			FROM
+				common_object_attribute coa	
+					WHERE
+						EXISTS
+						(
+							SELECT
+								1
+							FROM
+								common_object_definition cod
+							WHERE 
+								cod.common_object_definition_id = coa.common_object_definition_id
+							AND
+								cod.module_id = #{moduleId}
+						);
+		DELETE	FROM
+			external_object_definition WHERE module_id = #{moduleId};
+			
+		DELETE	FROM
+			common_object_definition WHERE module_id = #{moduleId};
+	</sql>
+	
+	<sql id="updateForMenu">
+		update menu_design m set screen_id = null
+		where exists (
+			select 1 from screen_design s where m.screen_id = s.screen_id and s.module_id = #{moduleId}
+		);
+		
+		update menu_design_item m set screen_id = null
+		where exists (
+			select 1 from screen_design s where m.screen_id = s.screen_id and s.module_id = #{moduleId}
+		);
+	</sql>
+	
+	<sql id="deleteAdvance">
+		<!-- delete advance -->
+		DELETE FROM advance_input_value a
+		WHERE EXISTS
+			(
+				SELECT 1
+				FROM
+					advance_component b INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id AND c.component_type = 6)
+				WHERE
+					b.advance_component_id = a.advance_component_id
+				AND 
+					EXISTS
+					(
+						SELECT
+							1
+						FROM 
+							business_logic bl
+						WHERE
+							bl.business_logic_id = c.business_logic_id
+						AND
+							bl.module_id = #{moduleId}
+					)
+			);
+			
+		DELETE FROM advance_output_value a
+		WHERE EXISTS
+			(
+				SELECT 1
+				FROM
+					advance_component b INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id AND c.component_type = 6)
+				WHERE
+					b.advance_component_id = a.advance_component_id
+				AND
+				EXISTS
+					(
+						SELECT
+							1
+						FROM 
+							business_logic bl
+						WHERE
+							bl.business_logic_id = c.business_logic_id
+						AND
+							bl.module_id = #{moduleId}
+					)
+			);
+			
+		DELETE
+		FROM advance_component a
+		WHERE EXISTS
+			(
+			SELECT b.sequence_logic_id
+			FROM sequence_logic b INNER JOIN business_logic bl ON (bl.business_logic_id = b.business_logic_id AND bl.module_id = #{moduleId})
+			WHERE
+				b.sequence_logic_id = a.sequence_logic_id AND b.component_type = 6
+			);
+	</sql>
+	
+	<sql id="deleteImportFile">
+		DELETE
+			FROM file_format a
+		WHERE EXISTS
+		(
+			SELECT 1
+			FROM 
+				import_file_component b INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id AND c.component_type = 16)
+			WHERE 
+				b.import_file_component_id = a.file_id
+			AND
+				EXISTS
+					(
+						SELECT
+							1
+						FROM 
+							business_logic bl
+						WHERE
+							bl.business_logic_id = c.business_logic_id
+						AND
+							bl.module_id = #{moduleId}
+					)
+		);
+		
+		DELETE
+			FROM import_assign_value a
+		WHERE EXISTS
+		(
+			SELECT 1
+			FROM 
+				import_file_component b INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id AND c.component_type = 16)
+			WHERE 
+				b.import_file_component_id = a.import_file_component_id
+			AND
+				EXISTS
+					(
+						SELECT
+							1
+						FROM 
+							business_logic bl
+						WHERE
+							bl.business_logic_id = c.business_logic_id
+						AND
+							bl.module_id = #{moduleId}
+					)
+		);
+
+		DELETE
+			FROM import_file_component b
+		WHERE EXISTS
+		(
+			SELECT 1
+			FROM 
+				sequence_logic c INNER JOIN business_logic bl ON (bl.business_logic_id = c.business_logic_id AND bl.module_id = #{moduleId})
+			WHERE 
+				c.sequence_logic_id = b.sequence_logic_id AND c.component_type = 16
+		);
+	</sql>
+	
+	<sql id="deleteExportFile">
+		DELETE FROM file_format a
+		WHERE EXISTS
+		(
+			SELECT 1
+			FROM 
+				export_file_component b INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id AND c.component_type = 17)
+			WHERE 
+				b.export_file_component_id = a.file_id
+			AND
+				EXISTS
+					(
+						SELECT
+							1
+						FROM 
+							business_logic bl
+						WHERE
+							bl.business_logic_id = c.business_logic_id
+						AND
+							bl.module_id = #{moduleId}
+					)
+		);
+		
+		DELETE FROM column_file_format a
+		WHERE EXISTS
+		(
+			SELECT 1
+			FROM export_assign_value b
+				INNER JOIN export_file_component d ON b.export_file_component_id = d.export_file_component_id
+				INNER JOIN sequence_logic c ON (c.sequence_logic_id = d.sequence_logic_id AND c.component_type = 17)
+			WHERE
+				b.export_file_component_id = d.export_file_component_id AND a.export_assign_value_id = b.export_assign_value_id
+			AND
+				EXISTS
+					(
+						SELECT
+							1
+						FROM 
+							business_logic bl
+						WHERE
+							bl.business_logic_id = c.business_logic_id
+						AND
+							bl.module_id = #{moduleId}
+					)
+		);
+		DELETE
+			FROM export_assign_value a
+		WHERE EXISTS
+		(
+			SELECT 1
+			FROM 
+				export_file_component b INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id AND c.component_type = 17)
+			WHERE 
+				b.export_file_component_id = a.export_file_component_id
+			AND
+				EXISTS
+					(
+						SELECT
+							1
+						FROM 
+							business_logic bl
+						WHERE
+							bl.business_logic_id = c.business_logic_id
+						AND
+							bl.module_id = #{moduleId}
+					)
+		);
+
+		DELETE
+			FROM export_file_component b
+		WHERE EXISTS
+		(
+			SELECT 1
+			FROM 
+				sequence_logic c INNER JOIN business_logic bl ON (bl.business_logic_id = c.business_logic_id AND bl.module_id = #{moduleId})
+			WHERE 
+				c.sequence_logic_id = b.sequence_logic_id AND c.component_type = 17
+		);
+	</sql>
+
+	<delete id="deleteAssociatedModule" parameterType="Module">
+	
+		<!-- Delete Common External Object -->
+		<include refid="deleteCommonExternalObject" />
+		
+		<include refid="updateForMenu" />
+		
+		<!-- Delete project item -->
+		DELETE	FROM
+			project_items WHERE module_id = #{moduleId};
+		
+        
+        DELETE
+                FROM 
+                    bd_parameter_index bd
+                WHERE 
+                    EXISTS
+                    (
+                        SELECT
+                            1
+                        FROM 
+                            business_logic bl
+                        WHERE
+                            bl.business_logic_id = bd.business_logic_id
+                        AND
+                            bl.module_id = #{moduleId}
+                    );
+		<!-- delete Decision Table function -->
+			
+			DELETE
+				FROM 
+					decision_condition_item dci
+				WHERE
+					EXISTS
+					(
+						SELECT
+							1
+						FROM
+							decision_condition_group dcg
+						WHERE
+							EXISTS
+							(
+								SELECT 
+									1
+								FROM 
+									decision_item_design did
+								WHERE
+									EXISTS
+									(
+										SELECT
+											1
+										FROM
+											decision_table dt
+										WHERE 
+											did.decision_table_id = dt.decision_table_id
+										AND
+											dt.module_id = #{moduleId}
+									)
+								AND
+									dcg.decision_item_design_id = did.decision_item_design_id
+							)
+						AND
+							dci.condition_group_id = dcg.condition_group_id
+					);
+					
+			DELETE
+				FROM 
+					decision_condition_group dcg
+				WHERE
+					EXISTS
+					(
+						SELECT 
+							1
+						FROM 
+							decision_item_design did
+						WHERE
+							EXISTS
+							(
+								SELECT
+									1
+								FROM
+									decision_table dt
+								WHERE 
+									did.decision_table_id = dt.decision_table_id
+								AND
+									dt.module_id = #{moduleId}
+							)
+						AND
+							dcg.decision_item_design_id = did.decision_item_design_id
+					);
+					
+			DELETE 
+				FROM
+					decision_item_design did
+				WHERE
+					EXISTS
+					(
+						SELECT
+							1
+						FROM
+							decision_table dt
+						WHERE 
+							did.decision_table_id = dt.decision_table_id
+						AND
+							dt.module_id = #{moduleId}
+					);
+			
+			DELETE 
+				FROM
+					decision_input_value div
+				WHERE
+					EXISTS
+					(
+						SELECT
+							1
+						FROM
+							decision_component dc
+						WHERE
+							EXISTS
+							(
+								SELECT
+									1
+								FROM
+									decision_table dt
+								WHERE 
+									dc.decision_table_id = dt.decision_table_id
+								AND
+									dt.module_id = #{moduleId}
+							)
+						AND
+							div.decision_component_id = dc.decision_component_id
+					);
+					
+			DELETE 
+				FROM
+					decision_input_bean dib
+				WHERE
+					EXISTS
+					(
+						SELECT
+							1
+						FROM
+							decision_table dt
+						WHERE 
+							dib.decision_table_id = dt.decision_table_id
+						AND
+							dt.module_id = #{moduleId}
+					);
+			 
+			DELETE 
+				FROM
+					decision_output_value dov
+				WHERE
+					EXISTS
+					(
+						SELECT
+							1
+						FROM
+							decision_component dc
+						WHERE
+							EXISTS
+							(
+								SELECT
+									1
+								FROM
+									decision_table dt
+								WHERE 
+									dc.decision_table_id = dt.decision_table_id
+								AND
+									dt.module_id = #{moduleId}
+							)
+						AND
+							dov.decision_component_id = dc.decision_component_id
+					);
+			
+			DELETE 
+				FROM
+					decision_output_bean dob
+				WHERE
+					EXISTS
+					(
+						SELECT
+							1
+						FROM
+							decision_table dt
+						WHERE 
+							dob.decision_table_id = dt.decision_table_id
+						AND
+							dt.module_id = #{moduleId}
+					);
+					
+			
+			DELETE
+				FROM
+					decision_component dc
+				WHERE
+					EXISTS
+					(
+						SELECT
+							1
+						FROM
+							decision_table dt
+						WHERE 
+							dc.decision_table_id = dt.decision_table_id
+						AND
+							dt.module_id = #{moduleId}
+					);
+					
+			
+			DELETE 
+				FROM 
+					decision_table 
+				WHERE 
+					module_id = #{moduleId};
+			
+			<!-- delete business design function -->
+			DELETE
+				FROM 
+					execution_input_value eiv
+				WHERE 
+					EXISTS
+					(
+						SELECT 
+							1
+						FROM
+							execution_component ec
+						INNER JOIN 
+							sequence_logic sl 
+							ON 
+								sl.sequence_logic_id = ec.sequence_logic_id
+							AND 
+								sl.component_type = 2
+						WHERE
+							EXISTS
+							(
+								SELECT
+									1
+								FROM 
+									business_logic bl
+								WHERE
+									bl.business_logic_id = sl.business_logic_id
+								AND
+									bl.module_id = #{moduleId}
+							)
+						AND 
+							ec.execution_component_id = eiv.execution_component_id
+					);
+			
+			DELETE
+				FROM 
+					execution_output_value eov
+				WHERE 
+					EXISTS
+					(
+						SELECT 
+							1
+						FROM 
+							execution_component ec
+						INNER JOIN 
+							sequence_logic sl
+							ON 
+								sl.sequence_logic_id = ec.sequence_logic_id
+							AND 
+								sl.component_type = 2
+						WHERE 
+							EXISTS
+							(
+								SELECT
+									1
+								FROM 
+									business_logic bl
+								WHERE
+									bl.business_logic_id = sl.business_logic_id
+								AND
+									bl.module_id = #{moduleId}
+							)
+						AND 
+							ec.execution_component_id = eov.execution_component_id
+					);
+				
+			DELETE 
+				FROM 
+					execution_component ec
+				WHERE 
+					EXISTS
+					( 
+						SELECT
+							1
+						FROM 
+							sequence_logic sl
+						WHERE
+							EXISTS
+							(
+								SELECT
+									1
+								FROM 
+									business_logic bl
+								WHERE
+									bl.business_logic_id = sl.business_logic_id
+								AND
+									bl.module_id = #{moduleId}
+							)
+						AND
+							sl.component_type = 2
+						AND
+							sl.sequence_logic_id = ec.sequence_logic_id
+					);
+
+            <!-- Delete log component -->
+    		DELETE
+    			FROM log_component b
+    		WHERE EXISTS
+    		(
+    			SELECT 1
+    			FROM 
+    				sequence_logic c INNER JOIN business_logic bl ON (bl.business_logic_id = c.business_logic_id AND bl.module_id = #{moduleId})
+    			WHERE 
+    				c.sequence_logic_id = b.sequence_logic_id AND c.component_type = 21
+    		);
+    
+            <!-- Delete download file component -->
+            DELETE
+                FROM download_file_component b
+            WHERE EXISTS
+            (
+                SELECT 1
+                FROM 
+                    sequence_logic c INNER JOIN business_logic bl ON (bl.business_logic_id = c.business_logic_id AND bl.module_id = #{moduleId})
+                WHERE 
+                    c.sequence_logic_id = b.sequence_logic_id AND c.component_type = 23
+            );
+    
+            <!-- Delete email component -->
+            DELETE
+                FROM email_content a
+            WHERE EXISTS
+            (
+                SELECT 1
+                FROM 
+                    email_component b INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id AND c.component_type = 20)
+                WHERE 
+                    b.email_component_id = a.email_component_id
+                AND
+                    EXISTS
+                        (
+                            SELECT
+                                1
+                            FROM 
+                                business_logic bl
+                            WHERE
+                                bl.business_logic_id = c.business_logic_id
+                            AND
+                                bl.module_id = #{moduleId}
+                        )
+            );
+            DELETE
+                FROM email_recipient a
+            WHERE EXISTS
+            (
+                SELECT 1
+                FROM 
+                    email_component b INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id AND c.component_type = 20)
+                WHERE 
+                    b.email_component_id = a.email_component_id
+                AND
+                    EXISTS
+                        (
+                            SELECT
+                                1
+                            FROM 
+                                business_logic bl
+                            WHERE
+                                bl.business_logic_id = c.business_logic_id
+                            AND
+                                bl.module_id = #{moduleId}
+                        )
+            );
+            DELETE
+                FROM email_component b
+            WHERE EXISTS
+            (
+                SELECT 1
+                FROM 
+                    sequence_logic c INNER JOIN business_logic bl ON (bl.business_logic_id = c.business_logic_id AND bl.module_id = #{moduleId})
+                WHERE 
+                    c.sequence_logic_id = b.sequence_logic_id AND c.component_type = 20
+            );
+    
+            <!-- Delete utility component -->
+            DELETE
+                FROM utility_component b
+            WHERE EXISTS
+            (
+                SELECT 1
+                FROM 
+                    sequence_logic c INNER JOIN business_logic bl ON (bl.business_logic_id = c.business_logic_id AND bl.module_id = #{moduleId})
+                WHERE 
+                    c.sequence_logic_id = b.sequence_logic_id AND c.component_type = 22
+            );
+            
+			<!-- delete business check -->
+			DELETE
+				FROM 
+					business_detail_content bdc
+				WHERE 
+					EXISTS
+					(
+						SELECT 
+							1
+						FROM 
+							business_check_detail bcd
+						INNER JOIN 
+							business_check_component bcc
+						ON 
+							bcc.business_check_component_id = bcd.business_check_component_id
+						INNER JOIN 
+							sequence_logic sl
+						ON 
+							sl.sequence_logic_id = bcc.sequence_logic_id
+						WHERE 
+							EXISTS
+								(
+									SELECT
+										1
+									FROM 
+										business_logic bl
+									WHERE
+										bl.business_logic_id = sl.business_logic_id
+									AND
+										bl.module_id = #{moduleId}
+								)
+						AND 
+							sl.component_type = 4
+						AND 
+							bcd.business_check_detail_id = bdc.business_check_detail_id
+					);
+			
+			DELETE
+				FROM 
+					business_check_detail bcd
+				WHERE 
+					EXISTS
+					(
+						SELECT 
+							1
+						FROM  
+							business_check_component bcc
+						INNER JOIN 
+							sequence_logic sl
+						ON 
+							sl.sequence_logic_id = bcc.sequence_logic_id
+						WHERE 
+							EXISTS
+								(
+									SELECT
+										1
+									FROM 
+										business_logic bl
+									WHERE
+										bl.business_logic_id = sl.business_logic_id
+									AND
+										bl.module_id = #{moduleId}
+								)
+						AND 
+							sl.component_type = 4
+						AND 
+							bcc.business_check_component_id = bcd.business_check_component_id
+					);
+			
+			DELETE
+				FROM 
+					business_check_component bcc
+				WHERE 
+					EXISTS
+					( 
+						SELECT 
+							1
+						FROM 
+							sequence_logic sl
+						WHERE 
+							EXISTS
+								(
+									SELECT
+										1
+									FROM 
+										business_logic bl
+									WHERE
+										bl.business_logic_id = sl.business_logic_id
+									AND
+										bl.module_id = #{moduleId}
+								)
+						AND 
+							sl.component_type = 4
+						AND 
+							sl.sequence_logic_id = bcc.sequence_logic_id
+					);
+					
+			<!-- delete validation check -->
+			
+			DELETE
+				FROM 
+					validation_check_detail vcd
+				WHERE 
+					EXISTS
+					    (
+					    	SELECT b.input_bean_id
+						    FROM input_bean b
+						    LEFT JOIN business_logic c on(c.business_logic_id = b.business_logic_id)
+						    WHERE
+						    	c.module_id = #{moduleId}
+					     		and b.input_bean_id = vcd.input_bean_id 
+					     );
+
+			<!-- delete assign -->
+			DELETE
+				FROM 
+					assign_detail ad
+				WHERE 
+					EXISTS
+					(
+						SELECT 
+							1
+						FROM 
+							assign_component ac
+						INNER JOIN 
+							sequence_logic sl 
+							ON 
+								sl.sequence_logic_id = ac.sequence_logic_id
+							AND 
+								sl.component_type = 8
+						WHERE 
+							EXISTS
+							(
+								SELECT
+									1
+								FROM 
+									business_logic bl
+								WHERE
+									bl.business_logic_id = sl.business_logic_id
+								AND
+									bl.module_id = #{moduleId}
+							)
+						AND 
+							ac.assign_component_id = ad.assign_component_id
+					);
+				
+			DELETE 
+				FROM 
+					assign_component ac
+				WHERE 
+					EXISTS
+					( 
+						SELECT 
+							1
+						FROM 
+							sequence_logic sl
+						WHERE 
+							EXISTS
+							(
+								SELECT
+									1
+								FROM 
+									business_logic bl
+								WHERE
+									bl.business_logic_id = sl.business_logic_id
+								AND
+									bl.module_id = #{moduleId}
+							)
+						AND 
+							sl.component_type = 8
+						AND 
+							sl.sequence_logic_id = ac.sequence_logic_id
+					);
+			DELETE 
+				FROM 
+					utility_component uc
+				WHERE 
+					EXISTS
+					( 
+						SELECT 
+							1
+						FROM 
+							sequence_logic sl
+						WHERE 
+							EXISTS
+							(
+								SELECT
+									1
+								FROM 
+									business_logic bl
+								WHERE
+									bl.business_logic_id = sl.business_logic_id
+								AND
+									bl.module_id = #{moduleId}
+							)
+						AND 
+							sl.component_type = 22
+						AND 
+							sl.sequence_logic_id = uc.sequence_logic_id
+					);
+			<!-- delete detail of decision component-->
+			DELETE
+				FROM 
+					decision_input_value div
+				WHERE 
+					EXISTS
+					(
+						SELECT 
+							1
+						FROM 
+							decision_component dc
+						INNER JOIN 
+							sequence_logic sl 
+							ON 
+								sl.sequence_logic_id = dc.sequence_logic_id
+							AND 
+								sl.component_type = 5
+						WHERE 
+							EXISTS
+							(
+								SELECT
+									1
+								FROM 
+									business_logic bl
+								WHERE
+									bl.business_logic_id = sl.business_logic_id
+								AND
+									bl.module_id = #{moduleId}
+							)
+						AND 
+							dc.decision_component_id = div.decision_component_id
+					);
+			
+			DELETE
+				FROM 
+					decision_output_value dov
+				WHERE 
+					EXISTS
+						(
+						SELECT 
+							1
+						FROM 
+							decision_component dc
+						INNER JOIN 
+							sequence_logic sl 
+							ON 
+								sl.sequence_logic_id = dc.sequence_logic_id
+							AND 
+								sl.component_type = 5
+						WHERE 
+							EXISTS
+							(
+								SELECT
+									1
+								FROM 
+									business_logic bl
+								WHERE
+									bl.business_logic_id = sl.business_logic_id
+								AND
+									bl.module_id = #{moduleId}
+							)
+						AND 
+							dc.decision_component_id = dov.decision_component_id
+						);
+			
+			<!-- delete decision component -->
+			DELETE 
+				FROM 
+					decision_component dc
+				WHERE 
+					EXISTS
+					( 
+						SELECT 
+							1
+						FROM 
+							sequence_logic sl
+						WHERE 
+							EXISTS
+							(
+								SELECT
+									1
+								FROM 
+									business_logic bl
+								WHERE
+									bl.business_logic_id = sl.business_logic_id
+								AND
+									bl.module_id = #{moduleId}
+							)
+						AND
+							sl.component_type = 5
+						AND 
+							sl.sequence_logic_id = dc.sequence_logic_id
+					);
+					
+			<!-- delete detail of loop component-->
+			DELETE 
+				FROM 
+					loop_component lc
+				WHERE 
+					EXISTS
+					( 
+						SELECT 
+							1
+						FROM 
+							sequence_logic sl
+						WHERE 
+							EXISTS
+							(
+								SELECT
+									1
+								FROM 
+									business_logic bl
+								WHERE
+									bl.business_logic_id = sl.business_logic_id
+								AND
+									bl.module_id = #{moduleId}
+							)
+						AND 
+							sl.component_type = 10
+						AND 
+							sl.sequence_logic_id = lc.sequence_logic_id
+					);
+			
+			<!-- delete detail of common component-->
+			DELETE
+				FROM common_input_value civ
+				WHERE 
+					EXISTS
+					(
+						SELECT 
+							1
+						FROM 
+							common_component cc
+						INNER JOIN 
+							sequence_logic sl 
+							ON 
+								sl.sequence_logic_id = cc.sequence_logic_id
+							AND 
+								sl.component_type = 7
+						WHERE 
+							EXISTS
+							(
+								SELECT
+									1
+								FROM 
+									business_logic bl
+								WHERE
+									bl.business_logic_id = sl.business_logic_id
+								AND
+									bl.module_id = #{moduleId}
+							)
+						AND 
+							cc.common_component_id = civ.common_component_id
+					);
+			
+			DELETE
+				FROM 
+					common_output_value cov
+				WHERE 
+					EXISTS
+					(
+						SELECT 
+							1
+						FROM 
+							common_component cc
+						INNER JOIN 
+							sequence_logic sl 
+							ON 
+								sl.sequence_logic_id = cc.sequence_logic_id
+							AND 
+								sl.component_type = 7
+						WHERE 
+							EXISTS
+							(
+								SELECT
+									1
+								FROM 
+									business_logic bl
+								WHERE
+									bl.business_logic_id = sl.business_logic_id
+								AND
+									bl.module_id = #{moduleId}
+							)
+						AND 
+							cc.common_component_id = cov.common_component_id
+					);
+			
+			<!-- delete common component -->
+			DELETE 
+				FROM 
+					common_component cc
+				WHERE 
+					EXISTS
+					( 
+						SELECT 
+							1
+						FROM 
+							sequence_logic sl
+						WHERE 
+							EXISTS
+							(
+								SELECT
+									1
+								FROM 
+									business_logic bl
+								WHERE
+									bl.business_logic_id = sl.business_logic_id
+								AND
+									bl.module_id = #{moduleId}
+							)
+						AND 
+							sl.component_type = 7
+						AND 
+							sl.sequence_logic_id = cc.sequence_logic_id
+					);
+					
+			<!-- delete navigator detail condition -->
+			DELETE
+				FROM 
+					navigator_detail nd
+				WHERE 
+					EXISTS
+					(
+					SELECT 
+						1
+					FROM 
+						navigator_component nc
+					INNER JOIN 
+						sequence_logic sl 
+						ON 
+							sl.sequence_logic_id = nc.sequence_logic_id
+						AND 
+							sl.component_type = 12
+					WHERE 
+						EXISTS
+							(
+								SELECT
+									1
+								FROM 
+									business_logic bl
+								WHERE
+									bl.business_logic_id = sl.business_logic_id
+								AND
+									bl.module_id = #{moduleId}
+							)
+					AND 
+						nc.navigator_component_id = nd.navigator_component_id
+					);
+					
+			<!-- delete navigator condition -->
+			DELETE 
+				FROM 
+					navigator_component nc
+				WHERE 
+					EXISTS
+					( 
+						SELECT
+							1
+				 		FROM
+				 			sequence_logic sl
+				 		WHERE 
+				 			EXISTS
+							(
+								SELECT
+									1
+								FROM 
+									business_logic bl
+								WHERE
+									bl.business_logic_id = sl.business_logic_id
+								AND
+									bl.module_id = #{moduleId}
+							)
+							AND 
+								sl.component_type = 12
+							AND 
+								sl.sequence_logic_id = nc.sequence_logic_id
+						);
+                    
+            <!-- delete exception detail condition -->
+            DELETE
+                FROM 
+                    exception_detail ed
+                WHERE 
+                    EXISTS
+                    (
+                    SELECT 
+                        1
+                    FROM 
+                        exception_component ec
+                    INNER JOIN 
+                        sequence_logic sl 
+                        ON 
+                            sl.sequence_logic_id = ec.sequence_logic_id
+                        AND 
+                            sl.component_type = 24
+                    WHERE 
+                        EXISTS
+                            (
+                                SELECT
+                                    1
+                                FROM 
+                                    business_logic bl
+                                WHERE
+                                    bl.business_logic_id = sl.business_logic_id
+                                AND
+                                    bl.module_id = #{moduleId}
+                            )
+                    AND 
+                        ec.exception_component_id = ed.exception_component_id
+                    );
+                    
+            <!-- delete exception condition -->
+            DELETE 
+                FROM 
+                    exception_component ec
+                WHERE 
+                    EXISTS
+                    ( 
+                        SELECT
+                            1
+                        FROM
+                            sequence_logic sl
+                        WHERE 
+                            EXISTS
+                            (
+                                SELECT
+                                    1
+                                FROM 
+                                    business_logic bl
+                                WHERE
+                                    bl.business_logic_id = sl.business_logic_id
+                                AND
+                                    bl.module_id = #{moduleId}
+                            )
+                            AND 
+                                sl.component_type = 24
+                            AND 
+                                sl.sequence_logic_id = ec.sequence_logic_id
+                        );
+					
+			<!-- delete if condition -->
+			DELETE
+				FROM 
+					if_condition_detail icd
+				WHERE 
+					EXISTS
+					(
+						SELECT 
+							1
+						FROM 
+							if_component ic
+						INNER JOIN 
+							sequence_logic sl 
+							ON 
+								sl.sequence_logic_id = ic.sequence_logic_id
+							AND 
+								sl.component_type = 9
+						WHERE 
+							EXISTS
+							(
+								SELECT
+									1
+								FROM 
+									business_logic bl
+								WHERE
+									bl.business_logic_id = sl.business_logic_id
+								AND
+									bl.module_id = #{moduleId}
+							)
+						AND 
+							ic.if_component_id = icd.if_component_id
+					);
+				
+			<!-- delete if component -->
+			DELETE 
+				FROM 
+					if_component ic
+				WHERE 
+					EXISTS
+					( 
+						SELECT 
+							1
+				 		FROM 
+				 			sequence_logic sl
+				 		WHERE 
+				 			EXISTS
+							(
+								SELECT
+									1
+								FROM 
+									business_logic bl
+								WHERE
+									bl.business_logic_id = sl.business_logic_id
+								AND
+									bl.module_id = #{moduleId}
+							)
+						AND 
+							sl.component_type = 9
+						AND 
+							sl.sequence_logic_id = ic.sequence_logic_id
+					);
+	
+			<!-- delete parameter feedback -->
+			DELETE
+				FROM 
+					message_parameter mp
+				WHERE 
+					EXISTS
+					(
+						SELECT
+							1
+						FROM 
+							business_logic bl
+						WHERE
+							bl.business_logic_id = mp.business_logic_id
+						AND
+							bl.module_id = #{moduleId}
+					);
+			
+			<!-- delete feedback component -->
+			DELETE 
+				FROM 
+					feedback_component fc
+				WHERE 
+					EXISTS
+					( 
+						SELECT 
+							1
+				 		FROM 
+				 			sequence_logic sl
+				 		WHERE 
+				 			EXISTS
+							(
+								SELECT
+									1
+								FROM 
+									business_logic bl
+								WHERE
+									bl.business_logic_id = sl.business_logic_id
+								AND
+									bl.module_id = #{moduleId}
+							)
+							AND 
+								component_type = 11
+							AND 
+								sl.sequence_logic_id = fc.sequence_logic_id
+						);
+			
+			DELETE
+  				FROM 
+  					sequence_connector sc
+				WHERE 
+					EXISTS  
+					(
+						SELECT 
+							1
+						FROM
+							sequence_logic sl
+						WHERE 
+							EXISTS
+							(
+								SELECT
+									1
+								FROM 
+									business_logic bl
+								WHERE
+									bl.business_logic_id = sl.business_logic_id
+								AND
+									bl.module_id = #{moduleId}
+							)
+						AND 
+							sl.sequence_logic_id = sc.connector_source
+					);
+			
+			DELETE
+  				FROM 
+  					transaction_component tc
+				WHERE 
+					EXISTS  
+					(
+						SELECT 
+							1
+						FROM
+							sequence_logic sl
+						WHERE 
+							EXISTS
+							(
+								SELECT
+									1
+								FROM 
+									business_logic bl
+								WHERE
+									bl.business_logic_id = sl.business_logic_id
+								AND
+									bl.module_id = #{moduleId}
+							)
+						AND 
+							sl.sequence_logic_id = tc.sequence_logic_id
+					);
+				
+			DELETE
+				FROM 
+					sequence_logic sl
+				WHERE 
+					EXISTS
+					(
+						SELECT
+							1
+						FROM 
+							business_logic bl
+						WHERE
+							bl.business_logic_id = sl.business_logic_id
+						AND
+							bl.module_id = #{moduleId}
+					
+					);
+		DELETE
+				FROM 
+					outputbean_screenitem_mapping
+				WHERE 
+					outputbean_screenitem_mapping.output_bean_id In
+					(	
+						SELECT ob.output_bean_id
+							FROM 
+								output_bean ob
+							WHERE 
+								EXISTS
+								(
+									SELECT
+										1
+									FROM 
+										business_logic bl
+									WHERE
+										bl.business_logic_id = ob.business_logic_id
+									AND
+										bl.module_id = #{moduleId}
+								)
+					);
+		DELETE
+				FROM 
+					output_bean ob
+				WHERE 
+					EXISTS
+					(
+						SELECT
+							1
+						FROM 
+							business_logic bl
+						WHERE
+							bl.business_logic_id = ob.business_logic_id
+						AND
+							bl.module_id = #{moduleId}
+					);
+		DELETE
+				FROM 
+					input_bean ib
+				WHERE 
+					EXISTS
+					(
+						SELECT
+							1
+						FROM 
+							business_logic bl
+						WHERE
+							bl.business_logic_id = ib.business_logic_id
+						AND
+							bl.module_id = #{moduleId}
+					);
+		DELETE
+				FROM 
+					object_definition od
+				WHERE 
+					EXISTS
+					(
+						SELECT
+							1
+						FROM 
+							business_logic bl
+						WHERE
+							bl.business_logic_id = od.business_logic_id
+						AND
+							bl.module_id = #{moduleId}
+					);
+
+		DELETE
+			FROM upload_file uf
+			WHERE
+				EXISTS
+				(
+					SELECT 1 
+					FROM 
+						business_logic bl
+					WHERE
+						bl.customize_flg = true
+					AND
+						bl.module_id = #{moduleId}
+					AND
+						uf.upload_file_id = bl.upload_file_id
+				);
+
+		DELETE
+			FROM merge_file_detail a
+		WHERE EXISTS
+		(
+			SELECT 1
+			FROM 
+				fileoperation_component b INNER JOIN sequence_logic c ON (c.sequence_logic_id = b.sequence_logic_id AND c.component_type = 15)
+			WHERE 
+				b.fileoperation_component_id = a.fileoperation_component_id
+			AND
+				EXISTS
+					(
+						SELECT
+							1
+						FROM 
+							business_logic bl
+						WHERE
+							bl.business_logic_id = c.business_logic_id
+						AND
+							bl.module_id = #{moduleId}
+					)
+		);
+
+		DELETE
+			FROM fileoperation_component b
+		WHERE EXISTS
+		(
+			SELECT 1
+			FROM 
+				sequence_logic c INNER JOIN business_logic bl ON (bl.business_logic_id = c.business_logic_id AND bl.module_id = #{moduleId})
+			WHERE 
+				c.sequence_logic_id = b.sequence_logic_id AND c.component_type = 15
+		);
+
+		<include refid="deleteAdvance"></include>
+
+		DELETE
+			FROM nestedlogic_component b
+		WHERE EXISTS
+		(
+			SELECT 1
+			FROM 
+				sequence_logic c INNER JOIN business_logic bl ON (bl.business_logic_id = c.business_logic_id AND bl.module_id = #{moduleId})
+			WHERE 
+				c.sequence_logic_id = b.sequence_logic_id AND c.component_type = 14
+		);
+
+
+		<include refid="deleteImportFile" />
+		<include refid="deleteExportFile" />
+
+		DELETE
+				FROM 
+					business_logic
+				WHERE
+					module_id = #{moduleId};
+		
+		<!-- delete message design-->
+		DELETE FROM message_design WHERE module_id = #{moduleId};
+
+		DELETE FROM screen_item_event_mapping siem
+		WHERE 
+			EXISTS
+			(
+				SELECT
+					1
+				FROM
+					screen_item_event sie INNER JOIN screen_item si ON sie.screen_item_id = si.screen_item_id 
+				WHERE
+					 sie.screen_item_event_id = siem.screen_item_event_id 
+				AND 
+					EXISTS
+					(
+						SELECT 1 
+						FROM 
+							screen_design sd
+						WHERE
+							sd.module_id = #{moduleId} AND si.screen_id = sd.screen_id
+					)
+			);
+
+		DELETE
+			FROM 
+				screen_item_event sie
+			WHERE
+			EXISTS
+			(
+				SELECT
+					1
+				FROM
+					screen_item si
+				WHERE
+					 sie.screen_item_id = si.screen_item_id 
+				AND 
+					EXISTS
+					(
+						SELECT 1 
+						FROM 
+							screen_design sd
+						WHERE
+							sd.module_id = #{moduleId} AND si.screen_id = sd.screen_id AND si.screen_id = sd.screen_id
+					)
+			);
+
+		DELETE
+			FROM 
+				screen_item_validation siv
+			WHERE 
+			(
+				SELECT
+					COUNT(*)
+				FROM
+					screen_item si
+				WHERE
+					 siv.screen_item_id = si.screen_item_id 
+				AND 
+					EXISTS
+					(
+						SELECT 1 
+						FROM 
+							screen_design sd
+						WHERE
+							sd.module_id = #{moduleId}
+						AND 
+							si.screen_id = sd.screen_id
+					)
+			) > 0;
+		
+		DELETE
+			FROM
+				screen_item_codelist sic
+			WHERE 
+			(
+				SELECT
+					COUNT(*)
+				FROM
+					screen_item si
+				WHERE
+					sic.screen_item_id = si.screen_item_id 
+				AND 
+					EXISTS(
+						SELECT 1 
+						FROM 
+							screen_design sd 
+						WHERE
+							sd.module_id = #{moduleId}
+						AND 
+							si.screen_id = sd.screen_id
+					)
+			) > 0;
+
+		DELETE
+			FROM
+				screen_item_status sis
+			WHERE 
+			(
+				SELECT
+					COUNT(*)
+				FROM
+					screen_item si
+				WHERE
+					sis.screen_item_id = si.screen_item_id 
+				AND 
+					EXISTS(
+						SELECT 1 
+						FROM 
+							screen_design sd 
+						WHERE
+							sd.module_id = #{moduleId}
+						AND 
+							si.screen_id = sd.screen_id
+					)
+			) > 0;
+
+		DELETE
+			FROM
+				screen_item si
+			WHERE
+				EXISTS(
+					SELECT 1 
+					FROM 
+						screen_design sd 
+					WHERE
+						module_id = #{moduleId}
+					AND 
+						si.screen_id = sd.screen_id
+				);
+			
+		DELETE
+			FROM
+				screen_group_item 
+			WHERE
+				screen_area_id IN 			
+			(
+				SELECT
+					screen_area_id 
+				FROM
+					screen_area sa
+				WHERE
+				(
+					SELECT
+						COUNT(*)
+					FROM
+						screen_form sf
+					WHERE
+						sa.screen_form_id = sf.screen_form_id 
+					AND 
+						EXISTS(
+							SELECT 1 
+							FROM 
+								screen_design sd 
+							WHERE
+								sd.module_id = #{moduleId}
+							AND 
+								sf.screen_id = sd.screen_id
+						)
+				) > 0
+			);
+		
+		DELETE
+			FROM
+				screen_item_sequence 
+			WHERE
+				screen_area_id IN 
+			(
+				SELECT
+					screen_area_id 
+				FROM
+					screen_area sa
+				WHERE
+				(
+					SELECT
+						COUNT(*)
+					FROM
+						screen_form sf
+					WHERE
+						sa.screen_form_id = sf.screen_form_id AND 
+						EXISTS(
+							SELECT 1 
+							FROM 
+								screen_design sd 
+							WHERE
+								sd.module_id = #{moduleId}
+							AND 
+								sf.screen_id = sd.screen_id
+						)
+				) > 0
+			);
+		
+		DELETE
+			FROM
+				screen_area_event sae
+			WHERE
+			
+			EXISTS
+				(
+					SELECT
+						1
+					FROM
+						screen_form sf INNER JOIN screen_area sa ON sa.screen_form_id = sf.screen_form_id
+					WHERE
+						sa.screen_form_id = sf.screen_form_id 
+					AND 
+						sae.screen_area_id = sa.screen_area_id
+					AND 
+						EXISTS
+						(
+							SELECT 1 
+							FROM 
+								screen_design sd 
+							WHERE
+								sd.module_id = #{moduleId}
+							AND sf.screen_id = sd.screen_id	
+						)
+				);
+		
+		DELETE
+			FROM
+				screen_area sa
+			WHERE 
+			(
+				SELECT
+					COUNT(*)
+				FROM
+					screen_form sf
+				WHERE
+					sa.screen_form_id = sf.screen_form_id 
+				AND 
+					EXISTS(
+						SELECT 1 
+						FROM 
+							screen_design sd 
+						WHERE
+							sd.module_id = #{moduleId}
+						AND 
+							sf.screen_id = sd.screen_id
+					)
+			) > 0;
+		
+		DELETE
+			FROM
+				screen_form_tabs sa
+			WHERE 
+			EXISTS
+				(
+					SELECT
+						1
+					FROM
+						screen_form sf
+					WHERE
+						sa.screen_form_id = sf.screen_form_id 
+					AND 
+						EXISTS
+						(
+							SELECT 1 
+							FROM 
+								screen_design sd 
+							WHERE
+								sd.module_id = #{moduleId} AND sf.screen_id = sd.screen_id
+						)
+				);
+
+		DELETE
+			FROM
+				screen_form sf
+			WHERE
+				EXISTS(
+					SELECT 1 
+					FROM 
+						screen_design sd 
+					WHERE
+						sd.module_id = #{moduleId}
+					AND 
+						sf.screen_id = sd.screen_id
+				);
+			
+		DELETE
+			FROM
+				screen_action_param s 
+			WHERE
+			(
+				EXISTS 
+					(
+						SELECT 1  
+							FROM 
+								screen_action sa 
+							WHERE
+								s.screen_action_id = sa.screen_action_id
+							AND
+								EXISTS(
+									SELECT 1 
+									FROM 
+										screen_design sd 
+									WHERE
+										sd.module_id = #{moduleId}
+									AND 
+										(sa.from_screen_id = sd.screen_id OR sa.to_screen_id = sd.screen_id)
+								)
+					)
+				
+			);
+		
+		DELETE
+			FROM
+				screen_action sa
+			WHERE
+				EXISTS(
+					SELECT 1 
+						FROM 
+							screen_design sd 
+						WHERE
+							sd.module_id = #{moduleId}
+						AND 
+							sa.from_screen_id = sd.screen_id
+				);
+			
+		DELETE
+			FROM
+				screen_param sp
+			WHERE
+				EXISTS(
+					SELECT 1 
+					FROM 
+						screen_design sd 
+					WHERE
+						sd.module_id = #{moduleId}
+					AND 
+						sp.screen_id = sd.screen_id
+				);
+		
+		DELETE 
+			FROM
+				screen_area_sort_mapping sasm
+					WHERE
+						EXISTS
+						(
+							SELECT 
+								1
+							FROM 
+								screen_design sd
+							WHERE
+								sasm.screen_id = sd.screen_id
+							AND sd.module_id = #{moduleId}
+						);
+		
+		DELETE 
+			FROM 
+				screen_design 
+			WHERE
+				module_id = #{moduleId};
+				
+		DELETE
+			FROM
+				sql_design_having sdh
+			WHERE
+			EXISTS 
+				(SELECT 1
+					FROM
+						sql_design sd
+					WHERE
+						sd.module_id = #{moduleId}
+					AND 
+						sdh.sql_design_id = sd.sql_design_id 
+				);
+		DELETE
+			FROM
+				sql_design_results sdr
+			WHERE
+			EXISTS
+				(SELECT 1
+					FROM
+						sql_design sd
+					WHERE
+						sd.module_id = #{moduleId}
+					AND 
+						sdr.sql_design_id = sd.sql_design_id 
+				);
+				
+		DELETE
+			FROM
+				sql_design_table_items sdti
+			WHERE
+			EXISTS 
+				(
+					SELECT 1
+						FROM 
+							sql_design_table tdt 
+						WHERE
+						EXISTS
+							(SELECT 1
+								FROM
+									sql_design sd
+								WHERE
+									sd.module_id = #{moduleId}
+								AND 
+									tdt.sql_design_id = sd.sql_design_id 
+							)
+					AND 
+						tdt.sql_design_table_id = sdti.sql_design_table_id
+				);	
+		
+		DELETE
+			FROM
+				sql_design_table sdt
+			WHERE
+			EXISTS 
+				(SELECT 1
+					FROM
+						sql_design sd
+					WHERE
+						sd.module_id = #{moduleId}
+					AND 
+						sdt.sql_design_id = sd.sql_design_id 
+				);
+				
+		DELETE
+			FROM
+				sql_design_group_by sdgb
+			WHERE
+			EXISTS 
+				(SELECT 1
+					FROM
+						sql_design sd
+					WHERE
+						sd.module_id = #{moduleId}
+					AND 
+						sdgb.sql_design_id = sd.sql_design_id 
+				);
+		
+		DELETE
+			FROM
+				autocomplete_design	ad
+			WHERE
+			EXISTS
+				(SELECT 1
+					FROM
+						sql_design sd
+					WHERE
+						sd.module_id = #{moduleId}
+					AND 
+						ad.sql_design_id = sd.sql_design_id 
+				);
+		DELETE
+			FROM
+				autocomplete_design	ad
+			WHERE
+				ad.module_id = #{moduleId};
+		DELETE
+			FROM
+				sql_design_order sdo
+			WHERE
+			EXISTS
+				(SELECT 1
+					FROM
+						sql_design sd
+					WHERE
+						sd.module_id = #{moduleId}
+					AND 
+						sdo.sql_design_id = sd.sql_design_id 
+				);
+				
+		DELETE
+			FROM
+				sql_design_parameters sdp
+			WHERE
+			EXISTS 
+				(SELECT 1
+					FROM
+						sql_design_conditions sdc
+						WHERE
+						EXISTS 
+							(SELECT 1
+								FROM
+									sql_design sd
+								WHERE
+									sd.module_id = #{moduleId}
+								AND 
+									sdc.sql_design_id = sd.sql_design_id 
+							)
+						AND sdp.sql_design_parameter_id = sdc.sql_design_parameter_id
+				);
+						
+		DELETE
+			FROM
+				sql_design_conditions sdc
+			WHERE
+			EXISTS 
+				(SELECT 1
+					FROM
+						sql_design sd
+					WHERE
+						sd.module_id = #{moduleId}
+					AND 
+						sdc.sql_design_id = sd.sql_design_id 
+				);
+				
+		DELETE
+			FROM
+				sql_design_value sdv
+			WHERE
+			EXISTS 
+				(SELECT 1
+					FROM
+						sql_design sd
+					WHERE
+						module_id = #{moduleId}
+					AND 
+						sdv.sql_design_id = sd.sql_design_id 
+				);		
+				
+		DELETE
+			FROM
+				sql_design
+			WHERE
+				module_id = #{moduleId};	
+				
+		DELETE 
+			FROM 
+				module_table_mapping ma 
+			WHERE 
+				ma.module_id = #{moduleId};
+				
+		DELETE
+			FROM 
+				problem_list 
+			WHERE 
+				module_id = #{moduleId};
+		<!-- Delete codelist  -->
+		DELETE FROM
+			codelist_detail cld
+		WHERE 
+			EXISTS 
+				(SELECT 1
+					FROM
+						codelist cl
+					WHERE
+						cl.codelist_id = cld.codelist_id
+					AND 
+						module_id = #{moduleId}
+				);
+		
+		DELETE FROM
+			codelist cl
+		WHERE
+			module_id = #{moduleId};
+		<!-- Delete codelist  -->
+		
+		<!-- Delete Function Design  -->
+		DELETE
+			FROM 
+				function_design 
+			WHERE 
+				module_id = #{moduleId};
+		<!-- Delete Function Design  -->
+		
+		<include refid="deleteScreenTransitionByModule"/>
+
+		DELETE
+			FROM 
+				module 
+			WHERE 
+				module_id = #{moduleId};
+	</delete>
+		
+	<!-- //TungHT- update status from view screen -->
+	<update id="modifyDesignStatus" parameterType="Module">
+		<![CDATA[
+			UPDATE 
+				module
+			SET 
+				status = #{module.status},
+				updated_by = #{module.updatedBy},
+				updated_date = #{module.sysDatetime}
+			WHERE 
+				module_id = #{module.moduleId}
+			AND 
+				updated_date = #{module.updatedDate}
+		]]>
+	</update>
+	
+	<select id="validateChangeStatusToFixed" parameterType="Long" resultType="long" >
+			<![CDATA[
+			SELECT 
+				sum (total)
+			FROM
+			(
+				SELECT 
+					COUNT (*)  AS total
+				FROM 
+					screen_design
+				WHERE
+					design_status = 1
+				AND
+					module_id = #{moduleId}
+					
+				UNION ALL
+				
+				SELECT
+					COUNT(*) AS total 
+				FROM 
+					autocomplete_design
+				WHERE
+					design_status = 1
+				AND
+					module_id = #{moduleId}
+					
+				UNION ALL
+				
+				SELECT
+					COUNT(*) AS total 
+				FROM 
+					sql_design
+				WHERE
+					design_status = 1
+				AND
+					module_id = #{moduleId}
+					
+				UNION ALL
+				
+				SELECT
+					COUNT(*) AS total 
+				FROM 
+					business_logic
+				WHERE
+					design_status = 1
+				AND
+					module_id = #{moduleId}
+					
+				UNION ALL
+				
+				SELECT
+					COUNT(*) AS total 
+				FROM 
+					decision_table dt
+				WHERE
+					design_status = 1
+				AND
+					module_id = #{moduleId}
+				
+				UNION ALL
+				
+				SELECT
+					COUNT(*) AS total 
+				FROM 
+					problem_list
+				WHERE
+					module_id = #{moduleId}
+			) temp
+		]]>
+	</select>
+	
+	<!-- Finds all module information by project identify -->
+	<select id="findListModuleDependency" parameterType="_long" resultMap="moduleResultMap">
+		<![CDATA[
+			SELECT
+				module_id,
+				project_id,
+				module_code,
+				module_name,
+				status,
+				confirmation_type,
+				completion_type,
+				remark,
+				created_by,
+				created_date,
+				updated_by,
+				updated_date
+			FROM
+				module
+		]]>
+		<where>
+			<if test="projectId != null">
+				project_id = #{projectId}
+			</if>
+			<if test="projectId == null">
+				FALSE
+			</if>
+			AND
+				module_id != #{moduleId}
+		</where>
+	</select> 
+	
+	<!-- TungHT - get all module by list moduleId -->
+	<select id="getAllModule" resultMap="moduleResultMap" >
+		SELECT * FROM module 
+			WHERE module.module_id IN
+			<foreach item="item" index="index" collection="listOfModule" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			<if test="projectId != null">
+				AND project_id = #{projectId}
+			</if>
+	</select>
+	
+	<select id="findAllDistincModuleByProjectId" resultMap="moduleResultMap" >
+		Select 
+			DISTINCT
+			md.module_id,
+			md.module_name,
+			bt.business_type_id,
+			bt.business_type_name
+		From 
+			module md
+			LEFT JOIN business_type bt ON bt.business_type_id = md.business_type_id
+		 WHERE 
+			md.project_id = #{projectId}
+		ORDER BY 
+			bt.business_type_id ASC
+	</select>
+</mapper>

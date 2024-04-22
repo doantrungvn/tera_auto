@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="org.terasoluna.qp.domain.repository.projecttheme.ProjectThemeRepository">
+
+	<resultMap id="resultMap" type="org.terasoluna.qp.domain.model.ProjectTheme">
+		<id property="projectThemeId" column="project_theme_id" />
+		<result property="projectId" column="project_id" />
+		<result property="code" column="code" />
+		<result property="value" column="value" />
+	</resultMap>
+	<select id="getThemeSetting" parameterType="Long" resultMap="resultMap">
+		<!-- <select id="getThemeSetting" parameterType="Long" resultMap="hashMapResult"> -->
+		SELECT code,
+				value
+		FROM 
+			project_theme
+		WHERE 
+			project_id = #{projectId}
+	</select>
+	<insert id="addSetting" parameterType="org.terasoluna.qp.domain.model.ProjectTheme">
+		INSERT INTO project_theme(
+            project_id, 
+            code, 
+            value, 
+            created_by,
+            updated_by)
+    	VALUES 
+    		(#{projectId}, #{code}, #{value}, #{accountId}, #{accountId});
+	</insert>
+	
+	<insert id="insertStyleDelete" parameterType="org.terasoluna.qp.domain.model.ProjectTheme">
+		<foreach collection="lstProjectTheme" item="item">
+			INSERT INTO project_theme(
+	            project_id, 
+	            code, 
+	            value, 
+	            created_by,
+	            updated_by)
+	    	VALUES 
+	    		(#{item.projectId}, #{item.code}, #{item.value}, #{item.accountId}, #{item.accountId});
+		</foreach>
+		
+	</insert>
+	
+	<delete id="deleteByProjectId" parameterType="Long">
+		DELETE 
+		FROM 
+			project_theme
+		WHERE 
+			project_id = #{projectId}
+	</delete>
+</mapper>

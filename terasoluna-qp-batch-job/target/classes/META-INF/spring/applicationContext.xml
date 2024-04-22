@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"	
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+http://mybatis.org/schema/mybatis-spring
+http://mybatis.org/schema/mybatis-spring.xsd">
+ 
+ 	<!-- アノテーションによる設定 -->
+    <context:annotation-config />
+    
+	<import resource="classpath:beansDef/dataSource.xml" />
+
+	<bean id="messageSource" class="org.terasoluna.qp.app.common.ultils.InitializableMessageSource">
+		<property name="messageProvider">
+			<bean id="jdbcMessageProvider" class="org.terasoluna.qp.app.common.ultils.JdbcMessageProvider">
+				<property name="dataSource" ref="dataSource" />
+			</bean>
+		</property>
+	</bean>
+	
+	<import resource="classpath*:META-INF/spring/**/*-codelist.xml" />
+
+	<mybatis:scan base-package="org.terasoluna.qp.domain.repository" />
+ 
+ 	<bean id="applicationContextProvder" class="org.terasoluna.qp.app.common.ultils.ApplicationContextProvider"/>
+ 
+</beans>

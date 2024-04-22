@@ -1,0 +1,823 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.terasoluna.qp.domain.repository.autocomplete.AutocompleteDesignRepository">
+	<resultMap type="org.terasoluna.qp.domain.model.AutocompleteDesign" id="resultMap">
+		<id column="autocomplete_id" property="autocompleteId" />
+		<result column="autocomplete_name" property="autocompleteName"/>
+		<result column="autocomplete_code" property="autocompleteCode"/>
+		<result column="project_id" property="projectId"/>
+		<result column="module_id" property="moduleId"/>
+		<result column="module_name" property="moduleName"/>
+		<result column="module_code" property="moduleCode"/>
+		<result column="module_status" property="moduleStatus"/>
+		<result column="sql_design_id" property="sqlDesign.sqlDesignId" />
+		<result column="sql_design_name" property="sqlDesign.sqlDesignName" />
+		<result column="design_type" property="sqlDesign.designType" />
+		<result column="sql_updated_date" property="sqlDesign.updatedDate" />
+		<result column="matching_type" property="matchingType" />
+		<result column="display_col" property="displayColumn" />
+		<result column="submit_col" property="submitColumn" />
+		<result column="min_length" property="minLength"/>
+		<result column="output01" property="output01" />
+		<result column="output02" property="output02" />
+		<result column="output03" property="output03" />
+		<result column="output04" property="output04" />
+		<result column="output05" property="output05" />
+		<result column="output06" property="output06" />
+		<result column="output07" property="output07" />
+		<result column="output08" property="output08" />
+		<result column="output09" property="output09" />
+		<result column="output10" property="output10" />
+		<result column="output11" property="output11" />
+		<result column="output12" property="output12" />
+		<result column="output13" property="output13" />
+		<result column="output14" property="output14" />
+		<result column="output15" property="output15" />
+		<result column="output16" property="output16" />
+		<result column="output17" property="output17" />
+		<result column="output18" property="output18" />
+		<result column="output19" property="output19" />
+		<result column="output20" property="output20" />
+		<result column="updated_by" property="updatedBy" />
+		<result column="updated_date" property="updatedDate" />
+		<result column="created_by" property="createdBy" />
+		<result column="created_date" property="createdDate" />
+		<result column="display_col_flag" property="displayColumnFlag" />
+		<result column="design_status" property="designStatus" />
+		<result column="remark" property="remark"/>
+        <result property="author" column="username" />
+	</resultMap>
+	<resultMap type="org.terasoluna.qp.domain.model.ConsistencyValidationModel" id="resultMap2">
+		<result column="module_name" property="groupName"/>
+		<result column="item_name" property="itemName"/>
+		<result column="group_type" property="groupType"/>
+	</resultMap>
+	<sql id="findByCriteriaWhere">
+		<where>
+			<if test="criteria.autocompleteName != null and criteria.autocompleteName != ''">
+					<bind name="autocompleteName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.autocompleteName)"/>
+					<![CDATA[
+						AND autocomplete_name iLIKE #{autocompleteName}  ESCAPE '~'
+					]]>
+			</if>
+			<if test="criteria.autocompleteCode != null and criteria.autocompleteCode != ''">
+					<bind name="autocompleteCode" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.autocompleteCode)"/>
+					<![CDATA[
+						AND autocomplete_code iLIKE #{autocompleteCode}  ESCAPE '~'
+					]]>
+			</if>
+			<if test="criteria.moduleId != null and criteria.moduleId != ''">
+					<![CDATA[
+						AND A.module_id = #{criteria.moduleId}
+					]]>
+			</if>
+			<if test="criteria.projectId != null and criteria.projectId != ''">
+					<![CDATA[
+						AND A.project_id = #{criteria.projectId}
+					]]>
+			</if>
+			<if test="criteria.tableId != null and criteria.tableId != ''">
+					<![CDATA[
+						AND #{criteria.tableId} IN 
+						(
+							(
+								SELECT tbl_design_id
+								FROM sql_design_table
+								WHERE sql_design_id = A.sql_design_id
+							) 
+							UNION
+							(
+								SELECT join_tbl_design_id
+								FROM sql_design_table
+								WHERE sql_design_id = A.sql_design_id
+							)
+						)
+					]]>
+			</if>
+			<if test="criteria.matchingTypes != null and criteria.matchingTypes.length > 0">
+				AND matching_type IN 
+				<foreach item="item" index="index" collection="criteria.matchingTypes" open="(" separator="," close=")">
+						 #{item}
+				</foreach>
+			</if>
+			<if test="criteria.autocompleteTypes != null and criteria.autocompleteTypes.length > 0">
+				AND design_type IN 
+				<foreach item="item" index="index" collection="criteria.autocompleteTypes" open="(" separator="," close=")">
+						 #{item}
+				</foreach>
+			</if>
+			<if test="criteria.sqlDesignTypes == null or criteria.sqlDesignTypes.length == 0">
+				AND (design_type = 2 OR design_type =3)
+			</if>
+			<if test="criteria.designStatus != null and criteria.designStatus.length > 0">
+                AND A.design_status IN              
+                <foreach item="designStatus" index="index" collection="criteria.designStatus" open="(" separator="," close=")">
+                    #{designStatus}
+                </foreach>
+            </if>
+		</where>
+	</sql>
+	
+	<select id="findByCriteria"
+		parameterType="org.terasoluna.qp.domain.repository.autocomplete.AutocompleteSearchCriteria"
+		resultMap="resultMap">
+		SELECT A.autocomplete_id,
+				A.autocomplete_name,
+				A.autocomplete_code,
+				A.remark,
+				B.module_id,
+				B.module_name,
+				B.status as module_status,
+				C.sql_design_id,
+				C.sql_design_name,
+				C.design_type,
+				A.matching_type,
+				A.min_length,
+				A.created_by,
+				A.created_date,
+				A.updated_by,
+				A.updated_date,
+				A.display_col_flag,
+				A.design_status
+		FROM 
+			autocomplete_design A
+				LEFT JOIN
+			module B
+				ON 		
+			A.module_id = B.module_id
+				LEFT JOIN
+			sql_design C
+				ON
+			A.sql_design_id = C.sql_design_id
+				LEFT JOIN
+			project D
+				ON
+			B.project_id = D.project_id
+		<include refid="findByCriteriaWhere" />
+		<if test="pageable.sort != null">
+			ORDER BY
+			<foreach collection="pageable.sort" item="autocomplete" separator=",">
+				${autocomplete.property} ${autocomplete.direction} 
+			</foreach>
+		</if>
+		<if test="pageable.sort == null">
+			ORDER BY
+				updated_date DESC
+		</if>
+			LIMIT
+				#{pageable.pageSize}
+			OFFSET
+				#{pageable.offset}
+		
+	</select>
+	
+	<select id="countByCriteria"
+		resultType="_long">
+		<![CDATA[
+			SELECT 
+				COUNT(*) 
+			FROM 
+				autocomplete_design A
+					LEFT JOIN
+				module B
+					ON 		
+				A.module_id = B.module_id
+					LEFT JOIN
+				sql_design C
+					ON
+				A.sql_design_id = C.sql_design_id
+					LEFT JOIN
+				project D
+					ON
+				B.project_id = D.project_id	
+			]]>
+		<include refid="findByCriteriaWhere" />
+	</select>
+	
+	<insert id="register" parameterType="AutocompleteDesign">
+		<selectKey keyProperty="autocompleteId" resultType="long" order="BEFORE">
+			SELECT nextval('autocomplete_seq') AS autocompleteId
+		</selectKey>
+		INSERT INTO
+			autocomplete_design
+		(
+			autocomplete_id,
+			sql_design_id,
+			autocomplete_code,
+			autocomplete_name,
+			module_id,
+			display_col,
+			submit_col,
+			matching_type,
+			min_length,
+			output01,
+			output02,
+			output03,
+			output04,
+			output05,
+			output06,
+			output07,
+			output08,
+			output09,
+			output10,
+			output11,
+			output12,
+			output13,
+			output14,
+			output15,
+			output16,
+			output17,
+			output18,
+			output19,
+			output20,
+			created_by,
+			created_date,
+			updated_date,
+			display_col_flag,
+			project_id,
+			design_status,
+			remark
+		)
+		VALUES
+		(
+			#{autocompleteId},
+			#{sqlDesign.sqlDesignId},
+			#{autocompleteCode},
+			#{autocompleteName},
+			#{moduleId},
+			#{displayColumn},
+			#{submitColumn},
+			#{matchingType},
+			#{minLength},
+			#{output01},
+			#{output02},
+			#{output03},
+			#{output04},
+			#{output05},
+			#{output06},
+			#{output07},
+			#{output08},
+			#{output09},
+			#{output10},
+			#{output11},
+			#{output12},
+			#{output13},
+			#{output14},
+			#{output15},
+			#{output16},
+			#{output17},
+			#{output18},
+			#{output19},
+			#{output20},
+			#{createdBy},
+			#{systemDate},
+			#{systemDate},
+			#{displayColumnFlag},
+			#{projectId},
+			#{designStatus},
+			#{remark}
+		)
+	</insert>
+	
+	<update id="modify" parameterType="AutocompleteDesign">
+		
+		UPDATE
+			autocomplete_design
+		SET 
+			sql_design_id = #{sqlDesign.sqlDesignId},
+			autocomplete_code = #{autocompleteCode},
+			autocomplete_name = #{autocompleteName},
+			module_id = #{moduleId},
+			display_col = #{displayColumn},
+			submit_col  = #{submitColumn},
+			matching_type = #{matchingType},
+			min_length = #{minLength},
+			output01 = #{output01},
+			output02 = #{output02},
+			output03 = #{output03},
+			output04 = #{output04},
+			output05 = #{output05},
+			output06 = #{output06},
+			output07 = #{output07},
+			output08 = #{output08},
+			output09 = #{output09},
+			output10 = #{output10},
+			output11 = #{output11},
+			output12 = #{output12},
+			output13 = #{output13},
+			output14 = #{output14},
+			output15 = #{output15},
+			output16 = #{output16},
+			output17 = #{output17},
+			output18 = #{output18},
+			output19 = #{output19},
+			output20 = #{output20},
+			updated_by = #{updatedBy},
+			updated_date = #{systemDate},
+			display_col_flag = #{displayColumnFlag},
+			remark = #{remark}
+		WHERE 
+			autocomplete_id = #{autocompleteId}
+			AND
+			(updated_date = #{updatedDate} OR updated_date IS NULL)
+	</update>
+	
+	<delete id="delete" parameterType="AutocompleteDesign">
+		DELETE FROM
+			autocomplete_design
+		WHERE
+			autocomplete_id = #{autocompleteId}
+			AND
+			updated_date = #{updatedDate}
+	</delete>
+	
+	<select id="findOneById" parameterType="AutocompleteDesign" resultMap="resultMap">
+		SELECT
+			A.autocomplete_id,
+			A.autocomplete_name,
+			A.autocomplete_code,
+			A.matching_type,
+			A.display_col,
+			A.submit_col,
+			A.output01,
+			A.output02,
+			A.output03,
+			A.output04,
+			A.output05,
+			A.output06,
+			A.output07,
+			A.output08,
+			A.output09,
+			A.output10,
+			A.output11,
+			A.output12,
+			A.output13,
+			A.output14,
+			A.output15,
+			A.output16,
+			A.output17,
+			A.output18,
+			A.output19,
+			A.output20,
+			A.module_id,
+			A.project_id,
+			A.min_length,
+			A.module_id,
+			B.module_name,
+			B.module_code,
+			B.project_id,
+			C.project_name,
+			D.sql_design_id,
+			D.sql_design_name,
+			A.design_status,
+			D.updated_date as sql_updated_date,
+			A.updated_date,
+			A.display_col_flag,
+			A.design_status AS design_status_autocomplete,
+			A.remark
+		FROM
+			autocomplete_design A 
+				LEFT JOIN 
+			module B
+				ON 
+			A.module_id = B.module_id 
+				LEFT JOIN 
+			project C
+				ON 
+			B.project_id = C.project_id
+				LEFT JOIN
+			sql_design D
+				ON
+			A.sql_design_id = D.sql_design_id
+			
+		WHERE autocomplete_id = #{autocompleteId}
+	</select>
+	
+	<select id="getExistNameCode" parameterType="AutocompleteDesign" resultType="Integer">
+		SELECT COALESCE(SUM(FLAG),0)
+		FROM 
+		(
+			(
+				SELECT 1 as FLAG
+				FROM
+					autocomplete_design A
+				WHERE 
+					A.project_id = #{projectId} 
+					AND 
+					UPPER(A.autocomplete_name) = UPPER(#{autocompleteName}) 
+					<if test="autocompleteId != null">
+						AND A.autocomplete_id != #{autocompleteId}
+					</if>
+				LIMIT 1
+			)
+			UNION
+			(
+				SELECT 2 AS FLAG
+				FROM
+					autocomplete_design A
+				WHERE 
+					A.project_id = #{projectId} 
+					AND 
+					UPPER(A.autocomplete_code) = UPPER(#{autocompleteCode})
+					<if test="autocompleteId != null">
+						AND A.autocomplete_id != #{autocompleteId}
+					</if>
+				LIMIT 1
+			)
+		) AS A
+	</select>
+	
+	<select id="getReferenceById" resultMap="resultMap2">
+		(
+			SELECT COALESCE(C.message_string,B.message_code) as module_name,COALESCE(D.message_string,A.item_code) as item_name,1 as group_type
+			FROM 
+			screen_item A
+			LEFT JOIN 
+			screen_design B
+			ON A.screen_id = B.screen_id
+			LEFT JOIN
+			message_design C 
+			ON
+			B.message_code = C.message_code AND C.language_id = #{languageId}
+			LEFT JOIN
+			message_design D
+			ON
+			A.message_code = D.message_code AND D.language_id = #{languageId}
+			WHERE A.autocomplete_id = #{autocompleteId}
+		)
+		UNION
+		(
+			SELECT B.domain_tbl_mapping_name as module_name,A.domain_column_name as item_name,2 as group_type
+			FROM 
+			domain_table_mapping_items A
+			LEFT JOIN
+			domain_table_mapping B
+			ON A.domain_tbl_mapping_id = B.domain_tbl_mapping_id
+			WHERE A.autocomplete_id = #{autocompleteId}
+		)
+	</select>
+
+	<!-- Counts autocomplete design information by moduleId -->
+	<!-- DungNN don't see used every where -> removed -->
+    <!-- <select id="countByModuleId" parameterType="Module" resultType="_int">
+        SELECT
+           COUNT(*) AS rowCount
+        FROM
+            autocomplete_design
+        <where>
+            <if test="module.moduleId != null">
+                module_id = #{module.moduleId}
+            </if>
+            <if test="module.moduleId == null">
+                FALSE
+            </if>
+        </where>
+    </select> -->
+    
+    <select id="isProjectChangeable" resultType="boolean">
+		SELECT CASE WHEN NUMS>0 THEN 0 ELSE 1 END
+		FROM
+		(
+			SELECT COUNT(*) as NUMS
+			FROM
+			(
+				(
+					SELECT autocomplete_id
+					FROM 
+						screen_item A
+						LEFT JOIN 
+						screen_design B
+						ON 
+						A.screen_id = B.screen_id 
+						LEFT JOIN 
+						module C
+						ON 
+						B.module_id = C.module_id
+					WHERE A.autocomplete_id = #{autocompleteId} AND C.project_id != #{projectId}
+					LIMIT 1
+				)
+				UNION
+				(
+					SELECT autocomplete_id
+					FROM 
+						domain_table_mapping_items A
+						LEFT JOIN
+						domain_table_mapping B
+						ON 
+						A.domain_tbl_mapping_id = B.domain_tbl_mapping_id
+					WHERE A.autocomplete_id = #{autocompleteId} AND B.project_id != #{projectId}
+					LIMIT 1
+				)
+			) AS A
+		) AS B
+	</select>
+	
+	<select id="findAutocompleteBySqlDesignId" parameterType="Long" resultMap="resultMap">
+        SELECT
+           	autocomplete_id,
+			sql_design_id,
+			autocomplete_code,
+			autocomplete_name
+        FROM
+            autocomplete_design
+        WHERE 
+        	sql_design_id = #{sqlDesignId}
+       	LIMIT 1
+    </select>
+	
+	<delete id="deleteSqlDesignChildren">
+		DELETE FROM 
+			sql_design_table_items
+        WHERE
+        	sql_design_table_id 
+        	IN 
+	        	(
+	        	SELECT sql_design_table_id
+	        	FROM sql_design_table
+	        	WHERE sql_design_id = #{sqlDesignId}
+	        	);
+	    
+	    DELETE FROM 
+			sql_design_table
+        WHERE
+        	sql_design_id = #{sqlDesignId};
+        	
+        DELETE FROM 
+			sql_design_conditions
+        WHERE
+        	sql_design_id = #{sqlDesignId};
+        	
+        DELETE FROM 
+			sql_design_order
+        WHERE
+        	sql_design_id = #{sqlDesignId};
+        	
+        DELETE FROM 
+			sql_design_group_by
+        WHERE
+        	sql_design_id = #{sqlDesignId};
+        	
+        DELETE FROM 
+			sql_design_having
+        WHERE
+        	sql_design_id = #{sqlDesignId};
+        	
+        DELETE FROM 
+			sql_design_results
+        WHERE
+        	sql_design_id = #{sqlDesignId};
+        	
+       	
+       	WITH RECURSIVE ordered_inputs(sql_design_input_id,sql_design_input_parent_id) as (
+			SELECT sql_design_input_id,sql_design_input_parent_id,sql_design_input_id as root_id
+			FROM sql_design_input
+			WHERE sql_design_id = #{sqlDesignId} AND sql_design_input_parent_id IS NULL
+		
+			UNION ALL
+		
+			SELECT A.sql_design_input_id,A.sql_design_input_parent_id,B.root_id
+			FROM 
+			sql_design_input A
+			INNER JOIN 
+			ordered_inputs B
+			ON 
+			A.sql_design_input_parent_id = B.sql_design_input_id
+		)
+		DELETE FROM sql_design_input
+		WHERE sql_design_input_id in (SELECT sql_design_input_id FROM ordered_inputs);
+		
+		WITH RECURSIVE ordered_outputs(sql_design_output_id,sql_design_output_parent_id) as (
+			SELECT sql_design_output_id,sql_design_output_parent_id,sql_design_output_id as root_id
+			FROM sql_design_output
+			WHERE sql_design_id = #{sqlDesignId} AND sql_design_output_parent_id IS NULL
+		
+			UNION ALL
+		
+			SELECT A.sql_design_output_id,A.sql_design_output_parent_id,B.root_id
+			FROM 
+			sql_design_output A
+			INNER JOIN 
+			ordered_outputs B
+			ON 
+			A.sql_design_output_parent_id = B.sql_design_output_id
+		)
+		DELETE FROM sql_design_output
+		WHERE sql_design_output_id in (SELECT sql_design_output_id FROM ordered_outputs);
+		
+	</delete>
+	
+	<!-- //TungHT- update status from view screen -->
+	<update id="modifyDesignStatus" parameterType="AutocompleteDesign">
+		<![CDATA[
+			UPDATE 
+				autocomplete_design
+			SET 
+				design_status = #{autocompleteDesign.designStatus},
+				updated_by = #{autocompleteDesign.updatedBy},
+				updated_date = #{autocompleteDesign.systemDate}
+			WHERE 
+				autocomplete_id = #{autocompleteDesign.autocompleteId}
+			AND 
+				updated_date = #{autocompleteDesign.updatedDate}
+		]]>
+	</update>
+	
+	<select id="getAllAutocompleteDesignId" resultType="_long">
+		SELECT DISTINCT
+				C.autocomplete_id
+			FROM
+				autocomplete_design as C
+			WHERE
+				C.project_id = #{projectId}
+	</select>
+	
+	<select id="checkAutocompleteDesignExists" resultType="_long">
+		SELECT
+			autocomplete_id
+		FROM
+			autocomplete_design
+		<where>
+			<if test="listOfId != null and listOfId.size > 0">
+				<foreach item="Id" collection="listOfId" open="autocomplete_id IN (" separator="," close=")">
+					#{Id}
+				</foreach>
+			</if>
+			<if test="listOfId == null or listOfId.size == 0">
+				FALSE
+			</if>
+		</where>
+		ORDER BY autocomplete_id
+	</select>
+	
+	<!-- //TungHT -->
+	<select id="getAutocompleteDesignByScreenItem" resultMap="resultMap" parameterType="_long">
+		SELECT DISTINCT
+			ad.autocomplete_id,
+			ad.autocomplete_name,
+			ad.autocomplete_code,
+			arg01,
+			arg02,
+			arg03,
+			arg04,
+			arg05,
+			arg06,
+			arg07,
+			arg08,
+			arg09,
+			arg10,
+			arg11,
+			arg12,
+			arg13,
+			arg14,
+			arg15,
+			arg16,
+			arg17,
+			arg18,
+			arg19,
+			arg20,
+			ad.sql_design_id,
+			display_col_flag,
+			submit_col
+		FROM
+			autocomplete_design as ad
+		INNER JOIN
+			screen_item si ON si.autocomplete_id = ad.autocomplete_id
+		WHERE
+			si.autocomplete_id = #{autocompleteId}
+	</select>
+	
+	<select id="getAllAutocompleteDesignByProjectId" resultType="AutocompleteDesign" parameterType="_long">
+		SELECT
+			A.autocomplete_id,
+			A.autocomplete_name,
+			A.autocomplete_code,
+			A.matching_type,
+			A.display_col,
+			A.submit_col,
+			A.output01,
+			A.output02,
+			A.output03,
+			A.output04,
+			A.output05,
+			A.output06,
+			A.output07,
+			A.output08,
+			A.output09,
+			A.output10,
+			A.output11,
+			A.output12,
+			A.output13,
+			A.output14,
+			A.output15,
+			A.output16,
+			A.output17,
+			A.output18,
+			A.output19,
+			A.output20,
+			A.module_id,
+			A.project_id,
+			A.min_length,
+			B.module_name,
+			B.module_code,
+			B.project_id,
+			C.project_name,
+			D.sql_design_id,
+			D.sql_design_name,
+			A.design_status,
+			D.updated_date as sql_updated_date,
+			A.updated_date,
+			A.display_col_flag,
+			A.design_status AS design_status_autocomplete,
+			A.remark,
+            acc.username
+		FROM
+			autocomplete_design A 
+				LEFT JOIN 
+			module B
+				ON 
+			A.module_id = B.module_id 
+				LEFT JOIN 
+			project C
+				ON 
+			B.project_id = C.project_id
+				LEFT JOIN
+			sql_design D
+				ON
+			A.sql_design_id = D.sql_design_id
+        LEFT JOIN account acc ON (acc.account_id = A.created_by)
+			
+		WHERE A.project_id = #{projectId}
+	</select>
+	<select id="getAllAutocompleteDesignByModuleId" resultType="AutocompleteDesign" parameterType="_long">
+		SELECT
+			A.autocomplete_id,
+			A.autocomplete_name,
+			A.autocomplete_code,
+			A.matching_type,
+			A.display_col,
+			A.submit_col,
+			A.output01,
+			A.output02,
+			A.output03,
+			A.output04,
+			A.output05,
+			A.output06,
+			A.output07,
+			A.output08,
+			A.output09,
+			A.output10,
+			A.output11,
+			A.output12,
+			A.output13,
+			A.output14,
+			A.output15,
+			A.output16,
+			A.output17,
+			A.output18,
+			A.output19,
+			A.output20,
+			A.module_id,
+			A.project_id,
+			A.min_length,
+			B.module_name,
+			B.module_code,
+			B.project_id,
+			C.project_name,
+			D.sql_design_id,
+			D.sql_design_name,
+			A.design_status,
+			D.updated_date as sql_updated_date,
+			A.updated_date,
+			A.display_col_flag,
+			A.design_status AS design_status_autocomplete,
+			A.remark,
+            acc.username
+		FROM
+			autocomplete_design A 
+				LEFT JOIN 
+			module B
+				ON 
+			A.module_id = B.module_id 
+				LEFT JOIN 
+			project C
+				ON 
+			B.project_id = C.project_id
+				LEFT JOIN
+			sql_design D
+				ON
+			A.sql_design_id = D.sql_design_id
+        LEFT JOIN account acc ON (acc.account_id = A.created_by)
+		<where>
+			<if test="moduleId != null and moduleId != ''">
+				A.module_id = #{moduleId} 
+			</if>
+			<if test="moduleId == null or moduleId == ''">
+				A.module_id IS NULL
+				AND
+				A.project_id = #{projectId} 
+			</if>
+			AND (design_type = 2 OR design_type = 3)
+		</where>	
+	</select>
+	
+</mapper>

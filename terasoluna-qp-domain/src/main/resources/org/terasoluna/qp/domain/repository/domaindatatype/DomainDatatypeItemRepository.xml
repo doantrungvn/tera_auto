@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.terasoluna.qp.domain.repository.domaindatatype.DomainDatatypeItemRepository">
+	<resultMap type="org.terasoluna.qp.domain.model.DomainDatatypeItem" id="domainDatatypeItemResultMap">
+		<id property="domainDatatypeItemId" column="column_id" />
+		<result property="domainDatatypeId" column="tbl_design_id" />
+		<result property="domainColumnName" column="column_name" />
+		<result property="domainColumnCode" column="column_code" />
+		<result property="keyType" column="key_type" />
+		<result property="domainDataType" column="data_type" />
+		<result property="displayType" column="display_type" />
+		<result property="maxlength" column="maxlength" />
+		<result property="minVal" column="min_val" />
+		<result property="maxVal" column="max_val" />
+		<result property="physicalDataType" column="group_base_type_id" />
+		<result property="autocompleteId" column="autocomplete_id" />
+		<result property="itemSeqNo" column="item_seq_no" />
+		<result property="onChangeMethod" column="on_change_method" />
+		<result property="onSelectMethod" column="on_select_method" />
+		<result property="codelistType" column="codelist_type" />
+		<result property="codelistName" column="codelist_name" />
+		<result property="tblDesignDetailsId" column="column_id" />
+		<result property="tblDesignDetailsCode" column="design_column_code" />
+		<result property="maxlengthPhysical" column="maxlength" />
+		<result property="requiredFlg" column="mandatory_flg" />
+		<result property="groupBasetypeId" column="group_id" />
+		<result property="autocompleteName" column="autocomplete_name" />
+		<result property="codelistId" column="codelist_id" />
+		<result property="fmtCode" column="fmt_code" />
+		<result property="defaultValue" column="default_value" />
+		<result property="itemType" column="item_type" />
+		<result property="datasourceId" column="datasource_id"/>
+		<result property="datasourceType" column="datasource_type"/>
+		<result property="defaultType" column="default_type" />
+		<result property="autoincrementFlg" column="autoincrement_flg" />
+		<result property="decimalPart" column="decimal_part" />
+		<result property="constrainsType" column="constrains_type" />
+		<result property="domainName" column="domain_name" />
+		<result property="dataTypeFlg" column="data_type_flg" />
+		<result property="operatorCode" column="operator_code" />
+		<result property="baseType" column="base_type" />
+	</resultMap>
+
+	<select id="findAllByDomainDatatype" parameterType="long" resultMap="domainDatatypeItemResultMap">
+		<![CDATA[
+		SELECT 
+			m.column_id,
+			m.tbl_design_id,
+			m.column_name,
+			m.column_code,
+			m.key_type,
+			m.data_type,
+			m.display_type,
+			m.maxlength,
+			m.min_val,
+			m.max_val,
+			m.group_base_type_id,
+			m.datasource_id,
+			m.item_seq_no,
+			m.datasource_type,
+			m.fmt_code,
+			m.default_value,
+			m.item_type,
+			m.mandatory_flg,
+			(
+				SELECT 
+					value3
+				FROM
+					resources
+				WHERE
+					category_cd='clBasetype' AND CAST (value2 AS numeric) = data_type
+			) group_id
+		FROM
+			table_design_details m
+		WHERE
+			tbl_design_id=#{domainDatatypeId}
+		ORDER BY
+			m.item_seq_no
+		]]>
+	</select>
+	
+	<select id="findOneByDomainDatatypeId" parameterType="long" resultMap="domainDatatypeItemResultMap">
+		<![CDATA[
+		SELECT 
+			m.column_id,
+			m.tbl_design_id,
+			m.column_name,
+			m.column_code,
+			m.key_type,
+			m.data_type,
+			m.display_type,
+			m.maxlength,
+			m.min_val,
+			m.max_val,
+			m.group_base_type_id,
+			m.datasource_id,
+			m.item_seq_no,
+			m.datasource_type,
+			m.item_type,
+			m.fmt_code,
+			m.default_value
+		FROM
+			table_design_details m
+		WHERE
+			m.column_id=#{domainDatatypeId}
+		]]>
+	</select>
+
+	<select id="getDomainTableMappingItemsByProjectId" parameterType="long" resultMap="domainDatatypeItemResultMap">
+		<![CDATA[
+		SELECT 
+			m.column_id,
+			m.tbl_design_id,
+			m.column_name,
+			m.column_code,
+			m.key_type,
+			m.data_type,
+			m.display_type,
+			b.maxlength,
+			m.min_val,
+			m.max_val,
+			m.group_base_type_id,
+			m.datasource_id,
+			m.item_seq_no,
+			m.datasource_type,
+			m.item_type,
+			m.fmt_code,
+			m.default_value
+		FROM
+			table_design a 
+			INNER JOIN table_design_details m ON a.tbl_design_id = m.tbl_design_id
+			INNER JOIN domain_design b ON m.data_type = b.domain_id
+		WHERE
+			a.project_id=#{projectId}
+		]]>
+	</select>
+	<update id="updateDomainDatatypeItem" parameterType="org.terasoluna.qp.domain.model.DomainDatatypeItem">
+		<![CDATA[
+		UPDATE 
+			table_design_details
+		SET
+			column_name = #{domainColumnName},
+			column_code = #{domainColumnCode},
+			data_type = #{domainDataType},
+			display_type = #{displayType},
+			maxlength = #{maxlength},
+			min_val = #{minVal},
+			max_val = #{maxVal},
+			datasource_id = #{datasourceId},
+			datasource_type = #{datasourceType},
+			item_seq_no = #{itemSeqNo},
+			fmt_code = #{fmtCode},
+			default_value = #{defaultValue}
+
+		WHERE
+			column_id = #{domainDatatypeItemId}
+		]]>
+	</update>
+
+	<insert id="insertDomainDatatypeItem" parameterType="org.terasoluna.qp.domain.model.DomainDatatypeItem"
+		useGeneratedKeys="true" keyProperty="DomainDatatypeItem.domainDatatypeItemId" keyColumn="column_id">
+		<selectKey keyProperty="domainDatatypeItemId" resultType="long" order="BEFORE">
+			SELECT NEXTVAL('tbl_design_detail_seq'::regclass)
+		</selectKey>
+
+		<![CDATA[
+		INSERT INTO
+			table_design_details
+		(
+			column_id,
+			tbl_design_id,
+			column_name,
+			column_code,
+			data_type,
+			display_type,
+			maxlength,
+			min_val,
+			max_val,
+			group_base_type_id,
+			datasource_id,
+			item_seq_no,
+			datasource_type,
+			key_type,
+			fmt_code,
+			default_value
+		)
+		VALUES
+		(
+			#{domainDatatypeItemId},
+			#{domainDatatypeId},
+			#{domainColumnName},
+			#{domainColumnCode},
+			#{domainDataType},
+			#{displayType},
+			#{maxlength},
+			#{minVal},
+			#{maxVal},
+			#{physicalDataType},
+			#{datasourceId},
+			#{itemSeqNo},
+			#{datasourceType},
+			#{keyType},
+			#{fmtCode},
+			#{defaultValue}
+		)
+		]]>
+	</insert>
+
+	<delete id="deleteDomainDatatypeItem" parameterType="long">
+		<![CDATA[
+		DELETE FROM 
+			table_design_details
+		WHERE 
+			tbl_design_id=#{id}
+		]]>
+	</delete>
+	
+	<select id="findByListTableDesignId" resultMap="domainDatatypeItemResultMap">
+		WITH 
+			table_design_temp AS (
+				SELECT 
+					tbl_design_id
+				FROM 
+					table_design t
+				WHERE
+					<![CDATA[ t.project_id = #{projectId} ]]>
+					<if test="listId != null and listId.size() > 0 ">
+						AND tbl_design_id IN
+						<foreach item="id" index="index" collection="listId" open="(" separator="," close=")">
+							#{id}
+						</foreach>
+					</if>
+			)
+
+		SELECT
+			a.column_id,
+			a.tbl_design_id,
+			a.column_name,
+			a.column_code,
+			b.maxlength,
+			b.mandatory_flg,
+			a.key_type,
+			b.group_base_type_id,
+			b.default_value,
+			b.default_type,
+			a.item_seq_no,
+			a.autoincrement_flg,
+			a.decimal_part,
+			a.data_type,
+			b.constrains_type,
+			b.datasource_type,
+			b.datasource_id,
+			b.fmt_code,
+			b.domain_name,
+			a.data_type_flg,
+			a.item_type,
+			a.display_type,
+			b.min_val,
+			b.max_val,
+			b.operator_code,
+			b.base_type
+		FROM
+			table_design_details a LEFT JOIN domain_design b ON a.data_type = b.domain_id
+		WHERE
+			a.data_type_flg = 1
+		AND	
+			EXISTS 
+			(
+				SELECT
+					1
+				FROM 
+					table_design_temp t
+				WHERE 
+					t.tbl_design_id = a.tbl_design_id
+			)
+		UNION ALL
+		SELECT
+			a.column_id,
+			a.tbl_design_id,
+			a.column_name,
+			a.column_code,
+			a.maxlength,
+			a.mandatory_flg,
+			a.key_type,
+			a.group_base_type_id,
+			a.default_value,
+			a.default_type,
+			a.item_seq_no,
+			a.autoincrement_flg,
+			a.decimal_part,
+			a.data_type,
+			a.constrains_type,
+			a.datasource_type,
+			a.datasource_id,
+			a.fmt_code,
+			b.value1 AS domain_name,
+			a.data_type_flg,
+			a.item_type,
+			a.display_type,
+			a.min_val,
+			a.max_val,
+			a.operator_code,
+			a.data_type AS base_type
+		FROM
+			table_design_details a
+		LEFT JOIN
+			resources b
+		ON
+			b.category_cd = 'clBasetype'
+		AND
+			a.data_type = CAST (b.value2 AS NUMERIC)
+		WHERE 
+			a.data_type_flg = 0
+		AND
+			EXISTS
+			(
+				SELECT
+					1
+				FROM 
+					table_design_temp t
+				WHERE
+					t.tbl_design_id = a.tbl_design_id
+			)
+		ORDER BY
+			tbl_design_id , item_seq_no
+	</select>
+</mapper>

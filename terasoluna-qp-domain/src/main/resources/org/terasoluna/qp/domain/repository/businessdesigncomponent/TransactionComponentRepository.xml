@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.businessdesigncomponent.TransactionComponentRepository">
+
+    <resultMap id="transactionComponentResultMap" type="TransactionComponent">
+        <id property="transactionComponentId" column="transaction_component_id" />
+        <result property="label" column="label" />
+        <result property="transactionType" column="transaction_type" />
+        <result property="remark" column="remark" />
+        <result property="sequenceLogicId" column="sequence_logic_id" />
+    </resultMap>
+    <select id="getSequencesTransactionComponent" resultType="Long">
+    	select SETVAL('transaction_component_seq'::regclass, NEXTVAL('transaction_component_seq'::regclass) + #{size})
+    </select>
+    <insert id="registerTransactionComponent" >
+		<foreach item="item" collection="transactionComponentItems">
+			INSERT INTO transaction_component
+				(
+            		transaction_component_id, 
+            		label, 
+            		transaction_type, 
+            		remark, 
+            		sequence_logic_id
+            	)
+	    		VALUES 
+	    		(
+					#{item.transactionComponentId},
+					#{item.label},
+					#{item.transactionType},
+	            	#{item.remark},
+	            	#{item.sequenceLogicId}
+	            );
+		</foreach>
+    </insert>
+    
+    <select id="findTransactionComponentByBusinessLogic" resultMap="transactionComponentResultMap">
+    	SELECT 
+    		a.transaction_component_id, 
+	    	a.label, 
+	    	a.transaction_type, 
+	    	a.remark, 
+	        a.sequence_logic_id
+  		FROM transaction_component a
+  		WHERE EXISTS
+		    (
+			    SELECT sl.sequence_logic_id
+			    FROM sequence_logic sl
+			    WHERE sl.business_logic_id = #{businessLogicId}
+			       	AND component_type = 18
+			       	AND sl.sequence_logic_id = a.sequence_logic_id 
+		     )
+		ORDER BY a.transaction_component_id
+    </select>
+    
+    <select id="findAllTransactionComponentByModule" resultMap="transactionComponentResultMap">
+    	SELECT 
+    		a.transaction_component_id, 
+	    	a.label, 
+	    	a.transaction_type, 
+	    	a.remark, 
+	        a.sequence_logic_id
+  		FROM transaction_component a
+  		WHERE EXISTS
+		    (
+			    SELECT sl.sequence_logic_id
+			    FROM sequence_logic sl
+			    INNER JOIN business_logic bl ON bl.business_logic_id = sl.business_logic_id
+			    WHERE bl.module_id = #{moduleId}
+			       	AND component_type = 18
+			       	AND sl.sequence_logic_id = a.sequence_logic_id 
+		     )
+		ORDER BY a.transaction_component_id
+    </select>
+    
+    <!-- generate source code of commmon blogic -->
+    <select id="findAllTransactionComponentByModuleCommon" resultMap="transactionComponentResultMap">
+        SELECT 
+            a.transaction_component_id, 
+            a.label, 
+            a.transaction_type, 
+            a.remark, 
+            a.sequence_logic_id
+        FROM transaction_component a
+        WHERE EXISTS
+            (
+                SELECT sl.sequence_logic_id
+                FROM sequence_logic sl
+                INNER JOIN business_logic bl ON bl.business_logic_id = sl.business_logic_id
+                WHERE bl.project_id = #{projectId} AND bl.module_id is null and bl.blogic_type = 1   
+                    AND component_type = 18
+                    AND sl.sequence_logic_id = a.sequence_logic_id 
+             )
+        ORDER BY a.transaction_component_id
+    </select>
+</mapper>

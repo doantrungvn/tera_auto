@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.terasoluna.qp.domain.repository.role.RoleRepository">
+
+	<resultMap id="roleResultMap" type="Role">
+		<id property="roleId" column="role_id" />
+		<result property="roleCd" column="role_code" />
+		<result property="roleName" column="role_name" />
+		<result property="status" column="status" />
+		<result property="remark" column="remark" />
+		<result property="accountId" column="account_id" />
+		<result property="permissionId" column="permission_id" />
+	</resultMap>
+
+	<select id="findOne" parameterType="Long" resultMap="roleResultMap">
+		SELECT
+			role_id,
+			role_code,
+			role_name,
+			status,
+			remark,
+			created_by,
+            created_date,
+            updated_by,
+            updated_date
+		FROM
+			role
+		WHERE role_id=#{roleId}
+	</select>
+
+	<select id="countReferenceByRoleId" parameterType="_long" resultType="hashmap">
+        SELECT 
+	        (SELECT COUNT(C.role_id) FROM account_role AS C WHERE C.role_id = A.role_id) AS account_role_ref_count
+        FROM 
+            role AS A
+        WHERE 
+            A.role_id = #{roleId};
+    </select>
+    
+	<select id="countBySearchCriteria" resultType="Long"
+		parameterType="org.terasoluna.qp.domain.repository.role.RoleSearchCriteria">
+		SELECT COUNT(*)
+		FROM role
+		WHERE TRUE
+		<if test="roleName !=null  and roleName != '' ">
+            <bind name="roleName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(roleName)" />
+			<![CDATA[
+            AND role_name ILIKE #{roleName} ESCAPE '~'
+            ]]>
+		</if>
+		<if test="roleCd !=null and roleCd !=''">
+            <bind name="roleCd" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(roleCd)" />
+            <![CDATA[
+			AND role_code ILIKE #{roleCd} ESCAPE '~'
+            ]]>
+		</if>
+		<if test="remark !=null and remark !=''">
+            <bind name="remark" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(remark)" />
+            <![CDATA[
+			AND remark ILIKE #{remark} ESCAPE '~'
+            ]]>
+		</if>
+		<if test="status !=null and status.length > 0 ">
+			AND status IN 
+			<foreach item="status" index="index" collection="status" open="(" separator="," close=")">
+            	#{status}
+            </foreach>
+		</if>
+	</select>
+
+	<select id="findBySearchCriteria" resultMap="roleResultMap"
+		parameterType="org.terasoluna.qp.domain.repository.role.RoleSearchCriteria">
+		<![CDATA[
+		SELECT role_id,
+			role_code,
+			role_name,
+			status,
+			remark,
+			created_by,
+			created_date,
+			updated_by,
+			updated_date
+		FROM role
+		WHERE TRUE
+		]]>
+		<if test="roleCriteria.roleName !=null and roleCriteria.roleName != '' ">
+			<bind name="roleName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(roleCriteria.roleName)" />
+            <![CDATA[
+               AND role_name ILIKE #{roleName} ESCAPE '~'
+            ]]>
+		</if>
+		<if test="roleCriteria.roleCd !=null and roleCriteria.roleCd !=''">
+			<bind name="roleCd" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(roleCriteria.roleCd)" />
+			<![CDATA[
+        		AND role_code ILIKE #{roleCd} ESCAPE '~'
+            ]]>
+		</if>
+		<if test="roleCriteria.remark !=null and roleCriteria.remark !=''">
+			<bind name="remark" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(roleCriteria.remark)" />
+			<![CDATA[
+        		AND remark ILIKE #{remark} ESCAPE '~'
+            ]]>
+		</if>
+		<if test="roleCriteria.status !=null and roleCriteria.status.length > 0 ">
+			AND status IN 
+			<foreach item="status" index="index" collection="roleCriteria.status" open="(" separator="," close=")">
+            	#{status}
+            </foreach>
+		</if>
+		<if test="pageable.sort != null">
+			ORDER BY
+			<foreach collection="pageable.sort" item="order" separator=",">
+				${order.property} ${order.direction}
+			</foreach>
+		</if>
+		<if test="pageable.sort == null">
+			ORDER BY updated_date DESC
+		</if>
+		
+		<![CDATA[
+		LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
+		]]>
+	</select>
+	
+	<select id="getRoleByAccount" resultMap="roleResultMap" parameterType="Long">
+    <![CDATA[
+        SELECT   t1.role_id, 
+                 t1.role_name, 
+                 t1.role_code, 
+                 t1.status, 
+                 t1.remark,
+                 t2.account_id
+        FROM role t1
+        left join account_role t2
+        on (t1.role_id = t2.role_id and t2.account_id = #{accountId})
+        WHERE
+        	t1.status = 1;
+    ]]>
+    </select>
+    
+    <select id="findRoleOfAccount" resultMap="roleResultMap" parameterType="Long">
+    <![CDATA[
+        SELECT   t1.role_id, 
+                 t1.role_name, 
+                 t1.role_code, 
+                 t1.status, 
+                 t1.remark
+        FROM 
+        	role t1
+        INNER JOIN 
+        	account_role t2
+        ON
+       	 	t1.role_id = t2.role_id
+       	 WHERE 
+       	 	t2.account_id = #{accountId}
+    ]]>
+    </select>
+    
+    <select id="getRolePermission" resultMap="roleResultMap">
+    <![CDATA[
+        SELECT   
+        		 a.role_id,
+        		 a.permission_id,
+                 b.role_name, 
+                 b.role_code, 
+                 b.status, 
+                 b.remark
+        FROM 
+        	role_permission a 
+        INNER JOIN 
+        	role b
+        ON
+       	 	a.role_id = b.role_id
+    ]]>
+    </select>
+    
+    <select id="countNameCodeByRoleId" parameterType="Role" resultType="Long">
+        SELECT 
+            SUM(rowVal) AS totalCount 
+        FROM (
+                (SELECT 
+                        1 AS rowVal 
+                 FROM 
+                        role 
+                 <where>
+	                 <if test="roleName != null and roleName != ''">
+                        UPPER(role_name) = UPPER(#{roleName})
+	                 </if> 
+	                 <if test="roleId != null">AND role_id != #{roleId}</if>
+	                 <if test="roleName == null and roleName == ''">AND FALSE</if>
+                 </where>
+                 LIMIT 1
+                 ) 
+                 UNION
+                (SELECT 
+                        2 AS rowVal 
+                 FROM 
+                        role
+                 <where>
+                        <if test="roleCd != null and roleCd != ''">
+                            UPPER(role_code) = UPPER(#{roleCd})
+                        </if> 
+                        <if test="roleId != null">AND role_id != #{roleId}</if>
+                        <if test="roleCd == null and roleCd == ''">AND FALSE</if>
+                 </where>
+                 LIMIT 1
+                 )
+             ) AS foo
+    </select>
+	
+	<insert id="register" parameterType="Role">
+	<selectKey keyProperty="roleId" resultType="long" order="BEFORE">
+        SELECT NEXTVAL('role_seq') AS roleId
+    </selectKey>
+    <![CDATA[
+        INSERT INTO role
+        (
+            role_id,
+            role_code,
+            role_name,
+            status,
+            remark,
+            created_by,
+            created_date,
+            updated_by,
+            updated_date
+        )
+        VALUES
+        (
+        	#{roleId},            
+            #{roleCd},
+            #{roleName},
+            #{status},
+            #{remark},
+            #{createdBy},
+            #{createdDate},
+            #{updatedBy},
+            #{updatedDate}
+        )
+    ]]>
+	</insert>
+	
+	<update id="modify" parameterType="Role">
+    <![CDATA[
+       UPDATE role
+   			SET  role_code= #{roleCd},
+   			role_name= #{roleName},
+   			status= #{status},
+            remark = #{remark},
+            updated_by = #{updatedBy},
+            updated_date = #{sysDatetime}
+ 		WHERE 
+ 			role_id= #{roleId}
+ 		AND
+            updated_date = #{updatedDate}
+    ]]>
+	</update>
+
+	<delete id="delete" parameterType="Role">
+    <![CDATA[
+        DELETE FROM
+            role
+        WHERE
+            role_id= #{roleId}
+    ]]>
+	</delete>
+	
+	<!-- QuyND: add get list of user using role by role id -->
+    <select id="getRoleAppliedUserAccount" parameterType="Long" resultType="String">
+		<![CDATA[
+	     	SELECT 
+	     		t2.username
+	     	FROM 
+	     		account_role t1 INNER JOIN account t2 ON t1.account_id = t2.account_id
+	     	WHERE
+	     		t1.role_id = #{roleId}
+	     	]]>
+	</select>
+	
+	<!-- NhatDN: check roleID exists or not in database -->
+	<select id="getRoleByListId" resultMap="roleResultMap" parameterType="org.terasoluna.qp.domain.model.AccountRole">
+	SELECT
+		role_id,
+		role_code,
+		role_name,
+		status,
+		remark,
+		created_by,
+        created_date,
+        updated_by,
+        updated_date
+       FROM role
+       	WHERE role_id IN
+       <foreach collection="lstAccountRole" item="item" open="(" close=")" separator=",">
+	       	<![CDATA[
+				#{item.roleId}        		
+	       	]]>
+       </foreach>
+</select>
+
+</mapper>

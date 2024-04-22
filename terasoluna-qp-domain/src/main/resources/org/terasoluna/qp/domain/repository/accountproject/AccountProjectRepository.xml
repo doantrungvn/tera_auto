@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="org.terasoluna.qp.domain.repository.accountproject.AccountProjectRepository">
+
+	<resultMap id="accountProjectResultMap" type="AccountProject">
+		<result property="accountId" column="account_id" />
+		<result property="projectId" column="project_id" />
+	</resultMap>
+
+	<delete id="deleteAccountProject" parameterType="AccountProject">
+		DELETE FROM account_project
+		WHERE account_id = #{accountId}
+	</delete>
+
+	<insert id="registerAccountProject">
+		<if test="projectItems != null and  projectItems.size() > 0 ">
+			INSERT INTO
+			account_project
+			(
+				account_id,
+				project_id
+			)
+			SELECT  #{accountId}, project_id FROM project WHERE project_id in 
+	    	<foreach item="item" collection="projectItems" separator="," open="(" close=")">
+	    		#{item.projectId}
+			</foreach>;
+		</if>
+	</insert>
+	
+	<select id="findAll" resultMap="accountProjectResultMap">
+		SELECT account_id, project_id FROM account_project ORDER BY account_id
+	</select>
+</mapper>

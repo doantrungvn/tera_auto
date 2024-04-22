@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.sqldesign.SqlDesignOutputRepository">
+    <resultMap id="resultMap" type="SqlDesignOutput">
+        <result property="sqlDesignOutputId" column="sql_design_output_id" />
+        <result property="sqlDesignId" column="sql_design_id" />
+        <result property="sqlDesignOutputName" column="sql_design_output_name" />
+        <result property="sqlDesignOutputCode" column="sql_design_output_code" />
+        <result property="dataType" column="data_type" />
+        <result property="sqlDesignOutputParentId" column="sql_design_output_parent_id" />
+        <result property="arrayFlag" column="array_flg" />
+        <result property="itemSeqNo" column="item_seq_no" />
+        <result property="mappingColumn" column="mapping_column"/>
+        <result property="groupIndex" column="group_index"/>
+        
+        <result property="businessDesignId" column="business_logic_id" />
+        <result property="businessDesignModuleId" column="business_logic_module_id" />
+        
+        <result property="screenDesignId" column="screen_id" />
+        <result property="screenDesignModuleId" column="screen_module_id" />
+        
+        <result property="tableId" column="table_id"/>
+        <result property="columnId" column="column_id"/>
+        <result property="designType" column="design_type"/>
+        <result property="objectType" column="object_type"/>
+        <result property="objectTypeCode" column="object_type_code"/>
+        <result property="packageName" column="package_name"/>
+        <result property="sqlDesignCode" column="sql_design_code" />
+        <result property="moduleId" column="module_id" />
+        <result property="moduleCode" column="module_code" />
+        
+    </resultMap>
+	<select id="findAllBySqlDesignId" parameterType="Long" resultMap="resultMap">
+		WITH RECURSIVE ordered_outputs(sql_design_output_id,sql_design_output_parent_id) as (
+			SELECT sdo.sql_design_output_id,
+					sdo.sql_design_output_parent_id,
+					sdo.sql_design_output_id as root_id,
+					cast(row_number() over(ORDER BY sdo.item_seq_no) as text) as group_index,
+					sdo.sql_design_id,
+					sdo.sql_design_output_name,
+					sdo.sql_design_output_code,
+					sdo.data_type,
+					sdo.array_flg,
+					sdo.mapping_column,
+					sdo.item_seq_no,
+					sdo.table_id,
+					sdo.column_id,
+					sdo.design_type,
+					sdo.object_type
+			FROM sql_design_output sdo
+			WHERE sdo.sql_design_id = #{sqlDesignId} AND sdo.sql_design_output_parent_id IS NULL
+		
+		
+			UNION ALL
+		
+			SELECT A.sql_design_output_id,
+					A.sql_design_output_parent_id,
+					B.root_id,
+					(B.group_index ||'.'|| cast(row_number() over(PARTITION BY B.group_index ORDER BY A.item_seq_no) as text)) as group_index,
+					A.sql_design_id,
+					A.sql_design_output_name,
+					A.sql_design_output_code,
+					A.data_type,
+					A.array_flg,
+					A.mapping_column,
+					A.item_seq_no,
+					A.table_id,
+					A.column_id,
+					A.design_type,
+					A.object_type
+			FROM 
+			sql_design_output A
+			INNER JOIN 
+			ordered_outputs B
+			ON 
+			A.sql_design_output_parent_id = B.sql_design_output_id
+			
+		)		SELECT * FROM ordered_outputs ORDER BY item_seq_no;
+    </select>
+    <select id="findAllForGenerationBySqlDesignId" parameterType="Long" resultMap="resultMap">
+		WITH RECURSIVE ordered_outputs(sql_design_output_id,sql_design_output_parent_id) as (
+			SELECT A.sql_design_output_id,
+					A.sql_design_output_parent_id,
+					A.sql_design_output_id as root_id,
+					cast(row_number() over(ORDER BY A.item_seq_no) as text) as group_index,
+					A.sql_design_id,
+					A.sql_design_output_name,
+					A.sql_design_output_code,
+					A.data_type,
+					A.array_flg,
+					A.mapping_column,
+					A.item_seq_no,
+					A.table_id,
+					A.column_id,
+					A.design_type,
+					A.object_type,
+					C.package_name,
+					COALESCE(E.tbl_design_code,D.common_object_definition_code,C.external_object_definition_code) as object_type_code,
+					module.module_code
+			FROM sql_design_output A
+			LEFT JOIN 
+			external_object_definition C
+			ON (A.object_type = 1 AND A.table_id = C.external_object_definition_id)
+			LEFT JOIN 
+			common_object_definition D
+			ON (A.object_type = 0 AND A.table_id = D.common_object_definition_id)
+			LEFT JOIN 
+			table_design E
+			ON (A.object_type = 4 AND A.table_id = E.tbl_design_id)
+			LEFT JOIN module ON D.module_id = module.module_id
+			WHERE A.sql_design_id = #{sqlDesignId} AND A.sql_design_output_parent_id IS NULL AND A.design_type != 1
+		
+		
+			UNION ALL
+		
+			SELECT A.sql_design_output_id,
+					A.sql_design_output_parent_id,
+					B.root_id,
+					(B.group_index ||'.'|| cast(row_number() over(PARTITION BY B.group_index ORDER BY A.item_seq_no) as text)) as group_index,
+					A.sql_design_id,
+					A.sql_design_output_name,
+					A.sql_design_output_code,
+					A.data_type,
+					A.array_flg,
+					A.mapping_column,
+					A.item_seq_no,
+					A.table_id,
+					A.column_id,
+					A.design_type,
+					A.object_type,
+					C.package_name,
+					COALESCE(E.tbl_design_code,D.common_object_definition_code,C.external_object_definition_code) as object_type_code,
+					module.module_code
+			FROM 
+			sql_design_output A
+			INNER JOIN 
+			ordered_outputs B
+			ON 
+			A.sql_design_output_parent_id = B.sql_design_output_id
+			LEFT JOIN 
+			external_object_definition C
+			ON (A.object_type = 1 AND A.table_id = C.external_object_definition_id)
+			LEFT JOIN 
+			common_object_definition D
+			ON (A.object_type = 0 AND A.table_id = D.common_object_definition_id)
+			LEFT JOIN 
+			table_design E
+			ON (A.object_type = 4 AND A.table_id = E.tbl_design_id)
+			LEFT JOIN module ON D.module_id = module.module_id
+			
+		)		SELECT * FROM ordered_outputs ORDER BY item_seq_no;
+    </select>
+    
+    <select id="findById" parameterType="Long" resultMap="resultMap">
+        SELECT A.sql_design_output_id,
+				A.sql_design_id,
+				A.sql_design_output_name,
+				A.sql_design_output_code,
+				A.data_type,
+				A.sql_design_output_parent_id,
+				A.array_flg,
+				A.item_seq_no,
+				A.mapping_column,
+				A.table_id,
+				A.column_id,
+				A.design_type,
+				A.object_type
+		FROM sql_design_output A
+		WHERE A.sql_design_output_id = #{sqlDesignOutputId}
+
+    </select>
+    <insert id="register" parameterType="SqlDesignOutput">
+        <selectKey keyProperty="sqlDesignOutputId" resultType="long" order="BEFORE">
+            SELECT NEXTVAL('sql_design_output_seq'::REGCLASS) AS sqlDesignOutputId
+        </selectKey>
+        INSERT INTO
+            sql_design_output
+        (
+        	sql_design_output_id,
+			sql_design_id,
+			sql_design_output_name,
+			sql_design_output_code,
+			data_type,
+			sql_design_output_parent_id,
+			array_flg,
+			item_seq_no,
+			mapping_column,
+			table_id,
+			column_id,
+			design_type,
+			object_type
+        )
+        VALUES
+        (
+        	#{sqlDesignOutputId},
+            #{sqlDesignId},
+            #{sqlDesignOutputName},
+            #{sqlDesignOutputCode},
+            #{dataType},
+            #{sqlDesignOutputParentId},
+            #{arrayFlag},
+            #{itemSeqNo},
+            #{mappingColumn},
+            #{tableId},
+            #{columnId},
+            #{designType},
+            #{objectType}
+        )
+    </insert>
+    
+    <insert id="registerAll">
+        INSERT INTO
+            sql_design_output
+        (
+        	sql_design_output_id,
+			sql_design_id,
+			sql_design_output_name,
+			sql_design_output_code,
+			data_type,
+			sql_design_output_parent_id,
+			array_flg,
+			item_seq_no,
+			mapping_column,
+			table_id,
+			column_id,
+			design_type,
+			object_type
+        )
+        VALUES
+        <foreach collection="sqlDesignOutputs" item="item" separator=",">
+        (
+        	#{item.sqlDesignOutputId},
+            #{item.sqlDesignId},
+            #{item.sqlDesignOutputName},
+            #{item.sqlDesignOutputCode},
+            #{item.dataType},
+            #{item.sqlDesignOutputParentId},
+            #{item.arrayFlag},
+            #{item.itemSeqNo},
+            #{item.mappingColumn},
+            #{item.tableId},
+            #{item.columnId},
+            #{item.designType},
+            #{item.objectType}
+        )
+        </foreach>
+    </insert>
+	
+	<update id="modify" parameterType="SqlDesignOutput">
+		UPDATE sql_design_output
+        SET sql_design_id = #{sqlDesignId},
+            sql_design_output_name = #{sqlDesignOutputName},
+            sql_design_output_code = #{sqlDesignOutputCode},
+            data_type = #{dataType},
+            sql_design_output_parent_id = #{sqlDesignOutputParentId},
+            array_flg = #{arrayFlag},
+            item_seq_no = #{itemSeqNo},
+            mapping_column = #{mappingColumn},
+            table_id = #{tableId},
+            column_id = #{columnId},
+            design_type = #{designType},
+            object_type = #{objectType}
+        WHERE sql_design_output_id = #{sqlDesignOutputId}
+	</update>
+	
+	<update id="modifyAll">
+		<foreach collection="sqlDesignOutputs" item="item" separator=";">
+			UPDATE sql_design_output
+	        SET sql_design_id = #{item.sqlDesignId},
+	            sql_design_output_name = #{item.sqlDesignOutputName},
+	            sql_design_output_code = #{item.sqlDesignOutputCode},
+	            data_type = #{item.dataType},
+	            sql_design_output_parent_id = #{item.sqlDesignOutputParentId},
+	            array_flg = #{item.arrayFlag},
+	            item_seq_no = #{item.itemSeqNo},
+	            mapping_column = #{item.mappingColumn},
+	            table_id = #{item.tableId},
+            	column_id = #{item.columnId},
+            	design_type = #{item.designType},
+            	object_type = #{item.objectType}
+        	WHERE sql_design_output_id = #{item.sqlDesignOutputId}
+		</foreach>
+	</update>
+	
+	<delete id="delete" parameterType="SqlDesignOutput">
+		DELETE FROM sql_design_output
+        WHERE sql_design_output_id = #{sqlDesignOutputId}
+	</delete>
+	
+	<delete id="deleteByExceptionalGroup">
+		DELETE FROM 
+			sql_design_output
+        <where>
+        	sql_design_id = #{sqlDesignId}
+         	<if test="exceptionGroup !=null and exceptionGroup.size() &gt; 0">
+        		AND sql_design_output_id NOT IN
+	        	<foreach collection="exceptionGroup" separator="," open="(" close=")" item="id">
+	        		#{id}
+	        	</foreach>
+        	</if>
+        </where>
+	</delete>
+	
+	<select id="getReferencedFromBusinessLogic" resultMap="resultMap">
+		SELECT B.sql_design_output_id,D.business_logic_id,e.module_id as business_logic_module_id,B.sql_design_output_name
+		FROM execution_output_value B
+			LEFT JOIN 
+			execution_component C
+			ON B.execution_component_id = C.execution_component_id
+			LEFT JOIN
+			sequence_logic D
+			ON C.sequence_logic_id = D.sequence_logic_id
+			LEFT JOIN
+			business_logic E
+			ON D.business_logic_id = E.business_logic_id
+			LEFT JOIN
+			sql_design_output F
+			ON 
+			B.sql_design_output_id = F.sql_design_output_id
+		WHERE C.sql_design_id = #{sqlDesignId}
+		
+	</select>
+	
+	<select id="getReferencedFromScreenDesign" resultMap="resultMap">
+		(
+			SELECT DISTINCT
+				A.option_label as sql_design_output_id,
+				C.sql_design_output_name,
+				A.screen_id,
+				B.module_id as screen_design_module_id
+			FROM 
+				screen_item A
+				LEFT JOIN 
+				screen_design B
+				ON A.screen_id = B.screen_id
+				LEFT JOIN
+				sql_design_output C
+				ON 
+				A.option_label = C.sql_design_output_id
+			WHERE A.sql_design_id = #{sqlDesignId}
+		)
+		UNION 
+		(
+			SELECT DISTINCT
+				A.option_value as sql_design_output_id,
+				C.sql_design_output_name,
+				A.screen_id,
+				B.module_id as screen_design_module_id
+			FROM 
+				screen_item A
+				LEFT JOIN 
+				screen_design B
+				ON A.screen_id = B.screen_id
+				LEFT JOIN
+				sql_design_output C
+				ON 
+				A.option_value = C.sql_design_output_id
+			WHERE A.sql_design_id = #{sqlDesignId}
+		)
+       
+	</select>
+	
+	<delete id="deleteBySqlDesignId">
+		DELETE FROM 
+			sql_design_output
+        WHERE
+        	sql_design_id = #{sqlDesignId}
+	</delete>
+	<select id="preserveIds" resultType="Long">
+		SELECT SETVAL('sql_design_output_seq'::regclass,NEXTVAL('sql_design_output_seq'::regclass)+#{preservedNumber})
+	</select>
+</mapper>

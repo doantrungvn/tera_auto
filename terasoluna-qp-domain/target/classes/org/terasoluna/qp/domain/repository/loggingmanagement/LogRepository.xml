@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="org.terasoluna.qp.domain.repository.loggingmanagement.LogRepository">
+	
+	<resultMap id="resultMapLog" type="org.terasoluna.qp.domain.model.Log">
+		<result property="logId" column="log_id" />
+		<result property="projectId" column="project_id" />
+		<result property="status" column="status" />
+		<result property="logType" column="log_type" />
+		<result property="createdBy" column="create_by" />
+		<result property="createdDate" column="create_date" />
+		<result property="updatedBy" column="update_by" />
+		<result property="updatedDate" column="update_date" />
+	</resultMap>
+		
+	<!-- Finds log by projectId and log Type -->
+	<select id="findLogByTypeAndProjectId" resultMap = "resultMapLog">
+	<![CDATA[
+		SELECT * 
+		FROM log
+		WHERE project_id = #{projectId} AND log_type = #{logType}
+		]]>		
+	</select> 
+	
+	<!-- Finds log by projectId, logtype, and status -->
+	<select id="findLogByProjectIdAndTypeAndStatus" resultMap = "resultMapLog">
+	<![CDATA[
+		SELECT * 
+		FROM log
+		WHERE project_id = #{projectId} AND log_type = #{logType} AND status = #{status}
+		]]>		
+	</select> 
+	
+	<!-- modify log -->
+	<update id="modifyLog" parameterType="Log">
+	<![CDATA[	
+		UPDATE 
+			log 
+		SET 
+			status=#{status},
+			update_by=#{updatedBy},
+			update_date=#{systemTime}
+		WHERE 
+			log_id= #{logId} AND update_date=#{updatedDate}
+	]]>
+	</update>
+	
+	<insert id="registerLog" parameterType="org.terasoluna.qp.domain.model.Log"
+		useGeneratedKeys="true" keyProperty="Log.logId" keyColumn="log_id">
+		<selectKey keyProperty="logId" resultType="long" order="BEFORE">
+			SELECT NEXTVAL('log_seq'::regclass)
+		</selectKey>
+		<![CDATA[
+		INSERT INTO log(
+            log_id, 
+            project_id, 
+            status, 
+            log_type, 
+            create_by, 
+            create_date, 
+            update_by, 
+            update_date)
+   		 VALUES (
+   		 	#{logId}, 
+            #{projectId}, 
+            #{status}, 
+            #{logType}, 
+            #{createdBy}, 
+            #{createdDate}, 
+            #{updatedBy}, 
+            #{updatedDate})
+		]]>
+	</insert>
+		
+</mapper>

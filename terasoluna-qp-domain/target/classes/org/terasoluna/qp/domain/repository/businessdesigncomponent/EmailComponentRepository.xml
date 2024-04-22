@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.businessdesigncomponent.EmailComponentRepository">
+
+    <resultMap id="emailComponentResultMap" type="EmailComponent">
+        <id property="emailComponentId" column="email_component_id" />
+        <result property="label" column="label" />
+        <result property="remark" column="remark" />
+        <result property="sequenceLogicId" column="sequence_logic_id" />
+        <result property="priorityType" column="priority_type" />
+        <result property="subjectType" column="subject_type" />
+        <result property="subjectContent" column="subject_content" />
+        <result property="subjectFormulaId" column="subject_formula_id" />
+    </resultMap>
+	<resultMap id="emailRecipientResultMap" type="EmailRecipient">
+        <id property="emailRecipientId" column="email_recipient_id" />
+        <result property="emailComponentId" column="email_component_id" />
+        <result property="recipientType" column="recipient_type" />
+        <result property="recipientContent" column="recipient_content" />
+        <result property="recipientFormulaId" column="recipient_formula_id" />
+    </resultMap>
+    <resultMap id="emailContentResultMap" type="EmailContent">
+        <id property="emailContentId" column="email_content_id" />
+        <result property="emailComponentId" column="email_component_id" />
+        <result property="content" column="content" />
+    </resultMap>
+    <select id="getSequencesEmailComponent" resultType="Long">
+    	select SETVAL('email_component_seq'::regclass, NEXTVAL('email_component_seq'::regclass) + #{size})
+    </select>
+    <insert id="registerEmailComponent" >
+		<foreach item="item" collection="emailComponentItems">
+			INSERT INTO email_component
+				(
+            		email_component_id, 
+            		label, 
+            		priority_type, 
+            		remark, 
+            		subject_type, 
+            		subject_content, 
+            		subject_formula_id, 
+            		sequence_logic_id
+            	)
+	    		VALUES 
+	    		(
+					#{item.emailComponentId},
+					#{item.label},
+					#{item.priorityType},
+	            	#{item.remark},
+					#{item.subjectType},
+					#{item.subjectContent},
+					#{item.subjectFormulaId},
+	            	#{item.sequenceLogicId}
+	            );
+	        <if test="item.emailRecipients.size() > 0">
+	        	INSERT INTO email_recipient
+	        	(
+           			email_component_id, 
+                    type,
+            		recipient_type, 
+            		recipient_content, 
+            		recipient_formula_id
+           		)
+	    		VALUES 
+	    		<foreach item="detail" collection="item.emailRecipients" separator=",">
+				(
+					#{item.emailComponentId},
+                    #{detail.type},
+					#{detail.recipientType},
+					#{detail.recipientContent},
+					#{detail.recipientFormulaId}
+	            )
+				</foreach>;
+	        </if>
+                INSERT INTO email_content
+                (
+                    email_component_id, 
+                    content
+                )
+                VALUES 
+                (
+                    #{item.emailComponentId},
+                    #{item.emailContent.content}
+                );
+		</foreach>
+    </insert>
+    
+    <select id="findEmailComponentByBusinessLogic" resultMap="emailComponentResultMap">
+    	SELECT 
+    		a.email_component_id, 
+	    	a.label, 
+            a.remark, 
+	    	a.priority_type, 
+       		a.subject_type, 
+       		a.subject_content, 
+       		a.subject_formula_id, 
+	        a.sequence_logic_id
+  		FROM email_component a
+  		WHERE EXISTS
+		    (
+			    SELECT sl.sequence_logic_id
+			    FROM sequence_logic sl
+			    WHERE sl.business_logic_id = #{businessLogicId}
+			       	AND component_type = 20
+			       	AND sl.sequence_logic_id = a.sequence_logic_id 
+		     )
+		ORDER BY a.email_component_id
+    </select>
+    
+    <select id="findEmailRecipientByBusinessLogic" resultMap="emailRecipientResultMap">
+    	SELECT 
+    		a.email_recipient_id, 
+    		a.email_component_id, 
+            a.type, 
+       		a.recipient_type, 
+       		a.recipient_content, 
+       		a.recipient_formula_id
+  		FROM email_recipient a
+  		LEFT JOIN email_component b on (b.email_component_id = a.email_component_id)
+  		WHERE EXISTS
+		    (
+			    SELECT sl.sequence_logic_id
+			    FROM sequence_logic sl
+			    WHERE sl.business_logic_id = #{businessLogicId}
+			       	AND component_type = 20
+			       	AND sl.sequence_logic_id = b.sequence_logic_id 
+		     )
+		ORDER BY a.email_recipient_id
+    </select>
+    
+    <select id="findEmailContentByBusinessLogic" resultMap="emailContentResultMap">
+        SELECT 
+            a.email_content_id, 
+            a.email_component_id, 
+            a.content
+        FROM email_content a
+        LEFT JOIN email_component b on (b.email_component_id = a.email_component_id)
+        WHERE EXISTS
+            (
+                SELECT sl.sequence_logic_id
+                FROM sequence_logic sl
+                WHERE sl.business_logic_id = #{businessLogicId}
+                    AND component_type = 20
+                    AND sl.sequence_logic_id = b.sequence_logic_id 
+             )
+        ORDER BY a.email_content_id
+    </select>
+    
+    <select id="findAllEmailComponent" resultMap="emailComponentResultMap">
+    	SELECT 
+    		a.email_component_id, 
+	    	a.label, 
+            a.remark, 
+	    	a.priority_type, 
+       		a.subject_type, 
+       		a.subject_content, 
+       		a.subject_formula_id, 
+	        a.sequence_logic_id
+  		FROM email_component a
+  		WHERE EXISTS
+		    (
+			    SELECT sl.sequence_logic_id
+			    FROM sequence_logic sl
+			    INNER JOIN business_logic bl on bl.business_logic_id = sl.business_logic_id
+			    WHERE bl.module_id = #{moduleId}
+			       	AND component_type = 20
+			       	AND sl.sequence_logic_id = a.sequence_logic_id 
+		     )
+		ORDER BY a.email_component_id
+    </select>
+    
+     <select id="findAllEmailRecipient" resultMap="emailRecipientResultMap">
+    	SELECT 
+    		a.email_recipient_id, 
+    		a.email_component_id,
+            a.type,
+       		a.recipient_type, 
+       		a.recipient_content, 
+       		a.recipient_formula_id
+  		FROM email_recipient a
+  		LEFT JOIN email_component b on (b.email_component_id = a.email_component_id)
+  		WHERE EXISTS
+		    (
+			    SELECT sl.sequence_logic_id
+			    FROM sequence_logic sl
+			    INNER JOIN business_logic bl on bl.business_logic_id = sl.business_logic_id
+			    WHERE bl.module_id = #{moduleId}
+			       	AND component_type = 20
+			       	AND sl.sequence_logic_id = b.sequence_logic_id
+		     )
+		ORDER BY a.email_recipient_id
+    </select>
+    
+     <select id="findAllEmailContent" resultMap="emailContentResultMap">
+        SELECT 
+            a.email_content_id, 
+            a.email_component_id,
+            a.content
+        FROM email_content a
+        LEFT JOIN email_component b on (b.email_component_id = a.email_component_id)
+        WHERE EXISTS
+            (
+                SELECT sl.sequence_logic_id
+                FROM sequence_logic sl
+                INNER JOIN business_logic bl on bl.business_logic_id = sl.business_logic_id
+                WHERE bl.module_id = #{moduleId}
+                    AND component_type = 20
+                    AND sl.sequence_logic_id = b.sequence_logic_id
+             )
+        ORDER BY a.email_content_id
+    </select>
+    
+    <select id="findAllEmailComponentByProject" resultMap="emailComponentResultMap">
+    	SELECT 
+    		a.email_component_id, 
+	    	a.label, 
+            a.remark, 
+	    	a.priority_type, 
+       		a.subject_type, 
+       		a.subject_content, 
+       		a.subject_formula_id, 
+	        a.sequence_logic_id
+  		FROM email_component a
+  		WHERE EXISTS
+		    (
+			    SELECT sl.sequence_logic_id
+			    FROM sequence_logic sl
+			    INNER JOIN business_logic bl on bl.business_logic_id = sl.business_logic_id
+			    WHERE bl.project_id = #{projectId} AND bl.module_id is null and bl.blogic_type = 1
+			       	AND component_type = 20
+			       	AND sl.sequence_logic_id = a.sequence_logic_id 
+		     )
+		ORDER BY a.email_component_id
+    </select>
+    
+     <select id="findAllEmailRecipientByProject" resultMap="emailRecipientResultMap">
+    	SELECT 
+    		a.email_recipient_id, 
+    		a.email_component_id,
+            a.type,
+       		a.recipient_type, 
+       		a.recipient_content, 
+       		a.recipient_formula_id
+  		FROM email_recipient a
+  		LEFT JOIN email_component b on (b.email_component_id = a.email_component_id)
+  		WHERE EXISTS
+		    (
+			    SELECT sl.sequence_logic_id
+			    FROM sequence_logic sl
+			    INNER JOIN business_logic bl on bl.business_logic_id = sl.business_logic_id
+			    WHERE bl.project_id = #{projectId} AND bl.module_id is null and bl.blogic_type = 1
+			       	AND component_type = 20
+			       	AND sl.sequence_logic_id = b.sequence_logic_id
+		     )
+		ORDER BY a.email_recipient_id
+    </select>
+    
+     <select id="findAllEmailContentByProject" resultMap="emailContentResultMap">
+        SELECT 
+            a.email_content_id, 
+            a.email_component_id,
+            a.content
+        FROM email_content a
+        LEFT JOIN email_component b on (b.email_component_id = a.email_component_id)
+        WHERE EXISTS
+            (
+                SELECT sl.sequence_logic_id
+                FROM sequence_logic sl
+                INNER JOIN business_logic bl on bl.business_logic_id = sl.business_logic_id
+                WHERE bl.project_id = #{projectId} AND bl.module_id is null and bl.blogic_type = 1
+                    AND component_type = 20
+                    AND sl.sequence_logic_id = b.sequence_logic_id
+             )
+        ORDER BY a.email_content_id
+    </select>
+    
+</mapper>

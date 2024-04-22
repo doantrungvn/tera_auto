@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.businessdesigncomponent.BDParameterIndexRepository">
+    <resultMap id="bDParameterIndexResultMap" type="BDParameterIndex">
+        <id property="bdParameterIndexId" column="bd_parameter_index_id" />
+        <result property="tableType" column="table_type" />
+        <result property="tableId" column="table_id" />
+        <result property="parameterId" column="parameter_id" />
+        <result property="parameterIndexType" column="parameter_index_type" />
+        <result property="parameterIndexId" column="parameter_index_id" />
+        <result property="businessLogicId" column="business_logic_id" />
+    </resultMap>
+    
+    <select id="findBDParameterIndexByBusinessLogic" resultMap="bDParameterIndexResultMap">
+		SELECT 
+			a.bd_parameter_index_id, 
+			a.table_type, 
+			a.table_id, 
+			a.parameter_id, 
+			a.parameter_index_type, 
+       		a.parameter_index_id, 
+       		a.business_logic_id
+  		FROM bd_parameter_index a
+  		WHERE a.business_logic_id = #{businessLogicId}
+       	ORDER BY a.bd_parameter_index_id
+    </select>
+
+    <select id="findBDParameterIndexByModuleId" resultMap="bDParameterIndexResultMap">
+        SELECT 
+            a.bd_parameter_index_id, 
+            a.table_type, 
+            a.table_id, 
+            a.parameter_id, 
+            a.parameter_index_type, 
+            a.parameter_index_id, 
+            a.business_logic_id
+        FROM bd_parameter_index a
+        LEFT JOIN business_logic b ON a.business_logic_id = b.business_logic_id
+        WHERE b.module_id = #{moduleId}
+    </select>
+    
+    <!-- generate source code of commmon blogic -->
+    <select id="findBDParameterIndexByModuleCommon" resultMap="bDParameterIndexResultMap">
+        SELECT 
+            a.bd_parameter_index_id, 
+            a.table_type, 
+            a.table_id, 
+            a.parameter_id, 
+            a.parameter_index_type, 
+            a.parameter_index_id, 
+            a.business_logic_id
+        FROM bd_parameter_index a
+        LEFT JOIN business_logic b ON a.business_logic_id = b.business_logic_id
+        WHERE b.project_id = #{projectId} AND b.module_id is null and b.blogic_type = 1   
+    </select>
+	
+	<select id="getSequencesBDParameterIndex" resultType="Long">
+        select SETVAL('bd_parameter_index_seq'::regclass, NEXTVAL('bd_parameter_index_seq'::regclass) + #{size})
+    </select>
+</mapper>

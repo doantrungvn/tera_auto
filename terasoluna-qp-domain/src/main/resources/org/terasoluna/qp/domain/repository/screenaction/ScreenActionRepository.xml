@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="org.terasoluna.qp.domain.repository.screenaction.ScreenActionRepository">
+
+	<resultMap id="screenActionResultMap" type="ScreenAction">
+		<id property="screenActionId" column="screen_action_id" />
+		<result property="fromScreenId" column="from_screen_id" />
+		<result property="toScreenId" column="to_screen_id" />
+		<result property="toScreenCode" column="to_screen_code" />
+		<result property="messageDesign.messageString" column="from_screen_name" />
+		<result property="messageDesign.messageString" column="to_screen_name" />
+		<result property="actionType" column="action_type" />
+		<result property="connectionMsg" column="connection_msg" />
+		<result property="submitMethodType" column="submit_method_type" />
+		<result property="businessLogicId" column="business_logic_id" />
+		<result property="createdBy" column="created_by" />
+        <result property="createdDate" column="created_date" />
+        <result property="updatedBy" column="updated_by" />
+        <result property="updatedDate" column="updated_date" />
+        <result property="toScreenText" column="message_string" />
+        <result property="toBlogicText" column="blogic_name" />
+        <result property="fromScreenPatternType" column="from_screen_pattern_type" />
+        <result property="toScreenPatternType" column="to_screen_pattern_type" />
+        <result property="toScreenTemplateType" column="to_screen_template_type" />
+        <result property="toBlogicReturnType" column="to_blogic_return_type" />
+        <result property="toBlogicInScreenId" column="to_blogic_in_screenId" />
+        <result property="navigateToBlogicId" column="navigate_to_blogic_id" />
+        <result property="navigateToBlogicText" column="business_logic_name" />
+        <result property="navigateToBlogicCode" column="business_logic_code" />
+        <result property="toBlogicScreenPatternType" column="to_blogic_screen_pattern_type" />
+        <result property="toBlogicScreenTemplateType" column="to_blogic_screen_template_type" />
+         <result property="toScreenByBlogicId" column="to_screen_by_blogic_id" />
+         <result property="toScreenCodeByNavigateBlogic" column="to_screen_code_by_navigate_blogic" />
+         <result property="toModuleCode" column="to_module_code" />
+         <result property="toModuleId" column="to_module_id" />
+         <result property="navigateToBlogicText" column="blogic_auto_complete" />
+         <result property="moduleName" column="module_name" />
+         
+	</resultMap>
+	
+	<insert id="insertScreenAction" parameterType="ScreenAction">
+		<selectKey keyProperty="screenActionId" resultType="Long"
+			order="BEFORE">
+			SELECT NEXTVAL('screen_action_seq'::REGCLASS)
+		</selectKey>
+		INSERT INTO
+		screen_action
+		(
+			screen_action_id,
+			from_screen_id,
+			to_screen_id,
+			action_type,
+			connection_msg,
+			submit_method_type,
+			business_logic_id,
+			created_by,
+	        created_date,
+	        updated_by,
+	        updated_date,
+	        navigate_to_blogic_id
+		)
+		VALUES
+		(
+			#{screenActionId},
+			#{fromScreenId},
+			#{toScreenId},
+			#{actionType},
+			#{connectionMsg},
+			#{submitMethodType},
+			#{businessLogicId},
+			#{createdBy},
+            #{createdDate},
+            #{updatedBy},
+            #{updatedDate},
+            #{navigateToBlogicId}
+		)
+	</insert>
+	
+	<insert id="insertScreenActionWithParam" parameterType="ScreenAction">
+		<selectKey keyProperty="screenAction.screenActionId" resultType="Long"
+			order="BEFORE">
+			SELECT NEXTVAL('screen_action_seq'::REGCLASS)
+		</selectKey>
+		INSERT INTO
+		screen_action
+		(
+			screen_action_id,
+			from_screen_id,
+			to_screen_id,
+			action_type,
+			connection_msg,
+			submit_method_type,
+			business_logic_id,
+			created_by,
+	        created_date,
+	        updated_by,
+	        updated_date,
+	        navigate_to_blogic_id
+		)
+		VALUES
+		(
+            #{screenAction.screenActionId},
+			#{screenAction.fromScreenId},
+			#{screenAction.toScreenId},
+			#{screenAction.actionType},
+			#{screenAction.connectionMsg},
+			#{screenAction.submitMethodType},
+			#{screenAction.businessLogicId},
+			#{screenAction.createdBy},
+            #{screenAction.createdDate},
+            #{screenAction.updatedBy},
+            #{screenAction.updatedDate},
+            #{screenAction.navigateToBlogicId}
+		);
+		<if test="screenAction.listScreenParameters != null and screenAction.listScreenParameters.size() > 0 ">
+			INSERT INTO 
+			screen_action_param
+			(
+            	screen_action_id, 
+            	domain_tbl_mapping_id, 
+            	domain_tbl_mapping_item_id, 
+            	action_param_code, action_param_name, 
+            	data_type, 
+	            array_flg, 
+	            param_seq_no, 
+	            parent_screen_action_param_id, 
+	            created_by, 
+	            created_date, 
+	            updated_by, 
+	            updated_date,
+	            screen_item_code
+	        )
+	    	VALUES 
+	    	<foreach item="item" collection="screenAction.listScreenParameters" separator=",">
+	    		
+	    	(
+	    		#{screenAction.screenActionId},
+	    		#{item.domainTblMappingId},
+	    		#{item.domainTblMappingItemId},
+	    		#{item.actionParamCode},
+	    		#{item.actionParamName},
+	    		#{item.dataType},
+	    		#{item.arrayFlg},
+	    		#{item.paramSeqNo},
+	    		#{item.parentScreenActionParamId},
+	            #{item.createdBy},
+	            #{item.createdDate},
+	            #{item.updatedBy}, 
+	            #{item.updatedDate},
+	            #{item.screenItemCode} 
+			)
+			</foreach>;
+		</if>
+	</insert>
+	<!-- (select x.screen_pattern_type from screen_design x LEFT JOIN screen_action a1 ON x.screen_id = a1.from_screen_id where a1.from_screen_id = #{screenId}) AS from_screen_pattern_type,
+	 (select x.screen_pattern_type from screen_design x LEFT JOIN screen_action a1 ON x.screen_id = a1.to_screen_id where a1.from_screen_id = #{screenId}) AS to_screen_pattern_type, -->
+    <!-- Select all action of from screen -->
+    <select id="findAllActionByScreenId" parameterType="_long" resultMap="screenActionResultMap">
+        <![CDATA[
+	      SELECT 
+             a.screen_action_id,
+             a.from_screen_id,
+             (select m.module_name from module m inner join screen_design sd on m.module_id = sd.module_id where sd.screen_id = a.from_screen_id) as module_name,
+             a.to_screen_id,
+             (select screen_pattern_type from screen_design x where x.screen_id = a.to_screen_id) as to_screen_pattern_type,
+             a.action_type,
+             a.connection_msg,
+             a.submit_method_type,
+             a.navigate_to_blogic_id,
+             a.business_logic_id,
+             (select business_logic_name from business_logic where business_logic_id = a.navigate_to_blogic_id) as blogic_auto_complete
+         FROM 
+          	screen_action a
+         WHERE 
+             a.from_screen_id = #{screenId};
+	     ]]>
+    </select>
+    
+    <select id="screenActionParamGetSequences" resultType="Long">
+    	select SETVAL('screen_action_param_seq'::regclass, NEXTVAL('screen_action_param_seq'::regclass) + #{size})
+    </select>
+    
+     <select id="findById" resultMap="screenActionResultMap">
+		SELECT 
+			a.screen_action_id, 
+			a.from_screen_id, 
+			a.to_screen_id, 
+			a.action_type,
+			a.connection_msg, 
+			a.submit_method_type, 
+			a.business_logic_id, 
+			a.created_by,
+			a.created_date,
+			a.updated_by, 
+			a.updated_date,
+			m.message_string,
+			b.screen_code as to_screen_code,
+			b.template_type as to_screen_template_type,
+			b.screen_pattern_type as to_screen_pattern_type,
+			mo.module_code as to_module_code,
+			b.module_id as to_module_id,
+			bl.business_logic_name as blogic_name,
+			bl.return_type as to_blogic_return_type,
+			bl.screen_id as to_blogic_in_screenId,
+			sd.screen_pattern_type AS to_blogic_screen_pattern_type,
+			sd.template_type AS to_blogic_screen_template_type,
+			a.navigate_to_blogic_id,
+			bl1.business_logic_name
+  		FROM screen_action a
+  		LEFT JOIN screen_design b on a.to_screen_id = b.screen_id
+  		LEFT JOIN module mo ON mo.module_id = b.module_id
+  		LEFT JOIN message_design m on (b.message_code = m.message_code and m.language_id=#{languageId})
+  		LEFT JOIN business_logic bl on a.to_screen_id = bl.business_logic_id
+  		LEFT JOIN business_logic bl1 on a.navigate_to_blogic_id = bl1.business_logic_id
+  		LEFT JOIN screen_design sd ON sd.screen_id = bl.screen_id
+		WHERE
+		    a.screen_action_id = #{screenActionId}
+    </select>
+    
+     <select id="findByIdOfNavigateBlogic" resultMap="screenActionResultMap">
+	    	SELECT DISTINCT
+				a.screen_action_id, 
+				a.from_screen_id, 
+				a.to_screen_id,
+				mo.module_code as to_module_code,
+				mo.module_id as to_module_id,
+				a.action_type,
+				a.connection_msg, 
+				a.submit_method_type, 
+				a.business_logic_id, 
+				a.created_by,
+				a.created_date,
+				a.updated_by, 
+				a.updated_date,
+				m.message_string,
+				a.navigate_to_blogic_id,
+				sd.screen_pattern_type AS to_blogic_screen_pattern_type,
+				sd.template_type AS to_blogic_screen_template_type,
+				sd.screen_code AS to_screen_code_by_navigate_blogic,
+				bl1.business_logic_name,
+				bl1.business_logic_code as business_logic_code
+				
+	  		FROM screen_action a
+	  		LEFT JOIN business_logic bl1 on a.navigate_to_blogic_id = bl1.business_logic_id
+	  		LEFT JOIN screen_design sd ON sd.screen_id = bl1.screen_id
+	  		LEFT JOIN module mo ON mo.module_id = sd.module_id
+	  		LEFT JOIN message_design m on (sd.message_code = m.message_code and m.language_id = #{languageId})
+	  		
+			WHERE
+			    a.screen_action_id = #{screenActionId}
+    </select>
+    
+    <update id="updateBLoicNavigator" parameterType="ScreenAction">
+    	UPDATE screen_action
+   			SET navigate_to_blogic_id= #{navigateToBlogicId}
+   		WHERE screen_action_id= #{screenActionId}
+    </update>
+    
+    <select id="getScreenActionByLstToScreenId" resultMap="screenActionResultMap">
+    	SELECT 
+			a.screen_action_id, 
+			a.from_screen_id, 
+			a.to_screen_id, 
+			a.action_type,
+			a.connection_msg, 
+			a.submit_method_type, 
+			a.business_logic_id, 
+			a.created_by,
+			a.created_date,
+			a.updated_by, 
+			a.updated_date,
+			a.navigate_to_blogic_id
+  		FROM screen_action a
+  		<if test="lstToScreenId != null and lstToScreenId.size() > 0">
+			WHERE a.to_screen_id IN
+			<foreach item="item" collection="lstToScreenId" separator="," close=")" open="(">
+    			#{item}
+    		</foreach>
+    	</if>
+    	ORDER BY
+    		a.screen_action_id
+    </select>
+    
+     <select id="getNavigateByActionId" resultMap="screenActionResultMap">
+	    	SELECT DISTINCT nc.*
+			FROM
+				screen_action sa inner join sequence_logic sl ON (sa.navigate_to_blogic_id = sl.business_logic_id)
+			INNER JOIN 
+				navigator_component nc ON sl.sequence_logic_id = nc.sequence_logic_id
+			WHERE
+			    screen_action_id = #{screenActionId}
+			LIMIT 1
+    </select>
+    
+    
+</mapper>

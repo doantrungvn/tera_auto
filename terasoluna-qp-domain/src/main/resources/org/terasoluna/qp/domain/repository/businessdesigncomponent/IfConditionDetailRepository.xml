@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.businessdesigncomponent.IfConditionDetailRepository">
+
+    <resultMap id="ifConditionDetailResultMap" type="IfConditionDetail">
+        <id property="ifConditionId" column="if_condition_id" />
+        <result property="caption" column="caption" />
+        <result property="formulaDefinitionContent" column="condition" />
+        <result property="conditionRemark" column="remark" />
+        <result property="ifComponentId" column="if_component_id" />
+        <result property="formulaDefinitionId" column="formula_definition_id" />
+        <result property="usedConditionFlg" column="used_condition_flg" />
+    </resultMap>
+    <insert id="registerIfConditionDetail" >
+    	<if test="ifConditionItems != null and  ifConditionItems.size() > 0 ">
+			INSERT INTO if_condition_detail
+				(
+            		caption, 
+            		condition, 
+            		remark, 
+            		if_component_id, 
+            		formula_definition_id,
+            		used_condition_flg
+            	)
+	    		VALUES 
+	    		<foreach item="item" collection="ifConditionItems" separator=",">
+				(
+					#{item.caption}, 
+					#{item.formulaDefinitionContent}, 
+					#{item.conditionRemark}, 
+					#{item.ifComponentId},
+	            	#{item.formulaDefinitionId},
+	            	#{item.usedConditionFlg}
+	            )
+				</foreach>;
+		</if>
+    </insert>
+    <select id="findIfConditionByBusinessLogic" resultMap="ifConditionDetailResultMap">
+		SELECT 
+			icd.if_condition_id, 
+			icd.caption, 
+			icd.condition, 
+			icd.remark, 
+			icd.if_component_id, 
+			icd.formula_definition_id,
+			ic.sequence_logic_id,
+			icd.used_condition_flg
+		FROM if_condition_detail icd
+		lEFT JOIN if_component ic
+		  on (ic.if_component_id = icd.if_component_id )
+		WHERE EXISTS
+		    (SELECT sl.sequence_logic_id
+		     FROM sequence_logic sl
+		     WHERE sl.business_logic_id = #{businessLogicId}
+		       AND component_type = 9
+		       AND sl.sequence_logic_id = ic.sequence_logic_id)
+		ORDER BY icd.if_condition_id
+    </select>
+    <select id="findIfConditionByModule" resultMap="ifConditionDetailResultMap">
+		SELECT 
+			if_condition_id, 
+			caption, 
+			condition, 
+			a.remark, 
+			a.if_component_id, 
+			formula_definition_id,
+			a.used_condition_flg
+  		FROM if_condition_detail a
+		lEFT JOIN if_component b
+		  on (b.if_component_id = a.if_component_id )
+		WHERE EXISTS
+		    (SELECT c.sequence_logic_id
+		     FROM sequence_logic c
+		     INNER JOIN business_logic d ON c.business_logic_id = d.business_logic_id
+		     WHERE d.module_id = #{moduleId}
+		       AND component_type = 9
+		       AND c.sequence_logic_id = b.sequence_logic_id)
+		ORDER BY a.if_condition_id
+    </select>
+    
+    <select id="findIfConditionByProject" resultMap="ifConditionDetailResultMap">
+		SELECT 
+			if_condition_id, 
+			caption, 
+			condition, 
+			a.remark, 
+			a.if_component_id, 
+			formula_definition_id,
+			a.used_condition_flg
+  		FROM if_condition_detail a
+		lEFT JOIN if_component b
+		  on (b.if_component_id = a.if_component_id )
+		WHERE EXISTS
+		    (SELECT c.sequence_logic_id
+		     FROM sequence_logic c
+		     INNER JOIN business_logic d ON c.business_logic_id = d.business_logic_id
+		     WHERE d.project_id = #{projectId}
+		       AND component_type = 9
+		       AND c.sequence_logic_id = b.sequence_logic_id)
+		ORDER BY a.if_condition_id
+    </select>
+    
+    <!-- generate source code of commmon blogic -->
+    <select id="findIfConditionByModuleCommon" resultMap="ifConditionDetailResultMap">
+		SELECT 
+			if_condition_id, 
+			caption, 
+			condition, 
+			a.remark, 
+			a.if_component_id, 
+			formula_definition_id,
+			a.used_condition_flg
+  		FROM if_condition_detail a
+		lEFT JOIN if_component b
+		  on (b.if_component_id = a.if_component_id )
+		WHERE EXISTS
+		    (SELECT c.sequence_logic_id
+		     FROM sequence_logic c
+		     INNER JOIN business_logic d ON c.business_logic_id = d.business_logic_id
+		     WHERE d.project_id = #{projectId} AND d.module_id is null and d.blogic_type = 1
+		       AND component_type = 9
+		       AND c.sequence_logic_id = b.sequence_logic_id)
+		ORDER BY a.if_component_id,
+                a.if_condition_id
+    </select>
+</mapper>

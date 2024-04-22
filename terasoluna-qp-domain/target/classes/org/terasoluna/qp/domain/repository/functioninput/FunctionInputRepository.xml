@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="org.terasoluna.qp.domain.repository.functioninput.FunctionInputRepository">
+
+	<resultMap id="functionMethodInputResultMap" type="org.terasoluna.qp.domain.model.FunctionMethodInput">
+		<id property="functionInputId" column="method_input_id" />
+		<result property="functionInputCode" column="method_input_name" />
+		<result property="functionInputName" column="function_input_name" />
+		<result property="dataType" column="data_type" />
+		<result property="arrayFlg" column="array_flg" />
+		<result property="functionMasterId" column="function_master_id" />
+		<result property="itemSeqNo" column="item_seq_no" />
+	</resultMap>
+    <insert id="register" >
+    	<if test="lstItems != null and  lstItems.size() > 0 ">
+			INSERT INTO 
+				function_input
+			(
+	           	method_input_name,
+	           	function_input_name,
+	           	data_type,
+	           	array_flg,
+	           	function_master_id,
+	           	item_seq_no
+	        )
+	    	VALUES 
+	    	<foreach item="item" collection="lstItems" separator=",">
+	    	(
+	    		#{item.functionInputCode},
+	    		#{item.functionInputName},
+	    		#{item.dataType},
+	    		#{item.arrayFlg},
+	    		#{item.functionMasterId},
+	    		#{item.itemSeqNo}
+			)
+			</foreach>;
+		</if>
+    </insert>
+    
+    <select id="getFunctionInput" resultMap="functionMethodInputResultMap" parameterType="Long">
+    <![CDATA[
+        SELECT   
+            method_input_id, 
+            method_input_name,
+            function_input_name,
+            data_type,
+           	array_flg,
+           	function_master_id,
+           	item_seq_no
+        FROM 
+        	function_input 
+       	WHERE
+       		function_master_id= #{functionMasterId}
+    	ORDER BY
+    		item_seq_no ASC
+    ]]>
+    </select>
+    
+    <update id="modify" parameterType="FunctionMethodInput">
+    <![CDATA[
+         UPDATE 
+            function_input
+         SET 
+            method_input_name = #{functionInputCode}, 
+            function_input_name = #{functionInputName}, 
+            data_type = #{dataType}, 
+            array_flg = #{arrayFlg}, 
+            item_seq_no = #{itemSeqNo} 
+         WHERE 
+            method_input_id = #{functionInputId}
+    ]]>
+    </update>
+    
+    <delete id="delete" >
+    	<if test="functionInputItems != null and  functionInputItems.size() > 0 ">
+			DELETE FROM 
+				function_input
+			WHERE 
+				method_input_id 
+			IN
+			<foreach item="item" index="index" collection="functionInputItems" open="(" separator="," close=")">
+            	#{item.functionInputId}
+            </foreach>
+		</if>
+    </delete>
+    
+    <select id="findFunctionInputByFormula" resultMap="functionMethodInputResultMap" parameterType="Long">
+    <![CDATA[
+        SELECT   
+            method_input_id, 
+            method_input_name,
+            function_input_name,
+            data_type,
+           	array_flg,
+           	function_master_id,
+           	item_seq_no
+        FROM 
+        	function_input fi
+       	WHERE
+       		exists
+       		(
+		SELECT
+				function_master_id
+			FROM function_master fm
+			WHERE project_id = #{projectId}
+			and fm.function_master_id = fi.function_master_id
+       		)
+    	ORDER BY
+    		item_seq_no ASC
+    ]]>
+    </select>
+    
+</mapper>

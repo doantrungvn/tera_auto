@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="org.terasoluna.qp.domain.repository.generatemanagement.GenerateManagementRepository">
+	<resultMap id="resultMap" type="GenerateHistory">
+		<result property="generateId" column="job_seq_id" />
+		<result property="generateMode" column="generate_mode" />
+		<result property="generateDate" column="generate_date" />
+		<result property="generateBy" column="generate_by" />
+		<result property="generateByName" column="username" />
+		<result property="generateStatus" column="generate_status" />
+		<result property="curAppStatus" column="cur_app_status" />
+		<result property="blogicAppStatus" column="blogic_app_status" />
+		<result property="projectId" column="project_id" />
+		<result property="isDownload" column="is_download" />
+		<result property="fileName" column="file_name" />
+		<result property="updatedDate" column="updated_date" />
+		<result property="languageId" column="language_id" />
+	</resultMap>
+	<resultMap id="projectResultMap" type="Project">
+		<result property="projectId" column="project_id" />
+		<result property="projectName" column="project_name" />
+		<result property="projectCode" column="project_code" />
+		<result property="status" column="status" />
+		<result property="dbType" column="db_type" />
+	</resultMap>
+	<resultMap id="jobControlResultMap" type="JobControl">
+		<result property="jobSeqId" column="job_seq_id" />
+		<result property="jobAppCd" column="job_app_cd" />
+		<result property="jobArgNm1" column="job_arg_nm1" />
+		<result property="jobArgNm2" column="job_arg_nm2" />
+		<result property="updatedDate" column="upd_date_time" />
+	</resultMap>
+
+	<!-- Finds all generate history by project id -->
+	<select id="findPageBySearchCriteria" resultMap="resultMap">
+		<![CDATA[
+		SELECT
+			t1.job_seq_id,
+			t1.job_app_cd,
+			t1.job_arg_nm1 as generate_mode,
+			t1.job_arg_nm2 as project_id,
+			t1.job_arg_nm4 as generate_by,
+			t1.job_arg_nm5 as file_name,
+			t1.cur_app_status,
+			t1.blogic_app_status,
+			(
+			CASE WHEN cur_app_status in ('1', '0') AND t1.add_date_time + CAST(#{batchJobTimeOut} AS INTERVAL) < now() THEN '3'
+			ELSE cur_app_status END
+			) AS generate_status,
+			t1.add_date_time as generate_date,
+			t1.upd_date_time as updated_date,
+			t2.username,
+			t1.job_arg_nm6 as is_download
+		FROM 
+			job_control t1
+		LEFT JOIN 
+			account t2 ON CAST (t1.job_arg_nm4 as numeric ) = t2.account_id
+		WHERE
+			t1.job_arg_nm2 = #{projectId} AND job_app_cd = 'Generate'
+		]]>
+		<if test="pageable.sort != null">
+			ORDER BY
+			<foreach collection="pageable.sort" item="order" separator=",">
+				${order.property} ${order.direction}
+			</foreach>
+		</if>
+		<if test="pageable.sort == null">
+			ORDER BY t1.add_date_time DESC
+		</if>
+		<![CDATA[
+			LIMIT
+				#{pageable.pageSize}
+			OFFSET
+				 #{pageable.offset}
+		]]>
+	</select>
+
+	<!-- Count generate history by project id -->
+	<select id="countBySearchCriteria" resultType="_long">
+		<![CDATA[
+			SELECT 
+				COUNT(*) 
+			FROM 
+				job_control
+			WHERE
+				job_arg_nm2 = #{projectId} AND job_app_cd = 'Generate'
+		]]>
+	</select>
+
+	<!-- Count generate history is generating by project id -->
+	<select id="countGenerateHistoryIsGenerating" resultType="long" >
+		<![CDATA[
+			SELECT 
+				COUNT(*) 
+			FROM 
+				job_control
+			WHERE
+				job_arg_nm2 = #{generateHistory.projectId} AND job_arg_nm1 = #{generateHistory.generateMode}
+			AND 
+				(
+					CASE WHEN cur_app_status in ('1', '0') AND add_date_time + CAST(#{batchJobTimeOut} AS INTERVAL) < now() THEN '2' ELSE cur_app_status END
+				) != '2' 
+		]]>
+		<if test="generateHistory.generateId != null or generateHistory.generateId != ''">
+			<![CDATA[ AND job_seq_id != #{generateHistory.generateId}]]>
+		</if>
+	</select>
+
+	<!-- insert generate history -->
+	<insert id="registerGenerateHistory" parameterType="org.terasoluna.qp.domain.model.GenerateHistory" useGeneratedKeys="true" keyProperty="GenerateHistory.generateId" keyColumn="job_seq_id">
+		<selectKey keyProperty="generateId" resultType="String"
+			order="BEFORE">
+			SELECT NEXTVAL('job_control_seq'::regclass)
+		</selectKey>
+		<![CDATA[
+		INSERT INTO 
+			job_control
+			(
+			job_seq_id,
+			job_app_cd,
+			job_arg_nm1,
+			job_arg_nm2,
+			job_arg_nm3,
+			job_arg_nm4,
+			job_arg_nm5,
+			job_arg_nm6,
+			add_date_time,
+			cur_app_status
+			)
+		VALUES 
+			(
+			CAST (#{generateId} AS varchar(10)),
+			'Generate',
+			#{generateMode},
+			#{projectId},
+			#{languageId},
+			#{generateBy},
+			#{fileName},
+			#{isDownload},
+			#{generateDate},
+			#{generateStatus}
+			)
+		]]>
+	</insert>
+
+	<!-- get first job_seq_id -->
+	<select id="getJobSeqIdEnd" resultMap="jobControlResultMap">
+		<![CDATA[
+			SELECT
+				job_seq_id,
+				job_app_cd,
+				job_arg_nm1,
+				job_arg_nm2,
+				upd_date_time
+			FROM 
+				job_control
+			WHERE
+				cur_app_status = '2'
+			LIMIT 1	
+		]]>
+	</select>
+
+	<!-- get first job_seq_id -->
+	<select id="getBatchJobError" resultMap="jobControlResultMap">
+		<![CDATA[
+			SELECT
+				job_seq_id,
+				job_app_cd,
+				job_arg_nm1,
+				upd_date_time
+			FROM 
+				job_control
+			WHERE
+				cur_app_status = '2' AND blogic_app_status = '-1'
+		]]>
+	</select>
+
+	<!-- update batch job -->
+	<update id="updateBatchJob" parameterType="JobControl">
+		<![CDATA[	
+			UPDATE 
+				job_control 
+			SET 
+				job_arg_nm1 = #{jobArgNm1},
+				upd_date_time = #{systemTime},
+				cur_app_status = '0'
+			WHERE 
+				job_seq_id= #{jobSeqId}
+		]]>
+		<if test="updatedDate != null">
+			AND upd_date_time = #{updatedDate}
+		</if>
+	</update>
+
+	<!-- update batch job error -->
+	<update id="updateBatchJobError" parameterType="JobControl">
+		<![CDATA[	
+			UPDATE 
+				job_control 
+			SET 
+				job_arg_nm1 = #{jobArgNm1},
+				upd_date_time = #{systemTime},
+				blogic_app_status = '0'
+			WHERE 
+				job_seq_id= #{jobSeqId}
+		]]>
+		<if test="updatedDate != null">
+			and upd_date_time = #{updatedDate}
+		</if>
+	</update>
+
+	<!-- update generate history -->
+	<update id="modifyGenerateHistory" parameterType="GenerateHistory">
+		<![CDATA[	
+			UPDATE 
+				job_control
+			SET 
+				cur_app_status = #{curAppStatus},
+				blogic_app_status = #{blogicAppStatus},
+				job_arg_nm5 = #{fileName},			
+				job_arg_nm6 = #{isDownload},
+				upd_date_time = #{updatedDate}
+			WHERE 
+				job_seq_id = #{generateId} 
+		]]>
+	</update>
+
+	<!-- update generate history by id -->
+	<update id="updateGenerateHistoryById" parameterType="GenerateHistory">
+		<![CDATA[	
+			UPDATE 
+				job_control 
+			SET 
+				cur_app_status = #{generateStatus},
+				add_date_time = #{generateDate},
+				job_arg_nm5 = #{fileName},
+				upd_date_time = #{generateDate}
+			WHERE 
+				job_seq_id = #{generateId} and add_date_time = #{updatedDate}
+		]]>
+	</update>
+
+	<select id="getLastFileName" resultType="String" parameterType="org.terasoluna.qp.domain.model.GenerateHistory">
+		<![CDATA[
+			SELECT 
+				job_arg_nm5
+			FROM 
+				job_control
+			WHERE
+				job_arg_nm2 = #{projectId} AND job_arg_nm1= #{generateMode} AND cur_app_status = '2'
+			ORDER BY add_date_time desc
+			LIMIT 1
+		]]>
+	</select>
+
+	<!-- Count generating -->
+	<select id="countAllGenerateHistoryIsGenerating" resultType="long" parameterType="String">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM 
+				job_control
+			WHERE
+				(
+					CASE WHEN cur_app_status in ('1', '0') AND add_date_time + CAST(#{batchJobTimeOut} AS INTERVAL) < now() THEN '2' ELSE cur_app_status END
+				) != '2'
+		]]>
+		<if test="generateId != null or generateId != ''">
+			<![CDATA[ AND job_seq_id != #{generateId}]]>
+		</if>
+	</select>
+
+	<!-- get generate history by generate history id -->
+	<select id="getGenerateHistoryById" resultMap="resultMap">
+		<![CDATA[
+			SELECT
+				job_seq_id,
+				job_arg_nm1 as generate_mode,
+				job_arg_nm2 as project_id,
+				job_arg_nm3 as language_id,
+				job_arg_nm4 as generate_by,
+				job_arg_nm5 as file_name,
+				add_date_time as generate_date,
+				cur_app_status,
+				blogic_app_status,
+				upd_date_time as updated_date
+			FROM 
+				job_control t1
+			WHERE
+				job_seq_id = #{generateId}
+		]]>
+	</select>
+
+
+	<!-- update download flag -->
+	<update id="updateDownloadFlag" parameterType="GenerateHistory">
+	<![CDATA[	
+		UPDATE 
+			job_control 
+		SET 
+			job_arg_nm6 = '0'
+		WHERE 
+			job_arg_nm2 = #{projectId} AND job_arg_nm1= #{generateMode} AND cur_app_status = '2'
+	]]>
+	</update>
+
+
+</mapper>

@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="org.terasoluna.qp.domain.repository.generatesourcecode.GenerateServiceImpDetailRepository">
+    <resultMap id="sequenceLogicResultMap" type="SequenceLogic">
+    	<id property="sequenceLogicId" column="sequence_logic_id" />
+        <result property="sequenceLogicName" column="sequence_logic_name" />
+        <result property="componentType" column="component_type" />
+        <result property="componentId" column="component_id" />
+        <result property="sequenceNo" column="sequence_no" />
+        <result property="xCoordinates" column="x_coordinates" />
+        <result property="yCoordinates" column="y_coordinates" />
+        <result property="remark" column="remark" />
+		<result property="businessLogicId" column="business_logic_id" />
+        <result property="parentSequenceLogicId" column="parent_sequence_logic_id" />
+        <result property="groupFlg" column="group_flg" />
+        <result property="relatedSequenceLogicId" column="related_sequence_logic_id" />
+    </resultMap>
+    
+    <resultMap id="inputbeanResultMap" type="InputBean">
+    	<id property="inputBeanId" column="input_bean_id" />
+        <result property="inputBeanCode" column="input_bean_code" />
+        <result property="inputBeanName" column="input_bean_name" />
+        <result property="messageString" column="message_string" />
+        <result property="messageStringAutocomplete" column="message_string_autocomplete" />
+        <result property="inputBeanType" column="input_bean_type" />
+        <result property="dataType" column="data_type" />
+        <result property="arrayFlg" column="array_flg" />
+        <result property="screenItemId" column="screen_item_id" />
+        <result property="businessLogicId" column="business_logic_id" />
+        <result property="parentInputBeanId" column="parent_input_bean_id" />
+        <result property="itemSequenceNo" column="item_sequence_no" />
+        <result property="tblDesignId" column="tbl_design_id" />
+        <result property="tblDesignName" column="tbl_design_name" />
+        <result property="columnId" column="column_id" />
+        <result property="columnName" column="column_name" />
+    </resultMap>
+    
+    <resultMap id="outputbeanResultMap" type="OutputBean">
+    	<id property="outputBeanId" column="output_bean_id" />
+        <result property="outputBeanCode" column="output_bean_code" />
+        <result property="outputBeanName" column="output_bean_name" />
+        <result property="messageString" column="output_bean_name" />
+        <result property="messageStringAutocomplete" column="message_string" />
+        <result property="dataType" column="data_type" />
+        <result property="arrayFlg" column="array_flg" />
+        <result property="businessLogicId" column="business_logic_id" />
+        <result property="parentOutputBeanId" column="parent_output_bean_id" />
+        <result property="itemSequenceNo" column="item_sequence_no" />
+        <result property="tblDesignId" column="tbl_design_id" />
+        <result property="tblDesignName" column="tbl_design_name" />
+        <result property="columnId" column="column_id" />
+        <result property="columnName" column="column_name" />
+        <result property="columnCode" column="column_code" />
+        <result property="groupBaseTypeId" column="group_base_type_id" />
+        <result property="impactStatus" column="impact_status" />
+        <result property="screenItemId" column="screen_item_id" />
+        <result property="screenItemIdAutocomplete" column="screen_item_id_autocomplete" />
+    </resultMap>
+    
+    <resultMap id="objectdefinitionResultMap" type="ObjectDefinition">
+    	<id property="objectDefinitionId" column="object_definition_id" />
+        <result property="objectDefinitionCode" column="object_definition_code" />
+        <result property="objectDefinitionName" column="object_definition_name" />
+        <result property="dataType" column="data_type" />
+        <result property="arrayFlg" column="array_flg" />
+        <result property="businessLogicId" column="business_logic_id" />
+        <result property="parentObjectDefinitionId" column="parent_object_definition_id" />
+        <result property="itemSequenceNo" column="item_sequence_no" />
+        <result property="tblDesignId" column="tbl_design_id" />
+        <result property="tblDesignName" column="tbl_design_name" />
+        <result property="tblDesignCode" column="tbl_design_code" />
+        <result property="columnId" column="column_id" />
+        <result property="columnName" column="column_name" />
+        <result property="columnCode" column="column_code" />
+        <result property="groupBaseTypeId" column="group_base_type_id" />
+        <result property="impactStatus" column="impact_status" />
+        <result property="baseType" column="base_type" />
+    </resultMap>
+	
+   	<resultMap id="sequenceConnectorResultMap" type="SequenceConnector">
+    	<id property="sequenceConnectorId" column="sequence_connector_id" />
+        <result property="connectorSource" column="connector_source" />
+        <result property="connectorDest" column="connector_dest" />
+        <result property="connectorType" column="connector_type" />
+    </resultMap>
+	
+	<select id="findSequenceLogicByModuleId" parameterType="_long" resultMap="sequenceLogicResultMap">
+    	<![CDATA[
+			SELECT 
+				a.sequence_logic_id, 
+				a.sequence_logic_name, 
+				a.component_type, 
+				a.component_id, 
+       			a.sequence_no, 
+       			a.x_coordinates, 
+       			a.y_coordinates, 
+       			a.remark, 
+       			a.business_logic_id, 
+       			a.parent_sequence_logic_id,
+       			a.group_flg,
+       			a.related_sequence_logic_id
+  			FROM sequence_logic a
+  			INNER JOIN
+  				business_logic b ON a.business_logic_id = b.business_logic_id
+			WHERE
+				b.module_id = #{moduleId}
+			ORDER BY
+				a.sequence_logic_id
+		]]>
+	</select>
+	
+	<select id="findInputBeanByModuleId" resultMap="inputbeanResultMap">
+    	<![CDATA[
+			SELECT
+				ib.input_bean_id,
+				ib.input_bean_code,
+				ib.input_bean_name,
+				ib.input_bean_name as message_string,
+				ib.input_bean_type,
+				ib.data_type,
+				ib.array_flg,
+				ib.screen_item_id,
+				ib.business_logic_id,
+				ib.parent_input_bean_id,
+				ib.item_sequence_no,
+				ib.tbl_design_id,
+				CASE ib.input_bean_type
+					WHEN 0 THEN md.message_string
+					ELSE ib.input_bean_name
+				END AS message_string_autocomplete
+			FROM 
+				input_bean ib
+			INNER JOIN business_logic b ON ib.business_logic_id = b.business_logic_id
+			LEFT JOIN message_design md on (ib.input_bean_name = md.message_code and md.language_id = #{languageId} and md.project_id = #{projectId})
+			WHERE
+				b.module_id = #{moduleId}
+			ORDER BY
+				ib.item_sequence_no
+		]]>
+	</select>
+	
+	<select id="findOutputBeanByModuleId" parameterType="_long" resultMap="outputbeanResultMap">
+		<![CDATA[
+			SELECT
+				ob.output_bean_id,
+				ob.output_bean_code,
+				ob.output_bean_name,
+				ob.data_type,
+				ob.array_flg,
+				ob.business_logic_id,
+				ob.parent_output_bean_id,
+				ob.item_sequence_no,
+				ob.tbl_design_id, 
+				ob.column_id, 
+				ob.group_base_type_id, 
+				ob.impact_status
+			FROM 
+				output_bean ob
+			INNER JOIN 
+				business_logic b ON b.business_logic_id = ob.business_logic_id
+			WHERE
+				b.module_id = #{moduleId}
+			ORDER BY
+				ob.item_sequence_no
+		]]>
+	</select>
+	
+	<select id="findObjectDefinitionByModuleId" parameterType="_long" resultMap="objectdefinitionResultMap">
+    	<![CDATA[
+			SELECT
+				a.object_definition_id,
+				a.object_definition_code,
+				a.object_definition_name,
+				a.data_type,
+				a.array_flg,
+				a.business_logic_id,
+				a.parent_object_definition_id,
+				a.item_sequence_no,
+				a.tbl_design_id, 
+				a.column_id, 
+				a.group_base_type_id, 
+				a.impact_status
+			FROM 
+				object_definition a
+			INNER JOIN
+				business_logic b ON a.business_logic_id = b.business_logic_id
+			WHERE
+				b.module_id = #{moduleId}
+			ORDER BY
+				a.item_sequence_no
+		]]>
+	</select>
+	
+	<select id="findSequenceConnectorOfModule" parameterType="_long" resultMap="sequenceConnectorResultMap">
+    	<![CDATA[
+			SELECT 
+				sequence_connector_id, 
+				connector_source, 
+				connector_dest, 
+				connector_type
+  			FROM sequence_connector
+			where EXISTS  
+				(
+					select sequence_logic.sequence_logic_id
+					from sequence_logic
+					INNER JOIN business_logic ON business_logic.business_logic_id = sequence_logic.business_logic_id
+					where 
+						business_logic.module_id = #{moduleId} and 
+						sequence_logic.sequence_logic_id = sequence_connector.connector_source
+				)
+		]]>
+	</select>
+	
+	<select id="findAllSequenceLogicByLstBlogic" resultMap="sequenceLogicResultMap">
+		SELECT 
+			sequence_logic_id, 
+			sequence_logic_name, 
+			component_type, 
+			component_id, 
+      			sequence_no, 
+      			x_coordinates, 
+      			y_coordinates, 
+      			remark, 
+      			business_logic_id, 
+      			parent_sequence_logic_id,
+      			group_flg,
+      			related_sequence_logic_id
+ 			FROM sequence_logic
+		WHERE
+			business_logic_id in 
+			<if test="blogics != null and blogics.size() > 0 ">
+				<foreach item="item" index="index" collection="blogics" open="(" separator="," close=")">
+					#{item.businessLogicId}
+				</foreach>
+			</if>
+			<if test="blogics == null or blogics.size() == 0 ">
+				(0) 
+			</if>
+		ORDER BY
+			sequence_logic_id
+	</select>
+	
+	<select id="findAllSequenceConnectorByLstBlogic" resultMap="sequenceConnectorResultMap">
+		SELECT 
+			sequence_connector_id, 
+			connector_source, 
+			connector_dest, 
+			connector_type
+ 			FROM sequence_connector
+		where EXISTS  
+			(
+				select sequence_logic.sequence_logic_id
+				from sequence_logic
+				INNER JOIN business_logic ON business_logic.business_logic_id = sequence_logic.business_logic_id
+				where 
+					sequence_logic.sequence_logic_id = sequence_connector.connector_source 
+					AND business_logic.business_logic_id in
+					<if test="blogics != null and blogics.size() > 0 ">
+						<foreach item="item" index="index" collection="blogics" open="(" separator="," close=")">
+							#{item.businessLogicId}
+						</foreach>
+					</if>
+					<if test="blogics == null or blogics.size() == 0 ">
+						(0) 
+					</if>
+			)
+	</select>
+
+</mapper>

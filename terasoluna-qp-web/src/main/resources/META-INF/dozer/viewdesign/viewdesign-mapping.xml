@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozer.sourceforge.net" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://dozer.sourceforge.net
+          http://dozer.sourceforge.net/schema/beanmapping.xsd">
+<!-- 	relationship-type="non-cumulative" remove-orphans="true" -->
+	<mapping>
+		<class-a>org.terasoluna.qp.app.viewdesign.ViewDesignDesignForm</class-a>
+		<class-b>org.terasoluna.qp.domain.service.sqldesign.SqlDesignCompound</class-b>
+		<field>
+			<a>selectForm</a>
+			<b>sqlDesignResults</b>
+		</field>
+		<field>
+			<a>sqlDesignForm</a>
+			<b>sqlDesign</b>
+		</field>
+		<field>
+			<a>fromForm</a>
+			<b>sqlDesignTables</b>
+		</field>
+		<field>
+			<a>whereForm</a>
+			<b>sqlDesignConditions</b>
+		</field>
+		<field>
+			<a>orderByForm</a>
+			<b>sqlDesignOrders</b>
+		</field>
+		<field custom-converter="org.terasoluna.qp.app.autocomplete.converter.SqlDesignResultOrderFormConverter">
+			<a>orderByForm</a>
+			<b>sqlDesignResults</b>
+		</field>
+	</mapping>
+	<mapping>
+		<class-a>org.terasoluna.qp.app.viewdesign.ViewDesignAdvancedDesignForm</class-a>
+		<class-b>org.terasoluna.qp.domain.service.sqldesign.SqlDesignCompound</class-b>
+		<field>
+			<a>sqlDesignForm</a>
+			<b>sqlDesign</b>
+		</field>
+	</mapping>
+</mappings> 

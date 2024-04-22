@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.terasoluna.qp.domain.repository.domaindatatype.DomainDatatypeRepository">
+	<resultMap type="org.terasoluna.qp.domain.model.DomainDatatype" id="domainDatatypeResultMap">
+		<id property="domainDatatypeId" column="domain_tbl_mapping_id" />
+		<result property="domainDatatypeName" column="domain_tbl_mapping_name" />
+		<result property="domainDatatypeCode" column="domain_tbl_mapping_code" />
+		<result property="status" column="status" />
+		<result property="tableDesignId" column="tbl_design_id" />
+		<result property="tableDesignName" column="tbl_design_name" />
+		<result property="remark" column="remark" />
+		<result property="projectId" column="project_id" />
+		<result property="projectName" column="project_name" />
+		<result property="createdBy" column="created_by" />
+		<result property="createdDate" column="created_date" />
+		<result property="updatedBy" column="updated_by" />
+		<result property="updatedDate" column="updated_date" />
+	</resultMap>
+	<resultMap type="org.terasoluna.qp.domain.model.ValidationRule" id="validationRuleMap">
+		<id property="validationRuleCode" column="validation_rule_code" />
+		<result property="validationRuleName" column="validation_rule_name" />
+		<result property="include" column="include" />
+		<result property="baseTypeGroup" column="basetype_group" />
+		<result property="itemType" column="item_type_id" />
+		<result property="remark" column="remark" />
+	</resultMap>
+	<sql id="findPageByCriteriaWhere">
+		<where>
+			<if test="criteria.domainTableName != null and criteria.domainTableName != ''">
+				<bind name="domainTableName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.domainTableName)" />
+				<![CDATA[
+					AND domain_tbl_mapping_name iLIKE #{domainTableName} ESCAPE '~'
+				]]>
+			</if>
+			<if test="criteria.domainTableCode != null and criteria.domainTableCode != ''">
+				<bind name="domainTableCode" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.domainTableCode)" />
+				<![CDATA[
+					AND domain_tbl_mapping_code iLIKE #{domainTableCode} ESCAPE '~'
+				]]>
+			</if>
+			<if test="criteria.statuses != null and criteria.statuses.length > 0">
+				AND status IN
+					<foreach item="status" index="index" collection="criteria.statuses" open="(" separator="," close=")">
+						#{status} 
+					</foreach>
+			</if>
+			<if test="criteria.projectId != null and criteria.projectId!= 0">
+				<![CDATA[
+					AND d.project_id =  #{criteria.projectId}
+				]]>
+			</if>
+		</where>
+	</sql>
+	<select id="findPageByCriteria"
+		parameterType="org.terasoluna.qp.domain.repository.domaindatatype.DomainDatatypeCriteria"
+		resultMap="domainDatatypeResultMap">
+		SELECT 
+			d.domain_tbl_mapping_id,
+			d.domain_tbl_mapping_name,
+			d.domain_tbl_mapping_code, 
+			d.status,
+			(
+				SELECT 
+					project_name
+				FROM 
+					project p
+				WHERE
+					p.project_id= d.project_id
+			) project_name,
+			t.tbl_design_name
+		FROM 
+			domain_table_mapping d LEFT JOIN table_design t 
+		ON 
+			d.tbl_design_id = t.tbl_design_id
+		<include refid="findPageByCriteriaWhere" />
+
+		<if test="pageable.sort != null">
+			ORDER BY
+			<foreach collection="pageable.sort" item="account" separator=",">
+				<![CDATA[
+					${account.property} ${account.direction}
+				]]>
+			</foreach>
+		</if>
+
+		<if test="pageable.sort == null">
+			ORDER BY
+				d.updated_date DESC
+		</if>
+
+		<![CDATA[
+			LIMIT
+				#{pageable.pageSize}
+			OFFSET
+				#{pageable.offset}
+		]]>
+	</select>
+	<select id="countByCriteria"
+		parameterType="org.terasoluna.qp.domain.repository.domaindatatype.DomainDatatypeCriteria"
+		resultType="long">
+		<![CDATA[
+			SELECT 
+				COUNT(*) 
+			FROM 
+				domain_table_mapping d LEFT JOIN table_design t 
+			ON 
+				d.tbl_design_id = t.tbl_design_id
+		]]>
+		<include refid="findPageByCriteriaWhere" />
+	</select>
+
+	<select id="findOne" parameterType="long" resultMap="domainDatatypeResultMap">
+		<![CDATA[
+		SELECT 
+			domain_tbl_mapping_id,
+			domain_tbl_mapping_name,
+			domain_tbl_mapping_code, 
+			d.status,
+			d.remark,
+			t.tbl_design_id,
+			t.tbl_design_name,
+			d.project_id,
+			(
+				SELECT 
+					project_name
+				FROM 
+					project p
+				WHERE
+					p.project_id= d.project_id
+			) project_name,
+			d.created_by,
+			d.created_date,
+			d.updated_by,
+			d.updated_date
+		FROM 
+			domain_table_mapping d LEFT JOIN table_design t
+		ON
+			d.tbl_design_id = t.tbl_design_id
+		WHERE 
+			d.domain_tbl_mapping_id=#{id}
+		]]>
+	</select>
+	
+	<delete id="deleteDomainDatatype" parameterType="long">
+		<![CDATA[
+		DELETE FROM 
+			domain_table_mapping
+		WHERE 
+			domain_tbl_mapping_id=#{id}
+		]]>
+	</delete>
+	
+	<update id="updateDomainDatatype" parameterType="org.terasoluna.qp.domain.model.DomainDatatype">
+		<![CDATA[
+		UPDATE 
+			domain_table_mapping
+		SET 
+			domain_tbl_mapping_name = #{domainDatatypeName},
+			domain_tbl_mapping_code = #{domainDatatypeCode},
+			status = #{status}, 
+			remark = #{remark},
+			updated_date = #{systemTime},
+			updated_by = #{updatedBy}
+		WHERE 
+			domain_tbl_mapping_id=#{domainDatatypeId} AND updated_date = #{updatedDate}
+		]]>	
+	</update>
+
+	<insert id="insertDomainDatatype" parameterType="org.terasoluna.qp.domain.model.DomainDatatype"
+		useGeneratedKeys="true" keyProperty="DomainDatatype.domainDatatypeId" keyColumn="domain_tbl_mapping_id">
+		<selectKey keyProperty="domainDatatypeId" resultType="long" order="BEFORE">
+			SELECT NEXTVAL('domain_tbl_mapping_seq'::regclass)
+		</selectKey>
+
+		<![CDATA[
+		INSERT INTO
+			domain_table_mapping
+		(
+			domain_tbl_mapping_id,
+			domain_tbl_mapping_code,
+			domain_tbl_mapping_name,
+			status,
+			tbl_design_id,
+			remark,
+			project_id,
+			created_by,
+			created_date,
+			updated_by,
+			updated_date
+		)
+		VALUES
+		(
+			#{domainDatatypeId},
+			#{domainDatatypeCode},
+			#{domainDatatypeName},
+			#{status},
+			#{tableDesignId},
+			#{remark},
+			#{projectId},
+			#{createdBy},
+			#{createdDate},
+			#{updatedBy},
+			#{updatedDate}
+		)
+		]]>
+	</insert>
+
+	<select id="checkExistNameOrCodeOnProject"
+		parameterType="org.terasoluna.qp.domain.repository.domaindatatype.DomainDatatypeCriteria"
+		resultMap="domainDatatypeResultMap">
+		<!-- Escape special character -->
+		<bind name="dtName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toLikeCondition(criteria.domainTableName)" />
+		<bind name="dtCode" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toLikeCondition(criteria.domainTableCode)" />
+
+		<![CDATA[
+			SELECT 
+				domain_tbl_mapping_code,
+				domain_tbl_mapping_name
+			FROM 
+				domain_table_mapping d
+			WHERE
+				( domain_tbl_mapping_name iLIKE #{dtName}
+			OR 
+				domain_tbl_mapping_code iLIKE #{dtCode} 
+				)
+			AND	
+				project_id =  #{criteria.projectId}
+			AND
+				domain_tbl_mapping_id <> #{criteria.domainTableId}
+			Limit 1
+		]]>
+	</select>
+
+	<!-- DungNN get all domain mapping item using domain desing  -->
+	<select id="findAllByDomainDesign" parameterType="long" resultMap="domainDatatypeResultMap">
+		<![CDATA[
+		SELECT 
+			m.domain_tbl_mapping_name,
+			d.domain_column_name domain_tbl_mapping_code
+		FROM
+			domain_table_mapping_items d INNER JOIN domain_table_mapping m
+		ON
+			d.domain_tbl_mapping_id = m.domain_tbl_mapping_id
+		WHERE
+			d.domain_mapping_data_type=#{domainDesignId}
+		ORDER BY
+			m.domain_tbl_mapping_id
+		]]>
+	</select>
+	
+	<select id="findAllByProjectId" parameterType="_long" resultMap="domainDatatypeResultMap">
+		<![CDATA[
+		SELECT 
+			domain_tbl_mapping_id,
+			domain_tbl_mapping_name,
+			domain_tbl_mapping_code, 
+			status
+		FROM
+			domain_table_mapping
+		WHERE
+			project_id=#{projectId}
+		]]>
+	</select>
+	
+	<select id="findAllValidationRule" resultMap="validationRuleMap">
+		<![CDATA[
+		SELECT 
+			validation_rule_code,
+			validation_rule_name,
+			include,
+			basetype_group,
+			item_type_id,
+			remark
+		FROM
+			validation_rule
+		]]>
+	</select>
+	
+	<!-- For check foreign key  -->
+	<select id="findByDomainDesign" parameterType="long" resultMap="domainDatatypeResultMap">
+		<![CDATA[
+		SELECT 
+			domain_tbl_mapping_id,
+			domain_tbl_mapping_name,
+			domain_tbl_mapping_code
+		FROM 
+			domain_table_mapping d
+		WHERE
+			EXIST
+				(
+					SELECT 1
+					FROM 
+						domain_table_mapping_items i
+					WHERE 
+						domain_mapping_data_type = #{domainId}
+					AND
+						d.domain_tbl_mapping_id=i.domain_tbl_mapping_id
+				)
+		]]>
+	</select>
+
+
+	<select id="findAllValidationRuleByStatus" resultMap="validationRuleMap" parameterType="int">
+		<![CDATA[
+		SELECT 
+			validation_rule_code,
+			validation_rule_name,
+			include,
+			basetype_group,
+			item_type_id,
+			remark,
+			item_seq_no
+		FROM
+			validation_rule
+		WHERE 
+			status = #{status}
+		ORDER BY
+			item_seq_no
+		]]>
+	</select>
+</mapper>

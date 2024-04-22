@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+		<bean id="CL_SQL_AGGREGATE_FUNCTIONS" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+			<property name="map">
+				<util:map>
+					<entry key="0" value="AVG" />
+					<entry key="1" value="COUNT" />
+					<entry key="2" value="FIRST" />
+					<entry key="3" value="LAST" />
+					<entry key="4" value="MAX" />
+					<entry key="5" value="MIN" />
+					<entry key="6" value="SUM" />
+				</util:map>
+			</property>
+		</bean>
+		<bean id="CL_SQL_JOIN_TYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+			<property name="map">
+				<util:map>
+					<entry key="1" value="INNER JOIN" />
+					<entry key="2" value="LEFT JOIN" />
+					<entry key="3" value="RIGHT JOIN" />
+					<entry key="4" value="FULL JOIN" />
+					<entry key="5" value="CROSS JOIN" />
+				</util:map>
+			</property>
+		</bean>
+		<bean id="CL_SQL_OPERATOR" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+			<property name="map">
+				<util:map>
+					<entry key="0" value="cl.sys.0001" />
+					<entry key="1" value="cl.sys.0002" />
+					<entry key="2" value="cl.sys.0003" />
+					<entry key="3" value="cl.sys.0004" />
+					<entry key="4" value="cl.sys.0005" />
+					<entry key="5" value="cl.sys.0006" />
+					<entry key="6" value="cl.sys.0007" />
+					<entry key="7" value="cl.sys.0008" />
+					<entry key="8" value="cl.sys.0013" />
+					<entry key="9" value="cl.sys.0014" />
+				</util:map>
+			</property>
+		</bean>
+		<bean id="CL_SQL_ORDER_DIRECTION" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+			<property name="map">
+				<util:map>
+					<entry key="0" value="Ascending" />
+					<entry key="1" value="Descending" />
+				</util:map>
+			</property>
+		</bean>
+		<bean id="CL_SQL_COMBINING_OPERATOR" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+			<property name="map">
+				<util:map>
+					<entry key="0" value="AND" />
+					<entry key="1" value="OR" />
+				</util:map>
+			</property>
+		</bean>
+		<bean id="CL_SQL_CONDITION_TYPE" parent="AbstractJdbcCodeList">
+			<property name="querySql" value="SELECT value2, value1 FROM resources where category_cd='clConditionType'" />
+			<property name="valueColumn" value="value1" />
+			<property name="labelColumn" value="value2" />
+		</bean>
+		<bean id="CL_FACTORY_FUNCTION" parent="AbstractJdbcCodeList">
+			<property name="querySql" value="SELECT value2, value1 FROM resources where category_cd='clFactoryFunction'" />
+			<property name="valueColumn" value="value1" />
+			<property name="labelColumn" value="value2" />
+		</bean>
+		<bean id="CL_SQL_FUNCTIONS" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+			<property name="map">
+				<util:map>
+					<entry key="0" value="CONCATENATE"></entry>
+					<entry key="1" value="CONCAT"></entry>
+					<entry key="2" value="UPPER"></entry>
+					<entry key="3" value="LOWER"></entry>
+					<entry key="4" value="UCASE"></entry>
+					<entry key="5" value="LCASE"></entry>
+					<entry key="6" value="SUBSTRING"></entry>
+					<entry key="7" value="SUBSTR"></entry>
+					<entry key="8" value="MID"></entry>
+					<entry key="9" value="TRIM"></entry>
+					<entry key="10" value="LTRIM"></entry>
+					<entry key="11" value="RTRIM"></entry>
+					<entry key="12" value="TRIM"></entry>
+					<entry key="13" value="BOTH"></entry>
+					<entry key="14" value="LEADING"></entry>
+					<entry key="15" value="TRAILING"></entry>
+					<entry key="16" value="TRANSLATE"></entry>
+					<entry key="17" value="REPLACE"></entry>
+					<entry key="18" value="CHAR_LENGTH"></entry>
+					<entry key="19" value="LEN"></entry>
+					<entry key="20" value="LENGTH"></entry>
+					
+					<entry key="21" value="OCTET_LENGTH"></entry>
+					<entry key="22" value="LENB"></entry>
+					<entry key="23" value="LENGTHB"></entry>
+					<entry key="24" value="LENGTH"></entry>
+					<entry key="25" value="MOD"></entry>
+					<entry key="26" value="%"></entry>
+					<entry key="27" value="ABS"></entry>
+					<entry key="28" value="ROUND"></entry>
+					<entry key="29" value="CEILING"></entry>
+					<entry key="30" value="CEIL"></entry>
+					<entry key="31" value="FLOOR"></entry>
+					<entry key="32" value="EXP"></entry>
+					<entry key="33" value="LOG"></entry>
+					<entry key="34" value="LOG10"></entry>
+					
+					<entry key="35" value="CURRENT_DATE"></entry>
+					<entry key="36" value="CURRENT_TIME"></entry>
+					<entry key="37" value="CURRENT_TIMESTAMP"></entry>
+					<entry key="38" value="SYSDATE"></entry>
+					<entry key="39" value="NOW"></entry>
+					<entry key="40" value="EXTRACT"></entry>
+					
+					<entry key="41" value="TO_CHAR"></entry>
+					<entry key="42" value="STR"></entry>
+					<entry key="43" value="TO_NUMBER"></entry>
+					<entry key="44" value="TO_CHAR"></entry>
+					<entry key="45" value="TO_DATE"></entry>
+					<entry key="46" value="TO_TIMESTAMP"></entry>
+					<entry key="47" value="CAST"></entry>
+					<entry key="48" value="CONVERT"></entry>
+				</util:map>
+			</property>
+		</bean>
+		<bean id="CL_SQL_SQLPATTERN" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+			<property name="map">
+				<util:map>
+					<entry key="0" value="SELECT"></entry>
+					<entry key="1" value="INSERT"></entry>
+					<entry key="2" value="UPDATE"></entry>
+					<entry key="3" value="DELETE"></entry>
+				</util:map>
+			</property>
+		</bean>
+		<bean id="CL_SQL_RETURNTYPE" parent="AbstractJdbcCodeList">
+			<property name="querySql" value="SELECT value2, value1 FROM resources where category_cd='clSqlReturnType'" />
+			<property name="valueColumn" value="value1" />
+			<property name="labelColumn" value="value2" />
+		</bean>
+		<bean id="CL_SQL_DATATYPE" class="org.terasoluna.gfw.common.codelist.SimpleMapCodeList">
+			<property name="map">
+				<util:map>
+					<entry key="16" value="Common Object"></entry>
+					<entry key="17" value="External Object"></entry>
+					<entry key="14" value="Entity"></entry>
+					<entry key="0" value="Object"></entry>
+					<entry key="1" value="Byte"></entry>
+					<entry key="2" value="Short"></entry>
+					<entry key="3" value="Integer"></entry>
+					<entry key="4" value="Long"></entry>
+					<entry key="5" value="Float"></entry>
+					<entry key="6" value="Double"></entry>
+					<entry key="7" value="Character"></entry>
+					<entry key="8" value="Boolean"></entry>
+					<entry key="9" value="String"></entry>
+					<entry key="10" value="BigDecimal"></entry>
+					<entry key="11" value="Timestamp"></entry>
+					<entry key="12" value="Datetime"></entry>
+					<entry key="13" value="Time"></entry>
+					<entry key="15" value="Date"></entry>
+				</util:map>
+			</property>
+		</bean>
+		<bean id="CL_SQL_TYPE" parent="AbstractJdbcCodeList">
+			<property name="querySql" value="SELECT value2, value1 FROM resources where category_cd='clSqlType'" />
+			<property name="valueColumn" value="value1" />
+			<property name="labelColumn" value="value2" />
+		</bean>
+		<bean id="CL_SQL_TYPE_AUTOCOMPLETE" parent="AbstractJdbcCodeList">
+			<property name="querySql" value="SELECT value2, value1 FROM resources where category_cd='clSqlType' and value3='2'" />
+			<property name="valueColumn" value="value1" />
+			<property name="labelColumn" value="value2" />
+		</bean>
+		<bean id="CL_SQL_TYPE_SQLDESIGN" parent="AbstractJdbcCodeList">
+			<property name="querySql" value="SELECT value2, value1 FROM resources where category_cd='clSqlType' and value3='4'" />
+			<property name="valueColumn" value="value1" />
+			<property name="labelColumn" value="value2" />
+		</bean>
+		<bean id="CL_SQL_TYPE_VIEWDESIGN" parent="AbstractJdbcCodeList">
+			<property name="querySql" value="SELECT value2, value1 FROM resources where category_cd='clSqlType' and value3='1'" />
+			<property name="valueColumn" value="value1" />
+			<property name="labelColumn" value="value2" />
+		</bean>
+</beans>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.sqldesign.SqlDesignParametersRepository">
+
+    <resultMap id="resultMap" type="SqlDesignParameters">
+        <result property="sqlDesignParameterId" column="sql_design_parameter_id" />
+        <result property="parameterCode" column="parameter_code" />
+        <result property="parameterValue" column="parameter_value" />
+    </resultMap>
+
+    <select id="findById" parameterType="Long" resultMap="resultMap">
+        SELECT sql_design_parameter_id,
+				parameter_code,
+				parameter_value,
+		FROM sql_design_parameters
+		WHERE sql_design_parameter_id = #{sql_design_parameter_id}
+
+    </select>
+    
+    <insert id="create" parameterType="SqlDesignParameters">
+        <selectKey keyProperty="sqlDesignParameterId" resultType="long" order="BEFORE">
+            SELECT nextval('sql_design_parameters_seq') AS sqlDesignParameterId
+        </selectKey>
+        INSERT INTO
+            sql_design_parameters
+        (
+        	sql_design_parameter_id,
+            parameter_code,
+            parameter_value,
+        )
+        VALUES
+        (
+        	#{sqlDesignParameterId},
+            #{parameterCode},
+            #{parameterValue},
+        )
+    </insert>
+	
+	<update id="update" parameterType="SqlDesignParameters">
+		UPDATE sql_design_parameters
+        SET parameter_code = #{parameterCode},
+            parameter_value = #{parameterValue},
+        WHERE sql_design_parameter_id = #{sqlDesignParameterId}
+	</update>
+	
+	<delete id="delete" parameterType="SqlDesignParameters">
+		DELETE FROM sql_design_parameters
+        WHERE sql_design_parameter_id = #{sqlDesignParameterId}
+	</delete>
+</mapper>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.terasoluna.qp.domain.repository.domaindesign.ResourceRepository">
+	<resultMap type="org.terasoluna.qp.domain.model.Resource" id="resourceResultMap">
+		<id property="resourceId" column="resource_id" />
+		<result property="categoryCd" column="category_cd" />
+		<result property="resourceCd" column="resource_cd" />
+		<result property="value1" column="value1" />
+		<result property="value2" column="value2" />
+		<result property="value3" column="value3" />
+		<result property="value4" column="value4" />
+		<result property="value5" column="value5" />
+		<result property="resourceType" column="resource_type" />
+		<result property="isDefault" column="is_default" />
+		<result property="deleteFlg" column="delete_flg" />
+	</resultMap>
+
+	<select id="getAllResourceByCategoryCd" parameterType="String" resultMap="resourceResultMap">
+		<![CDATA[
+			SELECT 
+				resource_id,
+				category_cd,
+				resource_cd,
+				value1,
+				value2,
+				value3, 
+				value4, 
+				value5, 
+				resource_type, 
+				is_default,
+				delete_flg 
+			FROM 
+				Resources 
+			WHERE Category_cd= #{categoryCd}
+			]]>
+	</select>
+</mapper>

@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.menudesign.MenuDesignRepository">
+	<resultMap id="menuDesignResultMap" type="org.terasoluna.qp.domain.model.MenuDesign">
+		<id property="menuId" column="menu_id" />
+		<result property="headerMenuName" column="header_menu_name" />
+		<result property="screenId" column="screen_id" />
+		<result property="screenIdAutocomplete" column="screen_name" />
+		<result property="headerMenuAction" column="header_menu_action" />
+		<result property="headerMenuActionAutocomplete" column="header_name" />
+		<result property="menuType" column="menu_type" />
+		<result property="projectId" column="project_id" />
+		<result property="createdBy" column="created_by" />
+		<result property="createdDate" column="created_date" />
+		<result property="updatedBy" column="updated_by" />
+		<result property="updatedDate" column="updated_date" />
+		<result property="urlMainAction" column="action_url_code" />
+		<result property="urlHomePage" column="action_home_page" />
+		<result property="moduleCode" column="module_code" />
+	</resultMap>
+	
+	<resultMap id="menuDesignItemResultMap" type="org.terasoluna.qp.domain.model.MenuDesignItem">
+		<result property="menuItemId" column="menu_item_id" />
+		<result property="menuId" column="menu_id" />
+		<result property="menuName" column="menu_name" />
+		<result property="menuItemType" column="menu_item_type" />
+		<result property="actionUrlCode" column="action_url_code" />
+		<result property="itemSeqNo" column="item_seq_no" />
+		<result property="parentMenuItemId" column="parent_id" />
+		<result property="screenId" column="screen_id" />
+		<result property="screenIdAutocomplete" column="screen_name" />
+	</resultMap>
+	
+	<resultMap id="autocompleteResultMap" type="Autocomplete">
+		<result property="optionValue" column="optionValue" />
+		<result property="optionLabel" column="optionLabel" />
+		<result property="output01" column="output01" />
+		<result property="output02" column="output02" />
+		<result property="output03" column="output03" />
+		<result property="output04" column="output04" />
+		<result property="output05" column="output05" />
+	</resultMap>
+	
+	<sql id="screenDesignTableTemp">
+		WITH table_temp AS (
+			SELECT 
+				s.screen_id ,
+				(md.module_name || '/' || COALESCE (m.message_string, s.message_code)) AS screen_name,
+				(md.module_code || '/' || s.screen_code) AS action_url_code
+			FROM
+				screen_design s 
+			LEFT JOIN 
+				message_design m ON s.message_code = m.message_code and m.language_id = #{menuDesign.languageId} AND m.project_id = #{menuDesign.projectId}
+			INNER JOIN 
+				module md ON s.module_id = md.module_id AND md.project_id = #{menuDesign.projectId} 
+		)
+	</sql>
+	
+		<select id="getMenuDesignInformation" resultMap="menuDesignResultMap"
+		parameterType="MenuDesign">
+			<include refid="screenDesignTableTemp"></include>
+			SELECT a.menu_id,
+				c.message_string AS header_menu_name,
+				a.screen_id,
+				a.header_menu_action,
+				a.menu_type,
+				a.project_id,
+				a.created_by,
+				a.created_date,
+				a.updated_by,
+				a.updated_date,
+				subQuery.action_url_code,
+				table_temp.screen_name,
+				subQuery.header_name,
+				subQuery.header_menu_action,
+				table_temp.action_url_code AS action_home_page
+			FROM menu_design a
+				LEFT JOIN message_design c ON c.message_code = a.header_menu_name
+					AND c.language_id = #{menuDesign.languageId}
+					AND c.project_id = #{menuDesign.projectId}
+			LEFT JOIN table_temp ON a.screen_id = table_temp.screen_id
+			LEFT JOIN
+				(SELECT a.menu_id,
+				c.message_string AS header_menu_name,
+				a.header_menu_action,
+				a.menu_type,
+				a.project_id,
+				a.created_by,
+				a.created_date,
+				a.updated_by,
+				a.updated_date,
+				table_temp.action_url_code,
+				table_temp.screen_name header_name
+				FROM menu_design a
+				LEFT JOIN message_design c ON c.message_code = a.header_menu_name
+				AND c.language_id = #{menuDesign.languageId}
+				AND c.project_id = #{menuDesign.projectId}
+				LEFT JOIN table_temp ON a.header_menu_action = table_temp.screen_id
+				WHERE a.project_id = #{menuDesign.projectId} LIMIT 1 ) AS subQuery ON TRUE
+			WHERE a.project_id = #{menuDesign.projectId} LIMIT 1
+	</select>
+	
+	<select id="findMenuDesignByProjectId" resultMap="menuDesignResultMap" parameterType="long">
+		SELECT 
+			menu_id, 
+			menu_type, 
+			md.project_id, 
+			md.created_by, 
+			md.created_date, 
+			md.updated_by,
+			md.updated_date, 
+			header_menu_name, 
+			md.screen_id
+		FROM
+			menu_design md
+		WHERE
+			md.project_id = #{projectId}
+	</select>
+
+	<select id="findMenuDesignItemByProjectId" resultMap="menuDesignItemResultMap" parameterType="MenuDesign">
+		<include refid="screenDesignTableTemp"></include>
+		SELECT
+			a.menu_item_id,
+			a.menu_id,
+			c.message_string as menu_name,
+			a.menu_item_type,
+			a.item_seq_no,
+			a.parent_id,
+			a.screen_id,
+			table_temp.action_url_code,
+			table_temp.screen_name
+		FROM
+			menu_design_item a
+		INNER JOIN
+			menu_design b ON a.menu_id = b.menu_id AND b.project_id = #{menuDesign.projectId}
+		LEFT JOIN
+			message_design c ON c.message_code = a.menu_name AND c.language_id = #{menuDesign.languageId} AND c.project_id = #{menuDesign.projectId}
+		LEFT JOIN table_temp ON a.screen_id = table_temp.screen_id
+		WHERE
+			b.menu_id = #{menuDesign.menuId}
+		ORDER BY
+			a.item_seq_no
+	</select>
+
+	<select id="getSequencesMenuDesignItem" resultType="Long">
+		select SETVAL('menu_design_item_seq'::regclass,NEXTVAL('menu_design_item_seq'::regclass) + #{size})
+	</select>
+	
+	<insert id="createMenuDesign" parameterType="MenuDesign">
+		<selectKey keyProperty="menuId" resultType="Long" order="BEFORE">
+			SELECT nextval('menu_design_seq') AS menuId
+		</selectKey>
+		<![CDATA[
+			INSERT INTO
+				menu_design
+			(
+				menu_id,
+				menu_type,
+				header_menu_name,
+				screen_id,
+				header_menu_action,
+				project_id,
+				created_by,
+				created_date,
+				updated_by,
+				updated_date
+			)
+			VALUES
+			(
+				#{menuId},
+				#{menuType},
+				#{headerMenuName},
+				#{screenId},
+				#{headerMenuAction},
+				#{projectId},
+				#{createdBy},
+				#{createdDate},
+				#{updatedBy},
+				#{updatedDate}
+			)
+		]]>
+	</insert>
+	
+	<insert id="createMenuDesignItem" >
+		<if test="menuDesignItems != null and  menuDesignItems.size() > 0 ">
+			INSERT INTO menu_design_item
+				(
+					menu_item_id,
+					menu_id,
+					menu_name,
+					menu_item_type,
+					screen_id,
+					item_seq_no,
+					parent_id
+				)
+				VALUES 
+				<foreach item="item" collection="menuDesignItems" separator=",">
+				(
+					CAST(#{item.menuItemId} AS numeric(16,0)),
+					#{item.menuId},
+					#{item.menuName},
+					#{item.menuItemType},
+					#{item.screenId},
+					#{item.itemSeqNo},
+					CAST(#{item.parentMenuItemId} AS numeric(16,0))
+				)
+				</foreach>;
+		</if>
+	</insert>
+	
+	<delete id="deleteMenuDesignItem">
+		DELETE FROM
+			message_design c 
+		WHERE
+			project_id = #{projectId}
+		AND 
+			EXISTS 
+				(
+					SELECT
+						1
+					FROM
+						menu_design_item a
+					INNER JOIN
+						menu_design b ON a.menu_id = b.menu_id AND b.project_id = #{projectId}
+					WHERE
+						b.menu_id = #{menuId} AND c.message_code = a.menu_name
+				);
+
+		DELETE FROM
+			menu_design_item a
+		WHERE
+			EXISTS 
+				(
+					SELECT
+						1
+					FROM
+						menu_design b WHERE a.menu_id = b.menu_id AND b.project_id = #{projectId}
+				);
+	</delete>
+	
+	<delete id="deleteMenuDesign">
+		DELETE FROM
+			menu_design c 
+		WHERE
+			menu_id = #{menuId}
+			AND project_id = #{projectId}
+		
+	</delete>
+	
+	<update id="updateMenuDesign" parameterType="MenuDesign" >
+		<![CDATA[
+			UPDATE 
+				menu_design
+			SET 
+				menu_type = #{menuType},
+				screen_id= #{screenId},
+				header_menu_action= #{headerMenuAction},
+				header_menu_name= #{messageCode},
+				updated_date = #{systemTime},
+				updated_by = #{updatedBy}
+			WHERE 
+				menu_id = #{menuId}
+			AND 
+				updated_date = #{updatedDate}
+			AND 
+				project_id = #{projectId};
+
+		UPDATE 
+			message_design m
+		SET 
+			message_string = #{headerMenuName},
+			updated_by = #{updatedBy},
+			updated_date = #{systemTime}
+		WHERE 
+			project_id = #{projectId}
+		AND 
+			EXISTS 
+				(
+					SELECT
+						1
+					FROM
+						menu_design d
+					WHERE
+						d.menu_id = #{menuId} AND m.message_code = d.header_menu_name and language_id = #{languageId}
+				);
+		]]>
+	</update>
+	
+	<select id="getMenuDesignItemForPreview" resultMap="menuDesignItemResultMap" parameterType="MenuDesign">
+		WITH table_temp AS (
+			SELECT 
+				s.screen_id ,
+				(md.module_code || '/' || s.screen_code) AS action_url_code
+			FROM
+				screen_design s 
+			INNER JOIN 
+				module md ON s.module_id = md.module_id AND md.project_id = #{menuDesign.projectId} 
+		)
+		
+		SELECT
+			a.menu_item_id,
+			a.menu_id,
+			COALESCE (c.message_string, a.menu_name) as menu_name,
+			a.menu_item_type,
+			a.item_seq_no,
+			a.parent_id,
+			a.screen_id,
+			table_temp.action_url_code
+		FROM
+			menu_design_item a
+		INNER JOIN
+			menu_design b ON a.menu_id = b.menu_id AND b.project_id = #{menuDesign.projectId}
+		LEFT JOIN
+			message_design c ON c.message_code = a.menu_name AND c.language_id = #{menuDesign.languageId} AND c.project_id = #{menuDesign.projectId}
+		LEFT JOIN table_temp ON a.screen_id = table_temp.screen_id
+		ORDER BY
+			a.item_seq_no
+	</select>
+
+	<sql id="screenDesignTableTempForJSP">
+		WITH table_temp AS (
+			SELECT 
+				b.screen_id,
+				md.module_code,
+				(md.module_code || '/' || b.business_logic_code) AS action_url_code
+			FROM
+				business_logic b 
+			INNER JOIN 
+				module md ON b.module_id = md.module_id AND md.project_id = #{menuDesign.projectId}
+			WHERE
+				b.project_id = #{menuDesign.projectId} AND b.return_type = 0
+				<!-- AND b.blogic_type = 0 -->
+		)
+	</sql>
+	
+	<select id="getMenuDesignInformationForJSP" resultMap="menuDesignResultMap" parameterType="MenuDesign">
+		<include refid="screenDesignTableTempForJSP"></include>
+
+		SELECT
+			a.menu_id,
+			a.header_menu_name,
+			a.screen_id,
+			a.menu_type,
+			a.project_id,
+			a.created_by,
+			a.created_date,
+			a.updated_by,
+			a.updated_date,
+			table_temp.action_url_code,
+			table_temp.module_code,
+			a.header_menu_action
+		FROM
+			menu_design a
+		<!-- LEFT JOIN
+			message_design c ON c.message_code = a.header_menu_name AND c.language_id = #{menuDesign.languageId} AND c.project_id = #{menuDesign.projectId} -->
+		LEFT JOIN 
+			table_temp ON a.screen_id = table_temp.screen_id
+		WHERE
+			a.project_id = #{menuDesign.projectId}
+		LIMIT 1	
+	</select>
+	<select id="getNavigationInformationForJSP" resultMap="menuDesignResultMap" parameterType="MenuDesign">
+			SELECT  
+				bl1.business_logic_code AS action_home_page,
+	        	bl2.business_logic_code AS action_url_code
+			FROM 
+				menu_design md 
+			LEFT JOIN 
+				business_logic bl1 ON bl1.screen_id = md.screen_id
+			LEFT JOIN 
+				business_logic bl2 ON bl2.screen_id = md.header_menu_action
+			WHERE 1 = 1
+				<if test="screenId != null and screenId != ''">
+					AND bl1.screen_id = #{screenId} 
+				</if>
+				<if test="headerMenuAction != null and headerMenuAction != ''">
+					AND bl2.screen_id = #{headerMenuAction}  
+				</if>
+				AND (bl1.blogic_type = 0 AND bl2.blogic_type = 0)
+				AND (bl1.return_type = 0 AND bl2.return_type = 0)
+				AND md.project_id = #{projectId}
+	</select>
+	<select id="getMenuDesignItemForGenerateJSP" resultMap="menuDesignItemResultMap" parameterType="MenuDesign">
+		<include refid="screenDesignTableTempForJSP"></include>
+
+		SELECT
+			a.menu_item_id,
+			a.menu_id,
+			a.menu_name as menu_name,
+			a.menu_item_type,
+			a.item_seq_no,
+			a.parent_id,
+			a.screen_id,
+			table_temp.action_url_code
+		FROM
+			menu_design_item a
+		INNER JOIN
+			menu_design b ON a.menu_id = b.menu_id AND b.project_id = #{menuDesign.projectId}
+		<!-- LEFT JOIN
+			message_design c ON c.message_code = a.menu_name AND c.language_id = #{menuDesign.languageId} AND c.project_id = #{menuDesign.projectId} -->
+		LEFT JOIN table_temp ON a.screen_id = table_temp.screen_id
+		ORDER BY
+			a.item_seq_no
+	</select>
+	
+	<select id="autocompleteGetScreenListForMenuDesign" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		WITH table_temp AS (
+			SELECT bl.business_logic_id, bl.screen_id
+			FROM business_logic bl
+			WHERE bl.project_id = CAST(#{arg01} AS NUMERIC) AND bl.blogic_type = 0 AND bl.return_type = 0
+			<!--
+			EXCEPT
+
+			SELECT bl.business_logic_id, bl.screen_id
+			FROM input_bean INNER JOIN business_logic bl USING (business_logic_id)
+			WHERE bl.project_id = CAST(#{arg01} AS NUMERIC) AND bl.blogic_type = 0 AND bl.return_type = 0 -->
+	
+		)
+
+		SELECT
+			a.screen_id AS optionValue,
+			(md.module_name || '/' || COALESCE (m.message_string, a.message_code)) AS optionLabel
+		FROM
+			screen_design a
+		LEFT JOIN message_design m ON a.message_code = m.message_code AND m.project_id = CAST(#{arg01} AS NUMERIC)
+		
+		<if test="arg03 != null and arg03 != ''">
+			AND m.language_id = CAST(#{arg03} AS NUMERIC)
+		</if>
+		<if test="arg03 == null || arg03 == ''">
+			AND m.language_id = 1
+		</if>
+		
+		INNER JOIN module md ON a.module_id = md.module_id AND md.project_id = CAST(#{arg01} AS NUMERIC)
+		<where>
+				a.design_mode = 1 
+			OR
+				(a.design_mode = 2 AND EXISTS ( SELECT 1 FROM table_temp temp WHERE  temp.screen_id = a.screen_id ))
+			<if test="searchKey != null and searchKey != ''">
+				AND m.message_string LIKE '%' || #{searchKey} || '%'
+			</if>
+				
+			<if test="arg01 == null || arg01 == ''">
+				AND false
+			</if>
+		</where>
+
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+		<if test="arg02 == null or arg02 == ''">
+			LIMIT 20
+		</if>
+	</select>
+
+	<!--  -->
+	<select id="checkExists" resultType="int" parameterType="map">
+		SELECT
+			Count(*)
+		FROM
+			menu_design a
+		WHERE
+			a.project_id = #{projectId}
+
+	</select>
+</mapper>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.businessdesigncomponent.ValidationCheckDetailRepository">
+
+	<resultMap id="validationCheckDetailResultMap" type="ValidationCheckDetail">
+        <id property="validationCheckDetailId" column="validation_check_detail_id" />
+        <result property="inputBeanId" column="input_bean_id" />
+        <result property="inputBeanCode" column="input_bean_code" />
+        <result property="dataType" column="data_type" />
+        <result property="arrayFlg" column="array_flg" />
+        <result property="validationType" column="validation_type" />
+    </resultMap>
+    <!-- validation check detail -->
+    
+    <select id="getSequencesValidationCheckDetail" resultType="Long">
+    	select SETVAL('validation_check_detail_seq'::regclass, NEXTVAL('validation_check_detail_seq'::regclass) + #{size})
+    </select>
+    
+    <insert id="registerValidationCheckDetails" >
+    	<if test="validationCheckDetailItems != null and  validationCheckDetailItems.size() > 0 ">
+			INSERT INTO validation_check_detail
+			(
+				validation_check_detail_id,
+            	input_bean_id, 
+            	validation_type
+            )
+    		VALUES 
+    		<foreach item="item" collection="validationCheckDetailItems" separator=",">
+			(
+				#{item.validationCheckDetailId},
+				CAST(#{item.inputBeanId} AS numeric(16,0)), 
+				#{item.validationType}
+            )
+			</foreach>;
+		</if>
+    </insert>
+    
+    <select id="findValidationCheckDetailsByBusinessLogic" resultMap="validationCheckDetailResultMap">
+		SELECT 
+			a.validation_check_detail_id, 
+			a.input_bean_id,
+			a.validation_type
+  		FROM validation_check_detail a
+		WHERE EXISTS
+		    (SELECT b.input_bean_id
+		     FROM input_bean b
+		     WHERE b.business_logic_id = #{businessLogicId}
+		     	and b.input_bean_id = a.input_bean_id )
+		ORDER BY a.validation_check_detail_id
+    </select>
+    
+    <select id="findValidationCheckDetailsByInputBeanIds" resultMap="validationCheckDetailResultMap">
+		SELECT 
+			a.validation_check_detail_id, 
+			a.input_bean_id,
+			a.validation_type
+  		FROM validation_check_detail a
+		WHERE
+			<if test="lstInputbeanId != null and lstInputbeanId.size() > 0">
+				a.input_bean_id IN
+				<foreach collection="lstInputbeanId" item="item" open="(" separator="," close=")">
+					CAST(#{item} AS NUMERIC)
+				</foreach>
+			</if>
+			<if test="lstInputbeanId == null or lstInputbeanId.size() == 0">
+				FALSE
+			</if>
+	</select>
+	
+	<delete id="deleteValidationCheckDetail">
+			DELETE 
+			FROM validation_check_detail 
+			WHERE 
+			<if test="validationCheckDetailItems != null and  validationCheckDetailItems.size() > 0 ">
+				validation_check_detail_id IN
+				<foreach item="item" index="index" collection="validationCheckDetailItems" open="(" separator="," close=")">
+						#{item.validationCheckDetailId}
+				</foreach>
+			</if>
+			<if test="validationCheckDetailItems == null">
+				FALSE
+			</if>
+	</delete>
+</mapper>

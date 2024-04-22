@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.moduletablemapping.ModuleTableMappingRepository">
+	<resultMap id="moduleResultMap" type="Module">
+		<id property="moduleId" column="module_id" />
+		<result property="moduleCode" column="module_code" />
+		<result property="moduleName" column="module_name" />
+		<result property="moduleType" column="module_type"></result>
+		<result property="businessTypeId" column="business_type_id" />
+		<result property="status" column="status" />
+		<result property="confirmationType" column="comfirm_type" />
+		<result property="completeType" column="complete_type" />
+		<result property="remark" column="remark" />
+		<result property="createBy" column="created_by" />
+		<result property="createDate" column="created_date" />
+		<result property="updateBy" column="updated_by" />
+		<result property="updateDate" column="updated_date" />		
+	</resultMap>
+	<resultMap id="moduleTableMappingResultMap" type="ModuleTableMapping">
+		<id property="moduleTableMappingId" column="module_table_mapping_id" />
+		<result property="tblDesignId" column="tbl_design_id" />
+		<result property="tblDesignName" column="tbl_design_name" />
+		<result property="tableMappingType" column="table_mapping_type" /> 
+		<result property="moduleId" column="module_id" />
+		<result property="tblDesignCode" column="tbl_design_code" />
+	</resultMap>
+	<resultMap id="autocompleteResultMap" type="Autocomplete">
+		<result property="optionValue" column="optionValue" />
+		<result property="optionLabel" column="optionLabel" />
+		<result property="output01" column="output01" />
+	</resultMap>
+ 
+	<!-- Find Module Mapping by ModuleId -->
+	<select id="findOne" resultMap="moduleTableMappingResultMap">
+	<![CDATA[
+		SELECT
+			a.module_table_mapping_id,
+			a.module_id,
+			b.tbl_design_id,
+			b.tbl_design_name,
+			a.table_mapping_type
+		FROM
+			module_table_mapping AS a LEFT JOIN table_design AS b
+		ON a.tbl_design_id = b.tbl_design_id
+		WHERE
+			a.module_table_mapping_id = #{moduleTableMappingId}
+	]]>
+	</select>
+		 
+	<!-- Find Module Mapping by ModuleId -->
+	<select id="findModuleTableMappingByModuleId" resultMap="moduleTableMappingResultMap">
+	<![CDATA[
+		SELECT
+			a.module_table_mapping_id,
+			a.module_id,
+			b.tbl_design_id,
+			b.tbl_design_name,
+			b.tbl_design_code,
+			a.table_mapping_type
+		FROM
+			module_table_mapping AS a INNER JOIN table_design AS b ON a.tbl_design_id = b.tbl_design_id
+		WHERE
+			a.module_id = #{moduleId}
+		ORDER BY a.module_table_mapping_id ASC
+	]]>
+	</select>	
+
+	<!-- register -->
+	<insert id="register" parameterType="ModuleTableMapping" >
+		 INSERT INTO
+				module_table_mapping (
+				tbl_design_id,
+				module_id,
+				table_mapping_type
+			) VALUES	(
+				#{tblDesignId},
+				#{moduleId},
+				#{tableMappingType}
+			)
+	</insert>
+	
+	<!-- register -->
+	<insert id="registerArray" parameterType="ModuleTableMapping">
+		 INSERT INTO
+				module_table_mapping
+			(
+				tbl_design_id,
+				module_id,
+				table_mapping_type			
+			)				
+			VALUES
+			<foreach item="item" collection="moduleTableMapping" separator=",">
+			(
+				#{item.tblDesignId},
+				#{item.moduleId},
+				#{item.tableMappingType}
+			)
+			</foreach>
+	</insert>
+
+	<!-- Update module mapping -->
+	<update id="update">
+		UPDATE 
+			module_table_mapping
+		SET 
+			tbl_design_id=#{tblDesignId},
+			table_mapping_type=#{tableMappingType}
+		 WHERE 
+		 	module_table_mapping_id = #{moduleTableMappingId}		
+	</update>
+	
+	<!-- Delete Module by Id -->
+	<delete id="delete" parameterType="ModuleTableMapping">
+	<![CDATA[
+		DELETE FROM 
+			module_table_mapping 
+		WHERE
+			module_table_mapping_id = #{moduleTableMappingId}
+	]]>
+	</delete>
+	
+	<!-- Delete Module Mapping by Id -->
+	<delete id="deleteByModuleId" parameterType="_long">
+	<![CDATA[
+		DELETE FROM 
+			module_table_mapping 
+		WHERE
+			module_id = #{moduleId}
+	]]>
+	</delete>
+	
+	<!-- Delete ModuleTableMapping by ModuleId -->
+	<delete id="deleteAllByModuleTableMappingArrayAndModuleId">
+		SELECT 
+			* 
+		FROM 
+			module_table_mapping
+		WHERE 
+			module_id=#{moduleId}
+		AND 
+			module_table_mapping_id NOT IN 
+		<foreach item="item" index="index" collection="moduleTableMappings" open="(" separator="," close=")"> 
+			#{item.moduleTableMappingId}
+		</foreach>		
+	</delete>
+	
+	<!-- get all module by domain datatype mapping -->
+	<select id="findBytblDesignId" resultMap="moduleResultMap" parameterType="_long">
+	<![CDATA[
+		SELECT
+			a.module_id,
+			a.module_code,
+			a.module_name,
+			a.business_type_id,
+			a.status,
+			a.confirmation_type,
+			a.completion_type,
+			a.remark,
+			a.created_by,
+			a.created_date,
+			a.updated_by,
+			a.updated_date,
+			m.tbl_design_id,
+			m.table_mapping_type
+		FROM
+			module AS a INNER JOIN module_table_mapping AS m 
+		ON 
+			a.module_id = m.module_id and m.tbl_design_id = #{tblDesignId}
+	]]>
+	</select>
+	
+	<!--	Auto complete functions for Domain Table Mapping -->
+	<select id="getAllDomainTableMappingForAutocomplete" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+			dtm.tbl_design_id AS optionValue,
+			dtm.tbl_design_name AS optionLabel,
+			dtm.tbl_design_code as output01
+		FROM 
+			table_design dtm
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+				<if test="searchKey != null and searchKey != ''">
+				<bind name="searchKey" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(searchKey)" />
+				<![CDATA[ dtm.tbl_design_name iLIKE #{searchKey} ESCAPE '~' ]]>
+			</if>
+			<if test="arg01 != null and arg01 != ''">
+				<![CDATA[
+					AND dtm.project_id = CAST(#{arg01} AS NUMERIC)
+				]]>
+			</if>
+			AND EXISTS 
+			(
+				SELECT 1 FROM table_design_details it WHERE dtm.tbl_design_id = it.tbl_design_id
+			)
+			<if test="arg01 == null or arg01 == ''">
+				AND FALSE
+			</if>
+		 </trim>
+		ORDER BY 
+			updated_date DESC,tbl_design_code
+		LIMIT 20
+	</select>
+	<select id="getDomainTableMappingByModuleId" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+			a.tbl_design_id AS optionValue,
+			a.tbl_design_name AS optionLabel
+		FROM 
+			table_design a INNER JOIN module_table_mapping c ON a.tbl_design_id = c.tbl_design_id
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<if test="searchKey != null and searchKey != ''">
+				<bind name="searchKey" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(searchKey)" />
+				<![CDATA[ tbl_design_name iLIKE #{searchKey} ESCAPE '~' ]]>
+			</if>
+			<if test="arg01 != null and arg01 != ''">
+				<![CDATA[
+					c.module_id = CAST(#{arg01} AS NUMERIC)
+				]]>
+			</if>
+			<if test="arg01 == null or arg01 == ''">
+				AND FALSE
+			</if>
+		 </trim>
+		ORDER BY
+			updated_date DESC,tbl_design_code
+	</select>
+	
+</mapper>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.businessdesignpattern.PatternedComponentRepository">
+
+    <resultMap id="patternedComponentResultMap" type="PatternedComponent">
+        <id property="patternedComponentId" column="patterned_component_id" />
+        <result property="image" column="image" />
+        <result property="name" column="name" />
+        <result property="remark" column="remark" />
+        <result property="projectId" column="project_id" />
+    </resultMap>
+	<resultMap id="patternedDetailResultMap" type="PatternedDetail">
+        <id property="patternedDetailId" column="patterned_detail_id" />
+        <result property="patternedComponentId" column="patterned_component_id" />
+        <result property="componentType" column="component_type" />
+        <result property="itemSequenceNo" column="item_sequence_no" />
+        
+    </resultMap>
+    <resultMap id="patternedDetailConnectorResultMap" type="PatternedDetailConnector">
+        <id property="connectorSource" column="connector_source" />
+        <result property="connectorDest" column="connector_dest" />
+        <result property="connectorType" column="output_bean_name" />
+    </resultMap>
+    <select id="findPatternedComponentByProject" resultMap="patternedComponentResultMap">
+		SELECT 
+			a.patterned_component_id, 
+			a.image, 
+			a.name, 
+			a.remark, 
+			a.project_id
+  		FROM patterned_component a
+  		WHERE a.project_id is null
+  		ORDER BY a.patterned_component_id
+    </select>
+    <select id="findPatternedDetailByProject" resultMap="patternedDetailResultMap">
+		SELECT 
+			a.patterned_detail_id, 
+			a.patterned_component_id, 
+			a.component_type, 
+       		a.item_sequence_no
+  		FROM patterned_detail a
+  		LEFT JOIN patterned_component b on (b.patterned_component_id = a.patterned_component_id)
+		WHERE b.project_id is null
+    </select>
+    <select id="findPatternedDetailConnectorByProject" resultMap="patternedDetailConnectorResultMap">
+		SELECT 
+			a.connector_source, 
+			a.connector_dest, 
+			a.connector_type,
+			a.patterned_component_id
+  		FROM patterned_detail_connector a
+		LEFT JOIN patterned_component b on (b.patterned_component_id = a.patterned_component_id)
+		WHERE b.project_id is null
+    </select>
+</mapper>

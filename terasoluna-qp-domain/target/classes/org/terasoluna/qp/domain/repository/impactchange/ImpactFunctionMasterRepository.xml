@@ -1,0 +1,607 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.impactchange.ImpactFunctionMasterRepository">
+	<resultMap id="DecisionResultMap" type="DecisionTable">
+		<id property="decisionTbId" column="decision_table_id" />
+		<result property="decisionTbName" column="decision_table_name" />
+		<result property="decisionTbCode" column="decision_table_code" />
+		<result property="moduleId" column="module_id" />
+		<result property="moduleName" column="module_name" />
+		<result property="moduleCode" column="module_code" />
+		<result property="moduleType" column="module_type" />
+		<result property="projectId" column="project_id" />
+		<result property="projectName" column="project_name" />
+		<result property="remark" column="remark" />
+		<result property="designStatus" column="design_status" />
+		<result property="designStatusParent" column="status" />
+		<result property="createdBy" column="created_by" />
+		<result property="createdDate" column="created_date" />
+		<result property="updatedBy" column="updated_by" />
+		<result property="updatedDate" column="updated_date" />
+		<result property="author" column="username" />
+	</resultMap>
+	
+	<resultMap id="functionMethodResultMap" type="FunctionMethod">
+		<id property="functionMasterId" column="function_master_id" />
+		<result property="functionMethodId" column="function_method_id" />
+		<result property="functionMethodName" column="function_method_name" />
+		<result property="functionMethodCode" column="function_method_code" />
+		<result property="remark" column="remark" />
+		<result property="itemSeqNo" column="item_seq_no" />
+		<result property="functionMasterCode" column="function_master_code" />
+	</resultMap>
+	
+	<resultMap id="sequenceLogicResultMap" type="SequenceLogic">
+		<id property="sequenceLogicId" column="sequence_logic_id" />
+		<result property="sequenceLogicName" column="sequence_logic_name" />
+		<result property="componentType" column="component_type" />
+		<result property="componentId" column="component_id" />
+		<result property="sequenceNo" column="sequence_no" />
+		<result property="xCoordinates" column="x_coordinates" />
+		<result property="yCoordinates" column="y_coordinates" />
+		<result property="remark" column="remark" />
+		<result property="businessLogicId" column="business_logic_id" />
+		<result property="parentSequenceLogicId" column="parent_sequence_logic_id" />
+		<result property="groupFlg" column="group_flg" />
+		<result property="relatedSequenceLogicId" column="related_sequence_logic_id" />
+		<result property="businessLogicCode" column="business_logic_code" />
+		<result property="businessLogicName" column="business_logic_name" />
+		<result property="moduleId" column="module_id" />
+		<result property="moduleName" column="module_name" />
+		<result property="formulaDetailId" column="formula_detail_id" />
+	</resultMap>
+	
+	<resultMap id="businessDesignResultMap" type="BusinessDesign">
+		<id property="businessLogicId" column="business_logic_id" />
+		<result property="businessLogicCode" column="business_logic_code" />
+		<result property="businessLogicName" column="business_logic_name" />
+		<result property="returnType" column="return_type" />
+		<result property="screenId" column="screen_id" />
+		<result property="moduleId" column="module_id" />
+		<result property="moduleName" column="module_name" />
+		<result property="moduleStatus" column="module_status" />
+		<result property="moduleIdAutocomplete" column="module_name" />
+		<result property="projectId" column="project_id" />
+		<result property="customizeFlg" column="customize_flg" />
+		<result property="uploadFileId" column="upload_file_id" />
+		<result property="createdBy" column="created_by" />
+		<result property="createdDate" column="created_date" />
+		<result property="updatedBy" column="updated_by" />
+		<result property="updatedDate" column="updated_date" />
+		<result property="fileName" column="file_name" />
+		<result property="file" column="content" />
+		<result property="designStatus" column="design_status" />
+		<result property="packageName" column="package_name" />
+		<result property="screenIdAutocomplete" column="screen_name" />
+		<result property="screenCode" column="screen_name_code" />
+		<result property="screenDesignCode" column="screen_design_code" />
+		<result property="messageString" column="message_string" />
+		<result property="patternType" column="pattern_type" />
+		<result property="confirmFlg" column="confirm_flg" />
+		<result property="completeFlg" column="complete_flg" />
+		<result property="remark" column="remark" />
+		<result property="functionDesignId" column="function_id" />
+		<result property="functionDesignIdAutocomplete" column="function_name" />
+		<result property="moduleType" column="module_type" />
+		<result property="screenFormId" column="screen_form_id" />
+		<result property="batchType" column="batch_type" />
+		<result property="blogicType" column="blogic_type" />
+		<result property="requestMethod" column="request_method" />
+		<result property="authenticatedFlg" column="authenticated_flg" />
+		<result property="screenFormIdAutocomplete" column="screen_form_id_autocomplete" />
+        <result property="moduleCode" column="module_code" />
+        <result property="screenTemplateType" column="screen_template_type" />
+       	<result property="designMode" column="design_mode" />
+        <result property="author" column="username" />
+        <result property="httpStatus" column="http_status" />
+	</resultMap>
+	
+	<resultMap id="formulaDetailResultMap" type="FormulaDetail">
+        <id property="formulaDetailId" column="formula_detail_id" />
+        <result property="itemSequenceNo" column="item_sequence_no" />
+        <result property="type" column="type" />
+        <result property="value" column="value" />
+        <result property="parameterId" column="parameter_id" />
+        <result property="formulaDefinitionId" column="formula_definition_id" />
+        <result property="functionMethodId" column="function_method_id" />
+    </resultMap>
+    
+    <resultMap id="formulaMethodInputResultMap" type="FormulaMethodInput">
+        <id property="formulaMethodInputId" column="formula_method_input_id" />
+        <result property="methodInputId" column="method_input_id" />
+        <result property="parameterScope" column="parameter_scope" />
+        <result property="parameterType" column="parameter_type" />
+        <result property="parameterId" column="parameter_id" />
+        <result property="parameterValue" column="parameter_value" />
+        <result property="formulaDetailId" column="formula_detail_id" />
+        <result property="parameterScope" column="parameter_scope" />
+        <result property="dataType" column="data_type" />
+        <result property="arrayFlg" column="array_flg" />
+    </resultMap>
+    
+    <resultMap id="formulaMethodOutputResultMap" type="FormulaMethodOutput">
+        <id property="formulaMethodOutputId" column="formula_method_output_id" />
+        <result property="formulaDetailId" column="formula_detail_id" />
+        <result property="methodOutputId" column="method_output_id" />
+        <result property="functionMethodOutput.methodOutputCode" column="method_output_code" />
+        <result property="dataType" column="data_type" />
+        <result property="arrayFlg" column="array_flg" />
+        <result property="methodOutputCode" column="method_output_code" />
+    </resultMap>
+    
+    <resultMap id="ResultMap" type="DecisionTableConditionItem">
+        <id property="conditionItemId" column="condition_item_id" />
+        <result property="conditionGroupId" column="condition_group_id" />
+        <result property="itemSequenceNo" column="item_sequence_no" />
+        <result property="opertatorType" column="opertator_type" />
+        <result property="itemType" column="item_type" />
+        <result property="itemValue" column="item_value" />
+        <result property="formulaDefinitionId" column="formula_definition_id" />
+        <result property="formulaDefinitionContent" column="formula_definition_content" />
+        <result property="decisionTbCode" column="decision_table_code" />
+        <result property="decisionTbId" column="decision_table_id" />
+        <result property="moduleId" column="module_id" />
+    </resultMap>
+    
+    <select id="findDecisionTableByLstProblemLists" resultMap="DecisionResultMap">
+		SELECT
+		a.decision_table_id,
+		a.decision_table_code,
+		a.decision_table_name,
+		a.module_id,
+		a.remark,
+		b.module_name
+		FROM decision_table a
+		LEFT JOIN module b on (b.module_id = a.module_id)
+		WHERE
+		<if test="lstProblemLists != null and lstProblemLists.size > 0">
+			a.decision_table_id IN
+			<foreach collection="lstProblemLists" item="item" open="(" close=")" separator=",">
+				#{item.resourceId}
+			</foreach>
+		</if>
+		<if test="lstProblemLists == null or lstProblemLists.size == 0">
+			FALSE
+		</if>
+	</select>
+	
+	<select id="findDecisionTableByUsingFunctionMethod" resultMap="DecisionResultMap">
+    	WITH table_temp as (
+			SELECT 
+				a.decision_item_design_id,
+				c.function_method_id
+	        FROM decision_condition_group a
+	        INNER JOIN decision_condition_item b ON (a.condition_group_id = b.condition_group_id)
+			INNER JOIN formula_detail c on (b.formula_definition_id = c.formula_definition_id)
+		)
+		SELECT
+			a.decision_table_id,
+			a.decision_table_name,
+			a.decision_table_code,
+			a.module_id,
+			b.module_name,
+			a.project_id
+		FROM decision_table a
+		LEFT JOIN module b on (b.module_id = a.module_id)
+		Where Exists
+		(
+			SELECT * from table_temp b
+			LEFT JOIN decision_item_design c on c.decision_item_design_id = b.decision_item_design_id
+			WHERE 
+				<if test="lstFunctionMethodIds != null and lstFunctionMethodIds.size > 0">
+					b.function_method_id IN
+					<foreach collection="lstFunctionMethodIds" item="id" open="(" close=")" separator=",">
+						#{id}
+					</foreach>
+				</if>
+				<if test="lstFunctionMethodIds == null or lstFunctionMethodIds.size == 0">
+					FALSE
+				</if>
+				AND a.decision_table_id = c.decision_table_id
+		)
+    </select>
+    
+    <select id="findOneFuntionMethodById" resultMap="functionMethodResultMap">
+		SELECT 
+			a.function_method_id, 
+			a.function_method_name, 
+			a.function_method_code, 
+       		a.remark, 
+       		a.item_seq_no, 
+       		a.function_master_id,
+       		b.function_master_code
+  		FROM function_method a
+  		LEFT JOIN function_master b on (b.function_master_id = a.function_master_id)
+		WHERE a.function_method_id = #{functionMethodId}
+	</select>
+	
+	<select id="findSequenceLogicAndFormulaDetailByUsingLstFunctionMethod" resultMap="sequenceLogicResultMap">
+    	WITH table_temp as (
+			SELECT 
+				a.sequence_logic_id,
+				b.formula_detail_id,
+				b.function_method_id
+            FROM log_component a
+            INNER JOIN formula_detail b on (a.message_formula_id = b.formula_definition_id)
+	
+			UNION
+	
+	        SELECT 
+	        	a.sequence_logic_id,
+				b.formula_detail_id,
+				b.function_method_id
+	        FROM email_component a
+			INNER JOIN formula_detail b on (a.subject_formula_id = b.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				c.formula_detail_id,
+				c.function_method_id
+	        FROM email_component a
+	        INNER JOIN email_recipient b ON (a.email_component_id = b.email_component_id)
+			INNER JOIN formula_detail c on (b.recipient_formula_id = c.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				b.formula_detail_id,
+				b.function_method_id
+	        FROM download_file_component a
+			INNER JOIN formula_detail b on (a.file_name_formula_id = b.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				b.formula_detail_id,
+				b.function_method_id
+	        FROM loop_component a
+			INNER JOIN formula_detail b on (a.formula_definition_id = b.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				c.formula_detail_id,
+				c.function_method_id
+	        FROM if_component a
+			INNER JOIN if_condition_detail b on (a.if_component_id = b.if_component_id)
+			INNER JOIN formula_detail c on (c.formula_definition_id = b.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				c.formula_detail_id,
+				c.function_method_id
+	        FROM  business_check_component a
+			INNER JOIN business_check_detail b on (a.business_check_component_id = b.business_check_component_id)
+			INNER JOIN formula_detail c on (c.formula_definition_id = b.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				c.formula_detail_id,
+				c.function_method_id
+	        FROM assign_component a
+			INNER JOIN assign_detail b on (a.assign_component_id = b.assign_component_id)
+			INNER JOIN formula_detail c on (c.formula_definition_id = b.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				b.formula_detail_id,
+				b.function_method_id
+	        FROM fileoperation_component a
+			INNER JOIN formula_detail b on (b.formula_definition_id = a.source_path_formula_id or  b.formula_definition_id = a.destination_path_formula_id or b.formula_definition_id = a.new_filename_formula_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				c.formula_detail_id,
+				c.function_method_id
+	        FROM fileoperation_component a
+	        INNER JOIN merge_file_detail b on (a.fileoperation_component_id = b.fileoperation_component_id)
+			INNER JOIN formula_detail c on (c.formula_definition_id = b.source_path_formula_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				b.formula_detail_id,
+				b.function_method_id
+	        FROM import_file_component a
+			INNER JOIN formula_detail b on (b.formula_definition_id = a.source_path_formula_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				b.formula_detail_id,
+				b.function_method_id
+	        FROM export_file_component a
+			INNER JOIN formula_detail b on (b.formula_definition_id = a.destination_path_formula_id)
+			
+			)
+			
+			SELECT
+				temp.formula_detail_id,
+				a.sequence_logic_id, 
+				a.sequence_logic_name, 
+				a.component_type, 
+				a.component_id, 
+       			a.business_logic_id,
+       			b.business_logic_code,
+       			b.business_logic_name,
+       			c.module_id,
+       			c.module_name
+       		FROM table_temp temp
+       		LEFT JOIN sequence_logic a on (a.sequence_logic_id = temp.sequence_logic_id)
+  			LEFT JOIN business_logic b on (b.business_logic_id = a.business_logic_id)
+  			LEFT JOIN module c on (c.module_id = b.module_id)
+  			WHERE
+  				<if test="lstFunctionMethods != null and lstFunctionMethods.size > 0">
+					temp.function_method_id IN
+					<foreach collection="lstFunctionMethods" item="item" open="(" close=")" separator=",">
+						#{item.functionMethodId}
+					</foreach>
+				</if>
+				<if test="lstFunctionMethods == null or lstFunctionMethods.size == 0">
+					FALSE
+				</if>
+    </select>
+    
+    <select id="findBusinessDesignByLstProblemLists" resultMap="businessDesignResultMap">
+    	SELECT 
+    		a.business_logic_id,
+    		a.business_logic_code,
+    		a.business_logic_name,
+    		a.module_id,
+    		b.module_name
+    	FROM business_logic a
+    	LEFT JOIN module b on (b.module_id = a.module_id)
+    	WHERE 
+    		<if test="lstProblemLists != null and lstProblemLists.size > 0">
+				a.business_logic_id IN
+				<foreach collection="lstProblemLists" item="item" open="(" close=")" separator=",">
+					#{item.resourceId}
+				</foreach>
+			</if>
+			<if test="lstProblemLists == null or lstProblemLists.size == 0">
+				FALSE
+			</if>
+    </select>
+    
+    <select id="findSequenceLogicByUsingFunctionMethod" resultMap="sequenceLogicResultMap">
+    	WITH table_temp as (
+			SELECT 
+				a.sequence_logic_id,
+				b.function_method_id
+            FROM log_component a
+            INNER JOIN formula_detail b on (a.message_formula_id = b.formula_definition_id)
+	
+			UNION
+	
+	        SELECT 
+	        	a.sequence_logic_id,
+				b.function_method_id
+	        FROM email_component a
+			INNER JOIN formula_detail b on (a.subject_formula_id = b.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				c.function_method_id
+	        FROM email_component a
+	        INNER JOIN email_recipient b ON (a.email_component_id = b.email_component_id)
+			INNER JOIN formula_detail c on (b.recipient_formula_id = c.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				b.function_method_id
+	        FROM download_file_component a
+			INNER JOIN formula_detail b on (a.file_name_formula_id = b.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				b.function_method_id
+	        FROM loop_component a
+			INNER JOIN formula_detail b on (a.formula_definition_id = b.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				c.function_method_id
+	        FROM if_component a
+			INNER JOIN if_condition_detail b on (a.if_component_id = b.if_component_id)
+			INNER JOIN formula_detail c on (c.formula_definition_id = b.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				c.function_method_id
+	        FROM  business_check_component a
+			INNER JOIN business_check_detail b on (a.business_check_component_id = b.business_check_component_id)
+			INNER JOIN formula_detail c on (c.formula_definition_id = b.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				c.function_method_id
+	        FROM assign_component a
+			INNER JOIN assign_detail b on (a.assign_component_id = b.assign_component_id)
+			INNER JOIN formula_detail c on (c.formula_definition_id = b.formula_definition_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				b.function_method_id
+	        FROM fileoperation_component a
+			INNER JOIN formula_detail b on (b.formula_definition_id = a.source_path_formula_id or  b.formula_definition_id = a.destination_path_formula_id or b.formula_definition_id = a.new_filename_formula_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				c.function_method_id
+	        FROM fileoperation_component a
+	        INNER JOIN merge_file_detail b on (a.fileoperation_component_id = b.fileoperation_component_id)
+			INNER JOIN formula_detail c on (c.formula_definition_id = b.source_path_formula_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				b.function_method_id
+	        FROM import_file_component a
+			INNER JOIN formula_detail b on (b.formula_definition_id = a.source_path_formula_id)
+	
+			UNION
+	
+			SELECT 
+				a.sequence_logic_id,
+				b.function_method_id
+	        FROM export_file_component a
+			INNER JOIN formula_detail b on (b.formula_definition_id = a.destination_path_formula_id)
+			
+			)
+			
+			SELECT 
+				a.sequence_logic_id, 
+				a.sequence_logic_name, 
+				a.component_type, 
+				a.component_id, 
+       			a.business_logic_id,
+       			b.business_logic_code,
+       			b.business_logic_name,
+       			c.module_id,
+       			c.module_name
+  			FROM sequence_logic a
+  			LEFT JOIN business_logic b on (b.business_logic_id = a.business_logic_id)
+  			LEFT JOIN module c on (c.module_id = b.module_id)
+  			WHERE EXISTS 
+			(
+				SELECT * from table_temp temp
+				WHERE 
+					temp.function_method_id = #{functionMethodId}
+					AND a.sequence_logic_id = temp.sequence_logic_id
+			)
+    </select>
+    
+    <select id="findMethodInputsByLstFunctionMethods" resultMap="formulaMethodInputResultMap">
+    	SELECT 
+    		a.formula_method_input_id, 
+    		a.method_input_id, 
+    		a.parameter_scope, 
+    		a.parameter_id, 
+       		a.parameter_value, 
+       		a.formula_detail_id, 
+       		a.parameter_type, 
+       		a.data_type, 
+       		a.array_flg
+  		FROM formula_method_input a
+  		LEFT JOIN formula_detail b on (b.formula_detail_id = a.formula_detail_id)
+  		WHERE
+  			<if test="lstFunctionMethods != null and lstFunctionMethods.size > 0">
+				b.function_method_id IN
+				<foreach collection="lstFunctionMethods" item="item" open="(" close=")" separator=",">
+					#{item.functionMethodId}
+				</foreach>
+			</if>
+			<if test="lstFunctionMethods == null or lstFunctionMethods.size == 0">
+				FALSE
+			</if>
+    </select>
+    
+    <select id="findMethodOutputsByLstFunctionMethods" resultMap="formulaMethodOutputResultMap">
+    	SELECT 
+    		a.formula_method_output_id, 
+    		a.formula_detail_id, 
+    		a.method_output_id, 
+       		a.data_type, 
+       		a.array_flg,
+       		a.method_output_code
+  		FROM formula_method_output a
+    	LEFT JOIN formula_detail b on (b.formula_detail_id = a.formula_detail_id)
+  		WHERE
+  			<if test="lstFunctionMethods != null and lstFunctionMethods.size > 0">
+				b.function_method_id IN
+				<foreach collection="lstFunctionMethods" item="item" open="(" close=")" separator=",">
+					#{item.functionMethodId}
+				</foreach>
+			</if>
+			<if test="lstFunctionMethods == null or lstFunctionMethods.size == 0">
+				FALSE
+			</if>
+    </select>
+    
+    <select id="findFormulaDetailsByLstFunctionMethods" resultMap="formulaDetailResultMap">
+    	SELECT 
+    		a.formula_detail_id, 
+    		a.item_sequence_no, 
+    		a.type, 
+    		a.value, 
+    		a.parameter_id, 
+       		a.function_method_id, 
+       		a.formula_definition_id
+  		FROM formula_detail a
+    	WHERE
+    		<if test="lstFunctionMethods != null and lstFunctionMethods.size > 0">
+				a.function_method_id IN
+				<foreach collection="lstFunctionMethods" item="item" open="(" close=")" separator=",">
+					#{item.functionMethodId}
+				</foreach>
+			</if>
+			<if test="lstFunctionMethods == null or lstFunctionMethods.size == 0">
+				FALSE
+			</if>
+    </select>
+    
+    <select id="findConditionItemByByUsingLstFunctionMethod" resultMap="ResultMap">
+    	SELECT 
+    		a.condition_item_id, 
+    		a.condition_group_id, 
+    		a.item_sequence_no, 
+    		a.opertator_type, 
+       		a.item_type, 
+       		a.item_value, 
+       		a.formula_definition_id, 
+       		a.formula_definition_content,
+       		e.decision_table_id,
+       		e.decision_table_code,
+       		f.module_id
+  		FROM decision_condition_item a
+  		LEFT JOIN formula_detail b on (b.formula_definition_id = a.formula_definition_id)
+  		LEFT JOIN decision_condition_group c on (c.condition_group_id = a.condition_group_id)
+  		LEFT JOIN decision_item_design d on (d.decision_item_design_id = c.decision_item_design_id)
+  		LEFT JOIN decision_table e on (e.decision_table_id = d.decision_table_id)
+  		LEFT JOIN module f on (f.module_id = e.module_id)
+  		WHERE
+  				<if test="lstFunctionMethods != null and lstFunctionMethods.size > 0">
+					b.function_method_id IN
+					<foreach collection="lstFunctionMethods" item="item" open="(" close=")" separator=",">
+						#{item.functionMethodId}
+					</foreach>
+				</if>
+				<if test="lstFunctionMethods == null or lstFunctionMethods.size == 0">
+					FALSE
+				</if>
+    </select>
+</mapper>

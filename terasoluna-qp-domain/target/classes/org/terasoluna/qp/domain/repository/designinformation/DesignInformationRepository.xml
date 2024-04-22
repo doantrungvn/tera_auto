@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.terasoluna.qp.domain.repository.designinformation.DesignInformationRepository">
+	<resultMap id="resultMap" type="DesignInformation">
+		<id property="designInformationId" column="design_information_id" />
+		<result property="designName" column="design_name" />
+		<result property="remark" column="remark" />
+		<result property="comment" column="comment" />
+		<result property="createdBy" column="created_by" /> 
+		<result property="createdDate" column="created_date" />
+		<result property="updatedBy" column="updated_by" />
+		<result property="updatedDate" column="updated_date" />
+	</resultMap>
+	
+	<resultMap id="DesignRealtionSettingResultMap" type="DesignRelationSetting">
+		<id property="designInformationId" column="design_information_id" />
+		<result property="module_code" column="moduleCode" />
+	</resultMap>
+	
+	<resultMap id="DesignInformationDetailsResultMap" type="DesignInformationDetail">
+		<id property="designInformationDetailId" column="design_information_detail_id" />
+		<result property="designInformationId" column="design_information_id" />
+		<result property="subtitle" column="subtitle" />
+		<result property="remark" column="remark" />
+	</resultMap>
+	
+	<resultMap id="autocompleteResultMap" type="Autocomplete">
+		<result property="optionValue" column="optionValue" />
+		<result property="optionLabel" column="optionLabel" />
+	</resultMap>
+
+    <!-- Count design information by search condition -->
+	<select id="countBySearchCriteria" parameterType="org.terasoluna.qp.domain.repository.designinformation.DesignInformationCriteria" resultType="_long">
+        <![CDATA[
+            SELECT 
+                COUNT(DISTINCT (B.module_code,A.design_information_id)) 
+            FROM 
+                design_information AS A
+            LEFT JOIN
+				design_relation_setting AS B ON A.design_information_id = B.design_information_id
+			LEFT JOIN
+				module AS C ON B.module_code = C.module_code
+			LEFT JOIN
+				account AS D on D.account_id = A.updated_by
+			LEFT JOIN
+				design_information_detail AS E ON A.design_information_id = E.design_information_id
+        ]]>
+		<include refid="findPageByCriteriaWherePhrase" />
+	</select>
+
+	<!-- Finds all design information by search condition -->
+	<select id="findPageBySearchCriteria" parameterType="org.terasoluna.qp.domain.repository.designinformation.DesignInformationCriteria" resultMap="resultMap">
+		<![CDATA[
+			SELECT DISTINCT
+				A.design_information_id,
+				A.design_name,
+				A.remark,
+				A.created_by,
+				A.created_date,
+				A.updated_by,
+				A.updated_date,
+				D.username,
+				B.module_code
+			FROM 
+				design_information AS A
+			LEFT JOIN
+				design_relation_setting AS B ON A.design_information_id = B.design_information_id
+			LEFT JOIN
+				design_information_detail AS E ON A.design_information_id = E.design_information_id
+			LEFT JOIN
+				account AS D on D.account_id = A.updated_by
+		]]>
+		<include refid="findPageByCriteriaWherePhrase" />
+		<if test="pageable.sort != null">
+			ORDER BY
+			<foreach collection="pageable.sort" item="order" separator=",">
+				${order.property} ${order.direction}
+			</foreach>
+		</if>
+        <if test="pageable.sort == null">
+            ORDER BY
+                updated_date DESC
+        </if>
+        <![CDATA[
+	         LIMIT
+	             #{pageable.pageSize}
+	         OFFSET
+	             #{pageable.offset}
+        ]]>
+	</select>
+	
+	<!-- Design information search criteria -->
+	<sql id="findPageByCriteriaWherePhrase">
+        <where>
+            <if test="criteria.moduleCode != null and criteria.moduleCode != ''">
+                <bind name="moduleCode" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.moduleCode)" />
+                <![CDATA[
+                   AND B.module_code ILIKE #{moduleCode} ESCAPE '~'
+                ]]>
+            </if>
+            <if test="criteria.remark != null and criteria.remark != ''">
+                <bind name="remark" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.remark)" />
+                <![CDATA[
+                    AND (A.remark ILIKE #{remark} ESCAPE '~' OR E.remark ILIKE #{remark} ESCAPE '~')
+                ]]>
+            </if>
+            <if test="criteria.title != null and criteria.title != ''">
+                <bind name="title" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.title)" />
+                <![CDATA[
+                    AND (A.design_name ILIKE #{title} ESCAPE '~' OR E.subtitle ILIKE #{title} ESCAPE '~')
+                ]]>
+            </if>
+            <if test="criteria.updatedBy != null and criteria.updatedBy != ''">
+                <![CDATA[
+                    AND A.updated_by = #{criteria.updatedBy}
+                ]]>
+            </if>
+            
+            <if test="criteria.dateFrom != null and criteria.dateFrom != ''">
+                <bind name="dateFrom" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.dateFrom)" />
+                <![CDATA[
+                    AND A.updated_date >= #{criteria.dateFrom}
+                ]]>
+            </if>
+            
+            <if test="criteria.dateTo != null and criteria.dateTo != ''">
+                <bind name="dateTo" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.dateTo)" />
+                <![CDATA[
+                    AND A.updated_date <= #{criteria.dateTo}
+                ]]>
+            </if>
+            
+        </where>
+    </sql>
+    
+    <insert id="registerDesignInformation" parameterType="map">
+		<selectKey keyProperty="designInformationId" resultType="long" order="BEFORE">
+			SELECT nextval('design_information_seq') AS designInformationId
+		</selectKey>
+		<![CDATA[
+			INSERT INTO
+				design_information
+			(
+				design_information_id,
+				design_name,
+				remark,
+				comment,
+				created_by,
+				created_date,
+				updated_by,
+				updated_date
+			)
+			VALUES
+			(
+				#{designInformationId},
+				#{designName},
+				#{remark},
+				#{comment},
+				#{createdBy},
+				#{createdDate},
+				#{updatedBy},
+				#{updatedDate}
+			)
+		]]>
+	</insert>
+    
+    <insert id="registerDesignInformationDetail" parameterType="map">
+    	<if test="designInformationDetail != null ">
+			INSERT INTO
+				design_information_detail
+			(
+				design_information_id,
+				subtitle,
+				remark
+			)
+			VALUES
+			 <foreach item="item" collection="designInformationDetail" separator=",">
+			 (
+				#{item.designInformationId},
+				#{item.subtitle},
+				#{item.remark}
+			 	)
+			</foreach>	
+		</if>
+	</insert>
+    
+    <insert id="registerDesignRelationSetting" parameterType="map">
+			INSERT INTO
+				design_relation_setting
+			(
+				design_information_id,
+				module_code
+			)
+			VALUES
+			 <foreach item="item" collection="designRelationSetting" separator=",">
+			 (
+				#{item.designInformationId},
+				#{item.moduleCode}
+			 	)
+			</foreach>
+	</insert>
+	
+	<select id="designInformationDetailGetSequences" resultType="Long">
+    	select SETVAL('design_information_detail_seq'::regclass, NEXTVAL('design_information_detail_seq'::regclass) + #{size})
+    </select>
+    
+    <select id="findDesignRelationSettingById" parameterType="DesignInformation" resultMap="DesignRealtionSettingResultMap">
+    	<![CDATA[
+		SELECT
+				B.design_information_id,
+				A.module_code
+			FROM 
+				design_relation_setting AS A
+			LEFT JOIN
+				design_information AS B ON A.design_information_id = B.design_information_id
+			WHERE
+				A.design_information_id = #{designInformationId}
+		  ]]>
+    </select>
+    
+    <select id="findDesignInformationDetailById" parameterType="DesignInformationDetail" resultMap="DesignInformationDetailsResultMap">
+    	<![CDATA[
+		SELECT
+				A.design_information_detail_id,
+				A.subtitle,
+				A.remark,
+				B.design_information_id
+			FROM 
+				design_information_detail AS A
+			LEFT JOIN
+				design_information AS B ON A.design_information_id = B.design_information_id
+			WHERE
+				A.design_information_id = #{designInformationId}
+		  ]]>
+    </select>
+    
+    <select id="findDesignInformationById" parameterType="Long" resultMap="resultMap">
+		SELECT
+				design_information_id,
+				design_name,
+				remark,
+				comment,
+				created_by,
+				created_date,
+				updated_by,
+				updated_date
+			FROM 
+				design_information
+			WHERE
+				design_information_id = #{designInformationId}
+    </select>
+    
+     <select id="findDesignInformationByName" parameterType="DesignInformation" resultType="Long">
+   	 <bind name="designInfoName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toLikeCondition(designName)" />
+		SELECT
+				COUNT(*)
+			FROM 
+				design_information
+			WHERE
+				design_name iLIKE #{designInfoName} ESCAPE '~'
+    </select>
+    
+    <!-- Modify design information -->
+    <update id="modifyDesignInformation" parameterType="DesignInformation">
+        UPDATE 
+            design_information 
+        SET 
+            design_name = #{designName}, 
+            remark = #{remark}, 
+            updated_date = #{sysDatetime},
+            updated_by = #{updatedBy},
+            comment = #{comment}
+        WHERE 
+            design_information_id = #{designInformationId}
+        AND 
+        	updated_date = #{updatedDate}
+    </update>
+    
+    <!-- Modify design information detail-->
+    <update id="modifyDesignInformationDetail" parameterType="DesignInformationDetail">
+    	<foreach collection="designInformationDetails" item="designInformationDetail" separator=";">
+	        UPDATE 
+	            design_information_detail
+	        SET
+	            subtitle = #{designInformationDetail.subtitle}, 
+	            remark = #{designInformationDetail.remark}
+	        WHERE
+	            design_information_detail_id = #{designInformationDetail.designInformationDetailId}
+       </foreach>
+    </update>
+    
+    <!-- Modify design relation setting -->
+    <update id="modifyDesignRelationSetting" parameterType="DesignRelationSetting">
+    	<foreach collection="designRelationSettings" item="designRelationSetting" separator=";">
+	         UPDATE 
+	            design_relation_setting
+	        SET 
+	            module_code = #{designRelationSetting.moduleCode}
+	        WHERE 
+	            design_information_id = #{designInformationId}
+         </foreach>
+    </update>
+    
+     <!-- Delete relation setting by identify -->
+    <delete id="deleteRelationSetting" parameterType="Long">
+        DELETE FROM 
+            design_relation_setting
+       WHERE
+            design_information_id = #{designInformationId}
+    </delete>
+    
+     <!-- Delete design information detail by identify -->
+     <delete id="deleteDesignInformationDetail" parameterType="Long">
+        DELETE FROM 
+            design_information_detail
+       WHERE
+            design_information_id = #{designInformationId}
+    </delete>
+    
+     <!-- Delete design information detail by identify -->
+     <delete id="deleteDesignInformation" parameterType="Long">
+        DELETE FROM 
+            design_information
+       WHERE
+            design_information_id = #{designInformationId}
+    </delete>
+</mapper>

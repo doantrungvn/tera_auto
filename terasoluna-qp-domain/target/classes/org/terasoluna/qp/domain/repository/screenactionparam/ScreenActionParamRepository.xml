@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="org.terasoluna.qp.domain.repository.screenactionparam.ScreenActionParamRepository">
+
+	<resultMap id="screenActionParamResultMap" type="ScreenActionParam">
+		<id property="screenActionParamId" column="screen_action_param_id" />
+		<result property="screenActionId" column="screen_action_id" />
+		<result property="domainTblMappingId" column="domain_tbl_mapping_id" />
+		<result property="domainTblMappingItemId" column="domain_tbl_mapping_item_id" />
+		<result property="actionParamCode" column="action_param_code" />
+		<result property="actionParamName" column="action_param_name" />
+		<result property="dataType" column="data_type" />
+		<result property="arrayFlg" column="array_flg" />
+		<result property="paramSeqNo" column="param_seq_no" />
+		<result property="parentScreenActionParamId" column="parent_screen_action_param_id" />
+		<result property="createdBy" column="created_by" />
+        <result property="createdDate" column="created_date" />
+        <result property="updatedBy" column="updated_by" />
+        <result property="updatedDate" column="updated_date" />
+        <result property="domainColumnName" column="domain_column_name" />
+        <result property="domainTblMappingName" column="domain_tbl_mapping_name" />
+        <result property="screenItemCode" column="screen_item_code" />
+        <result property="screenId" column="screen_id" />
+        <result property="moduleId" column="module_id" />
+         <result property="areaTypeOfItem" column="area_type_of_item" />
+         <result property="areaIdOfItem" column="area_id_of_item" />
+         <result property="itemPhysicalDataType" column="item_physical_data_type" />
+         <result property="itemId" column="item_id" />
+         <result property="outputIdOfItem" column="output_id_of_item" />
+         <result property="outputPhysicalDataTypeOfItem" column="output_physical_data_type_of_item" />
+         
+	</resultMap>
+	
+	<select id="getSequencesScreenActionParam" resultType="Long">
+    	select SETVAL('screen_action_param_seq'::regclass, NEXTVAL('screen_action_param_seq'::regclass) + #{size})
+    </select>
+    
+    <insert id="registerListScreenActionParam" >
+    	<if test="lstScreenActionParam != null and  lstScreenActionParam.size() > 0 ">
+			INSERT INTO 
+				screen_action_param
+			(
+            	screen_action_param_id, 
+            	screen_action_id, 
+            	domain_tbl_mapping_id, 
+            	domain_tbl_mapping_item_id, 
+            	action_param_code, 
+            	action_param_name, 
+            	data_type, 
+            	array_flg, 
+            	param_seq_no, 
+            	parent_screen_action_param_id, 
+            	created_by, 
+            	created_date,
+            	updated_by,
+            	updated_date,
+            	screen_item_code
+            )
+    		VALUES 
+    		<foreach item="item" collection="lstScreenActionParam" separator=",">
+			(
+				#{item.screenActionParamId}, 
+				#{item.screenActionId}, 
+				#{item.domainTblMappingId},
+            	#{item.domainTblMappingItemId},
+            	#{item.actionParamCode}, 
+				#{item.actionParamName}, 
+				#{item.dataType},
+            	#{item.arrayFlg},
+				#{item.paramSeqNo}, 
+				#{item.parentScreenActionParamId},
+            	#{item.createdBy},
+            	#{item.createdDate},
+            	#{item.updatedBy},
+            	#{item.updatedDate},
+            	#{item.screenItemCode}
+            )
+			</foreach>;
+		</if>
+    </insert>
+	
+	<insert id="insertScreenActionParam" parameterType="ScreenActionParam">
+		INSERT INTO
+		screen_action_param
+		(
+			screen_action_id,
+			action_param_code,
+			param_seq_no,
+			domain_tbl_mapping_id,
+			domain_tbl_mapping_item_id,
+			screen_item_code,
+			parent_screen_action_param_id,
+			data_type
+		)
+		VALUES
+		(
+			#{screenActionId},
+			#{actionParamCode},
+			#{paramSeqNo},
+			#{domainTblMappingId},
+			#{domainTblMappingItemId},
+			#{screenItemCode},
+			#{parentScreenActionParamId},
+			#{dataType}
+		)
+	</insert>
+	
+	<select id="countScreenActionParamByScreenActionId"
+		parameterType="Long"
+		resultType="Integer">
+	     	SELECT
+	     		COUNT(screen_action_id) 
+	     	FROM 
+	     		screen_action_param AS a	
+	     	 WHERE
+	     		a.screen_action_id = #{screenActionId}  	
+	</select>
+	
+	<!-- Select all param of screen action -->
+    <select id="findAllActionParamByScreenActionId" resultMap="screenActionParamResultMap">
+    	WITH TEMPS AS (
+			SELECT si.screen_area_id, sf.form_code||'.'||sa.area_code||'.'||si.item_code AS screen_item_code, sa.area_type As area_type_of_item,
+					si.physical_data_type as base_type, si.screen_item_id
+			FROM screen_item si 
+			inner join screen_area sa on si.screen_area_id = sa.screen_area_id
+			inner join screen_form sf on sa.screen_form_id = sf.screen_form_id
+			inner join screen_design sd on sd.screen_id = si.screen_id 
+			inner join module md on md.module_id = sd.module_id and md.project_id = #{projectId}
+		)  
+
+		SELECT 
+			a.screen_action_param_id,
+			a.screen_action_id,
+			a.domain_tbl_mapping_id,
+			a.domain_tbl_mapping_item_id,
+			a.action_param_code,
+			a.action_param_name,
+			a.data_type,
+			a.array_flg,
+			a.param_seq_no,
+			a.parent_screen_action_param_id,
+			a.created_by,
+			a.created_date,
+			a.updated_by,
+			a.updated_date,
+       		a.screen_item_code,
+       		TEMPS.screen_item_code as code,
+       		TEMPS.area_type_of_item as area_type_of_item,
+       		TEMPS.screen_area_id as area_id_of_item,
+       		TEMPS.base_type as item_physical_data_type,
+       		TEMPS.screen_item_id as item_id
+		FROM screen_action_param a inner JOIN TEMPS ON (regexp_replace(a.screen_item_code, 'From$', '') = TEMPS.screen_item_code or regexp_replace(a.screen_item_code, 'To$', '') = TEMPS.screen_item_code)
+		WHERE
+			a.screen_action_id =  #{screenActionId}
+		ORDER BY a.param_seq_no
+    
+    
+    </select>
+    
+    <!-- Select all param of inputbean of business logic -->
+    <select id="findAllActionParamByBusinessLogicId" parameterType="_long" resultMap="screenActionParamResultMap">
+		SELECT 
+			a.screen_action_param_id,
+			a.screen_action_id,
+			a.domain_tbl_mapping_id,
+			a.domain_tbl_mapping_item_id,
+			a.action_param_code,
+			a.action_param_name,
+			a.data_type,
+			a.array_flg,
+			a.param_seq_no,
+			a.parent_screen_action_param_id,
+			a.created_by,
+			a.created_date,
+			a.updated_by,
+			a.updated_date,
+       		a.screen_item_code,
+       		c.screen_id,
+       		c.module_id
+		FROM screen_action_param a
+		LEFT JOIN screen_action b
+			on (b.screen_action_id = a.screen_action_id)
+		LEFT JOIN screen_design c
+			on (c.screen_id = b.from_screen_id)
+		WHERE 
+			b.action_type = 1 
+			and b.to_screen_id = #{businessLogicId}
+		ORDER BY b.from_screen_id,a.screen_action_param_id
+    </select>
+    
+    <delete id="deleteScreenActionParamByAutofixProblem">
+    	DELETE 
+    	FROM screen_action_param a
+    	WHERE a.action_param_code = cast ( #{inputBeanId} as character varying(200)) 
+    	and EXISTS
+    	(
+    		SELECT b.screen_action_id
+    		FROM screen_action b
+			WHERE b.action_type = 1 
+			and b.from_screen_id = #{screenId}
+    		and b.screen_action_id = a.screen_action_id
+    	)
+    </delete>
+    
+    <update id="updateScreenActionCode" parameterType="ScreenActionParam">
+    	UPDATE screen_action_param
+   			SET action_param_code = #{actionParamCode}
+   		WHERE screen_action_param_id= #{screenActionParamId}
+    </update>
+    
+    <select id="findAllActionParamByLstScreenItem" parameterType="_long" resultMap="screenActionParamResultMap">
+		SELECT 
+			a.screen_action_param_id,
+			a.screen_action_id,
+			a.action_param_code,
+			a.action_param_name,
+			a.data_type,
+			a.array_flg
+		FROM screen_action_param a
+		LEFT JOIN screen_item b on (b.screen_action_id = a.screen_action_id)
+		WHERE 
+		<if test="lstScreenItems != null and lstScreenItems.size > 0">
+			b.screen_item_id IN 
+			<foreach collection="lstScreenItems" item="item" open="(" close=")" separator=",">
+				#{item.screenItemId}
+			</foreach>
+		</if>
+		<if test="lstScreenItems == null or lstScreenItems.size == 0">
+			FALSE
+		</if>
+    </select>
+    
+    <delete id="deleteScreenActionParamByNavigatorBlogicId">
+    	DELETE FROM screen_action_param
+		WHERE screen_action_param_id in
+		(
+			SELECT a.screen_action_param_id
+			FROM screen_action_param a
+			LEFT JOIN screen_action b on (b.screen_action_id = a.screen_action_id)
+			LEFT JOIN input_bean c on ( c.input_bean_id = CAST(a.action_param_code as numeric))
+			WHERE b.navigate_to_blogic_id = #{businessLogicId}
+			and c.input_bean_id is null
+		)
+    </delete>
+    
+    <delete id="deleteScreenActionParamByLstScreenItems">
+    	DELETE FROM screen_action_param a
+		LEFT JOIN screen_item b on (b.screen_action_id = a.screen_action_id)
+		WHERE 
+		<if test="lstScreenItems != null and lstScreenItems.size > 0">
+			b.screen_item_id IN 
+			<foreach collection="lstScreenItems" item="item" open="(" close=")" separator=",">
+				#{item.screenItemId}
+			</foreach>
+		</if>
+		<if test="lstScreenItems == null or lstScreenItems.size == 0">
+			FALSE
+		</if>
+    </delete>
+    
+    <select id="getOutputByItemId" resultMap="screenActionParamResultMap">
+    	SELECT 
+    		obm.output_bean_id as output_id_of_item,
+    		obm.screen_item_id as item_id,
+    		ob.group_base_type_id as output_physical_data_type_of_item
+    	FROM
+    		output_bean ob
+    	INNER JOIN
+    		outputbean_screenitem_mapping obm ON obm.output_bean_id = ob.output_bean_id
+    	WHERE
+   		<if test="lstScreenActionParam != null and lstScreenActionParam.size > 0">
+   			obm.screen_item_id IN
+   			<foreach collection="lstScreenActionParam" item="item" open="(" close=")" separator=",">
+				#{item.itemId}
+			</foreach>
+   		</if>
+   		<if test="lstScreenActionParam == null or lstScreenActionParam.size == 0">
+			FALSE
+		</if>
+    </select>
+    
+</mapper>

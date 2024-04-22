@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.decisiontable.DecisionTableOutputBeanRepository">
+
+    <resultMap id="ResultMap" type="DecisionTableOutputBean">
+        <id property="decisionOutputBeanId" column="decision_output_bean_id" />
+        <result property="parentDecisionOutputBeanId" column="parent_decision_output_bean_id" />
+        <result property="decisionOutputBeanCode" column="decision_output_bean_code" />
+         <result property="decisionOutputBeanName" column="decision_output_bean_name" />
+        <result property="dataType" column="data_type" />
+        <result property="itemSequenceNo" column="item_sequence_no" />
+        <result property="decisionTbId" column="decision_table_id" />
+		<result property="objectType" column="object_type" />
+		<result property="objectId" column="object_id" />
+		<result property="objectFlg" column="object_flg" />
+		<result property="commonObjDefiCode" column="common_object_definition_code" />
+        <result property="externalObjDefiCode" column="external_object_definition_code" />
+        <result property="packageNameObjExt" column="package_name" />
+        <result property="decisionTableCode" column="decision_table_code" />
+        <result property="moduleId" column="module_id" />
+        <result property="moduleCode" column="module_code" />
+    </resultMap>
+
+	<!-- Process for display view and modify -->
+    <select id="findDecisionOutputBeanTypeTree" parameterType="_long" resultMap="ResultMap">
+       <![CDATA[
+            SELECT 
+                ob.decision_output_bean_id,  
+	            ob.parent_decision_output_bean_id, 
+	            ob.decision_output_bean_code, 
+	            ob.decision_output_bean_name, 
+	            ob.data_type, 
+	            ob.item_sequence_no, 
+	            ob.decision_table_id ,
+				ob.object_type,
+				ob.object_id,
+				ob.object_flg
+            FROM 
+                decision_output_bean ob 
+            WHERE
+                ob.decision_table_id = #{decisionTbId}
+            ORDER BY
+                ob.item_sequence_no
+        ]]>
+    </select>
+    
+    <select id="getSequencesOutputBean" resultType="Long">
+        select SETVAL('decision_output_bean_seq'::regclass, NEXTVAL('decision_output_bean_seq'::regclass) + #{size})
+    </select>
+    
+    <insert id="registerOutputBean" >
+        <if test="outputbeanItems != null and  outputbeanItems.size() > 0 ">
+            INSERT INTO decision_output_bean
+                (
+                decision_output_bean_id, 
+                decision_output_bean_code, 
+                decision_output_bean_name, 
+                data_type, 
+                decision_table_id, 
+                item_sequence_no, 
+                parent_decision_output_bean_id ,
+				object_type,
+				object_id,
+				object_flg 
+                )
+                VALUES 
+                <foreach item="item" collection="outputbeanItems" separator=",">
+                (
+                    CAST(#{item.decisionOutputBeanId} AS numeric(16,0)), 
+                    #{item.decisionOutputBeanCode}, 
+                    #{item.decisionOutputBeanName}, 
+                    #{item.dataType}, 
+                    CAST(#{item.decisionTbId} AS numeric(16,0)) ,
+                    #{item.itemSequenceNo}, 
+                    CAST(#{item.parentDecisionOutputBeanId} AS numeric(16,0)) ,
+	            	CAST(#{item.objectType} AS numeric(16,0)),
+	            	CAST(#{item.objectId} AS numeric(16,0)), 
+	            	#{item.objectFlg}
+                )
+                </foreach>;
+        </if>
+    </insert>
+    
+    <delete id="deleteBeforModifyOutputBean">
+        DELETE 
+        FROM decision_output_bean 
+        WHERE 
+            decision_table_id = #{id}
+            <if test="outputbeanItems != null and  outputbeanItems.size() > 0 ">
+                AND decision_output_bean_id NOT IN  
+                <foreach item="item" index="index" collection="outputbeanItems" open="(" separator="," close=")">
+                    CAST(#{item.decisionOutputBeanId} AS numeric(16,0))
+                </foreach>
+            </if>
+    </delete>
+    
+    <update id="modifyOutputBean" >
+        <foreach item="item" collection="outputbeanItems" separator=";">
+            <![CDATA[
+                UPDATE decision_output_bean
+                SET 
+                    decision_output_bean_code = #{item.decisionOutputBeanCode}, 
+                    decision_output_bean_name = #{item.decisionOutputBeanName}, 
+                    data_type= #{item.dataType}, 
+                    item_sequence_no = #{item.itemSequenceNo}, 
+                    parent_decision_output_bean_id = CAST(#{item.parentDecisionOutputBeanId} AS numeric(16,0)) , 
+					object_type= #{item.objectType}, 
+					object_id= #{item.objectId}, 
+					object_flg= CAST(#{item.objectFlg} AS BOOLEAN )
+                 WHERE 
+                   decision_output_bean_id = CAST(#{item.decisionOutputBeanId} AS numeric(16,0))
+            ]]>
+        </foreach>
+    </update>
+    
+     <!-- TungHT - Select list output bean is deleted -->
+    <select id="selectListOutputBeanIsDeleted" resultType="DecisionTableOutputBean">
+        SELECT * FROM decision_output_bean 
+        WHERE 
+            decision_table_id = #{id} 
+            <if test="outputbeanItems != null and  outputbeanItems.size() > 0 ">
+                AND decision_output_bean_id NOT IN  
+                <foreach item="item" index="index" collection="outputbeanItems" open="(" separator="," close=")">
+                    CAST(#{item.decisionOutputBeanId} AS numeric(16,0))
+                </foreach>
+            </if>
+    </select>
+    
+    <!-- TungHT - Select list output bean before modify -->
+    <select id="getListOutputBeanBefore" resultType="DecisionTableOutputBean" parameterType="Long">
+        SELECT 
+        	decision_output_bean_id,
+        	decision_output_bean_code,
+        	decision_output_bean_name,
+        	data_type
+        FROM 
+        	decision_output_bean 
+        WHERE 
+            decision_table_id = #{decisionTbId} 
+    </select>
+    
+    <!-- For generate source -->
+    <select id="findAllDecisionOutputBeanByListDecisionId" resultMap="ResultMap">
+        SELECT 
+            ob.decision_output_bean_id,  
+	         ob.parent_decision_output_bean_id, 
+	         ob.decision_output_bean_code, 
+	         ob.decision_output_bean_name, 
+	         ob.data_type, 
+	         ob.item_sequence_no, 
+	         ob.decision_table_id ,
+			ob.object_type,
+			ob.object_id,
+			ob.object_flg,
+			cod.common_object_definition_code,
+			eod.external_object_definition_code, 
+			eod.package_name,
+			module.module_code
+        FROM 
+            decision_output_bean ob 
+            LEFT JOIN common_object_definition cod ON cod.common_object_definition_id = ob.object_id
+			LEFT JOIN external_object_definition eod ON eod.external_object_definition_id = ob.object_id
+			LEFT JOIN module ON cod.module_id = module.module_id
+        <if test="decisionLst != null and  decisionLst.size() > 0 ">
+		WHERE ob.decision_table_id IN
+		<foreach item="item" index="index" collection="decisionLst" open="(" separator="," close=")">
+		               #{item.decisionTbId}
+		           </foreach>
+		</if>
+        ORDER BY
+            ob.item_sequence_no
+    </select>
+</mapper>

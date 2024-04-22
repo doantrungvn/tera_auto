@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.languagedesign.LanguageDesignRepository">
+	<resultMap id="languageDesignResultMap" type="org.terasoluna.qp.domain.model.LanguageDesign">
+		<id property="languageId" column="language_id" />
+		<result property="languageCode" column="language_code" />
+		<result property="languageName" column="language_name" />
+		<result property="countryCode" column="country_code" />
+		<result property="regionCode" column="region_code" />
+		<result property="createdBy" column="created_by" />
+		<result property="createdDate" column="created_date" />
+		<result property="updatedBy" column="updated_by" />
+		<result property="updatedDate" column="updated_date" />
+		<result property="projectId" column="project_id" />
+		<result property="itemSeqNo" column="item_seq_no" />
+	</resultMap>
+	
+	<resultMap id="autocompleteResultMap" type="Autocomplete">
+			<result property="outputId" column="outputId" />
+			<result property="outputCd" column="outputCd" />
+			<result property="outputName" column="outputName" />
+			<result property="output01" column="output01" />
+			<result property="output02" column="output02" />
+			<result property="output03" column="output03" />
+			<result property="output04" column="output04" />
+			<result property="output05" column="output05" />
+			<result property="resourceType" column="resourceType" />
+	</resultMap>
+	
+	<select id="getLanguageDesignForAutocomplete" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+			language_code AS optionValue,
+			language_name AS optionLabel,
+			country_code AS output01,
+			language_id AS output02
+		FROM
+			language_design
+		<where>
+			<if test="arg01 != null and arg01 != ''">
+				<![CDATA[
+					AND language_id != CAST(#{arg01} AS NUMERIC)
+				]]>
+			</if>
+			<if test="arg02 != null and arg02 != ''">
+				<![CDATA[
+					AND project_id = CAST(#{arg02} AS NUMERIC)
+				]]>
+			</if>
+		</where>
+	</select>
+	
+	<select id="getLanguageDesignForAutocompleteMenuDesign" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+			language_id AS optionValue,
+			language_name AS optionLabel
+		FROM
+			language_design
+	</select>
+	
+	<select id="findAll" resultMap="languageDesignResultMap">
+		SELECT
+			language_id,
+			language_code,
+			language_name,
+			country_code,
+			region_code,
+			created_by,
+			created_date,
+			updated_by,
+			updated_date,
+			item_seq_no
+		FROM
+			language_design
+	</select>
+	<select id="findAllByProjectId" resultMap="languageDesignResultMap">
+		SELECT
+			language_id,
+			language_code,
+			language_name,
+			country_code,
+			region_code,
+			created_by,
+			created_date,
+			updated_by,
+			updated_date,
+			item_seq_no
+		FROM
+			language_design
+		WHERE project_id = #{projectId}
+	</select>
+	<select id="findAllLanguageDesign" resultMap="languageDesignResultMap">
+		SELECT
+			language_id,
+			language_code,
+			language_name,
+			country_code,
+			region_code,
+			created_by,
+			created_date,
+			updated_by,
+			updated_date,
+			item_seq_no
+		FROM
+			language_design
+		WHERE
+			language_id != #{languageId} AND project_id = #{projectId}
+		ORDER BY
+			language_name 
+	</select>
+	
+	<!-- register language_design -->
+	
+	<insert id="register" parameterType="map">
+		<selectKey keyProperty="languageDesign.languageId" resultType="Long" statementType="STATEMENT"
+			order="BEFORE">
+			SELECT NEXTVAL('language_design_seq'::REGCLASS)
+		</selectKey>
+		<![CDATA[
+		INSERT INTO 
+			language_design
+			(
+				language_id,
+				language_code,
+				language_name,
+				country_code,
+				region_code,
+				created_by,
+				created_date,
+				updated_by,
+				updated_date,
+				item_seq_no,
+				project_id
+			)
+		VALUES
+			(
+				#{languageDesign.languageId},
+				#{languageDesign.languageCode},
+				#{languageDesign.languageName},
+				#{languageDesign.countryCode},
+				#{languageDesign.regionCode},
+				#{languageDesign.createdBy},
+				#{languageDesign.createdDate},
+				#{languageDesign.updatedBy},
+				#{languageDesign.updatedDate},
+				#{languageDesign.itemSeqNo},
+				#{languageDesign.projectId}
+			);
+		]]>
+		<if test="defaultLanguage == null">
+			UPDATE project
+			SET default_language = #{languageDesign.languageId}
+			WHERE project_id = #{languageDesign.projectId};
+		</if>
+		<if test="defaultLanguage != null">
+			INSERT INTO message_design(
+					message_string, 
+					module_id, 
+					project_id,
+					message_level, 
+					remark, 
+					created_by, 
+					created_date, 
+					updated_by,
+					updated_date,
+					message_code,
+					message_type,
+					language_id,
+					generated_status
+			)
+			SELECT 
+					message_string, 
+					module_id, 
+					#{languageDesign.projectId},
+					message_level, 
+					remark,
+					#{languageDesign.createdBy},
+					#{languageDesign.createdDate},
+					#{languageDesign.updatedBy},
+					#{languageDesign.updatedDate},
+					message_code,
+					message_type,
+					#{languageDesign.languageId},
+					0
+			FROM 
+					message_design
+			WHERE 
+				<if test="defaultLanguage.languageCode != null and defaultLanguage.languageCode != ''">
+					language_id = (SELECT language_id FROM language_design WHERE language_code = #{defaultLanguage.languageCode} AND project_id = #{languageDesign.projectId} LIMIT 1)
+				</if>
+				<if test="defaultLanguage.languageCode == null or defaultLanguage.languageCode == ''">
+					FALSE
+				</if>
+		</if>
+	</insert>
+	
+	<update id="updateLanguageDesign" parameterType="LanguageDesign">	
+		<![CDATA[
+			UPDATE
+				language_design
+			SET
+				language_code = #{languageDesign.languageCode},
+				language_name = #{languageDesign.languageName},
+				country_code = #{languageDesign.countryCode},
+				region_code = #{languageDesign.regionCode},
+				updated_date = #{languageDesign.sysDatetime},
+				updated_by = #{languageDesign.updatedBy},
+				item_seq_no = #{languageDesign.itemSeqNo}
+			WHERE
+				language_id = #{languageDesign.languageId}
+			AND
+				updated_date = #{languageDesign.updatedDate}
+		]]>
+	</update>
+	
+
+	<!-- Register default message design -->
+	<insert id="registerDefaultLanguageCode" parameterType="LanguageDesign">
+		INSERT INTO message_design(
+				message_string,
+				module_id, 
+				project_id,
+				message_level, 
+				remark, 
+				created_by, 
+				created_date, 
+				updated_by,
+				updated_date,
+				message_code,
+				message_type,
+				generated_status
+		)
+		SELECT 
+				message_string, 
+				module_id, 
+				project_id,
+				message_level, 
+				remark,
+				#{createdBy},
+				#{createdDate},
+				#{updatedBy},
+				#{updatedDate},
+				message_code,
+				message_type,
+				0
+		FROM 
+				message_design
+		WHERE 
+				language_code = 'en'
+	</insert>
+
+	<!-- find language design -->
+	<select id="findByCode" parameterType="LanguageDesign" resultMap="languageDesignResultMap">
+			SELECT
+				language_id,
+				language_code,
+				language_name,
+				country_code,
+				region_code,
+				updated_by,
+				updated_date,
+				item_seq_no,
+				project_id
+			FROM
+				language_design
+		<where>
+			project_id = #{projectId}
+			<if test="languageCode != null and languageCode != ''">
+				AND language_code = #{languageCode}
+			</if>
+			
+			<if test="(languageCode == null or languageCode == '')">
+				AND FALSE
+			</if>
+		</where>
+		 LIMIT 1;	
+	</select>
+	
+	<select id="findByPK" parameterType="LanguageDesign" resultMap="languageDesignResultMap">
+			SELECT
+				language_id,
+				language_code,
+				language_name,
+				country_code,
+				region_code,
+				updated_by,
+				updated_date,
+				item_seq_no,
+				project_id
+			FROM
+				language_design
+			WHERE
+				language_id = #{languageId}
+	</select>
+	
+	<!-- update language design -->
+	<update id="modify" parameterType="LanguageDesign">	
+		<![CDATA[
+			UPDATE
+				language_design
+			SET
+				country_code = #{countryCode},
+				region_code = #{regionCode},
+				updated_date = #{sysDatetime},
+				updated_by = #{updatedBy}
+			WHERE
+				language_code = #{languageCode}
+			AND
+				updated_date = #{updatedDate}
+		]]>
+	</update>
+
+	<!-- delete language design -->
+
+	<delete id="delete" parameterType="LanguageDesign">
+		DELETE FROM 
+			language_design
+		WHERE 
+			language_id = #{languageId}
+	</delete>
+
+	<delete id="deleteReferenceMessage" parameterType="LanguageDesign">
+		DELETE FROM 
+			message_design
+		WHERE
+			language_id = #{languageId}
+	</delete>
+	<delete id="deleteByExceptionalGroup">
+		DELETE FROM 
+			message_design
+        <where>
+        	project_id = #{projectId}
+         	<if test="exceptionGroup !=null and exceptionGroup.size() &gt; 0">
+        		AND language_id NOT IN
+	        	<foreach collection="exceptionGroup" separator="," open="(" close=")" item="id">
+	        		#{id}
+	        	</foreach>
+        	</if>
+        	<if test="exceptionGroup ==null or exceptionGroup.size() &lt;= 0">
+        		AND TRUE
+        	</if>
+        </where>;
+        DELETE FROM 
+			language_design
+        <where>
+        	project_id = #{projectId}
+         	<if test="exceptionGroup !=null and exceptionGroup.size() &gt; 0">
+        		AND language_id NOT IN
+	        	<foreach collection="exceptionGroup" separator="," open="(" close=")" item="id">
+	        		#{id}
+	        	</foreach>
+        	</if>
+        	<if test="exceptionGroup ==null or exceptionGroup.size() &lt;= 0">
+        		AND TRUE
+        	</if>
+        	AND language_code != 'en' AND country_code != 'US'
+        </where>
+        
+	</delete>
+	<select id="countNameCodeByLanguageCode" parameterType="LanguageDesign" resultType="Long">
+		SELECT 
+			SUM(rowVal) AS totalCount 
+		FROM (
+				(SELECT 
+					1 AS rowVal 
+				FROM 
+					language_design 
+				<where>
+						<if test="languageCode != null and languageCode != ''">UPPER(language_code) = UPPER(#{languageCode})</if> 
+						<if test="languageCode == null and languageCode == ''">AND FALSE</if>
+				</where>
+				LIMIT 1
+				) 
+			) AS foo
+	</select>
+	
+	<select id="countReferenceByLanguageCode" parameterType="String" resultType="_long">
+		SELECT COUNT(A.message_design_id) AS message_ref_count FROM message_design AS A WHERE A.language_code = #{languageCode}
+	</select>
+	<select id="findById" resultMap="languageDesignResultMap">
+		SELECT
+			language_id,
+			language_code,
+			language_name,
+			country_code,
+			region_code,
+			created_by,
+			created_date,
+			updated_by,
+			updated_date
+		FROM
+			language_design
+		WHERE
+			language_code = #{languageCode}
+	</select>
+	
+	<!-- find by project id -->
+	<select id="findLanguageByProjectId" resultMap="languageDesignResultMap">
+		SELECT
+			language_id,
+			language_code,
+			language_name,
+			country_code,
+			region_code,
+			created_by,
+			created_date,
+			updated_by,
+			updated_date
+		FROM
+			language_design
+		WHERE
+			project_id = #{projectId}
+		ORDER BY language_name	
+	</select>
+	<select id="findPageByCriteria" resultMap="languageDesignResultMap" parameterType="org.terasoluna.qp.domain.repository.languagedesign.LanguageDesignCriteria">
+        SELECT
+            language_id,
+            language_code,
+            language_name,
+            country_code,
+            region_code,
+            created_by,
+            created_date,
+            updated_by,
+            updated_date
+        FROM
+            language_design
+        <where>
+            TRUE
+            <if test="criteria.languageCode != null and criteria.languageCode != ''">
+                <bind name="languageCode" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.languageCode)" />
+                AND language_code ILIKE #{languageCode} ESCAPE '~'
+            </if>
+            <if test="criteria.languageName != null and criteria.languageName != ''">
+                <bind name="languageName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.languageName)" />
+                AND language_name ILIKE #{languageName} ESCAPE '~'
+            </if>
+            <if test="criteria.projectId != null and criteria.projectId != ''"> 
+                <![CDATA[ 
+                     AND project_id = #{criteria.projectId}
+                 ]]>
+            </if>
+        </where>
+        <if test="pageable.sort != null">
+            ORDER BY
+            <foreach collection="pageable.sort" item="language" separator=",">
+                <![CDATA[
+                    ${language.property} ${language.direction}
+                ]]>
+            </foreach>
+        </if>
+        <if test="pageable.sort == null">
+        ORDER BY
+                updated_date DESC
+        </if>
+        <![CDATA[
+            LIMIT
+                #{pageable.pageSize}
+            OFFSET
+                #{pageable.offset}
+        ]]>
+    </select>
+    <select id="countByCriteria" parameterType="org.terasoluna.qp.domain.repository.languagedesign.LanguageDesignCriteria" resultType="Long">
+        SELECT 
+            COUNT(language_code) AS totalCount 
+        FROM
+            language_design
+        <where>
+            TRUE
+            <if test="criteria.languageCode != null and criteria.languageCode != ''">
+                <bind name="languageCode" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.languageCode)" />
+                AND language_code ILIKE #{languageCode} ESCAPE '~'
+            </if>
+            <if test="criteria.languageName != null and criteria.languageName != ''">
+                <bind name="languageName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.languageName)" />
+                AND language_name ILIKE #{languageName} ESCAPE '~'
+            </if>
+            <if test="criteria.projectId != null and criteria.projectId != ''"> 
+                <![CDATA[ 
+                     AND project_id = #{criteria.projectId}
+                 ]]>
+            </if>
+        </where>
+    </select>
+</mapper>

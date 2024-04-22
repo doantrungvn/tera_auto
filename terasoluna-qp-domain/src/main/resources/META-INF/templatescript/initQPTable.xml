@@ -1,0 +1,841 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<sql>
+	<table x="10" y="10" name="Qp language" code="qp_language"
+		tableid="0" designStatus="2" type="2" usedCommonColumn="0"
+		updateddate="" updatedby="" createddate="" createdby="">
+		<row name="Language code" code="language_code" columnid="0" null="1"
+			autoincrement="0" length="50" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+			<default></default>
+		</row>
+		<row name="Language name" code="language_name" columnid="0" null="1"
+			autoincrement="0" length="400" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+			<default></default>
+		</row>
+		<row name="Country code" code="country_code" columnid="0" null="1"
+			autoincrement="0" length="50" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+			<default></default>
+		</row>
+		<row name="Region code" code="region_code" columnid="0" null="0"
+			autoincrement="0" length="50" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+		</row>
+		<key type="PRIMARY" name="qp_language_pkey" keyid="0">
+			<part>country_code</part>
+			<part>language_code</part>
+		</key>
+	</table>
+	<table x="210" y="10" name="Qp message" code="qp_message"
+		tableid="0" designStatus="2" type="2" usedCommonColumn="0"
+		updateddate="" updatedby="" createddate="" createdby="">
+		<row name="Message id" code="message_id" columnid="0" null="1"
+			autoincrement="1" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>14</datatype>
+			<default>nextval(&#39;message_seq&#39;::regclass)</default>
+			<defaultType>1</defaultType>
+		</row>
+		<row name="Language code" code="language_code" columnid="0" null="1"
+			autoincrement="0" length="50" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+			<default></default>
+			<relation table="qp_language" row="language_code"
+				relationid="0" />
+			<relation table="qp_language" row="country_code" relationid="0" />
+		</row>
+		<row name="Message code" code="message_code" columnid="0" null="1"
+			autoincrement="0" length="200" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+			<default></default>
+		</row>
+		<row name="Message string" code="message_string" columnid="0"
+			null="1" autoincrement="0" length="400" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+			<default></default>
+		</row>
+		<row name="Country code" code="country_code" columnid="0" null="1"
+			autoincrement="0" length="50" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+			<default></default>
+			<relation table="qp_language" row="language_code"
+				relationid="0" />
+			<relation table="qp_language" row="country_code" relationid="0" />
+		</row>
+		<row name="Remark" code="remark" columnid="0" null="0"
+			autoincrement="0" length="400" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+		</row>
+		<row name="Module resource" code="module_resource" columnid="0"
+			null="0" autoincrement="0" length="200" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+		</row>
+		<key type="PRIMARY" name="qp_message_pkey" keyid="0">
+			<part>message_id</part>
+		</key>
+	</table>
+	<table x="410" y="10" name="Qp role permission" code="qp_role_permission"
+		tableid="0" designStatus="2" type="2" usedCommonColumn="0"
+		updateddate="" updatedby="" createddate="" createdby="">
+		<row name="Role id" code="role_id" columnid="0" null="1"
+			autoincrement="0" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>7</datatype>
+			<default></default>
+			<relation table="qp_role" row="role_id" relationid="0" />
+		</row>
+		<row name="Permission id" code="permission_id" columnid="0" null="1"
+			autoincrement="0" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>7</datatype>
+			<default></default>
+			<relation table="qp_permission" row="permission_id"
+				relationid="0" />
+		</row>
+		<key type="PRIMARY" name="qp_role_permission_pkey" keyid="0">
+			<part>permission_id</part>
+			<part>role_id</part>
+		</key>
+	</table>
+	<table x="610" y="10" name="Qp account permission" code="qp_account_permission"
+		tableid="0" designStatus="2" type="2" usedCommonColumn="1"
+		updateddate="" updatedby="" createddate="" createdby="">
+		<row name="Permission id" code="permission_id" columnid="0" null="1"
+			autoincrement="0" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>7</datatype>
+			<default></default>
+			<relation table="qp_permission" row="permission_id"
+				relationid="0" />
+		</row>
+		<row name="Account id" code="account_id" columnid="0" null="1"
+			autoincrement="0" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>7</datatype>
+			<default></default>
+			<relation table="qp_account" row="account_id" relationid="0" />
+		</row>
+		<row name="Created by" code="created_by" columnid="0" null="0"
+			autoincrement="0" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>7</datatype>
+		</row>
+		<row name="Created date" code="created_date" columnid="0" null="0"
+			autoincrement="0" length="19" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>12</datatype>
+			<default>timezone(&#39;utc&#39;::text, now())</default>
+			<defaultType>1</defaultType>
+		</row>
+		<row name="Updated by" code="updated_by" columnid="0" null="0"
+			autoincrement="0" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>7</datatype>
+		</row>
+		<row name="Updated date" code="updated_date" columnid="0" null="0"
+			autoincrement="0" length="19" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>12</datatype>
+			<default>timezone(&#39;utc&#39;::text, now())</default>
+			<defaultType>1</defaultType>
+		</row>
+		<key type="PRIMARY" name="qp_account_permission_pkey" keyid="0">
+			<part>permission_id</part>
+			<part>account_id</part>
+		</key>
+	</table>
+	<table x="35" y="170" name="Qp account profile" code="qp_account_profile"
+		tableid="0" designStatus="2" type="2" usedCommonColumn="1"
+		updateddate="" updatedby="" createddate="" createdby="">
+		<row name="Account id" code="account_id" columnid="0" null="1"
+			autoincrement="0" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>7</datatype>
+			<default></default>
+		</row>
+		<row name="Integer format" code="integer_format" columnid="0"
+			null="0" autoincrement="0" length="50" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+		</row>
+		<row name="Float format" code="float_format" columnid="0" null="0"
+			autoincrement="0" length="50" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+		</row>
+		<row name="Date format" code="date_format" columnid="0" null="0"
+			autoincrement="0" length="50" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+		</row>
+		<row name="Time format" code="time_format" columnid="0" null="0"
+			autoincrement="0" length="50" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+		</row>
+		<row name="Datetime format" code="datetime_format" columnid="0"
+			null="0" autoincrement="0" length="50" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+		</row>
+
+		<row name="Currency format" code="currency_format" columnid="0"
+			null="0" autoincrement="0" length="50" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+		</row>
+		<row name="Currency code" code="currency_code" columnid="0" null="0"
+			autoincrement="0" length="5" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+		</row>
+		<row name="Pagesize value" code="pagesize_value" columnid="0"
+			null="0" autoincrement="0" length="2000" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+		</row>
+		<row name="Default language" code="default_language" columnid="0"
+			null="0" autoincrement="0" length="50" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+		</row>
+		<row name="Session timeout" code="session_timeout" columnid="0"
+			null="0" autoincrement="0" length="6" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>6</datatype>
+		</row>
+		<row name="Proxy host" code="proxy_host" columnid="0" null="0"
+			autoincrement="0" length="50" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+		</row>
+		<row name="Proxy port" code="proxy_port" columnid="0" null="0"
+			autoincrement="0" length="10" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+		</row>
+		<row name="Proxy user" code="proxy_user" columnid="0" null="0"
+			autoincrement="0" length="50" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+		</row>
+		<row name="Proxy password" code="proxy_password" columnid="0"
+			null="0" autoincrement="0" length="50" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+		</row>
+		<row name="Bing client id" code="bing_client_id" columnid="0"
+			null="0" autoincrement="0" length="50" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+		</row>
+		<row name="Bing client secret" code="bing_client_secret" columnid="0"
+			null="0" autoincrement="0" length="50" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+		</row>
+		<row name="Proxy level" code="proxy_level" columnid="0" null="0"
+			autoincrement="0" length="6" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>6</datatype>
+		</row>
+		<row name="Interval reload" code="interval_reload" columnid="0"
+			null="0" autoincrement="0" length="10" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>5</datatype>
+		</row>
+		<row name="Connection flg" code="connection_flg" columnid="0"
+			null="0" autoincrement="0" length="6" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>6</datatype>
+		</row>
+		<key type="PRIMARY" name="qp_account_profile_pkey" keyid="0">
+			<part>account_id</part>
+		</key>
+		<row name="Created by" code="created_by" columnid="0" null="0"
+			autoincrement="0" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>7</datatype>
+		</row>
+		<row name="Created date" code="created_date" columnid="0" null="0"
+			autoincrement="0" length="19" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>12</datatype>
+			<default>timezone(&#39;utc&#39;::text, now())</default>
+			<defaultType>1</defaultType>
+		</row>
+		<row name="Updated by" code="updated_by" columnid="0" null="0"
+			autoincrement="0" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>7</datatype>
+		</row>
+		<row name="Updated date" code="updated_date" columnid="0" null="0"
+			autoincrement="0" length="19" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>12</datatype>
+			<default>timezone(&#39;utc&#39;::text, now())</default>
+			<defaultType>1</defaultType>
+		</row>
+	</table>
+	<table x="210" y="210" name="Qp account role" code="qp_account_role"
+		tableid="0" designStatus="2" type="2" usedCommonColumn="1"
+		updateddate="" updatedby="" createddate="" createdby="">
+		<row name="Role id" code="role_id" columnid="0" null="1"
+			autoincrement="0" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>7</datatype>
+			<default></default>
+			<relation table="qp_role" row="role_id" relationid="0" />
+		</row>
+		<row name="Account id" code="account_id" columnid="0" null="1"
+			autoincrement="0" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>7</datatype>
+			<default></default>
+			<relation table="qp_account" row="account_id" relationid="0" />
+		</row>
+		<row name="Created by" code="created_by" columnid="0" null="0"
+			autoincrement="0" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>7</datatype>
+		</row>
+		<row name="Created date" code="created_date" columnid="0" null="0"
+			autoincrement="0" length="19" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>12</datatype>
+			<default>timezone(&#39;utc&#39;::text, now())</default>
+			<defaultType>1</defaultType>
+		</row>
+		<row name="Updated by" code="updated_by" columnid="0" null="0"
+			autoincrement="0" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>7</datatype>
+		</row>
+		<row name="Updated date" code="updated_date" columnid="0" null="0"
+			autoincrement="0" length="19" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>12</datatype>
+			<default>timezone(&#39;utc&#39;::text, now())</default>
+			<defaultType>1</defaultType>
+		</row>
+		<key type="PRIMARY" name="qp_account_role_pkey" keyid="0">
+			<part>account_id</part>
+			<part>role_id</part>
+		</key>
+	</table>
+	<table x="410" y="210" name="Qp account rule definition" code="qp_account_rule_definition"
+		tableid="0" designStatus="2" type="2" usedCommonColumn="1"
+		updateddate="" updatedby="" createddate="" createdby="">
+		<row name="Account rule definition id" code="account_rule_definition_id"
+			columnid="0" null="1" autoincrement="1" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>7</datatype>
+			<default>nextval(&#39;account_rule_definition_seq&#39;::regclass)</default>
+			<defaultType>1</defaultType>
+		</row>
+		<row name="Account rule definition code" code="account_rule_definition_code"
+			columnid="0" null="1" autoincrement="0" length="200" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+			<default></default>
+		</row>
+		<row name="Account rule definition name" code="account_rule_definition_name"
+			columnid="0" null="1" autoincrement="0" length="400" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+			<default></default>
+		</row>
+		<row name="Range of string minimum" code="range_of_string_minimum"
+			columnid="0" null="0" autoincrement="0" length="6" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>6</datatype>
+		</row>
+		<row name="Range of string maximum" code="range_of_string_maximum"
+			columnid="0" null="0" autoincrement="0" length="6" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>6</datatype>
+		</row>
+		<row name="Characters type upper" code="characters_type_upper"
+			columnid="0" null="0" autoincrement="0" length="4" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>8</datatype>
+		</row>
+		<row name="Characters type lower" code="characters_type_lower"
+			columnid="0" null="0" autoincrement="0" length="4" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>8</datatype>
+		</row>
+		<row name="Characters type numeric" code="characters_type_numeric"
+			columnid="0" null="0" autoincrement="0" length="4" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>8</datatype>
+		</row>
+		<row name="Generations count" code="generations_count" columnid="0"
+			null="0" autoincrement="0" length="6" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>6</datatype>
+		</row>
+		<row name="Life time" code="life_time" columnid="0" null="0"
+			autoincrement="0" length="6" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>6</datatype>
+		</row>
+		<row name="Login continuous failure count" code="login_continuous_failure_count"
+			columnid="0" null="0" autoincrement="0" length="6" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>6</datatype>
+		</row>
+		<row name="Account lock time" code="account_lock_time" columnid="0"
+			null="0" autoincrement="0" length="6" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>6</datatype>
+		</row>
+		<row name="Initial password" code="initial_password" columnid="0"
+			null="0" autoincrement="0" length="4" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>8</datatype>
+		</row>
+		<row name="Initial password force change" code="initial_password_force_change"
+			columnid="0" null="0" autoincrement="0" length="4" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>8</datatype>
+		</row>
+		<row name="Created by" code="created_by" columnid="0" null="0"
+			autoincrement="0" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>7</datatype>
+		</row>
+		<row name="Created date" code="created_date" columnid="0" null="0"
+			autoincrement="0" length="19" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>12</datatype>
+			<default>timezone(&#39;utc&#39;::text, now())</default>
+			<defaultType>1</defaultType>
+		</row>
+		<row name="Updated by" code="updated_by" columnid="0" null="0"
+			autoincrement="0" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>7</datatype>
+		</row>
+		<row name="Updated date" code="updated_date" columnid="0" null="0"
+			autoincrement="0" length="19" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>12</datatype>
+			<default>timezone(&#39;utc&#39;::text, now())</default>
+			<defaultType>1</defaultType>
+		</row>
+		<key type="PRIMARY" name="account_rule_definition_pk" keyid="0">
+			<part>account_rule_definition_id</part>
+		</key>
+	</table>
+	<table x="610" y="210" name="Qp account theme" code="qp_account_theme"
+		tableid="0" designStatus="2" type="2" usedCommonColumn="1"
+		updateddate="" updatedby="" createddate="" createdby="">
+		<row name="Account theme id" code="account_theme_id" columnid="0"
+			null="1" autoincrement="1" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>7</datatype>
+			<default>nextval(&#39;account_theme_seq&#39;::regclass)</default>
+			<defaultType>1</defaultType>
+		</row>
+		<row name="Account id" code="account_id" columnid="0" null="1"
+			autoincrement="0" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>7</datatype>
+			<default></default>
+			<relation table="qp_account" row="account_id" relationid="0" />
+		</row>
+		<row name="Code" code="code" columnid="0" null="0" autoincrement="0"
+			length="50" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+		</row>
+		<row name="Value " code="value_" columnid="0" null="0"
+			autoincrement="0" length="50" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+		</row>
+		<row name="Created by" code="created_by" columnid="0" null="0"
+			autoincrement="0" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>7</datatype>
+		</row>
+		<row name="Created date" code="created_date" columnid="0" null="0"
+			autoincrement="0" length="19" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>12</datatype>
+			<default>timezone(&#39;utc&#39;::text, now())</default>
+			<defaultType>1</defaultType>
+		</row>
+		<row name="Updated by" code="updated_by" columnid="0" null="0"
+			autoincrement="0" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>7</datatype>
+		</row>
+		<row name="Updated date" code="updated_date" columnid="0" null="0"
+			autoincrement="0" length="19" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>12</datatype>
+			<default>timezone(&#39;utc&#39;::text, now())</default>
+			<defaultType>1</defaultType>
+		</row>
+		<key type="PRIMARY" name="qp_account_theme_pkey" keyid="0">
+			<part>account_theme_id</part>
+		</key>
+	</table>
+	<table x="810" y="210" name="Qp permission" code="qp_permission"
+		tableid="0" designStatus="2" type="2" usedCommonColumn="1"
+		updateddate="" updatedby="" createddate="" createdby="">
+		<row name="Permission id" code="permission_id" columnid="0" null="1"
+			autoincrement="1" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>7</datatype>
+			<default>nextval(&#39;permission_seq&#39;::regclass)</default>
+			<defaultType>1</defaultType>
+		</row>
+		<row name="Permission name" code="permission_name" columnid="0"
+			null="1" autoincrement="0" length="400" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+			<default></default>
+		</row>
+		<row name="Permission code" code="permission_code" columnid="0"
+			null="1" autoincrement="0" length="200" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+			<default></default>
+		</row>
+		<row name="Sort key" code="sort_key" columnid="0" null="1"
+			autoincrement="0" length="10" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>5</datatype>
+			<default></default>
+		</row>
+		<row name="Remark" code="remark" columnid="0" null="0"
+			autoincrement="0" length="2000" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+		</row>
+		<row name="Action path" code="action_path" columnid="0" null="1"
+			autoincrement="0" length="200" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+			<default></default>
+		</row>
+		<row name="Module code" code="module_code" columnid="0" null="0"
+			autoincrement="0" length="150" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+		</row>
+		<row name="Created by" code="created_by" columnid="0" null="0"
+			autoincrement="0" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>7</datatype>
+		</row>
+		<row name="Created date" code="created_date" columnid="0" null="0"
+			autoincrement="0" length="19" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>12</datatype>
+			<default>timezone(&#39;utc&#39;::text, now())</default>
+			<defaultType>1</defaultType>
+		</row>
+		<row name="Updated by" code="updated_by" columnid="0" null="0"
+			autoincrement="0" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>7</datatype>
+		</row>
+		<row name="Updated date" code="updated_date" columnid="0" null="0"
+			autoincrement="0" length="19" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>12</datatype>
+			<default>timezone(&#39;utc&#39;::text, now())</default>
+			<defaultType>1</defaultType>
+		</row>
+		<key type="PRIMARY" name="qp_permission_pkey" keyid="0">
+			<part>permission_id</part>
+		</key>
+	</table>
+	<table x="211" y="559" name="Qp resources" code="qp_resources"
+		tableid="0" designStatus="2" type="2" usedCommonColumn="0"
+		updateddate="" updatedby="" createddate="" createdby="">
+		<row name="Resource id" code="resource_id" columnid="0" null="1"
+			autoincrement="1" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>14</datatype>
+			<default>nextval(&#39;resources_seq&#39;::regclass)</default>
+			<defaultType>1</defaultType>
+		</row>
+		<row name="Category cd" code="category_cd" columnid="0" null="1"
+			autoincrement="0" length="150" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+			<default></default>
+		</row>
+		<row name="Resource cd" code="resource_cd" columnid="0" null="1"
+			autoincrement="0" length="150" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+			<default></default>
+		</row>
+		<row name="Value1" code="value1" columnid="0" null="1"
+			autoincrement="0" length="500" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+			<default></default>
+		</row>
+		<row name="Value2" code="value2" columnid="0" null="0"
+			autoincrement="0" length="500" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+		</row>
+		<row name="Value3" code="value3" columnid="0" null="0"
+			autoincrement="0" length="500" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+		</row>
+		<row name="Value4" code="value4" columnid="0" null="0"
+			autoincrement="0" length="500" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+		</row>
+		<row name="Value5" code="value5" columnid="0" null="0"
+			autoincrement="0" length="500" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+		</row>
+		<row name="Resource type" code="resource_type" columnid="0" null="0"
+			autoincrement="0" length="1" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+		</row>
+		<row name="Is default" code="is_default" columnid="0" null="0"
+			autoincrement="0" length="1" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+		</row>
+		<row name="Delete flg" code="delete_flg" columnid="0" null="0"
+			autoincrement="0" length="1" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+		</row>
+		<key type="PRIMARY" name="qp_resources_pkey" keyid="0">
+			<part>resource_id</part>
+		</key>
+	</table>
+	<table x="210" y="410" name="Qp role" code="qp_role" tableid="0"
+		designStatus="2" type="2" usedCommonColumn="1" updateddate=""
+		updatedby="" createddate="" createdby="">
+		<row name="Role id" code="role_id" columnid="0" null="1"
+			autoincrement="1" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>7</datatype>
+			<default>nextval(&#39;role_seq&#39;::regclass)</default>
+			<defaultType>1</defaultType>
+		</row>
+		<row name="Role name" code="role_name" columnid="0" null="1"
+			autoincrement="0" length="200" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+			<default></default>
+		</row>
+		<row name="Role code" code="role_code" columnid="0" null="1"
+			autoincrement="0" length="150" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+			<default></default>
+		</row>
+		<row name="Status" code="status" columnid="0" null="1"
+			autoincrement="0" length="10" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>5</datatype>
+			<default></default>
+		</row>
+		<row name="Remark" code="remark" columnid="0" null="0"
+			autoincrement="0" length="2000" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+		</row>
+		<row name="Created by" code="created_by" columnid="0" null="0"
+			autoincrement="0" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>7</datatype>
+		</row>
+		<row name="Created date" code="created_date" columnid="0" null="0"
+			autoincrement="0" length="19" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>12</datatype>
+			<default>timezone(&#39;utc&#39;::text, now())</default>
+			<defaultType>1</defaultType>
+		</row>
+		<row name="Updated by" code="updated_by" columnid="0" null="0"
+			autoincrement="0" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>7</datatype>
+		</row>
+		<row name="Updated date" code="updated_date" columnid="0" null="0"
+			autoincrement="0" length="19" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>12</datatype>
+			<default>timezone(&#39;utc&#39;::text, now())</default>
+			<defaultType>1</defaultType>
+		</row>
+		<key type="PRIMARY" name="qp_role_pkey" keyid="0">
+			<part>role_id</part>
+		</key>
+	</table>
+	<table x="410" y="410" name="Qp account" code="qp_account"
+		tableid="0" designStatus="2" type="2" usedCommonColumn="1"
+		updateddate="" updatedby="" createddate="" createdby="">
+		<row name="Account id" code="account_id" columnid="0" null="1"
+			autoincrement="1" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>7</datatype>
+			<default>nextval(&#39;account_seq&#39;::regclass)</default>
+			<defaultType>1</defaultType>
+		</row>
+		<row name="Username" code="username" columnid="0" null="1"
+			autoincrement="0" length="200" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+			<default></default>
+		</row>
+		<row name="Password " code="password_" columnid="0" null="1"
+			autoincrement="0" length="200" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>1</datatype>
+			<default></default>
+		</row>
+		<row name="Account non expired" code="account_non_expired"
+			columnid="0" null="0" autoincrement="0" length="4" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>8</datatype>
+			<defaultType>1</defaultType>
+		</row>
+		<row name="Account non locked" code="account_non_locked" columnid="0"
+			null="0" autoincrement="0" length="4" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>8</datatype>
+			<defaultType>1</defaultType>
+		</row>
+		<row name="Credentials non expired" code="credentials_non_expired"
+			columnid="0" null="0" autoincrement="0" length="4" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>8</datatype>
+			<defaultType>1</defaultType>
+		</row>
+		<row name="Force change password" code="force_change_password"
+			columnid="0" null="0" autoincrement="0" length="4" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>8</datatype>
+			<default>0</default>
+		</row>
+		<row name="Account rule definition id" code="account_rule_definition_id"
+			columnid="0" null="0" autoincrement="0" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>7</datatype>
+		</row>
+		<row name="Created by" code="created_by" columnid="0" null="0"
+			autoincrement="0" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>7</datatype>
+		</row>
+		<row name="Created date" code="created_date" columnid="0" null="0"
+			autoincrement="0" length="19" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>12</datatype>
+			<default>timezone(&#39;utc&#39;::text, now())</default>
+			<defaultType>1</defaultType>
+		</row>
+		<row name="Updated by" code="updated_by" columnid="0" null="0"
+			autoincrement="0" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>7</datatype>
+		</row>
+		<row name="Updated date" code="updated_date" columnid="0" null="0"
+			autoincrement="0" length="19" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>12</datatype>
+			<default>timezone(&#39;utc&#39;::text, now())</default>
+			<defaultType>1</defaultType>
+		</row>
+		<key type="PRIMARY" name="qp_account_pkey" keyid="0">
+			<part>account_id</part>
+		</key>
+	</table>
+	<table x="610" y="410" name="Qp account login attempt" code="qp_account_login_attempt"
+		tableid="0" designStatus="2" type="2" usedCommonColumn="1"
+		updateddate="" updatedby="" createddate="" createdby="">
+		<row name="Account login attempt id" code="account_login_attempt_id"
+			columnid="0" null="1" autoincrement="1" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>7</datatype>
+			<default>nextval(&#39;account_login_attempt_seq&#39;::regclass)</default>
+			<defaultType>1</defaultType>
+		</row>
+		<row name="Account id" code="account_id" columnid="0" null="1"
+			autoincrement="0" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>7</datatype>
+			<default></default>
+			<relation table="qp_account" row="account_id" relationid="0" />
+		</row>
+		<row name="Generations count" code="generations_count" columnid="0"
+			null="0" autoincrement="0" length="6" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>6</datatype>
+		</row>
+		<row name="Login continuous failure count" code="login_continuous_failure_count"
+			columnid="0" null="0" autoincrement="0" length="6" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>6</datatype>
+		</row>
+		<row name="Last login" code="last_login" columnid="0" null="0"
+			autoincrement="0" length="19" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>12</datatype>
+			<default>timezone(&#39;utc&#39;::text, now())</default>
+			<defaultType>1</defaultType>
+		</row>
+		<row name="Created by" code="created_by" columnid="0" null="0"
+			autoincrement="0" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>7</datatype>
+		</row>
+		<row name="Created date" code="created_date" columnid="0" null="0"
+			autoincrement="0" length="19" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>12</datatype>
+			<default>timezone(&#39;utc&#39;::text, now())</default>
+			<defaultType>1</defaultType>
+		</row>
+		<row name="Updated by" code="updated_by" columnid="0" null="0"
+			autoincrement="0" length="20" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>7</datatype>
+		</row>
+		<row name="Updated date" code="updated_date" columnid="0" null="0"
+			autoincrement="0" length="19" precision="0">
+			<isCommonFlg>0</isCommonFlg>
+			<datatype>12</datatype>
+			<default>timezone(&#39;utc&#39;::text, now())</default>
+			<defaultType>1</defaultType>
+		</row>
+		<key type="PRIMARY" name="account_login_attempt_pk" keyid="0">
+			<part>account_login_attempt_id</part>
+		</key>
+		<key type="INDEX" name="fki_qp_account" keyid="0">
+			<part>account_id</part>
+		</key>
+	</table>
+</sql>

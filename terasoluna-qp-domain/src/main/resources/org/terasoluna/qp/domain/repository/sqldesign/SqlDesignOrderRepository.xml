@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.sqldesign.SqlDesignOrderRepository">
+	<resultMap id="resultMap" type="SqlDesignOrder">
+		<result property="orderId" column="order_id" />
+		<result property="sqlDesignId" column="sql_design_id" />
+		<result property="sqlDesignResultId" column="sql_design_result_id" />
+		<result property="orderType" column="order_type" />
+		<result property="itemSeqNo" column="item_seq_no" />
+	</resultMap>
+	
+	<select id="findAllBySqlDesignId" parameterType="Long" resultMap="resultMap">
+		SELECT A.order_id,
+				A.sql_design_id,
+				A.sql_design_result_id,
+				A.order_type,
+				A.item_seq_no
+		FROM sql_design_order A
+		WHERE 
+			A.sql_design_id = #{sqlDesignId}
+		ORDER BY 
+			item_seq_no
+	</select>
+	
+	<select id="findById" parameterType="Long" resultMap="resultMap">
+		SELECT order_id,
+				sql_design_id,
+				sql_design_result_id,
+				order_type,
+				item_seq_no
+		WHERE A.order_id = #{orderId}
+	</select>
+	
+	<insert id="register" parameterType="SqlDesignOrder">
+		<selectKey keyProperty="orderId" resultType="long" order="BEFORE">
+			SELECT nextval('sql_design_order_seq') AS orderId
+		</selectKey>
+		INSERT INTO
+			sql_design_order
+		(
+			order_id,
+			sql_design_id,
+			sql_design_result_id,
+			order_type,
+			item_seq_no
+		)
+		VALUES
+		(
+			#{orderId},
+			#{sqlDesignId},
+			#{SqlDesignResultId},
+			#{orderType},
+			#{itemSeqNo}
+		)
+	</insert>
+	
+	<insert id="registerAll">
+		INSERT INTO
+			sql_design_order
+		(
+			sql_design_id,
+			sql_design_result_id,
+			order_type,
+			item_seq_no
+		)
+		VALUES
+		<foreach collection="sqlDesignOrders" item="item" separator=",">
+		(
+			#{item.sqlDesignId},
+			#{item.sqlDesignResultId},
+			#{item.orderType},
+			#{item.itemSeqNo}
+		)
+		</foreach>
+	</insert>
+	
+	<update id="modify" parameterType="SqlDesignOrder">
+		UPDATE sql_design_order
+		SET sql_design_id = #{sqlDesignId},
+			sql_design_result_id = #{sqlDesignResultId},
+			order_type = #{orderType},
+			item_seq_no = #{itemSeqNo}
+		WHERE order_id = #{orderId}
+	</update>
+	
+	<update id="modifyAll">
+		<foreach collection="sqlDesignOrders" item="item" separator=";">
+			UPDATE sql_design_order
+			SET sql_design_id = #{item.sqlDesignId},
+				sql_design_result_id = #{item.sqlDesignResultId},
+				order_type = #{item.orderType},
+				item_seq_no = #{item.itemSeqNo}
+			WHERE order_id = #{item.orderId}
+		</foreach>
+	</update>
+	
+	<delete id="delete" parameterType="SqlDesignOrder">
+		DELETE FROM sql_design_order
+		WHERE order_id = #{orderId}
+	</delete>
+	
+	<delete id="deleteByExceptionalGroup">
+		DELETE FROM 
+			sql_design_order
+		<where>
+			sql_design_id = #{sqlDesignId}
+		 	<if test="exceptionGroup !=null and exceptionGroup.size() &gt; 0">
+				AND order_id NOT IN
+				<foreach collection="exceptionGroup" separator="," open="(" close=")" item="id">
+					#{id}
+				</foreach>
+			</if>
+			<if test="exceptionGroup ==null or exceptionGroup.size() &lt;= 0">
+				AND TRUE
+			</if>
+		</where>
+	</delete>
+	
+	<delete id="deleteBySqlDesignId">
+		DELETE FROM 
+			sql_design_order
+		WHERE
+			sql_design_id = #{sqlDesignId}
+	</delete>
+</mapper>

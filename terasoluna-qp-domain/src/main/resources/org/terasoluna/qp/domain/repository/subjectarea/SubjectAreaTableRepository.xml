@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="org.terasoluna.qp.domain.repository.subjectarea.SubjectAreaTableRepository">
+
+	<resultMap id="resultMap" type="SubjectAreaTableDesign">
+		<result property="subAreaId" column="sub_area_design_id" />
+		<result property="tableId" column="tbl_design_id" />
+		<result property="xCoordinates" column="x_coordinates" />
+		<result property="yCoordinates" column="y_coordinates" />
+	</resultMap>
+
+	<select id="findBySubjectArea" parameterType="Long" resultMap="resultMap">
+		SELECT tbl_design_id,
+		sub_area_design_id,
+		x_coordinates,
+		y_coordinates
+		FROM subject_area_design_table
+		WHERE sub_area_design_id = #{subAreaId}
+	</select>
+
+	<insert id="create" parameterType="SubjectAreaTableDesign">
+		<selectKey keyProperty="subAreaId" resultType="Long" order="BEFORE">
+			<![CDATA[ 
+				SELECT 
+					sub_area_design_id AS subAreaId
+				FROM
+					subject_area_design
+				WHERE
+					sub_area_design_id = #{subAreaId}
+			]]>
+		</selectKey>
+
+		<if test="subAreaId != null and subAreaId > 0">
+
+			INSERT INTO
+			subject_area_design_table
+			(
+			tbl_design_id,
+			sub_area_design_id
+			)
+			VALUES
+			(
+			<![CDATA[
+				#{tableId},
+				#{subAreaId}
+			]]>
+			)
+		</if>
+	</insert>
+
+	<insert id="insertArray" parameterType="SubjectAreaTableDesign">
+		INSERT INTO
+			subject_area_design_table
+		(
+			tbl_design_id,
+			sub_area_design_id,
+			x_coordinates,
+			y_coordinates
+		)
+		VALUES
+		<foreach item="item" collection="subAreaTableDesigns" separator=",">
+		(
+			<![CDATA[
+				#{item.tableId},
+				#{item.subAreaId},
+				#{item.xCoordinates},
+				#{item.yCoordinates}
+			]]>
+		)
+		</foreach>
+	</insert>
+	
+	<update id="updateSubjectAreaDesignTable"> 
+		<if test="areaTableDesigns !=null and areaTableDesigns.size > 0"> 
+			<foreach item="item" collection="areaTableDesigns" separator=";"> 
+				UPDATE subject_area_design_table 
+				SET
+					x_coordinates=#{item.xCoordinates},
+					y_coordinates=#{item.yCoordinates}
+				WHERE sub_area_design_id = #{item.subAreaId}
+				AND tbl_design_id = #{item.tableId}
+			</foreach>
+		</if>
+	</update>
+	
+	<delete id="delete" parameterType="SubjectAreaTableDesign">
+		<if test="subjectAreaTableDesign !=null and subjectAreaTableDesign.size > 0">
+			<foreach item="item" collection="subjectAreaTableDesign" separator=";"> 
+				DELETE FROM
+				subject_area_design_table
+				WHERE tbl_design_id = #{item.tableId}
+				AND
+				sub_area_design_id = #{item.subAreaId}
+			</foreach>
+		</if>
+	</delete>
+
+	<delete id="deleteAllByTableId" parameterType="Long">
+		DELETE FROM
+		subject_area_design_table
+		WHERE tbl_design_id = #{tableId}
+	</delete>
+
+	<!-- Delete relation-ship of subject area and table by subjectAreaId -->
+	<delete id="deleteSubAreaDesignTableByAreaId" parameterType="_long">
+		DELETE
+		FROM
+		subject_area_design_table a
+		WHERE
+		a.sub_area_design_id = #{areaId}
+	</delete>
+
+	<!-- Insert relation-ship of subject area and table design -->
+	<insert id="insertSubAreaDesignTable" parameterType="org.terasoluna.qp.domain.model.TableDesign">
+		INSERT INTO
+		subject_area_design_table
+		(
+		sub_area_design_id,
+		tbl_design_id
+		) VALUES (
+		#{areaId},
+		#{areaTable.tableId}
+		);
+	</insert>
+
+</mapper>

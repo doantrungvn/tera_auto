@@ -1,0 +1,600 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.decisiontable.DecisionTableRepository">
+
+    <resultMap id="DecisionResultMap" type="DecisionTable">
+        <id property="decisionTbId" column="decision_table_id" />
+        <result property="decisionTbName" column="decision_table_name" />
+        <result property="decisionTbCode" column="decision_table_code" />
+        <result property="moduleId" column="module_id" />
+        <result property="moduleName" column="module_name" />
+        <result property="moduleCode" column="module_code" />
+        <result property="moduleType" column="module_type" />
+        <result property="projectId" column="project_id" />
+        <result property="projectName" column="project_name" />
+        <result property="remark" column="remark" />
+        <result property="designStatus" column="design_status" />
+        <result property="designStatusParent" column="status" />
+        <result property="createdBy" column="created_by" />
+        <result property="createdDate" column="created_date" />
+        <result property="updatedBy" column="updated_by" />
+        <result property="updatedDate" column="updated_date" />
+        <result property="author" column="username" />
+    </resultMap>
+
+	<resultMap type="DecisionTableInputBean" id="decisionTableInputBeanResultMap">
+		<id property="decisionInputBeanId" column="decision_input_bean_id" />
+        <result property="decisionInputBeanCode" column="decision_input_bean_code" />
+	</resultMap>
+	
+	<resultMap type="DecisionTableOutputBean" id="decisionTableOutputBeanResultMap">
+		<id property="decisionOutputBeanId" column="decision_output_bean_id" />
+        <result property="decisionOutputBeanCode" column="decision_output_bean_code" />
+	</resultMap>
+	
+    <resultMap id="businessDesignResultMap" type="BusinessDesign">
+        <id property="businessLogicId" column="business_logic_id" />
+        <result property="businessLogicCode" column="business_logic_code" />
+        <result property="businessLogicName" column="business_logic_name" />
+        <result property="returnType" column="return_type" />
+        <result property="moduleName" column="module_name" />
+        <result property="blogicType" column="blogic_type" />
+    </resultMap>
+    
+    <resultMap id="autocompleteResultMap" type="Autocomplete">
+        <result property="optionValue" column="optionValue" />
+        <result property="optionLabel" column="optionLabel" />
+        <result property="output01" column="output01" />
+    </resultMap>
+    
+    <!-- Count decision table by search condition -->
+    <select id="countBySearchCriteria" parameterType="org.terasoluna.qp.domain.repository.decisiontable.DecisionTableSearchCriteria" 
+        resultType="_long">
+        <![CDATA[
+            SELECT 
+                COUNT(*) 
+            FROM 
+                decision_table a
+                LEFT JOIN module b ON a.module_id = b.module_id
+                LEFT JOIN project c ON a.project_id = c.project_id
+        ]]>
+        <include refid="findPageByCriteriaWherePhrase" />
+    </select>
+
+    <!-- Finds all decision table by search condition -->
+    <select id="findPageBySearchCriteria" parameterType="org.terasoluna.qp.domain.repository.decisiontable.DecisionTableSearchCriteria" 
+        resultMap="DecisionResultMap">
+        <![CDATA[
+            SELECT
+                a.decision_table_id,
+                a.decision_table_name,
+                a.decision_table_code,
+                a.design_status,
+                b.module_id,
+                b.module_name, 
+                b.status 
+            FROM decision_table a 
+                 LEFT JOIN module b ON a.module_id = b.module_id
+                 LEFT JOIN project c ON a.project_id = c.project_id
+        ]]>
+        <include refid="findPageByCriteriaWherePhrase" />
+        <if test="pageable.sort != null">
+            ORDER BY
+            <foreach collection="pageable.sort" item="order" separator=",">
+                ${order.property} ${order.direction}
+            </foreach>
+        </if>
+        <if test="pageable.sort == null">
+            ORDER BY
+                a.updated_date DESC
+        </if>
+        <![CDATA[
+             LIMIT
+                 #{pageable.pageSize}
+             OFFSET
+                 #{pageable.offset}
+        ]]>
+    </select>
+
+    <!-- decision table search criteria -->
+    <sql id="findPageByCriteriaWherePhrase">
+        <where>
+            <if test="criteria.decisionTbName != null and criteria.decisionTbName != ''">
+                <bind name="decisionTbName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.decisionTbName)" />
+                <![CDATA[
+                    a.decision_table_name ILIKE #{decisionTbName} ESCAPE '~'
+                ]]>
+            </if>
+            <if test="criteria.decisionTbCode != null and criteria.decisionTbCode != ''">
+                <bind name="decisionTbCode" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(criteria.decisionTbCode)" />
+                <![CDATA[
+                    AND a.decision_table_code ILIKE #{decisionTbCode} ESCAPE '~'
+                ]]>
+            </if>
+            <if test="criteria.designStatus != null and criteria.designStatus.length > 0">
+                AND a.design_status IN              
+                <foreach item="status" index="index" collection="criteria.designStatus" open="(" separator="," close=")">
+                    #{status}
+                </foreach>
+            </if>
+            <if test="criteria.moduleId != null ">
+                <bind name="moduleId" value="criteria.moduleId" />
+                <![CDATA[
+                    AND b.module_id = #{moduleId}
+                ]]>
+            </if>
+            <if test="criteria.projectId != null ">
+                <bind name="projectId" value="criteria.projectId" />
+                <![CDATA[
+                    AND c.project_id = #{projectId}
+                ]]>
+            </if>
+        </where>
+    </sql>
+
+    <!-- Create information of decision table  -->
+    <insert id="register" parameterType="DecisionTable">
+        <selectKey keyProperty="decisionTbId" resultType="long" order="BEFORE">
+            SELECT NEXTVAL('decision_table_seq') AS decisionTbId
+        </selectKey>
+        <![CDATA[
+            INSERT INTO decision_table (
+                decision_table_id,
+                decision_table_name,
+                decision_table_code,
+                project_id, 
+                module_id,
+                remark,
+                design_status,
+                created_by,
+                created_date,
+                updated_by,
+                updated_date
+            ) VALUES (
+                #{decisionTbId},
+                #{decisionTbName},
+                #{decisionTbCode},
+                #{projectId},
+                #{moduleId},
+                #{remark},
+                #{designStatus},
+                #{createdBy},
+                #{createdDate},
+                #{updatedBy},
+                #{updatedDate}
+            );
+        ]]>
+    </insert>
+    
+    <!-- Update decision table information -->
+    <update id="modify" parameterType="DecisionTable">
+    <![CDATA[
+        UPDATE decision_table
+        SET 
+            decision_table_code = #{decisionTbCode}, 
+            decision_table_name = #{decisionTbName}, 
+            remark = #{remark}, 
+            updated_by = #{updatedBy}, 
+            updated_date = #{sysDatetime}
+        WHERE
+            decision_table_id = #{decisionTbId}
+        AND
+            updated_date = #{updatedDate}
+    ]]>
+    </update>
+    
+    <!-- Update decision table information -->
+    <update id="modifyDesignStatus" parameterType="DecisionTable">
+    <![CDATA[
+        UPDATE decision_table
+        SET 
+            design_status = #{designStatus},
+            updated_by = #{updatedBy}, 
+            updated_date = #{sysDatetime}
+        WHERE
+            decision_table_id = #{decisionTbId}
+        AND
+            updated_date = #{updatedDate}
+    ]]>
+    </update>
+
+    <!-- Process for display view and modify -->
+    <select id="findOneByDecisionTbId" parameterType="_long" resultMap="DecisionResultMap">
+          SELECT 
+              a.decision_table_id,
+              a.decision_table_name,
+              a.decision_table_code,
+              a.remark,
+              a.updated_date,
+              a.design_status,
+              b.module_id,
+              b.module_name, 
+              c.project_id,
+              b.module_name, 
+              b.module_code,
+              b.status 
+        FROM 
+              decision_table a 
+              LEFT JOIN module b ON a.module_id = b.module_id
+              LEFT JOIN project c ON a.project_id = c.project_id
+        WHERE 
+           a.decision_table_id = <![CDATA[ #{decisionTbId} ]]>
+    </select>
+    
+    <!-- Check duplicate name and code -->
+    <select id="countNameCodeExist" parameterType="DecisionTable" resultType="Long">
+        SELECT 
+            SUM(rowVal) AS totalCount 
+        FROM (
+                (SELECT 
+                        1 AS rowVal 
+                 FROM 
+                        decision_table 
+                 <where>
+                     <if test="decisionTbName != null and decisionTbName != ''">
+                        UPPER(decision_table_name) = UPPER(#{decisionTbName})
+                     </if> 
+                     <if test="decisionTbId != null">AND decision_table_id != #{decisionTbId}</if>
+                     <if test="decisionTbName == null and decisionTbName == ''">AND FALSE</if>
+                     <![CDATA[
+                         AND project_id = #{projectId} 
+                     ]]> 
+                 </where>
+                 LIMIT 1
+                 ) 
+                 UNION
+                (SELECT 
+                        2 AS rowVal 
+                 FROM 
+                        decision_table
+                 <where>
+                        <if test="decisionTbCode != null and decisionTbCode != ''">
+                            UPPER(decision_table_code) = UPPER(#{decisionTbCode})
+                        </if> 
+                        <if test="decisionTbId != null">AND decision_table_id != #{decisionTbId}</if>
+                        <if test="decisionTbCode == null and decisionTbCode == ''">AND FALSE</if>
+                        <![CDATA[
+                            AND project_id = #{projectId} 
+                        ]]>
+                 </where>
+                 LIMIT 1
+                 )
+             ) AS foo
+    </select>
+
+    <select id="countReferByDecisionTableId" parameterType="_long" resultType="hashmap">
+        SELECT
+            COUNT(DISTINCT d.business_logic_id) AS business_ref_count 
+        FROM decision_table a  
+            LEFT JOIN decision_component b ON a.decision_table_id = b.decision_table_id
+            LEFT JOIN sequence_logic c ON b.sequence_logic_id = c.sequence_logic_id
+            LEFT JOIN business_logic d ON c.business_logic_id = d.business_logic_id
+        WHERE 
+            a.decision_table_id = <![CDATA[ #{decisionTbId} ]]>;
+    </select>
+    
+    <delete id="deleteDecisionTable">
+		DELETE 
+	  		FROM decision_table 
+	  		WHERE 
+	  			decision_table_id = #{decisionTbId};
+    </delete>
+    
+    <!-- List of business logic -->
+    <select id="findAllBussinessLogicByDecisionId" parameterType="_long" resultMap="businessDesignResultMap">
+		SELECT
+		    DISTINCT a.business_logic_id,
+		    a.business_logic_code,
+		    a.business_logic_name,
+		    a.return_type,
+		    a.module_id,
+		    a.blogic_type,
+		    d.module_name as module_name,
+		    a.project_id
+		FROM business_logic a
+		LEFT JOIN module d ON d.module_id = a.module_id
+		WHERE exists
+		(
+			SELECT b.business_logic_id 
+			FROM sequence_logic b
+		    LEFT JOIN decision_component c ON c.sequence_logic_id = b.sequence_logic_id
+		    WHERE 
+			    c.decision_table_id = #{decisionTbId}
+			    AND  b.business_logic_id = a.business_logic_id
+		)
+    </select>
+    
+    <!-- Autocomplete for Input, Output bean -->
+    <select id="getAutocompleteForIOBeanName" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+        SELECT
+            message_code AS optionValue,
+            message_string AS optionLabel
+        FROM
+            message_design
+        WHERE
+            message_level = 5  
+            <if test="arg03 != null and arg03 != ''">
+                AND project_id = cast(#{arg03} as numeric)
+            </if>
+            <if test="arg01 != null and arg01 != ''">
+                AND module_id = cast(#{arg01} as numeric)
+            </if> 
+            <if test="searchKey != null and searchKey != ''">
+                <![CDATA[
+                    AND message_string iLIKE '%' || #{searchKey} || '%'
+                ]]>
+            </if>
+            <if test="languageCode != null and languageCode != ''">
+                <![CDATA[ AND language_id = #{languageId} ]]>
+            </if>
+            
+            AND message_code IN  (
+                SELECT * FROM 
+                (
+                    SELECT decision_input_bean_name AS message_code 
+                    FROM decision_input_bean
+                    WHERE 
+                    <if test="arg04 != null and arg04 != ''">
+                        <![CDATA[ decision_table_id = cast(#{arg04} as numeric) ]]>
+				    </if>
+				    <if test="arg04 == null or arg04 == ''">
+				        decision_table_id is null
+				    </if>
+                   UNION
+
+                    SELECT decision_output_bean_name AS message_code 
+                    FROM decision_output_bean
+                    WHERE 
+                    <if test="arg04 != null and arg04 != ''">
+                       <![CDATA[ decision_table_id = cast(#{arg04} as numeric) ]]>
+                    </if>
+                    <if test="arg04 == null or arg04 == ''">
+                        decision_table_id is null
+                    </if>
+                ) AS foo
+            )
+        <if test="arg02 != null and arg02 != ''">
+            LIMIT CAST(#{arg02} AS NUMERIC)
+        </if>
+        <if test="arg02 == null || arg02 == ''">
+            LIMIT 20
+        </if>
+    </select>
+    
+    <!-- Decision component -->
+    <!-- Finds all decision table by list id -->
+    <select id="findDecisionByListId" resultMap="DecisionResultMap">
+		SELECT
+			a.decision_table_id,
+			a.decision_table_name,
+			a.decision_table_code,
+			a.design_status
+		FROM decision_table a
+		<if test="decisionTableIds != null and  decisionTableIds.size() > 0 ">
+			where a.decision_table_id in
+				<foreach item="decision" index="index" collection="decisionTableIds" open="(" separator="," close=")">
+                    #{decision}
+                </foreach>
+		</if>
+    </select>
+
+	<!--TungHT - Delete from decision_input_value -->
+	<delete id="deleteInputValue" parameterType="Long">
+		DELETE FROM 
+			decision_input_value
+		WHERE
+			decision_input_value_id = #{decisionInputBeanId}
+	</delete>
+	
+	 <!--TungHT - Delete from decision_output_value -->
+	<delete id="deleteOutputValue" parameterType="Long">
+		DELETE FROM 
+			decision_output_value
+		WHERE
+			decision_output_value_id = #{decisionOutputBeanId}
+	</delete>
+	
+	<!-- Adding for generate source -->
+	<select id="findAllDecisionByProjectId" resultMap="DecisionResultMap">
+		SELECT
+            a.decision_table_id,
+            a.decision_table_name,
+            a.decision_table_code,
+            a.design_status,
+            b.module_id,
+            b.module_name, 
+            b.module_code, 
+            b.module_type,
+            b.status,
+            acc.username
+        FROM decision_table a 
+	        LEFT JOIN module b ON a.module_id = b.module_id
+	        LEFT JOIN project c ON a.project_id = c.project_id
+            LEFT JOIN account acc ON (acc.account_id = a.created_by)
+		WHERE 
+			c.project_id = #{projectId}
+    </select>
+
+	<select id="getAutocompleteCommonObjectForDT" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+			a.common_object_definition_id AS optionValue,
+			a.common_object_definition_name AS optionLabel,
+			a.common_object_definition_code AS output01
+		FROM 
+			common_object_definition a
+		<where>
+			<if test="searchKey != null and searchKey != ''">
+				AND a.common_object_definition_name iLIKE '%' || #{searchKey} || '%'
+			</if>
+			<if test="arg01 != null and arg01 != ''">
+				<![CDATA[
+					AND a.project_id = CAST(#{arg01} AS numeric(16,0))
+				]]>
+			</if>
+			<if test="arg01 == null or arg01 == ''">
+				FALSE
+			</if>
+			<if test="arg03 != null and arg03 != ''">
+				AND (a.module_id is NULL OR a.module_id = CAST(#{arg03} AS numeric(16,0)))
+			</if>
+			<if test="arg03 == null or arg03 == ''">
+				AND a.module_id is NULL
+			</if>
+		</where>
+		ORDER BY common_object_definition_id ASC
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+		<if test="arg02 == null or arg02 == ''">
+			LIMIT 20
+		</if>
+	</select>
+	
+	<select id="getAutocompleteExternalObjectForDT" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+		SELECT
+			a.external_object_definition_id AS optionValue,
+			a.external_object_definition_name AS optionLabel,
+			a.external_object_definition_code AS output01
+		FROM 
+			external_object_definition a
+		<where>
+			<if test="searchKey != null and searchKey != ''">
+				AND a.external_object_definition_name iLIKE '%' || #{searchKey} || '%'
+			</if>
+			<if test="arg01 != null and arg01 != ''">
+				<![CDATA[
+					AND a.project_id = CAST(#{arg01} AS numeric(16,0))
+				]]>
+			</if>
+			<if test="arg01 == null or arg01 == ''">
+				FALSE
+			</if>
+			<if test="arg03 != null and arg03 != ''">
+				AND (a.module_id is NULL OR a.module_id = CAST(#{arg03} AS numeric(16,0)))
+			</if>
+			<if test="arg03 == null or arg03 == ''">
+				AND a.module_id is NULL
+			</if>
+		</where>
+		ORDER BY external_object_definition_id ASC
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+		<if test="arg02 == null or arg02 == ''">
+			LIMIT 20
+		</if>
+	</select>
+	
+    <select id="findDecisionTableByUsingExternalOb" resultMap="DecisionResultMap">
+		SELECT
+			a.decision_table_id,
+			a.decision_table_name,
+			a.decision_table_code,
+			a.module_id,
+			a.project_id
+		FROM decision_table a
+		Where Exists
+		(
+			SELECT b1.decision_table_id
+			FROM
+				decision_input_bean b1
+			WHERE b1.data_type = 17 and b1.object_type = 1 and b1.object_id = #{externalObjectDefinitionId}
+				AND b1.decision_table_id = a.decision_table_id
+		) OR Exists
+		(
+			SELECT b1.decision_table_id
+			FROM
+				decision_output_bean b1
+			WHERE b1.data_type = 17 and b1.object_type = 1 and b1.object_id = #{externalObjectDefinitionId}
+				AND b1.decision_table_id = a.decision_table_id
+		)
+    </select>
+    
+    <select id="findDecisionTableByUsingCommonOb" resultMap="DecisionResultMap">
+		SELECT
+			a.decision_table_id,
+			a.decision_table_name,
+			a.decision_table_code,
+			a.module_id,
+			a.project_id
+		FROM decision_table a
+		Where Exists
+		(
+			SELECT b1.decision_table_id
+			FROM
+				decision_input_bean b1
+			WHERE b1.data_type = 16 and b1.object_type = 0 and b1.object_id = #{commonObjectDefinitionId}
+				AND b1.decision_table_id = a.decision_table_id
+		) OR Exists
+		(
+			SELECT b1.decision_table_id
+			FROM
+				decision_output_bean b1
+			WHERE b1.data_type = 16 and b1.object_type = 0 and b1.object_id = #{commonObjectDefinitionId}
+				AND b1.decision_table_id = a.decision_table_id
+		)
+    </select>
+    
+    
+    <select id="findDecisionTableUsingMethodOutput" resultMap="DecisionResultMap">
+    	WITH table_temp as (
+			SELECT 
+				a.decision_item_design_id,
+				c.function_method_id,
+				c.formula_detail_id
+	        FROM decision_condition_group a
+	        INNER JOIN decision_condition_item b ON (a.condition_group_id = b.condition_group_id)
+			INNER JOIN formula_detail c on (b.formula_definition_id = c.formula_definition_id)
+		)
+		SELECT
+			a.decision_table_id,
+			a.decision_table_name,
+			a.decision_table_code,
+			a.module_id,
+			a.project_id
+		FROM decision_table a
+		Where Exists
+		(
+			SELECT * from table_temp b
+			LEFT JOIN decision_item_design c on c.decision_item_design_id = b.decision_item_design_id
+			LEFT JOIN formula_method_output d on d.formula_detail_id = b.formula_detail_id
+			WHERE 
+				<if test="lstMethodOutputIds != null and lstMethodOutputIds.size > 0">
+					d.method_output_id IN
+					<foreach collection="lstMethodOutputIds" item="id" open="(" close=")" separator=",">
+						#{id}
+					</foreach>
+				</if>
+				<if test="lstMethodOutputIds == null or lstMethodOutputIds.size == 0">
+					FALSE
+				</if>
+				AND a.decision_table_id = c.decision_table_id
+		)
+    </select>
+    
+    <select id="findDecisionTableByLstProblemLists" resultMap="DecisionResultMap">
+    	SELECT 
+    		a.decision_table_id, 
+    		a.decision_table_code, 
+    		a.decision_table_name, 
+       		a.module_id,
+       		a.remark,
+       		b.module_name
+  		FROM decision_table a
+  		LEFT JOIN module b on (b.module_id = a.module_id)
+    	WHERE 
+    		<if test="lstProblemLists != null and lstProblemLists.size > 0">
+				a.decision_table_id IN
+				<foreach collection="lstProblemLists" item="item" open="(" close=")" separator=",">
+					<if test="item.resourceType == 6">
+						#{item.resourceId}
+					</if>
+				</foreach>
+			</if>
+			<if test="lstProblemLists == null or lstProblemLists.size == 0">
+				FALSE
+			</if>
+    </select>
+</mapper>

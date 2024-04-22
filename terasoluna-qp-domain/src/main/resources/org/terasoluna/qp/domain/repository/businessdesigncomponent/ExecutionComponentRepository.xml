@@ -1,0 +1,780 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.businessdesigncomponent.ExecutionComponentRepository">
+
+     <resultMap id="executionComponentResultMap" type="ExecutionComponent">
+        <id property="executionComponentId" column="execution_component_id" />
+        <result property="label" column="label" />
+        <result property="sqlDesignId" column="sql_design_id" />
+        <result property="sqlDesignIdAutocomplete" column="sql_design_name" />
+        <result property="sqlDesignCode" column="sql_design_code" />
+        <result property="sqlDesignIdRefer" column="sql_design_id_refer" />
+        <result property="sqlDesignNameRefer" column="sql_design_name_refer" />
+        <result property="sqlDesignCodeRefer" column="sql_design_code_refer" />
+        <result property="sqlPattern" column="sql_pattern" />
+        <result property="remark" column="remark" />
+        <result property="sequenceLogicId" column="sequence_logic_id" />
+        <result property="concurrencyFlg" column="concurrency_flg" />
+        <result property="moduleId" column="module_id" />
+        <result property="moduleIdAutocomplete" column="module_name" />
+        <result property="moduleCode" column="module_code" />
+        <result property="returnType" column="return_type" />
+        <result property="pageable" column="pageable" />
+    </resultMap>
+    
+    <resultMap id="autocompleteResultMap" type="Autocomplete">
+		<result property="optionValue" column="optionValue" />
+		<result property="optionLabel" column="optionLabel" />
+	</resultMap>
+	
+	<resultMap id="executionInputValueResultMap" type="ExecutionInputValue">
+        <id property="executionInputValueId" column="execution_input_value_id" />
+        <result property="executionComponentId" column="execution_component_id" />
+        <result property="sqlDesignInputId" column="sql_design_input_id" />
+        <result property="sqlDesignInputCode" column="sql_design_input_code" />
+        <result property="sqlDesignInputName" column="sql_design_input_name" />
+        <result property="dataType" column="data_type" />
+        <result property="arrayFlg" column="array_flg" />
+        <result property="parameterScope" column="parameter_scope" />
+        <result property="parameterId" column="parameter_id" />
+        <result property="itemSequenceNo" column="item_sequence_no" />
+        <result property="sqlDesignInputIdRefer" column="sql_design_input_id_refer" />
+        <result property="sqlDesignInputCodeRefer" column="sql_design_input_code_refer" />
+        <result property="sqlDesignInputNameRefer" column="sql_design_input_name_refer" />
+        <result property="dataTypeRefer" column="data_type_refer" />
+        <result property="arrayFlgRefer" column="array_flg_refer" />
+        <result property="sqlDesignIdRefer" column="sql_design_id_refer" />
+    </resultMap>
+    
+    <resultMap id="executionOutputValueResultMap" type="ExecutionOutputValue">
+        <id property="executionOutputValueId" column="execution_output_value_id" />
+        <result property="executionComponentId" column="execution_component_id" />
+        <result property="sqlDesignOutputId" column="sql_design_output_id" />
+        <result property="sqlDesignOutputCode" column="sql_design_output_code" />
+        <result property="sqlDesignOutputName" column="sql_design_output_name" />
+        <result property="dataType" column="data_type" />
+        <result property="arrayFlg" column="array_flg" />
+        <result property="targetScope" column="target_scope" />
+        <result property="targetId" column="target_id" />
+        <result property="itemSequenceNo" column="item_sequence_no" />
+        <result property="sqlDesignOutputIdRefer" column="sql_design_output_id_refer" />
+        <result property="sqlDesignOutputCodeRefer" column="sql_design_output_code_refer" />
+        <result property="sqlDesignOutputNameRefer" column="sql_design_output_name_refer" />
+        <result property="dataTypeRefer" column="data_type_refer" />
+        <result property="arrayFlgRefer" column="array_flg_refer" />
+        <result property="sqlDesignIdRefer" column="sql_design_id_refer" />
+    </resultMap>
+	
+	<resultMap id="businessDesignResultMap" type="BusinessDesign">
+        <id property="businessLogicId" column="business_logic_id" />
+        <result property="businessLogicCode" column="business_logic_code" />
+        <result property="businessLogicName" column="business_logic_name" />
+        <result property="returnType" column="return_type" />
+        <result property="screenId" column="screen_id" />
+        <result property="moduleId" column="module_id" />
+        <result property="projectId" column="project_id" />
+        <result property="customizeFlg" column="customize_flg" />
+        <result property="uploadFileId" column="upload_file_id" />
+        <result property="createdBy" column="created_by" />
+        <result property="createdDate" column="created_date" />
+        <result property="updatedBy" column="updated_by" />
+        <result property="updatedDate" column="updated_date" />
+        <result property="designStatus" column="design_status" />
+        <result property="packageName" column="package_name" />
+        <result property="patternType" column="pattern_type" />
+        <result property="confirmFlg" column="confirm_flg" />
+        <result property="completeFlg" column="complete_flg" />
+        <result property="remark" column="remark" />
+        <result property="screenFormId" column="screen_form_id" />
+        <result property="functionId" column="function_id" />
+        <result property="batchType" column="batch_type" />
+    </resultMap>
+	
+    <!--  Auto complete functions -->
+    <select id="getAutocompleteExecutionForExecutionCom" parameterType="org.terasoluna.qp.domain.service.common.AutocompleteInput" resultMap="autocompleteResultMap">
+    	SELECT 
+    		a.sql_design_id AS optionValue,
+       		a.sql_design_code AS output01,
+       		a.sql_design_name AS optionLabel
+		FROM sql_design a
+		WHERE
+			(a.design_type = 4 or a.design_type = 5)
+			and a.project_id= CAST(#{arg01} AS NUMERIC)
+  			<if test="searchKey != null and searchKey != ''">
+                <bind name="searchKey" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(searchKey)" />
+                <![CDATA[ AND a.sql_design_name iLIKE #{searchKey} ESCAPE '~' ]]>
+           </if>
+           <if test="arg03 != null and arg03 != ''">
+           and 
+           	(
+	        	a.module_id = CAST(#{arg03} AS NUMERIC)
+			)
+			</if>
+			 <if test="arg03 == null or arg03 == ''">
+           and 
+           	(
+	           	a.module_id is null
+			)
+			</if>
+		ORDER BY a.sql_design_id DESC
+		<if test="arg02 != null and arg02 != ''">
+			LIMIT CAST(#{arg02} AS NUMERIC)
+		</if>
+		<if test="arg02 == null || arg02 == ''">
+			LIMIT 20
+		</if>
+		
+    </select>
+    
+    <select id="getSequencesExecutionComponent" resultType="Long">
+    	select SETVAL('execution_component_seq'::regclass, NEXTVAL('execution_component_seq'::regclass) + #{size})
+    </select>
+    
+    <select id="getSequencesExecutionInputValue" resultType="Long">
+    	select SETVAL('execution_input_value_seq'::regclass, NEXTVAL('execution_input_value_seq'::regclass) + #{size})
+    </select>
+    
+    <select id="getSequencesExecutionOutputValue" resultType="Long">
+    	select SETVAL('execution_output_value_seq'::regclass, NEXTVAL('execution_output_value_seq'::regclass) + #{size})
+    </select>
+    
+    <select id="findExecutionComponentByBusinessLogic" resultMap="executionComponentResultMap">
+		SELECT 
+			a.execution_component_id, 
+			a.label, 
+			a.sql_design_id, 
+			a.sql_design_name, 
+			a.sql_design_code, 
+			a.remark, 
+			a.sequence_logic_id,
+			a.concurrency_flg,
+			b.sql_design_id as sql_design_id_refer, 
+			b.sql_design_name as sql_design_name_refer, 
+			b.sql_design_code as sql_design_code_refer,
+            b.pageable as pageable,
+			c.module_id,
+			c.module_name
+  		FROM execution_component a
+  		LEFT JOIN sql_design b
+  			on b.sql_design_id = a.sql_design_id
+  		LEFT JOIN module c
+  			on c.module_id = b.module_id
+		WHERE EXISTS
+    		( 
+    		SELECT c.sequence_logic_id
+     		FROM sequence_logic c
+     		WHERE c.business_logic_id = #{businessLogicId}
+       			AND c.component_type = 2
+       			AND c.sequence_logic_id = a.sequence_logic_id
+       		)
+    </select>
+    
+    <select id="findExecutionComponentByModuleId" resultMap="executionComponentResultMap">
+		SELECT 
+			a.execution_component_id, 
+			a.label, 
+			a.sql_design_id, 
+			a.sql_design_name, 
+			a.sql_design_code, 
+			a.remark, 
+			a.sequence_logic_id,
+			a.concurrency_flg,
+			b.sql_design_id as sql_design_id_refer, 
+			b.sql_design_name as sql_design_name_refer, 
+			b.sql_design_code as sql_design_code_refer,
+            b.pageable as pageable,
+            b.sql_pattern,
+			b.return_type,
+			c.module_id,
+			c.module_name,
+			c.module_code
+  		FROM execution_component a
+  		LEFT JOIN sql_design b
+  			on b.sql_design_id = a.sql_design_id
+  		LEFT JOIN module c
+  			on c.module_id = b.module_id
+		WHERE EXISTS
+    		( 
+    		SELECT c.sequence_logic_id
+     		FROM sequence_logic c
+     		INNER JOIN business_logic d ON c.business_logic_id = d.business_logic_id
+     		WHERE d.module_id = #{moduleId}
+       			AND c.component_type = 2
+       			AND c.sequence_logic_id = a.sequence_logic_id
+       		)
+    </select>
+    
+    <insert id="registerExecutionComponent" >
+    	<foreach item="item" collection="executionComponentItems" separator=";">
+			INSERT INTO execution_component
+			(
+            	execution_component_id, 
+            	label, 
+            	remark, 
+            	sql_design_id,
+            	sql_design_code,
+            	sql_design_name, 
+            	sequence_logic_id,
+            	concurrency_flg
+            )
+    		VALUES
+    		(
+				#{item.executionComponentId},
+				#{item.label}, 
+				#{item.remark},
+				#{item.sqlDesignId},
+				#{item.sqlDesignCode},
+				#{item.sqlDesignIdAutocomplete},
+            	#{item.sequenceLogicId},
+            	#{item.concurrencyFlg}
+            );
+            <if test="item.parameterInputBeans != null and  item.parameterInputBeans.size() > 0 ">
+	    		<foreach item="itemInput" collection="item.parameterInputBeans" separator=";">
+	            	INSERT INTO execution_input_value
+					(
+						execution_input_value_id,
+		            	execution_component_id, 
+		            	sql_design_input_id, 
+		            	sql_design_input_code, 
+		            	sql_design_input_name, 
+		            	data_type, 
+		            	array_flg,
+		            	parameter_scope, 
+		            	parameter_id,
+		            	item_sequence_no
+		            )
+		    		VALUES 
+		            (
+		            	#{itemInput.executionInputValueId},
+						#{item.executionComponentId},
+						#{itemInput.sqlDesignInputId}, 
+						#{itemInput.sqlDesignInputCode}, 
+						#{itemInput.sqlDesignInputName},
+		            	#{itemInput.dataType},
+		            	#{itemInput.arrayFlg},
+		            	#{itemInput.parameterScope},
+		            	CAST(#{itemInput.parameterId} AS numeric(16,0)),
+		            	#{itemInput.itemSequenceNo}
+		            );
+		            <if test="itemInput.lstParameterIndex != null and  itemInput.lstParameterIndex.size() > 0 ">
+		            	INSERT INTO bd_parameter_index
+		            	(
+		            		table_type, 
+		            		table_id, 
+		            		parameter_id, 
+		            		parameter_index_type, 
+		            		parameter_index_id,
+		            		business_logic_id
+		            	)
+		    			VALUES
+		    			<foreach item="itemIndex" collection="itemInput.lstParameterIndex" separator=",">
+			    			(
+			    				#{itemIndex.tableType}, 
+			    				#{itemInput.executionInputValueId},
+			    				CAST(#{itemIndex.parameterId} AS numeric(16,0)),
+			    				#{itemIndex.parameterIndexType}, 
+			            		CAST(#{itemIndex.parameterIndexId} AS numeric(16,0)),
+			            		#{itemIndex.businessLogicId}
+			            	)
+		    			</foreach>;
+		    		</if>
+	            </foreach>;
+            </if>
+            <if test="item.parameterOutputBeans != null and  item.parameterOutputBeans.size() > 0 ">
+	    		<foreach item="itemOutput" collection="item.parameterOutputBeans" separator=";">
+					INSERT INTO execution_output_value
+					(
+						execution_output_value_id,
+		            	execution_component_id, 
+		            	sql_design_output_id, 
+		            	sql_design_output_code, 
+		            	sql_design_output_name, 
+		            	data_type, 
+		            	array_flg,
+		            	target_scope, 
+		            	target_id,
+		            	item_sequence_no
+		            )
+		    		VALUES 
+		            (
+		            	#{itemOutput.executionOutputValueId},
+						#{item.executionComponentId},
+						#{itemOutput.sqlDesignOutputId}, 
+						#{itemOutput.sqlDesignOutputCode}, 
+						#{itemOutput.sqlDesignOutputName},
+		            	#{itemOutput.dataType},
+		            	#{itemOutput.arrayFlg},
+		            	#{itemOutput.targetScope},
+		            	CAST(#{itemOutput.targetId} AS numeric(16,0)),
+		            	#{itemOutput.itemSequenceNo}
+		            );
+		            <if test="itemOutput.lstTargetIndex != null and  itemOutput.lstTargetIndex.size() > 0 ">
+		            	INSERT INTO bd_parameter_index
+		            	(
+		            		table_type, 
+		            		table_id, 
+		            		parameter_id, 
+		            		parameter_index_type, 
+		            		parameter_index_id,
+		            		business_logic_id
+		            	)
+		    			VALUES
+		    			<foreach item="itemIndex" collection="itemOutput.lstTargetIndex" separator=",">
+			    			(
+			    				#{itemIndex.tableType}, 
+			    				#{itemOutput.executionOutputValueId},
+			    				CAST(#{itemIndex.parameterId} AS numeric(16,0)),
+			    				#{itemIndex.parameterIndexType}, 
+			            		CAST(#{itemIndex.parameterIndexId} AS numeric(16,0)),
+			            		#{itemIndex.businessLogicId}
+			            	)
+		    			</foreach>;
+		    		</if>
+				</foreach>;
+			</if>
+		</foreach>
+    </insert>
+    
+    <insert id="registerExecutionInputValue" >
+    	<if test="executionInputValueItems != null and  executionInputValueItems.size() > 0 ">
+			INSERT INTO execution_input_value
+			(
+            	execution_component_id, 
+            	sql_design_input_id, 
+            	sql_design_input_code, 
+            	sql_design_input_name, 
+            	data_type, 
+            	array_flg,
+            	parameter_scope, 
+            	parameter_id,
+            	item_sequence_no
+            )
+    		VALUES 
+    		<foreach item="item" collection="executionInputValueItems" separator=",">
+			(
+				#{item.executionComponentId},
+				#{item.sqlDesignInputId}, 
+				#{item.sqlDesignInputCode}, 
+				#{item.sqlDesignInputName},
+            	#{item.dataType},
+            	#{item.arrayFlg},
+            	#{item.parameterScope},
+            	CAST(#{item.parameterId} AS numeric(16,0)),
+            	#{item.itemSequenceNo}
+            )
+			</foreach>;
+		</if>
+    </insert>
+    <delete id="deleteExecutionInputBySqlDesignInputId">
+    	DELETE 
+    	FROM execution_input_value
+    	WHERE sql_design_input_id = #{sqlDesignInputId}
+    </delete>
+    <delete id="deleteExecutionOutputBySqlDesignOutputId">
+    	DELETE 
+    	FROM execution_output_value
+    	WHERE sql_design_output_id = #{sqlDesignOutputId}
+    </delete>
+    
+    <insert id="registerExecutionOutputValue" >
+    	<if test="executionOutputValueItems != null and  executionOutputValueItems.size() > 0 ">
+			INSERT INTO execution_output_value
+			(
+            	execution_component_id, 
+            	sql_design_output_id, 
+            	sql_design_output_code, 
+            	sql_design_output_name, 
+            	data_type, 
+            	array_flg,
+            	target_scope, 
+            	target_id,
+            	item_sequence_no
+            )
+    		VALUES 
+    		<foreach item="item" collection="executionOutputValueItems" separator=",">
+			(
+				#{item.executionComponentId},
+				#{item.sqlDesignOutputId}, 
+				#{item.sqlDesignOutputCode}, 
+				#{item.sqlDesignOutputName},
+            	#{item.dataType},
+            	#{item.arrayFlg},
+            	#{item.targetScope},
+            	CAST(#{item.targetId} AS numeric(16,0)),
+            	#{item.itemSequenceNo}
+            )
+			</foreach>;
+		</if>
+    </insert>
+    
+    <select id="findExecutionInputValueByBusinessLogic" resultMap="executionInputValueResultMap">
+		SELECT	A.*,
+				A1.*
+		FROM 
+		(	
+			SELECT 
+				a.execution_input_value_id, 
+				a.execution_component_id, 
+				a.sql_design_input_id, 
+				a.sql_design_input_code, 
+				a.sql_design_input_name, 
+				a.data_type, 
+				a.array_flg, 
+				a.parameter_scope, 
+				a.parameter_id, 
+				a.item_sequence_no,
+				b.sql_design_id
+			FROM execution_input_value a
+			LEFT JOIN execution_component b
+				on (b.execution_component_id = a.execution_component_id )
+			WHERE EXISTS
+			    (
+					SELECT c.sequence_logic_id
+					FROM sequence_logic c
+					WHERE c.business_logic_id = #{businessLogicId}
+						AND component_type = 2
+						AND c.sequence_logic_id = b.sequence_logic_id
+				)
+			ORDER BY a.execution_input_value_id
+		) as A
+		FULL OUTER JOIN 
+		(
+			SELECT 
+				a.sql_design_input_id as sql_design_input_id_refer, 
+				a.sql_design_id as sql_design_id_refer, 
+				a.sql_design_input_name as sql_design_input_name_refer, 
+				a.sql_design_input_code as sql_design_input_code_refer, 
+				a.data_type as data_type_refer, 
+				a.array_flg as array_flg_refer
+			FROM sql_design_input a
+			WHERE EXISTS
+			    (
+			    	SELECT b.sql_design_id
+					FROM execution_component b
+					LEFT JOIN sequence_logic c
+						on (b.sequence_logic_id = c.sequence_logic_id)
+					WHERE c.business_logic_id = #{businessLogicId}
+						AND c.component_type = 2
+						AND b.sql_design_id = a.sql_design_id
+				)
+			ORDER BY a.item_seq_no
+		) A1 
+		on (A1.sql_design_input_id_refer = A.sql_design_input_id)
+    </select>
+    
+    <select id="findExecutionInputValueByModuleId" resultMap="executionInputValueResultMap">
+		SELECT	A.*
+		FROM 
+		(	
+			SELECT 
+				a.execution_input_value_id, 
+				a.execution_component_id, 
+				a.sql_design_input_id, 
+				sInput.sql_design_input_code, 
+				sInput.sql_design_input_name, 
+				a.data_type, 
+				a.array_flg, 
+				a.parameter_scope, 
+				a.parameter_id, 
+				a.item_sequence_no,
+				b.sql_design_id
+			FROM execution_input_value a
+			LEFT JOIN execution_component b
+				on (b.execution_component_id = a.execution_component_id )
+			LEFT JOIN  sql_design_input sInput ON (a.sql_design_input_id = sInput.sql_design_input_id)
+			WHERE EXISTS
+			    (
+					SELECT c.sequence_logic_id
+					FROM sequence_logic c
+					INNER JOIN business_logic blogic ON c.business_logic_id = blogic.business_logic_id
+					WHERE blogic.module_id = #{moduleId}
+						AND component_type = 2
+						AND c.sequence_logic_id = b.sequence_logic_id
+				)
+			ORDER BY sInput.item_seq_no
+		) as A
+    </select>
+    
+    <select id="findExecutionOutputValueByBusinessLogic" resultMap="executionOutputValueResultMap">
+		SELECT	A.*,
+				A1.*
+		FROM 
+		(	
+			SELECT 
+				a.execution_output_value_id, 
+				a.execution_component_id, 
+				a.sql_design_output_id, 
+				a.sql_design_output_code, 
+				a.sql_design_output_name, 
+				a.data_type, 
+				a.array_flg, 
+				a.target_scope, 
+				a.target_id, 
+				a.item_sequence_no,
+				b.sql_design_id
+			FROM execution_output_value a
+			LEFT JOIN execution_component b
+				on (b.execution_component_id = a.execution_component_id )
+			WHERE EXISTS
+			    (
+					SELECT c.sequence_logic_id
+					FROM sequence_logic c
+					WHERE c.business_logic_id = #{businessLogicId}
+						AND component_type = 2
+						AND c.sequence_logic_id = b.sequence_logic_id
+				)
+			ORDER BY a.execution_output_value_id
+		) as A
+		FULL OUTER JOIN 
+		(
+			SELECT 
+				a.sql_design_output_id as sql_design_output_id_refer, 
+				a.sql_design_id as sql_design_id_refer, 
+				a.sql_design_output_name as sql_design_output_name_refer, 
+				a.sql_design_output_code as sql_design_output_code_refer, 
+				a.data_type as data_type_refer, 
+				a.array_flg as array_flg_refer
+			FROM sql_design_output a
+			WHERE EXISTS
+			    (
+			    	SELECT b.sql_design_id
+					FROM execution_component b
+					LEFT JOIN sequence_logic c
+						on (b.sequence_logic_id = c.sequence_logic_id)
+					WHERE c.business_logic_id = #{businessLogicId}
+						AND c.component_type = 2
+						AND b.sql_design_id = a.sql_design_id
+				)
+			ORDER BY a.item_seq_no
+		) A1 
+		on (A1.sql_design_output_id_refer = A.sql_design_output_id)
+    </select>
+    
+    <select id="findExecutionOutputValueByModuleId" resultMap="executionOutputValueResultMap">
+		SELECT	A.*
+		FROM 
+		(	
+			SELECT 
+				a.execution_output_value_id, 
+				a.execution_component_id, 
+				a.sql_design_output_id, 
+				sOutput.sql_design_output_code, 
+				sOutput.sql_design_output_name, 
+				a.data_type, 
+				a.array_flg, 
+				a.target_scope, 
+				a.target_id, 
+				a.item_sequence_no,
+				b.sql_design_id
+			FROM execution_output_value a
+			LEFT JOIN execution_component b
+				on (b.execution_component_id = a.execution_component_id )
+			LEFT JOIN  sql_design_output sOutput ON (a.sql_design_output_id = sOutput.sql_design_output_id)
+			WHERE EXISTS
+			    (
+					SELECT c.sequence_logic_id
+					FROM sequence_logic c
+					INNER JOIN business_logic blogic ON c.business_logic_id = blogic.business_logic_id
+					WHERE blogic.module_id = #{moduleId}
+						AND component_type = 2
+						AND c.sequence_logic_id = b.sequence_logic_id
+				)
+			ORDER BY a.execution_output_value_id
+		) as A
+    </select>
+    
+    <!-- Adding HungHX -->
+    <select id="findExecutionComponentByProjectId" resultMap="executionComponentResultMap">
+		SELECT 
+			a.execution_component_id, 
+			a.label, 
+			a.sql_design_id, 
+			a.sql_design_name, 
+			a.sql_design_code, 
+			a.remark, 
+			a.sequence_logic_id,
+			a.concurrency_flg,
+			b.sql_design_id as sql_design_id_refer, 
+			b.sql_design_name as sql_design_name_refer, 
+			b.sql_design_code as sql_design_code_refer,
+            b.pageable as pageable,
+			b.return_type
+  		FROM execution_component a
+  		LEFT JOIN sql_design b
+  			on b.sql_design_id = a.sql_design_id
+		WHERE EXISTS
+    		( 
+    		SELECT c.sequence_logic_id
+     		FROM sequence_logic c
+     		INNER JOIN business_logic d ON c.business_logic_id = d.business_logic_id
+     		WHERE d.project_id = #{projectId}
+       			AND c.component_type = 2
+       			AND c.sequence_logic_id = a.sequence_logic_id
+       		)
+    </select>
+
+	<select id="findExecutionInputValueByProjectId" resultMap="executionInputValueResultMap">
+		SELECT	A.*
+		FROM 
+		(	
+			SELECT 
+				a.execution_input_value_id, 
+				a.execution_component_id, 
+				a.sql_design_input_id, 
+				sInput.sql_design_input_code, 
+				sInput.sql_design_input_name, 
+				a.data_type, 
+				a.array_flg, 
+				a.parameter_scope, 
+				a.parameter_id, 
+				a.item_sequence_no,
+				b.sql_design_id
+			FROM execution_input_value a
+			LEFT JOIN execution_component b
+				on (b.execution_component_id = a.execution_component_id )
+			LEFT JOIN  sql_design_input sInput ON (a.sql_design_input_id = sInput.sql_design_input_id)
+			WHERE EXISTS
+			    (
+					SELECT c.sequence_logic_id
+					FROM sequence_logic c
+					INNER JOIN business_logic blogic ON c.business_logic_id = blogic.business_logic_id
+					WHERE blogic.project_id = #{projectId}
+						AND component_type = 2
+						AND c.sequence_logic_id = b.sequence_logic_id
+				)
+			ORDER BY sInput.item_seq_no
+		) as A
+	</select>
+
+	<select id="findExecutionOutputValueByProjectId" resultMap="executionOutputValueResultMap">
+		SELECT	A.*
+		FROM 
+		(	
+			SELECT 
+				a.execution_output_value_id, 
+				a.execution_component_id, 
+				a.sql_design_output_id, 
+				sOutput.sql_design_output_code, 
+				sOutput.sql_design_output_name, 
+				a.data_type, 
+				a.array_flg, 
+				a.target_scope, 
+				a.target_id, 
+				a.item_sequence_no,
+				b.sql_design_id
+			FROM execution_output_value a
+			LEFT JOIN execution_component b
+				on (b.execution_component_id = a.execution_component_id )
+			LEFT JOIN  sql_design_output sOutput ON (a.sql_design_output_id = sOutput.sql_design_output_id)
+			WHERE EXISTS
+			    (
+					SELECT c.sequence_logic_id
+					FROM sequence_logic c
+					INNER JOIN business_logic blogic ON c.business_logic_id = blogic.business_logic_id
+					WHERE blogic.project_id = #{projectId}
+						AND component_type = 2
+						AND c.sequence_logic_id = b.sequence_logic_id
+				)
+			ORDER BY a.execution_output_value_id
+		) as A
+	</select>
+    
+    <!-- generate source code of commmon blogic -->
+    <select id="findExecutionComponentByModuleCommon" resultMap="executionComponentResultMap">
+        SELECT 
+            a.execution_component_id, 
+            a.label, 
+            a.sql_design_id, 
+            a.sql_design_name, 
+            a.sql_design_code, 
+            a.remark, 
+            a.sequence_logic_id,
+            a.concurrency_flg,
+            b.sql_design_id as sql_design_id_refer, 
+            b.sql_design_name as sql_design_name_refer, 
+            b.sql_design_code as sql_design_code_refer,
+            b.pageable as pageable,
+            b.return_type,
+            b.sql_pattern
+        FROM execution_component a
+        LEFT JOIN sql_design b
+            on b.sql_design_id = a.sql_design_id
+        WHERE EXISTS
+            ( 
+            SELECT c.sequence_logic_id
+            FROM sequence_logic c
+            INNER JOIN business_logic d ON c.business_logic_id = d.business_logic_id
+            WHERE d.project_id = #{projectId} AND d.module_id is null and d.blogic_type = 1   
+                AND c.component_type = 2
+                AND c.sequence_logic_id = a.sequence_logic_id
+            )
+    </select>
+
+    <select id="findExecutionInputValueByModuleCommon" resultMap="executionInputValueResultMap">
+        SELECT  A.*
+        FROM 
+        (   
+            SELECT 
+                a.execution_input_value_id, 
+                a.execution_component_id, 
+                a.sql_design_input_id, 
+                sInput.sql_design_input_code, 
+                sInput.sql_design_input_name, 
+                a.data_type, 
+                a.array_flg, 
+                a.parameter_scope, 
+                a.parameter_id, 
+                a.item_sequence_no,
+                b.sql_design_id
+            FROM execution_input_value a
+            LEFT JOIN execution_component b
+                on (b.execution_component_id = a.execution_component_id )
+            LEFT JOIN  sql_design_input sInput ON (a.sql_design_input_id = sInput.sql_design_input_id)
+            WHERE EXISTS
+                (
+                    SELECT c.sequence_logic_id
+                    FROM sequence_logic c
+                    INNER JOIN business_logic blogic ON c.business_logic_id = blogic.business_logic_id
+                    WHERE blogic.project_id = #{projectId} AND blogic.module_id is null and blogic.blogic_type = 1   
+                        AND component_type = 2
+                        AND c.sequence_logic_id = b.sequence_logic_id
+                )
+            ORDER BY a.execution_input_value_id
+        ) as A
+    </select>
+
+    <select id="findExecutionOutputValueByModuleCommon" resultMap="executionOutputValueResultMap">
+        SELECT  A.*
+        FROM 
+        (   
+            SELECT 
+                a.execution_output_value_id, 
+                a.execution_component_id, 
+                a.sql_design_output_id, 
+                sOutput.sql_design_output_code, 
+                sOutput.sql_design_output_name, 
+                a.data_type, 
+                a.array_flg, 
+                a.target_scope, 
+                a.target_id, 
+                a.item_sequence_no,
+                b.sql_design_id
+            FROM execution_output_value a
+            LEFT JOIN execution_component b
+                on (b.execution_component_id = a.execution_component_id )
+            LEFT JOIN  sql_design_output sOutput ON (a.sql_design_output_id = sOutput.sql_design_output_id)
+            WHERE EXISTS
+                (
+                    SELECT c.sequence_logic_id
+                    FROM sequence_logic c
+                    INNER JOIN business_logic blogic ON c.business_logic_id = blogic.business_logic_id
+                    WHERE blogic.project_id = #{projectId} AND blogic.module_id is null and blogic.blogic_type = 1   
+                        AND component_type = 2
+                        AND c.sequence_logic_id = b.sequence_logic_id
+                )
+            ORDER BY a.execution_output_value_id
+        ) as A
+    </select>
+</mapper>

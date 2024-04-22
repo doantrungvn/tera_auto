@@ -1,0 +1,340 @@
+<!-- appendHeaderHere -->
+
+
+			<div class="qp-body-container">
+			<div class="qp-link-header pull-right">
+				<span class="qp-link-header-icon glyphicon glyphicon-plus"></span>
+			
+						<a onmouseover="this.setAttribute('style', 'null')" onmouseout="this.setAttribute('style', 'null')" href="registerForm.html">Register role</a>&nbsp;
+		</div>
+			
+			<div class="qp-breadcrumb">
+							<ul class="breadcrumb" style="float:left;color:#337ab7;font-size:14px;">
+								<li><a href="#{homePage}"><i class="qp-link-header-icon glyphicon glyphicon-home"></i></a></li>
+								<li><span>Role management</span></li>
+								<li><span>Search role</span></li>
+							</ul>
+			</div>
+			
+			<!-- End toolbar-->
+			
+			<!-- Start message -->
+			<div class="qp-message">
+				</div>
+			<!-- End message -->
+
+			<!-- Start content -->
+			<div class="qp-body">
+<form id="roleSearchForm" action="http://localhost:8080/terasoluna-qp-web/role/search" method="post"><div class="panel panel-default qp-div-search-condition">
+				<div class="panel-heading">
+					<span class="glyphicon  qp-heading-icon" aria-hidden="true">&nbsp;</span>
+					<span class="qp-heading-text">Search condition</span>
+				</div>
+				<div class="panel-body">
+					<table class="table table-bordered qp-table-form">
+						<colgroup>
+							<col width="20%">
+							<col width="30%">
+							<col width="20%">
+							<col width="30%">
+						</colgroup>
+						<tbody><tr>
+							<th><label for="roleName">Role name</label></th>
+							<td><input id="roleName" name="roleName" class="form-control qp-input-text" type="text" value=""></td>
+							<th><label for="roleCd">Role code</label></th>
+							<td><input id="roleCd" name="roleCd" class="form-control qp-input-text" type="text" value=""></td>
+						</tr>
+						<tr>
+							<th><label for="status">Status</label></th>
+							<td><span><input id="status1" name="status" class="qp-input-checkbox-margin qp-input-checkbox" type="checkbox" value="1"><label for="status1">Active</label></span><span><input id="status2" name="status" class="qp-input-checkbox-margin qp-input-checkbox" type="checkbox" value="0"><label for="status2">InActive</label></span><input type="hidden" name="_status" value="on"></td>
+							<th><label for="remark">Remark</label></th>
+							
+							<td><input id="remark" name="remark" class="form-control qp-input-text" type="text" value=""></td>
+						</tr>
+					</tbody></table>
+				</div>
+			</div>
+			<div class="qp-div-action">
+				
+
+
+
+
+
+
+
+
+
+
+
+
+	<input type="button" onclick="window.location.href='searchForm.html'" class="btn qp-button " value="Search" style="null">
+				
+
+
+</div>
+		<div>
+<input type="hidden" name="_csrf" value="6e22c002-28d3-4e24-95c7-75e956cd53c5">
+</div></form><div class="panel panel-default qp-div-search-result">
+				<div class="panel-heading">
+					
+
+
+
+
+
+
+
+<script type="text/javascript">
+	var actionPath = '/role/search';
+	var form = "#"+'roleSearchForm';
+	var href = CONTEXT_PATH + "/PageSize/setPageSize?r="+Math.random();
+	function calSavePageSize() {
+		if($(form).length >0){
+			var size = $( "#fcomPageSizeSelect" ).val();
+			var param =  {
+					action : actionPath,
+					size : size
+				};
+			$.ajax({
+				method : "GET",
+				url : href,
+				data : {data:JSON.stringify(param)}
+			}).done(function(msg) {
+				if(msg.status == '1'){
+					$(form).submit();
+				}
+				else{
+					// Error when save information of pagesize
+					alert("");
+				}
+			});
+		}else{
+			// This form is not exist.
+			alert("");
+		}
+		
+	}
+</script>
+
+ 
+
+	
+		
+		<span class="glyphicon qp-heading-icon" style="width: 24px;" aria-hidden="true">&nbsp;</span>
+		<span class="qp-heading-text">
+			Search results
+			&nbsp;
+			<span class="badge">&nbsp;1&nbsp;</span>
+		</span>
+		<div class="form-inline qp-item-per-page">
+			<label>
+				<select id="fcomPageSizeSelect" style="margin-top: -3px;" name="size" aria-controls="dataTables-example" class="form-control qp-input-select" onchange="calSavePageSize()">
+					
+						
+		    				<option value="10" selected="selected">10</option>
+		    			
+		    			
+		  			
+						
+		    			
+		    				<option value="20">20</option>
+		    			
+		  			
+						
+		    			
+		    				<option value="30">30</option>
+		    			
+		  			
+						
+		    			
+		    				<option value="50">50</option>
+		    			
+		  			
+						
+		    			
+		    				<option value="100">100</option>
+		    			
+		  			
+				</select>
+			</label>
+		</div>
+	
+	
+
+</div>
+				<div class="panel-body">
+					<div class="table-responsive">
+						<table class="table table-bordered qp-table-list">
+							<colgroup>
+								<col>
+								<col>
+								<col width="20%">
+								<col width="10%">
+								<col>
+								<col width="5%">
+							</colgroup>
+							<thead>
+								<tr>
+									<th>No.</th>
+									<th>
+
+
+
+
+
+
+
+
+<div class="form-inline" onclick="$.qp.sortDataByColumn(&#39;roleSearchForm&#39;,&#39;role_name&#39;)" style="cursor: pointer;">
+	<label style="margin-bottom: 0px;cursor: pointer;">Role name</label>
+	
+	
+		<input type="hidden" value="role_name,DESC" id="fcomHeaderSortrole_name">
+	
+</div></th>
+									<th>
+
+
+
+
+
+
+
+
+<div class="form-inline" onclick="$.qp.sortDataByColumn(&#39;roleSearchForm&#39;,&#39;role_code&#39;)" style="cursor: pointer;">
+	<label style="margin-bottom: 0px;cursor: pointer;">Role code</label>
+	
+	
+		<input type="hidden" value="role_code,DESC" id="fcomHeaderSortrole_code">
+	
+</div></th>
+									<th>
+
+
+
+
+
+
+
+
+<div class="form-inline" onclick="$.qp.sortDataByColumn(&#39;roleSearchForm&#39;,&#39;status&#39;)" style="cursor: pointer;">
+	<label style="margin-bottom: 0px;cursor: pointer;">Status</label>
+	
+	
+		<input type="hidden" value="status,DESC" id="fcomHeaderSortstatus">
+	
+</div></th>
+									<th>
+
+
+
+
+
+
+
+
+<div class="form-inline" onclick="$.qp.sortDataByColumn(&#39;roleSearchForm&#39;,&#39;remark&#39;)" style="cursor: pointer;">
+	<label style="margin-bottom: 0px;cursor: pointer;">Remark</label>
+	
+	
+		<input type="hidden" value="remark,DESC" id="fcomHeaderSortremark">
+	
+</div></th>
+									<th class="com-table-th-text style-header-table"></th>
+								</tr>
+							</thead>
+							<tbody>
+							<tr>
+									<td>
+
+
+
+<!--  attribute -->
+
+
+
+
+
+	
+	
+	
+		
+			1
+		
+		
+	
+	
+</td>
+									<td class="word-wrap">
+										
+
+
+
+
+
+
+
+
+
+
+
+
+	<a class="qp-link-popup" href="viewForm.html?roleId=1&amp;mode=1">
+
+
+
+<span style="white-space:pre">Full role</span>
+</a>
+                                        
+
+
+</td>
+									<td class="word-wrap">
+
+
+
+<span style="white-space:pre">fullrole</span>
+</td>
+									<td>
+
+
+
+<span style="white-space:pre">Active</span>
+</td>
+									<td class="word-wrap">
+
+
+
+<span style="white-space:pre">dfsdfsdf</span>
+</td>
+									<td>
+										
+
+
+
+
+
+
+
+
+
+
+
+
+	<a href="modifyForm.html?roleId=1&amp;mode=0" class="btn qp-button glyphicon glyphicon-pencil  qp-link-button qp-link-action"></a>
+										
+
+
+</td>
+								</tr>
+							</tbody></table>
+
+						<div class="qp-div-action">
+							<ul class="pagination pagination-md"><li class="disabled"><a href="javascript:void(0)">&lt;&lt;</a></li><li class="disabled"><a href="javascript:void(0)">&lt;</a></li><li class="active"><a href="javascript:void(0)">1</a></li><li class="disabled"><a href="javascript:void(0)">&gt;</a></li><li class="disabled"><a href="javascript:void(0)">&gt;&gt;</a></li></ul></div>
+
+</div>
+				</div>
+			</div></div>
+
+			<!-- appendFooterHere -->

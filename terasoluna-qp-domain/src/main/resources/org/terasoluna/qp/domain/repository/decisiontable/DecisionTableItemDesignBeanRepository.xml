@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.decisiontable.DecisionTableItemDesignBeanRepository">
+
+    <resultMap id="ResultMap" type="DecisionTableItemDesignBean">
+        <id property="decisionItemDesignId" column="decision_item_design_id" />
+        <result property="itemName" column="item_name" />
+        <result property="itemType" column="item_type" />
+        <result property="itemValue" column="item_value" />
+        <result property="itemSequenceNo" column="item_sequence_no" />
+        <result property="decisionTbId" column="decision_table_id" />
+        <result property="objectName" column="object_name" />
+        <result property="objectCode" column="object_code" />
+        <result property="objectCodeCombine" column="object_code_combine" />
+        <result property="objectCodeParent" column="object_code_parent" />
+        <result property="dataType" column="data_type" />
+    </resultMap>
+
+	 <!-- Process for display view and modify -->
+    <select id="findDecisionItemDesignBeanById" parameterType="_long" resultMap="ResultMap">
+      SELECT * FROM (
+         (
+	        SELECT *
+				FROM 
+				    (
+				    SELECT 
+				          a.decision_item_design_id,
+				          a.item_name,
+				          a.item_type,
+				          a.item_value,
+				          a.item_sequence_no,
+				          b.decision_table_id,
+				          c.decision_input_bean_name as object_name,
+				          c.decision_input_bean_code as object_code,
+				          c.data_type
+				    FROM 
+				          decision_item_design a 
+				          LEFT JOIN decision_table b ON a.decision_table_id = b.decision_table_id
+				          LEFT JOIN decision_input_bean c ON a.item_value = c.decision_input_bean_id
+				          
+				    WHERE 
+				       a.decision_table_id = <![CDATA[ #{decisionTbId} ]]> AND a.item_type = 1
+				    ) AS t
+	                 ORDER BY t.item_sequence_no
+	      )
+	       UNION
+	      (
+	        SELECT *
+				FROM 
+				    (
+				    SELECT 
+				          a.decision_item_design_id,
+				          a.item_name,
+				          a.item_type,
+				          a.item_value,
+				          a.item_sequence_no,
+				          b.decision_table_id,
+				          c.decision_output_bean_name as object_name,
+				          c.decision_output_bean_code as object_code,
+				          c.data_type
+				    FROM 
+				          decision_item_design a 
+				          LEFT JOIN decision_table b ON a.decision_table_id = b.decision_table_id
+				          LEFT JOIN decision_output_bean c ON a.item_value = c.decision_output_bean_id
+				    WHERE 
+				       a.decision_table_id = <![CDATA[ #{decisionTbId} ]]> AND a.item_type = 0
+				    ) AS t
+	      )
+      ) AS a ORDER BY a.item_sequence_no
+    </select>
+    
+    <select id="getSequencesItemDesign" resultType="Long">
+        select SETVAL('decision_item_design_seq'::regclass, NEXTVAL('decision_item_design_seq'::regclass) + #{size})
+    </select>
+    
+    <insert id="registerItemDesign" >
+        <if test="itemdesigns != null and  itemdesigns.size() > 0 ">
+            INSERT INTO decision_item_design
+                (
+                decision_item_design_id, 
+                item_type, 
+                item_name, 
+                item_value, 
+                item_sequence_no, 
+                decision_table_id 
+                )
+                VALUES 
+                <foreach item="item" collection="itemdesigns" separator=",">
+                (
+                    CAST(#{item.decisionItemDesignId} AS numeric(16,0)), 
+                    #{item.itemType}, 
+                    #{item.itemName}, 
+                    CAST(#{item.itemValue} AS numeric(16,0)), 
+                    #{item.itemSequenceNo} ,
+                    CAST(#{item.decisionTbId} AS numeric(16,0)) 
+                )
+                </foreach>;
+        </if>
+    </insert>
+    
+    <select id="countItemDesignModifyIn" resultType="_int">
+        SELECT  COUNT(*) 
+        FROM decision_item_design 
+        WHERE 
+            decision_table_id = #{id} 
+            <if test="itemdesigns != null and  itemdesigns.size() > 0 ">
+                AND decision_item_design_id NOT IN  
+                <foreach item="item" index="index" collection="itemdesigns" open="(" separator="," close=")">
+                    CAST(#{item.decisionItemDesignId} AS numeric(16,0))
+                </foreach>
+            </if>
+    </select>
+    
+    <delete id="deleteBeforModifyItemDesign">
+        DELETE 
+        FROM decision_item_design 
+        WHERE 
+            decision_table_id = #{id}
+            
+            <if test="itemdesigns != null and  itemdesigns.size() > 0 ">
+                AND decision_item_design_id NOT IN  
+                <foreach item="item" index="index" collection="itemdesigns" open="(" separator="," close=")">
+                    CAST(#{item.decisionItemDesignId} AS numeric(16,0))
+                </foreach>
+            </if>
+    </delete>
+    
+    <update id="modifyItemDesign" >
+        <foreach item="item" collection="itemdesigns" separator=";">
+            <![CDATA[
+                UPDATE decision_item_design
+                SET 
+                    item_type = #{item.itemType}, 
+                    item_name = #{item.itemName}, 
+                    item_value = CAST(#{item.itemValue} AS numeric(16,0)), 
+                    item_sequence_no= #{item.itemSequenceNo}
+                 WHERE 
+                   decision_item_design_id = CAST(#{item.decisionItemDesignId} AS numeric(16,0))
+            ]]>
+        </foreach>
+    </update>
+    
+    <!-- For generate source code -->
+    <select id="findAllDecisionItemDesignBeanByIOBeanId" resultMap="ResultMap">
+    	SELECT * FROM 
+		(
+		   (
+			SELECT 
+			  a.decision_item_design_id,
+			  a.item_name,
+			  a.item_type,
+			  a.item_value,
+			  a.item_sequence_no
+			FROM 
+			  decision_item_design a
+			WHERE 
+			  a.item_value IN (242, 243)
+			  <foreach item="item" index="index" collection="inputBeans" open="(" separator="," close=")">
+                    CAST(#{item.decisionInputBeanId} AS numeric(16,0))
+              </foreach>
+			  AND a.item_type = 1
+		   ) 
+		   UNION  
+		  (    
+		    SELECT 
+			  a.decision_item_design_id,
+			  a.item_name,
+			  a.item_type,
+			  a.item_value,
+			  a.item_sequence_no
+			FROM 
+			  decision_item_design a
+			WHERE 
+			  a.item_value in (174, 175)
+			  <foreach item="item" index="index" collection="outputBeans" open="(" separator="," close=")">
+                    CAST(#{item.decisionOutputBeanId} AS numeric(16,0))
+              </foreach>
+			  AND a.item_type = 0
+		   )
+		 ) AS T ORDER BY decision_item_design_id
+    </select>
+
+    <select id="findAllDecisionItemDesignByLstDecisionInfor" resultMap="ResultMap">
+		SELECT 
+			a.decision_item_design_id,
+			a.item_name,
+			a.item_type,
+			a.item_value,
+			a.item_sequence_no,
+			a.decision_table_id
+		FROM 
+			decision_item_design a
+		<if test="decisionLst != null and  decisionLst.size() > 0 ">
+			WHERE a.decision_table_id IN
+			<foreach item="item" index="index" collection="decisionLst" open="(" separator="," close=")">
+				#{item.decisionTbId}
+			</foreach>
+		</if>
+	</select>
+	
+</mapper>

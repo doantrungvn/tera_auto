@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.terasoluna.qp.domain.repository.sample.SampleRepository">
+	<resultMap type="org.terasoluna.qp.domain.model.Sample" id="sampleResultMap">
+		<id property="columnId" column="column_id" />
+		<result property="columnText" column="column_text" />
+		<result property="columnInteger" column="column_integer" />
+		<result property="columnDate" column="column_date" />
+		<result property="columnDatetime" column="column_datetime" />				
+		<result property="columnTime" column="column_time" />
+		<result property="columnRadio.id" column="column_radio" />
+		<result property="columnRadio.nameType" column="radio_name_type" />
+		<result property="columnCheckbox.id" column="column_checkbox" />
+		<result property="columnCheckbox.nameType" column="checkbox_name_type" />
+		<result property="columnCurrency" column="column_currency" />
+		<result property="columnImage" column="column_image" />
+		<result property="columnFloat" column="column_float" />
+		<result property="columnSelect" column="column_select" />
+		<result property="columnAutocomplete" column="column_autocomplete" />
+		<result property="columnPercentage" column="column_percentage" />
+		<result property="columnPercentageDecimal" column="column_percentage_decimal" />
+	</resultMap>
+	<resultMap type="org.terasoluna.qp.domain.model.SampleChild" id="sampleChildResultMap">
+		<id property="columnId" column="column_id" />
+		<result property="columnText" column="column_text" />
+		<result property="columnAutocomplete.id" column="column_autocomplete" />
+		<result property="columnAutocomplete.nameType" column="column_autocomplete_name" />
+		<result property="columnDatetime" column="column_datetime" />
+		<result property="sample.columnId" column="sample_id" />
+		<result property="columnInteger" column="column_integer" />
+	</resultMap>
+	<sql id="findPageByCriteriaWhere">
+		<where>
+			<if
+				test="criteria.columnText != null and criteria.columnText != ''">
+					<![CDATA[
+						AND column_text LIKE '%' || #{criteria.columnText} || '%'
+					]]>
+			</if>
+			<if test="criteria.columnIntegerFrom!= null">
+					<![CDATA[
+						AND column_integer >= #{criteria.columnIntegerFrom}
+					]]>
+			</if>
+			<if test="criteria.columnIntegerTo != null">
+					<![CDATA[
+						AND column_integer <= #{criteria.columnIntegerTo}
+					]]>
+			</if>
+			<if test="criteria.columnCurrencyFrom != null">
+					<![CDATA[
+						AND column_currency >= cast (#{criteria.columnCurrencyFrom} as money)
+					]]>
+			</if>
+			<if test="criteria.columnCurrencyTo != null">
+					<![CDATA[
+						AND column_currency <= cast (#{criteria.columnCurrencyTo} as money)
+					]]>
+			</if>
+			<if test="criteria.columnFloatFrom != null">
+					<![CDATA[
+						AND column_float >= #{criteria.columnFloatFrom}
+					]]>
+			</if>
+			<if test="criteria.columnFloatTo != null">
+					<![CDATA[
+						AND column_float <= #{criteria.columnFloatTo}
+					]]>
+			</if>
+			<if test="criteria.columnPercentageFrom != null">
+					<![CDATA[
+						AND column_percentage >= #{criteria.columnPercentageFrom}
+					]]>
+			</if>
+			<if test="criteria.columnPercentageTo != null">
+					<![CDATA[
+						AND column_percentage <= #{criteria.columnPercentageTo}
+					]]>
+			</if>
+			<if test="criteria.columnPercentageDecimalFrom != null">
+					<![CDATA[
+						AND column_percentage_decimal >= #{criteria.columnPercentageDecimalFrom}
+					]]>
+			</if>
+			<if test="criteria.columnPercentageDecimalTo != null">
+					<![CDATA[
+						AND column_percentage_decimal <= #{criteria.columnPercentageDecimalTo}
+					]]>
+			</if>
+			<if test="criteria.columnDateFrom != null">
+					<![CDATA[
+						AND column_date >= #{criteria.columnDateFrom}
+					]]>
+			</if>
+			<if test="criteria.columnDateTo != null">
+					<![CDATA[
+						AND column_date <= #{criteria.columnDateTo}
+					]]>
+			</if>			
+			<if test="criteria.columnDatetimeFrom != null">
+					<![CDATA[
+						AND column_datetime >= #{criteria.columnDatetimeFrom}
+					]]>
+			</if>
+			<if test="criteria.columnDatetimeTo != null">
+					<![CDATA[
+						AND column_datetime <= #{criteria.columnDatetimeTo}
+					]]>
+			</if>			
+			<if test="criteria.columnTimeFrom != null">
+					<![CDATA[
+						AND column_time >= #{criteria.columnTimeFrom}
+					]]>
+			</if>
+			<if test="criteria.columnTimeTo != null">
+					<![CDATA[
+						AND column_time <= #{criteria.columnTimeTo}
+					]]>
+			</if>			
+			<if test="criteria.columnSelect != null">
+					<![CDATA[
+						AND column_select = #{criteria.columnSelect}
+					]]>
+			</if>
+			<if test="criteria.columnAutocomplete != null">
+					<![CDATA[
+						AND column_autocomplete = #{criteria.columnAutocomplete}
+					]]>
+			</if>
+			<if test="criteria.columnRadio != null">
+					<![CDATA[
+						AND column_radio = #{criteria.columnRadio}
+					]]>
+			</if>
+			<if test="criteria.columnCheckboxs != null and criteria.columnCheckboxs.length > 0">
+				AND column_checkbox IN				
+				<foreach item="item" index="index" collection="criteria.columnCheckboxs" open="(" separator="," close=")">					
+						 #{item}
+				</foreach>				
+			</if>
+		</where>
+	</sql>
+	<select id="findPageByCriteria"
+		parameterType="org.terasoluna.qp.domain.repository.sample.SampleCriteria"
+		resultMap="sampleResultMap">
+		SELECT 
+			s.column_id AS column_id,
+			s.column_text AS column_text,
+			s.column_integer AS column_integer,
+			s.column_date AS column_date,
+			s.column_datetime AS column_datetime, 
+       		s.column_time AS column_time,
+			s.column_radio AS column_radio,
+			s.column_checkbox AS column_checkbox,
+			cast(s.column_currency as numeric) as column_currency, 
+       		s.column_image AS column_image,
+			s.column_float AS column_float,
+			s.column_select AS column_select,
+			s.column_autocomplete AS column_autocomplete, 
+       		s.column_percentage AS column_percentage,
+			s.column_percentage_decimal AS column_percentage_decimal,
+			st.name_type as radio_name_type,
+			st_c.name_type as checkbox_name_type
+  		FROM 
+  			sample AS s LEFT JOIN sample_type AS st  			
+  		ON 
+  				s.column_radio=st.id LEFT JOIN sample_type AS st_c
+  		ON 	
+  				s.column_checkbox=st_c.id
+		<include refid="findPageByCriteriaWhere" />
+		<![CDATA[		   	
+		   	ORDER BY
+		           column_id DESC
+		       LIMIT
+		           #{pageable.pageSize}
+		       OFFSET
+		           #{pageable.offset}
+	     ]]>
+	</select>
+	<select id="countByCriteria"
+		parameterType="org.terasoluna.qp.domain.repository.sample.SampleCriteria"
+		resultType="_long">
+		<![CDATA[
+	     	SELECT 
+	     		COUNT(*) 
+	     	FROM 
+	     		sample	     	
+	     	]]>
+		<include refid="findPageByCriteriaWhere" />
+	</select>
+	<insert id="addSample" parameterType="Sample" useGeneratedKeys="true"
+		keyProperty="Sample.columnId" keyColumn="columnId">
+		<selectKey keyProperty="columnId" resultType="Integer"
+			order="BEFORE">
+			SELECT NEXTVAL('sample_column_id_seq'::regclass)
+		</selectKey>
+		INSERT INTO 
+			sample
+		(            
+			column_id,
+			column_text,
+			column_integer,
+			column_date,
+			column_datetime, 
+            column_time,
+			column_radio,
+			column_checkbox,
+			column_currency, 
+            column_image,
+			column_float,
+			column_select,
+			column_autocomplete, 
+            column_percentage,
+			column_percentage_decimal
+        )
+    	VALUES
+		(
+			#{columnId},
+			#{columnText},
+    		#{columnInteger},
+    		#{columnDate},
+    		#{columnDatetime}, 
+            #{columnTime},
+            #{columnRadio.id},
+            #{columnCheckbox.id},
+            #{columnCurrency}, 
+            #{columnImage},
+            #{columnFloat},
+            #{columnSelect},
+            #{columnAutocomplete}, 
+            #{columnPercentage},
+            #{columnPercentageDecimal}
+       )
+	</insert>
+	<insert id="addSampleChilds">
+		INSERT INTO 
+			sample_child
+		(
+			column_text,
+			column_autocomplete,
+			column_datetime,
+			sample_id,
+			column_integer
+		)
+		VALUES
+		<foreach item="item" collection="sampleChild" separator=",">
+		(
+			#{item.columnText},
+			#{item.columnAutocomplete.id},
+			#{item.columnDatetime},
+			#{item.sample.columnId},
+			#{item.columnInteger}
+		)
+		</foreach>
+	</insert>
+	<select id="findOne" parameterType="Integer" resultMap="sampleResultMap">
+		SELECT 
+			s.column_id AS column_id,
+			s.column_text AS column_text,
+			s.column_integer AS column_integer,
+			s.column_date AS column_date,
+			s.column_datetime AS column_datetime, 
+       		s.column_time AS column_time,
+			s.column_radio AS column_radio,
+			s.column_checkbox AS column_checkbox,
+			cast(s.column_currency as numeric) as column_currency, 
+       		s.column_image AS column_image,
+			s.column_float AS column_float,
+			s.column_select AS column_select,
+			s.column_autocomplete AS column_autocomplete, 
+       		s.column_percentage AS column_percentage,
+			s.column_percentage_decimal AS column_percentage_decimal,
+			st.name_type as radio_name_type,
+			st_c.name_type as checkbox_name_type
+  		FROM 
+  			sample AS s LEFT JOIN sample_type AS st  			
+  		ON 
+  				s.column_radio=st.id LEFT JOIN sample_type AS st_c
+  		ON 	
+  				s.column_checkbox=st_c.id
+		WHERE 
+			column_id=#{columnId}
+	</select>
+	<select id="findChilds" resultMap="sampleChildResultMap">
+		SELECT 
+			column_id,
+			column_text,
+			column_autocomplete,
+			column_datetime,
+			sample_id,
+			column_integer,
+			st.name_type as column_autocomplete_name
+		FROM
+			sample_child AS s LEFT JOIN sample_type AS st 
+		ON		s.column_autocomplete = st.id
+		WHERE 
+			sample_id=#{parentId}
+	</select>
+	<update id="updateSample" parameterType="Sample">
+		UPDATE 
+			sample
+		SET 
+			column_text=#{columnText},
+			column_integer=#{columnInteger},
+			column_date=#{columnDate}, 
+		    column_datetime=#{columnDatetime},
+			column_time=#{columnTime},
+			column_radio=#{columnRadio.id},
+			column_checkbox=#{columnCheckbox.id}, 
+		    column_currency=#{columnCurrency},
+			column_image=#{columnImage},
+			column_float=#{columnFloat},
+			column_select=#{columnSelect}, 
+		    column_autocomplete=#{columnAutocomplete},
+			column_percentage=#{columnPercentage},
+			column_percentage_decimal=#{columnPercentageDecimal}
+		 WHERE 
+		 	column_id=#{columnId}		
+	</update>
+	<update id="updateSampleChild">		
+		UPDATE 
+			sample_child
+		SET 			
+			column_text=#{columnText},
+			column_autocomplete=#{columnAutocomplete.id},
+			column_datetime=#{columnDatetime}, 		    
+		    column_integer=#{columnInteger}
+		 WHERE 
+		 	column_id=#{columnId}		
+	</update>
+	<delete id="deleteSampleChildById">
+		DELETE FROM
+			sample_child
+		WHERE 
+			column_id=#{columnId}
+	</delete>
+	<insert id="addSampleChild">
+		INSERT INTO 
+			sample_child
+		(
+			column_text,
+			column_autocomplete,
+			column_datetime, 
+		    sample_id,
+			column_integer
+		)
+		VALUES
+		(
+			#{sampleChild.columnText},
+			#{sampleChild.columnAutocomplete.id},
+			#{sampleChild.columnDatetime},
+			#{sampleChild.sample.columnId}, 
+		    #{sampleChild.columnInteger}
+		)		
+	</insert>
+	<delete id="deleteSample"
+		parameterType="Integer">
+		DELETE FROM 
+			sample
+		WHERE 
+			column_id = #{columnId}
+	</delete>	
+	<update id="updateSampleNonImage" parameterType="Sample">
+		UPDATE 
+			sample
+		SET 
+			column_text=#{columnText},
+			column_integer=#{columnInteger},
+			column_date=#{columnDate}, 
+		    column_datetime=#{columnDatetime},
+			column_time=#{columnTime},
+			column_radio=#{columnRadio.id},
+			column_checkbox=#{columnCheckbox.id}, 
+		    column_currency=#{columnCurrency},			
+			column_float=#{columnFloat},
+			column_select=#{columnSelect}, 
+		    column_autocomplete=#{columnAutocomplete},
+			column_percentage=#{columnPercentage},
+			column_percentage_decimal=#{columnPercentageDecimal}
+		 WHERE 
+		 	column_id=#{columnId}		
+	</update>	
+	<delete id="deleteSampleChildBySampleId"
+		parameterType="Integer">
+		DELETE FROM 
+			sample_child
+		WHERE 
+			sample_id = #{sampleId}
+	</delete>	
+</mapper>    

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.webservicetoken.WebServiceTokenRepository">
+	<resultMap id="webServiceTokenResultMap" type="WebServiceToken">
+		<id property="wsTokenId" column="ws_token_id" />
+		<result property="projectId" column="project_id" />
+		<result property="clientId" column="client_id" />
+		<result property="clientSecret" column="client_secret" />
+		<result property="createdBy" column="create_by" />
+		<result property="createdDate" column="create_date" />
+		<result property="updatedBy" column="update_by" />
+		<result property="updatedDate" column="update_date" />
+		<result property="projectName" column="project_name" />
+		<result property="projectCode" column="project_code" />
+	</resultMap>
+	
+	<select id="countBySearchCriteria" resultType="Long"
+		parameterType="org.terasoluna.qp.domain.model.WebServiceToken">
+		SELECT
+			COUNT (*)
+		FROM
+			webservice_token as WS 
+			LEFT JOIN project as P 
+			on WS.project_id = P.project_id
+		<include refid="findPageByCriteriaWhere" />
+	</select>
+	
+	<select id="getBySearchCriteria" parameterType="org.terasoluna.qp.domain.model.WebServiceToken"
+		resultMap="webServiceTokenResultMap">
+		SELECT
+			WS.ws_token_id,
+			WS.project_id,
+			WS.client_id,
+			WS.client_secret,
+			WS.create_by,
+			WS.create_date,
+			WS.update_by,
+			WS.update_date,
+			P.project_name,
+			P.project_code
+		FROM
+			webservice_token as WS 
+			LEFT JOIN project as P 
+			on WS.project_id = P.project_id
+		<include refid="findPageByCriteriaWhere" />
+
+		ORDER BY
+		<if test="pageable.sort != null">
+			<foreach collection="pageable.sort" item="order" separator=",">
+				${order.property} ${order.direction}
+			</foreach>
+		</if>
+		<if test="pageable.sort == null">
+			WS.update_date DESC
+		</if>
+		<![CDATA[
+			LIMIT
+				#{pageable.pageSize}
+			OFFSET
+				#{pageable.offset}
+		]]>
+	</select>
+	
+	<sql id="findPageByCriteriaWhere">
+		<where>
+			<if test="webServiceToken.projectName !=null and webServiceToken.projectName !=''">
+				<bind name="projectName" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(webServiceToken.projectName)" />
+				<![CDATA[ 
+					P.project_name ILIKE #{projectName} ESCAPE '~'
+				]]> 
+			</if>
+			<if test="webServiceToken.projectCode !=null and webServiceToken.projectCode !=''">
+				<bind name="projectCode" value="@org.terasoluna.gfw.common.query.QueryEscapeUtils@toContainingCondition(webServiceToken.projectCode)" />
+				<![CDATA[ 
+					AND P.project_code ILIKE #{projectCode} ESCAPE '~'
+				]]> 
+			</if>
+		</where>
+	</sql>
+	
+	<select id="getWebServiceToken" parameterType="long" resultMap="webServiceTokenResultMap">
+		<![CDATA[
+			SELECT
+			WS.ws_token_id,
+			WS.project_id,
+			WS.client_id,
+			WS.client_secret,
+			WS.create_by,
+			WS.create_date,
+			WS.update_by,
+			WS.update_date,
+			P.project_name,
+			P.project_code
+		FROM
+			webservice_token as WS 
+			LEFT JOIN project as P 
+			on WS.project_id = P.project_id
+		WHERE WS.ws_token_id = #{wsTokenId}
+		]]>
+	</select>
+	
+	<select id="getWebServiceTokenByProjectId" resultMap="webServiceTokenResultMap">
+		<![CDATA[
+			SELECT
+			WS.ws_token_id,
+			WS.project_id,
+			WS.client_id,
+			WS.client_secret,
+			WS.create_by,
+			WS.create_date,
+			WS.update_by,
+			WS.update_date,
+			P.project_name,
+			P.project_code
+		FROM
+			webservice_token as WS 
+			LEFT JOIN project as P 
+			on WS.project_id = P.project_id
+		WHERE WS.project_id = #{projectId}
+		]]>
+	</select>
+	
+	<insert id="registerWebServiceToken" parameterType="org.terasoluna.qp.domain.model.WebServiceToken"
+		useGeneratedKeys="true" keyProperty="WebServiceToken.wsTokenId" keyColumn="ws_token_id ">
+		<selectKey keyProperty="wsTokenId" resultType="long" order="BEFORE">
+			SELECT NEXTVAL('webservice_token_seq'::regclass)
+		</selectKey>
+		<![CDATA[
+		INSERT INTO 
+			webservice_token
+			(
+			ws_token_id ,
+			project_id ,
+			client_id ,
+			client_secret ,
+			update_by,
+			update_date,
+			create_by,
+			create_date
+			)
+		VALUES 
+			(
+			#{wsTokenId},
+			#{projectId},
+			#{clientId},
+			#{clientSecret},
+			#{updatedBy},
+			#{updatedDate},
+			#{createdBy},
+			#{createdDate}
+			)
+		]]>
+	</insert>
+	
+	<update id="modifyWebServiceToken" parameterType="WebServiceToken">
+	<![CDATA[	
+		UPDATE 
+			webservice_token 
+		SET 
+			client_id=#{clientId},
+			client_secret=#{clientSecret},
+			update_by=#{updatedBy},
+			update_date=#{systemTime}
+		WHERE 
+			ws_token_id= #{wsTokenId} AND update_date = #{updatedDate}
+	]]>
+	</update>
+	
+	<delete id="deleteWebServiceToken" parameterType="long">
+	<![CDATA[
+		DELETE FROM
+			webservice_token
+		WHERE
+			ws_token_id= #{wsTokenId}
+	]]>
+	</delete>
+	
+</mapper>

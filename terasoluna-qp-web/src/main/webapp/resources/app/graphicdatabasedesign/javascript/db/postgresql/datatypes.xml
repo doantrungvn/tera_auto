@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<datatypes db="postgresql">
+	<group label="Numeric" color="rgb(238,238,170)">
+		<type label="integer" length="0" sql="INTEGER" re="INT" quote="" />
+		<type label="smallint" length="0" sql="SMALLINT" quote="" />
+		<type label="bigint" length="0" sql="BIGINT" quote="" />
+		<type label="numeric" length="1" sql="DECIMAL" re="numeric" quote="" />
+		<type label="serial" length="0" sql="SERIAL" re="SERIAL4" fk="Integer" quote="" />
+		<type label="bigserial" length="0" sql="BIGSERIAL" re="SERIAL8" fk="Big Integer" quote="" />
+	</group>
+
+	<group label="Character" color="rgb(255,200,200)">
+		<type label="char" length="1" sql="CHAR" quote="'"/>
+		<type label="character varying" length="1" sql="VARCHAR" re="CHARACTER VARYING" quote="'"/>
+		<type label="text" length="0" sql="TEXT" quote="'"/>
+		<type label="binary" length="1" sql="BYTEA" quote="'"/>
+		<type label="boolean" length="0" sql="BOOLEAN" quote="'"/>
+	</group>
+
+	<group label="Date &amp; Time" color="rgb(200,255,200)">
+		<type label="date" length="0" sql="DATE" quote="'" />
+		<type label="time w/ TZ" length="0" sql="TIME WITH TIME ZONE" quote="'" />
+		<type label="timestamp w/ TZ" length="0" sql="TIMESTAMP WITH TIME ZONE" quote="'" />
+	</group>
+</datatypes>

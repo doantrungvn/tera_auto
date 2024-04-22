@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.terasoluna.qp.domain.repository.impactchange.ImpactSessionManagementRepository">
+	<resultMap id="inputbeanResultMap" type="InputBean">
+		<id property="inputBeanId" column="input_bean_id" />
+		<result property="inputBeanCode" column="input_bean_code" />
+		<result property="inputBeanName" column="input_bean_name" />
+		<result property="messageDesign.messageString" column="message_string" />
+		<result property="messageString" column="message_string" />
+		<result property="messageStringAutocomplete" column="message_string_autocomplete" />
+		<result property="inputBeanType" column="input_bean_type" />
+		<result property="dataType" column="data_type" />
+		<result property="arrayFlg" column="array_flg" />
+		<result property="screenItemId" column="screen_item_id" />
+		<result property="businessLogicId" column="business_logic_id" />
+		<result property="parentInputBeanId" column="parent_input_bean_id" />
+		<result property="itemSequenceNo" column="item_sequence_no" />
+		<result property="tblDesignId" column="tbl_design_id" />
+		<result property="tblDesignName" column="tbl_design_name" />
+		<result property="columnId" column="column_id" />
+		<result property="columnName" column="column_name" />
+		<result property="objectType" column="object_type" />
+		<result property="objectId" column="object_id" />
+		<result property="objectFlg" column="object_flg" />
+		<result property="scopeType" column="scope_type" />
+		<result property="scopeValue" column="scope_value" />
+		<result property="displayType" column="display_type" />
+		<result property="scopeValueAutocomplete" column="scope_value_autocomplete" />
+		<result property="autoincrementFlg" column="autoincrement_flg" />
+		<result property="groupBaseTypeId" column="group_base_type_id" />
+        <result property="screenItemIdAutocomplete" column="screen_item_id_autocomplete" />
+        <result property="dataTypeSession" column="dataTypeSession" />
+        <result property="arrayFlagSession" column="arrayFlagSession" />
+        <result property="businessLogicCode" column="business_logic_code" />
+        <result property="moduleId" column="module_id" />
+        <result property="projectId" column="project_id" />
+	</resultMap>
+	
+	<resultMap id="outputbeanResultMap" type="OutputBean">
+		<id property="outputBeanId" column="output_bean_id" />
+		<result property="outputBeanCode" column="output_bean_code" />
+		<result property="outputBeanName" column="output_bean_name" />
+		<result property="messageDesign.messageString" column="message_string" />
+		<result property="messageString" column="message_string" />
+		<result property="messageStringAutocomplete" column="message_string" />
+		<result property="dataType" column="data_type" />
+		<result property="arrayFlg" column="array_flg" />
+		<result property="businessLogicId" column="business_logic_id" />
+		<result property="parentOutputBeanId" column="parent_output_bean_id" />
+		<result property="itemSequenceNo" column="item_sequence_no" />
+		<result property="tblDesignId" column="tbl_design_id" />
+		<result property="tblDesignName" column="tbl_design_name" />
+		<result property="columnId" column="column_id" />
+		<result property="columnName" column="column_name" />
+		<result property="columnCode" column="column_code" />
+		<result property="groupBaseTypeId" column="group_base_type_id" />
+		<result property="impactStatus" column="impact_status" />
+		<result property="screenItemId" column="screen_item_id" />
+		<result property="screenItemIdAutocomplete" column="screen_item_id_autocomplete" />
+		<result property="objectType" column="object_type" />
+		<result property="objectId" column="object_id" />
+		<result property="objectFlg" column="object_flg" />
+		<result property="scopeType" column="scope_type" />
+		<result property="scopeValue" column="scope_value" />
+		<result property="scopeValueAutocomplete" column="scope_value_autocomplete" />
+        <result property="dataTypeSession" column="dataTypeSession" />
+        <result property="arrayFlagSession" column="arrayFlagSession" />
+        <result property="businessLogicCode" column="business_logic_code" />
+        <result property="moduleId" column="module_id" />
+        <result property="projectId" column="project_id" />
+	</resultMap>
+	
+	<select id="findInputbeanBySessionId" resultMap="inputbeanResultMap">
+		SELECT 
+			a.input_bean_id, 
+			a.input_bean_code, 
+			a.input_bean_name,
+			a.data_type,
+			a.array_flg,
+			b.business_logic_id,
+			b.business_logic_code,
+			b.module_id,
+			b.project_id
+		FROM input_bean a
+		LEFT JOIN business_logic b on (a.business_logic_id = b.business_logic_id)
+		WHERE a.scope_type = 1
+			AND a.scope_value = CAST(#{sessionManagementId} as character varying)
+	</select>
+	
+	<select id="findOutputbeanBySessionId" resultMap="outputbeanResultMap">
+		SELECT 
+			a.output_bean_id, 
+			a.output_bean_code, 
+			a.output_bean_name,
+			a.data_type,
+			a.array_flg,
+			b.business_logic_id,
+			b.business_logic_code,
+			b.module_id,
+			b.project_id
+		FROM output_bean a
+		LEFT JOIN business_logic b on (a.business_logic_id = b.business_logic_id)
+		WHERE a.scope_type = 1
+			AND a.scope_value = CAST(#{sessionManagementId} as character varying)
+	</select>
+</mapper>
